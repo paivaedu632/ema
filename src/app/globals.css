@@ -1,0 +1,464 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --radius: 0.625rem;
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .font-inter {
+    font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  }
+  .font-jetbrains-mono {
+    font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  }
+}
+
+@layer components {
+  /* EmaPay Universal Amount Input Styling */
+  .amount-input {
+    border-radius: 8px !important;
+  }
+
+  /* Standard amount input field styling for EmaPay */
+  .amount-input-standard {
+    @apply font-bold border-black bg-white;
+    height: 4rem !important; /* 64px - equivalent to h-16 */
+    font-size: 1.5rem !important; /* 24px - equivalent to text-2xl */
+    border-radius: 8px !important;
+  }
+
+  /* EmaPay Universal Currency Selector Styling */
+  .currency-selector {
+    @apply w-auto font-bold;
+    background-color: transparent !important;
+    border: none !important;
+    color: #111827 !important; /* gray-900 */
+    border-radius: 9999px !important; /* rounded-full - consistent with secondary action buttons */
+    font-size: 1.125rem !important; /* 18px - equivalent to text-lg */
+    padding: 0.5rem !important; /* 8px - equivalent to px-2 */
+    transition: background-color 0.2s ease-in-out !important;
+  }
+
+  .currency-selector:hover {
+    background-color: #f3f4f6 !important; /* gray-100 */
+  }
+
+  /* Increase arrow contrast for currency selector */
+  .currency-selector svg {
+    opacity: 1 !important; /* Full opacity for better contrast */
+    color: #111827 !important; /* gray-900 - same as text color */
+  }
+
+  /* EmaPay Universal Primary Action Button Styling */
+  .primary-action-button {
+    @apply w-full text-white font-medium;
+    height: 4rem !important; /* 64px - equivalent to h-16 */
+    background-color: #000000 !important; /* Black background */
+    font-size: 1.125rem !important; /* 18px - equivalent to text-lg */
+    border-radius: 9999px !important; /* Full rounded */
+    transition: background-color 0.2s ease-in-out !important;
+  }
+
+  .primary-action-button:hover {
+    background-color: #111827 !important; /* Gray-900 equivalent */
+  }
+
+  .primary-action-button:disabled {
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
+  }
+
+  /* EmaPay Universal Layout Container Styling */
+
+  /* Page Container - Main page wrapper with full height and background */
+  .page-container {
+    @apply min-h-screen;
+  }
+
+  /* Page Container variants for different background colors */
+  .page-container-white {
+    @apply min-h-screen bg-white;
+  }
+
+  .page-container-gray {
+    @apply min-h-screen bg-gray-100;
+  }
+
+  /* Content Container - Main content area with consistent spacing and max-width */
+  .content-container {
+    @apply max-w-sm mx-auto px-4 pt-8 pb-24;
+  }
+
+  /* Content Container variant for success pages with centered content */
+  .content-container-centered {
+    @apply max-w-sm mx-auto px-4 pt-8 pb-24 flex flex-col justify-center items-center text-center flex-1;
+  }
+
+  /* Fixed Bottom Container - Bottom action button area */
+  .fixed-bottom-container {
+    @apply fixed bottom-6 left-4 right-4 max-w-sm mx-auto;
+  }
+
+  /* EmaPay Universal Typography Standards */
+
+  /* Heading Styles */
+
+  /* Main Page Heading - Used for primary page titles (e.g., "Quanto você quer depositar?") */
+  .heading-main {
+    @apply text-3xl font-bold text-gray-900;
+    line-height: 1.2 !important; /* Equivalent to leading-tight */
+  }
+
+  /* Step Heading - Used for multi-step flow titles (e.g., "Como depositar?") */
+  .heading-step {
+    @apply text-2xl font-bold text-gray-900;
+  }
+
+  /* Section Heading - Used for dashboard sections and card titles (e.g., "Saldo", "Transações") */
+  .heading-section {
+    @apply text-xl font-semibold text-gray-900;
+  }
+
+  /* Card Heading - Used for card titles and subsection headings */
+  .heading-card {
+    @apply text-lg text-gray-900;
+  }
+
+  /* Small Heading - Used for small section titles and form group headings */
+  .heading-small {
+    @apply font-medium text-gray-900;
+  }
+
+  /* Label Styles */
+
+  /* Form Label - Used for form field labels and descriptive text */
+  .label-form {
+    @apply text-sm text-gray-900;
+  }
+
+  /* Info Label - Used for balance info, help text, and secondary information */
+  .label-info {
+    @apply text-base text-gray-900;
+  }
+
+  /* Value Styles */
+
+  /* Primary Value - Used for important data values, amounts, and key information */
+  .value-primary {
+    @apply text-sm font-medium text-gray-900;
+  }
+
+  /* Large Value - Used for prominent amounts and balance displays */
+  .value-large {
+    @apply font-bold text-2xl text-gray-900;
+  }
+
+  /* Secondary Value - Used for regular data values and transaction amounts */
+  .value-secondary {
+    @apply font-semibold text-gray-900;
+  }
+
+  /* Body Text Styles */
+
+  /* Body Text - Used for regular content, descriptions, and paragraphs */
+  .text-body {
+    @apply text-gray-900;
+  }
+
+  /* Body Text Large - Used for larger body content and important descriptions */
+  .text-body-large {
+    @apply text-base text-gray-900;
+  }
+
+  /* EmaPay Universal Secondary Action Button Standards */
+
+  /* Back Button - Used for navigation back buttons with arrow icons */
+  .back-button {
+    @apply p-0 mb-6;
+    /* Uses ShadCN Button with variant="ghost" size="icon" */
+  }
+
+  /* Copy Button - Used for copy actions with state feedback */
+  .copy-button {
+    @apply h-8 px-4 text-xs transition-all;
+    background-color: #f3f4f6 !important; /* gray-100 - consistent with secondary buttons */
+    border: 1px solid #f3f4f6 !important; /* gray-100 - consistent with secondary buttons */
+    color: #111827 !important; /* gray-900 - consistent with secondary buttons */
+    border-radius: 9999px !important; /* rounded-full - consistent with secondary buttons */
+  }
+
+  .copy-button:hover {
+    background-color: #f3f4f6 !important; /* gray-100 - consistent with secondary buttons */
+  }
+
+  .copy-button.copied {
+    background-color: #000000 !important; /* black */
+    border-color: #000000 !important; /* black */
+    color: #ffffff !important; /* white */
+  }
+
+  /* Secondary Action Button - Used for secondary actions like "Vender", "Comprar" */
+  .secondary-action-button {
+    @apply flex-1 font-medium border border-gray-100 cursor-pointer;
+    height: 3rem !important; /* 48px - equivalent to h-12 */
+    background-color: #f3f4f6 !important; /* gray-100 */
+    color: #111827 !important; /* gray-900 */
+    border-radius: 9999px !important; /* rounded-full */
+    font-size: 1rem !important; /* 16px - equivalent to text-base */
+    transition: background-color 0.2s ease-in-out !important;
+  }
+
+  .secondary-action-button:hover {
+    background-color: #f3f4f6 !important; /* gray-100 */
+  }
+
+  /* Outline Secondary Button - Used for alternative actions like "Voltar ao início" */
+  .outline-secondary-button {
+    @apply w-full text-black font-medium;
+    height: 4rem !important; /* 64px - equivalent to h-16 */
+    background-color: transparent !important;
+    border: 1px solid #000000 !important; /* black border */
+    border-radius: 9999px !important; /* rounded-full */
+    font-size: 1.125rem !important; /* 18px - equivalent to text-lg */
+    transition: background-color 0.2s ease-in-out !important;
+  }
+
+  .outline-secondary-button:hover {
+    background-color: #f3f4f6 !important; /* gray-100 */
+  }
+
+  /* Small Action Button - Used for small actions like "Trocar", "Enviar" */
+  .small-action-button {
+    @apply h-8 px-3 text-sm;
+    background-color: #f3f4f6 !important; /* gray-100 - consistent with secondary buttons */
+    border: 1px solid #f3f4f6 !important; /* gray-100 - consistent with secondary buttons */
+    color: #111827 !important; /* gray-900 - consistent with secondary buttons */
+    border-radius: 9999px !important; /* rounded-full - consistent with secondary buttons */
+    transition: background-color 0.2s ease-in-out !important;
+  }
+
+  .small-action-button:hover {
+    background-color: #f3f4f6 !important; /* gray-100 - consistent with secondary buttons */
+  }
+
+  /* Icon Action Button - Used for dashboard icon buttons with labels */
+  .icon-action-button {
+    @apply flex flex-col items-center space-y-2 cursor-pointer p-2 rounded-lg;
+    transition: opacity 0.2s ease-in-out, background-color 0.2s ease-in-out !important;
+  }
+
+  .icon-action-button:hover {
+    opacity: 0.8 !important;
+    background-color: #f3f4f6 !important; /* gray-100 */
+  }
+
+  /* Icon Action Button Circle - The circular icon container */
+  .icon-action-circle {
+    @apply w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center border border-gray-100;
+  }
+
+  /* EmaPay Universal Card Component Standards */
+
+  /* Balance Card - Used for dashboard account/currency balance cards */
+  .card-balance {
+    @apply bg-gray-100 rounded-2xl border border-gray-100 p-6;
+  }
+
+  /* Content Card - Used for exchange details, payment info, confirmation summaries */
+  .card-content {
+    @apply bg-white rounded-2xl p-4;
+  }
+
+  /* Selection Card - Used for payment methods, exchange options, clickable choices */
+  .card-selection {
+    @apply bg-white border border-black rounded-2xl p-4 cursor-pointer hover:bg-gray-100 transition-colors;
+  }
+
+  /* Selection Card Active State - Used when a selection card is selected/active */
+  .card-selection-active {
+    @apply bg-white border-2 border-black rounded-2xl p-4 cursor-pointer;
+  }
+
+  /* Info Card - Used for warnings, help text, important notices */
+  .card-info {
+    @apply bg-gray-100 border border-gray-100 rounded-2xl p-4;
+  }
+
+  /* Warning Card - Used for important warnings and alerts */
+  .card-warning {
+    @apply bg-gray-100 border border-gray-100 rounded-2xl p-4;
+  }
+
+  /* Transaction Card - Used for transaction history items and similar list items */
+  .card-transaction {
+    @apply bg-white border border-gray-100 rounded-2xl p-4 hover:bg-gray-100 transition-colors;
+  }
+
+  /* Exchange Detail Card - Used specifically for exchange rate and fee information */
+  .card-exchange-detail {
+    @apply bg-white rounded-2xl p-4;
+  }
+
+  /* Card with Dividers - Used for cards with internal sections separated by borders */
+  .card-with-dividers {
+    @apply bg-white rounded-2xl p-4;
+  }
+
+  .card-with-dividers .card-divider {
+    @apply py-2 border-b border-gray-100 last:border-b-0;
+  }
+
+  /* EmaPay Universal Form Element Standards */
+
+  /* Standard Search Input - Used for search fields across components */
+  .search-input {
+    @apply h-10 text-base text-gray-900 placeholder:text-gray-500 rounded-md border-black bg-white;
+  }
+
+  /* Standard Form Input - Used for regular form inputs */
+  .form-input-standard {
+    @apply h-10 text-base border-black rounded-md bg-white;
+  }
+
+  /* Auth Form Input - Used for authentication-style forms */
+  .form-input-auth {
+    @apply h-10 border-gray-300 rounded-md bg-white text-base;
+  }
+
+  /* Auth Form Input with Validation - Used for authentication-style forms with validation states */
+  .form-input-auth-validation {
+    @apply h-10 border-2 rounded-md bg-white text-base focus:border-2 focus:border-black;
+  }
+
+  /* Default EmaPay Form Input with Validation - Standard validation styling for all forms */
+  .form-input-validation {
+    @apply h-10 border-2 border-black rounded-md bg-white text-base focus:border-2 focus:border-black;
+  }
+
+  /* EmaPay Validation Border Colors - Applied dynamically based on validation state */
+  .validation-valid {
+    @apply border-black;
+  }
+
+  .validation-invalid {
+    @apply !border-red-700;
+  }
+
+  .validation-neutral {
+    @apply border-black;
+  }
+
+  /* EmaPay Universal Form Spacing Standards */
+
+  /* Standard spacing between form inputs and their validation/subtitle text */
+  .form-input-with-subtitle {
+    @apply space-y-3; /* 12px spacing - EmaPay default */
+  }
+
+  /* EmaPay React International Phone Styling */
+  .react-international-phone-emapay .react-international-phone {
+    @apply h-14 border-2 border-gray-300 rounded-2xl bg-white;
+  }
+
+  .react-international-phone-emapay .react-international-phone:focus-within {
+    @apply border-2 border-black;
+  }
+
+  .react-international-phone-emapay .react-international-phone-country-selector-button {
+    @apply bg-white border-r border-gray-300 px-3 py-2 text-base hover:bg-gray-50 focus:outline-none;
+    border-radius: 16px 0 0 16px;
+  }
+
+  .react-international-phone-emapay .react-international-phone-input-emapay {
+    @apply flex-1 px-3 py-2 text-base bg-white border-0 focus:outline-none;
+    border-radius: 0 16px 16px 0;
+  }
+
+  .react-international-phone-emapay .react-international-phone-dropdown-emapay {
+    @apply border-2 border-black rounded-2xl shadow-lg bg-white mt-1;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+
+  .react-international-phone-emapay .react-international-phone-country-selector-dropdown__list-item {
+    @apply hover:bg-gray-50 px-4 py-2 text-sm;
+  }
+
+
+
+  /* EmaPay Universal List Item Standards */
+
+  /* Recipient List Item - Used for recipient selection lists */
+  .recipient-list-item {
+    @apply flex items-center justify-between cursor-pointer py-4 hover:bg-gray-50 transition-colors rounded-lg;
+  }
+
+  /* Transaction List Item - Used for transaction history items */
+  .transaction-list-item {
+    @apply flex items-center justify-between py-4 hover:bg-gray-50 transition-colors rounded-lg cursor-pointer;
+  }
+}
