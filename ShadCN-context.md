@@ -98,6 +98,7 @@
 - **StepIndicator** (`src/components/ui/step-indicator.tsx`) - Reusable step progress indicator with dots for multi-step flows
 - **CurrencyAmount** (`src/components/ui/currency-amount.tsx`) - Reusable currency amount display with consistent formatting and sizing options
 
+
 ### AWS KYC Components ✅ NEW:
 - **CameraCapture** (`src/components/ui/camera-capture.tsx`) - Camera functionality for document/selfie capture with preview, retake, and confirm options
 - **DocumentUpload** (`src/components/ui/document-upload.tsx`) - File upload component with drag-and-drop support, file validation, and preview functionality

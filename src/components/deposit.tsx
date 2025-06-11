@@ -102,8 +102,8 @@ export function DepositFlow() {
   if (currentStep === "success") {
     return (
       <SuccessScreen
-        title="Depósito confirmado!"
-        message="Seu dinheiro chegará em segundos na sua conta EmaPay."
+        title="Obrigado!"
+        message="Seu dinheiro chegará em 1-2 dias úteis na sua conta EmaPay."
         primaryAction={{
           label: "Voltar ao início",
           onClick: handleBackToHome

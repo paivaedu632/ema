@@ -59,7 +59,7 @@ export function KYCFormStep({
 
   // Default validation: non-empty string
   const defaultValidation = (value: string) => value.trim() !== ""
-  
+
   // Use custom validation if provided, otherwise use default
   const isValid = validation ? validation(currentValue) : defaultValidation(currentValue)
   const canContinue = isValid
@@ -81,7 +81,7 @@ export function KYCFormStep({
             placeholder={placeholder}
             required
           />
-          
+
           {customValidationMessage && !isValid && currentValue.trim() !== "" && (
             <div className="text-sm text-red-700 mt-2">
               {customValidationMessage}

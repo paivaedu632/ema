@@ -94,7 +94,7 @@ export function WithdrawFlow() {
       <div className="page-container-white">
         <main className="content-container">
           <PageHeader
-            title="Qual seu IBAN ou celular?"
+            title="Qual seu IBAN ou Celular?"
             onBack={handleBack}
           />
 
@@ -172,10 +172,7 @@ export function WithdrawFlow() {
           </div>
 
           {/* Warning */}
-          <ConfirmationWarning>
-            <p className="label-form">
-              Devido alta demanda, seu saque pode demorar 24h para ser realizado. Daremos um sinal!
-            </p>
+          <ConfirmationWarning>Devido alta demanda, seu saque pode demorar 24h para ser realizado.
           </ConfirmationWarning>
         </div>
       </main>

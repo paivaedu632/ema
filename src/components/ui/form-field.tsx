@@ -70,7 +70,7 @@ export function FormField({
 // Specialized form field for authentication-style forms with different styling
 interface AuthFormFieldProps {
   label?: string
-  type?: 'text' | 'email' | 'password'
+  type?: 'text' | 'email' | 'password' | 'tel'
   value: string
   onChange: (value: string) => void
   placeholder?: string

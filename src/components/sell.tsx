@@ -131,7 +131,7 @@ export function SellFlow() {
                 {
                   id: "manual",
                   title: "Manual",
-                  description: "Você controla o câmbio manualmente.",
+                  description: "Você controla o câmbio.",
                   icon: Wrench,
                   onClick: () => handleRateTypeSelect("manual")
                 }
