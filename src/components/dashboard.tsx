@@ -2,15 +2,18 @@
 
 import React from 'react'
 import { useRouter } from 'next/navigation'
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { PrimaryActionButtons } from '@/components/ui/primary-action-buttons'
 import { IconActionButtons } from '@/components/ui/icon-action-buttons'
 import { BalanceCard } from '@/components/ui/balance-card'
 import { AngolaFlag, EurFlag } from '@/components/ui/flag-icon'
-import { Bell, ShoppingBag, ArrowUpRight, ArrowDownLeft, CreditCard } from 'lucide-react'
+import { ShoppingBag, ArrowUpRight, ArrowDownLeft, CreditCard, LogOut } from 'lucide-react'
+import { SignedIn, SignedOut, UserButton, useClerk } from '@clerk/nextjs'
+import { ClerkAuth } from '@/components/auth/clerk-auth'
 
 export default function Dashboard() {
   const router = useRouter()
+  const { signOut } = useClerk()
 
   const handleCardClick = (account: typeof accounts[0]) => {
     const params = new URLSearchParams({
@@ -19,6 +22,15 @@ export default function Dashboard() {
       amount: account.amount
     })
     router.push(`/wallet?${params.toString()}`)
+  }
+
+  const handleSignOut = async () => {
+    try {
+      await signOut()
+      router.push('/login')
+    } catch (error) {
+      console.error('Sign out error:', error)
+    }
   }
 
 
@@ -78,14 +90,41 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-white">
-      <main className="max-w-sm mx-auto px-4 pt-8 pb-6">
-        {/* Header with Profile Avatar and Notification */}
+      <SignedOut>
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center space-y-6">
+            <h1 className="text-2xl font-bold text-gray-900">Welcome to EmaPay</h1>
+            <p className="text-gray-600">Please sign in to access your dashboard</p>
+            <ClerkAuth />
+          </div>
+        </div>
+      </SignedOut>
+
+      <SignedIn>
+        <main className="max-w-sm mx-auto px-4 pt-8 pb-6">
+        {/* Header with Profile Avatar and Sign Out */}
         <div className="flex justify-between items-center mb-8">
-          <Avatar className="w-12 h-12">
-            <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=48&h=48&fit=crop&crop=face" alt="Profile" />
-            <AvatarFallback>U</AvatarFallback>
-          </Avatar>
-          <Bell className="w-6 h-6 text-gray-900" />
+          <SignedIn>
+            <UserButton
+              appearance={{
+                elements: {
+                  avatarBox: "w-12 h-12"
+                }
+              }}
+            />
+          </SignedIn>
+          <SignedOut>
+            <Avatar className="w-12 h-12">
+              <AvatarFallback>U</AvatarFallback>
+            </Avatar>
+          </SignedOut>
+          <button
+            onClick={handleSignOut}
+            className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+            title="Sair"
+          >
+            <LogOut className="w-5 h-5 text-gray-700" />
+          </button>
         </div>
 
         {/* Account Cards Section */}
@@ -154,7 +193,8 @@ export default function Dashboard() {
             ))}
           </div>
         </div>
-      </main>
+        </main>
+      </SignedIn>
     </div>
   )
 }

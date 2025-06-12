@@ -42,3 +42,6 @@ next-env.d.ts
 
 # external tools
 browser-tools-mcp/
+
+# clerk configuration (can include secrets)
+/.clerk/

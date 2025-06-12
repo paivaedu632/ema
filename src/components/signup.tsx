@@ -2,16 +2,19 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { useSignUp } from "@clerk/nextjs"
 import { PageHeader } from "@/components/ui/page-header"
 import { AuthFormField } from "@/components/ui/form-field"
 import { FixedBottomAction } from "@/components/ui/fixed-bottom-action"
 import { CodeInput } from "@/components/ui/code-input"
 import { PhoneInput } from "@/components/ui/phone-input"
+import { GoogleAuthButton } from "@/components/ui/google-auth-button"
 
 type Step = "email" | "email-verification" | "phone" | "phone-verification" | "password"
 
 export function Signup() {
   const router = useRouter()
+  const { isLoaded, signUp, setActive } = useSignUp()
   const [currentStep, setCurrentStep] = useState<Step>("email")
   const [email, setEmail] = useState("")
   const [emailVerificationCode, setEmailVerificationCode] = useState("")
@@ -20,6 +23,8 @@ export function Signup() {
   const [password, setPassword] = useState("")
   const [countdown, setCountdown] = useState(119) // 1:59 in seconds
   const [canResend, setCanResend] = useState(false)
+  const [error, setError] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
 
   // Countdown timer effect
   useEffect(() => {
@@ -57,44 +62,141 @@ export function Signup() {
     }
   }
 
-  const handleNext = () => {
-    if (currentStep === "email") {
-      // Move to email verification step
-      setCurrentStep("email-verification")
-      setCountdown(119) // Reset countdown
-      setCanResend(false)
-    } else if (currentStep === "email-verification") {
-      // Move to phone step
-      setCurrentStep("phone")
-    } else if (currentStep === "phone") {
-      // Move to phone verification step
-      setCurrentStep("phone-verification")
-      setCountdown(119) // Reset countdown
-      setCanResend(false)
-    } else if (currentStep === "phone-verification") {
-      // Move to password step
-      setCurrentStep("password")
-    } else {
-      // Handle password creation and complete signup
-      console.log("Password:", password)
-      console.log("Phone verification code:", phoneVerificationCode)
-      console.log("Phone number:", phoneNumber)
-      console.log("Email:", email)
-      // For now, just navigate to dashboard
-      router.push("/dashboard")
+  const handleNext = async () => {
+    if (!isLoaded) return
+
+    setIsLoading(true)
+    setError("")
+
+    try {
+      if (currentStep === "email") {
+        // Start the sign-up process with Clerk
+        await signUp.create({
+          emailAddress: email,
+        })
+
+        // Send email verification code
+        await signUp.prepareEmailAddressVerification({ strategy: "email_code" })
+
+        // Move to email verification step
+        setCurrentStep("email-verification")
+        setCountdown(119) // Reset countdown
+        setCanResend(false)
+      } else if (currentStep === "email-verification") {
+        // Verify email code with Clerk
+        const result = await signUp.attemptEmailAddressVerification({
+          code: emailVerificationCode,
+        })
+
+        if (result.status === "complete") {
+          // Email verified, move to phone step
+          setCurrentStep("phone")
+        } else {
+          setError("Invalid verification code")
+        }
+      } else if (currentStep === "phone") {
+        // Add phone number to the sign-up
+        await signUp.update({
+          phoneNumber: phoneNumber,
+        })
+
+        // Send phone verification code
+        await signUp.preparePhoneNumberVerification({ strategy: "phone_code" })
+
+        // Move to phone verification step
+        setCurrentStep("phone-verification")
+        setCountdown(119) // Reset countdown
+        setCanResend(false)
+      } else if (currentStep === "phone-verification") {
+        // Verify phone code with Clerk
+        const result = await signUp.attemptPhoneNumberVerification({
+          code: phoneVerificationCode,
+        })
+
+        if (result.status === "complete") {
+          // Phone verified, move to password step
+          setCurrentStep("password")
+        } else {
+          setError("Invalid verification code")
+        }
+      } else {
+        // Handle password creation and complete signup
+        const result = await signUp.update({
+          password: password,
+        })
+
+        if (result.status === "complete") {
+          // Sign-up complete, set active session
+          await setActive({ session: result.createdSessionId })
+          router.push("/dashboard")
+        } else {
+          setError("Failed to complete signup")
+        }
+      }
+    } catch (err: any) {
+      console.error("Signup error:", err)
+      // Handle Clerk-specific errors
+      if (err.errors) {
+        const errorMessage = err.errors[0]?.message || "Signup failed"
+        setError(errorMessage)
+      } else {
+        setError("An error occurred during signup")
+      }
+    } finally {
+      setIsLoading(false)
     }
   }
 
-  const handleResendCode = () => {
-    if (canResend) {
-      // Handle resend logic here
-      if (currentStep === "email-verification") {
-        console.log("Resending email code to:", email)
-      } else if (currentStep === "phone-verification") {
-        console.log("Resending SMS code to:", phoneNumber)
+  const handleGoogleSignUp = async () => {
+    if (!isLoaded) return
+
+    setError("")
+
+    try {
+      // Use Clerk's OAuth with proper redirect handling
+      await signUp.authenticateWithRedirect({
+        strategy: "oauth_google",
+        redirectUrl: "/sso-callback",
+        redirectUrlComplete: "/dashboard"
+      })
+    } catch (err: any) {
+      console.error("Google sign-up error:", err)
+      if (err.errors) {
+        const errorMessage = err.errors[0]?.message || "Google sign-up failed"
+        setError(errorMessage)
+      } else {
+        setError("An error occurred with Google sign-up")
       }
+    }
+  }
+
+  const handleResendCode = async () => {
+    if (!canResend || !isLoaded) return
+
+    setIsLoading(true)
+    setError("")
+
+    try {
+      if (currentStep === "email-verification") {
+        // Resend email verification code
+        await signUp.prepareEmailAddressVerification({ strategy: "email_code" })
+      } else if (currentStep === "phone-verification") {
+        // Resend phone verification code
+        await signUp.preparePhoneNumberVerification({ strategy: "phone_code" })
+      }
+
       setCountdown(119) // Reset countdown
       setCanResend(false)
+    } catch (err: any) {
+      console.error("Resend error:", err)
+      if (err.errors) {
+        const errorMessage = err.errors[0]?.message || "Failed to resend code"
+        setError(errorMessage)
+      } else {
+        setError("Failed to resend verification code")
+      }
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -127,6 +229,30 @@ export function Signup() {
               placeholder=""
               required
             />
+
+            {/* Error Message */}
+            {error && (
+              <div className="text-sm text-red-700 text-center">
+                {error}
+              </div>
+            )}
+
+            {/* Divider */}
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300" />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="bg-white px-2 text-gray-500">ou</span>
+              </div>
+            </div>
+
+            {/* Google Sign-up Button - Secondary Action */}
+            <GoogleAuthButton
+              onClick={handleGoogleSignUp}
+              variant="signup"
+              disabled={isLoading}
+            />
           </div>
         </main>
 
@@ -146,9 +272,9 @@ export function Signup() {
 
         <FixedBottomAction
           primaryAction={{
-            label: "Continuar",
+            label: isLoading ? "Enviando..." : "Continuar",
             onClick: handleNext,
-            disabled: !canContinueEmail
+            disabled: !canContinueEmail || isLoading
           }}
         />
       </div>
@@ -171,17 +297,24 @@ export function Signup() {
               value={emailVerificationCode}
               onChange={setEmailVerificationCode}
             />
+
+            {/* Error Message */}
+            {error && (
+              <div className="text-sm text-red-700 text-center">
+                {error}
+              </div>
+            )}
           </div>
         </main>
 
         <FixedBottomAction
           primaryAction={{
-            label: "Continuar",
+            label: isLoading ? "Verificando..." : "Continuar",
             onClick: handleNext,
-            disabled: !canContinueEmailVerification
+            disabled: !canContinueEmailVerification || isLoading
           }}
           secondaryAction={canResend ? {
-            label: "Reenviar código",
+            label: isLoading ? "Reenviando..." : "Reenviar código",
             onClick: handleResendCode
           } : {
             label: `Reenviar em ${formatTime(countdown)}`,
@@ -210,6 +343,13 @@ export function Signup() {
               onChange={setPhoneNumber}
             />
 
+            {/* Error Message */}
+            {error && (
+              <div className="text-sm text-red-700 text-center">
+                {error}
+              </div>
+            )}
+
             {/* Login Link */}
             <div className="text-center">
               <span className="text-sm text-gray-600">
@@ -237,9 +377,9 @@ export function Signup() {
 
         <FixedBottomAction
           primaryAction={{
-            label: "Continuar",
+            label: isLoading ? "Enviando..." : "Continuar",
             onClick: handleNext,
-            disabled: !canContinuePhone
+            disabled: !canContinuePhone || isLoading
           }}
         />
       </div>
@@ -268,14 +408,21 @@ export function Signup() {
             <div className="text-sm text-gray-600">
               Deve ter no mínimo 8 dígitos, com letras e números.
             </div>
+
+            {/* Error Message */}
+            {error && (
+              <div className="text-sm text-red-700 text-center">
+                {error}
+              </div>
+            )}
           </div>
         </main>
 
         <FixedBottomAction
           primaryAction={{
-            label: "Continuar",
+            label: isLoading ? "Criando conta..." : "Continuar",
             onClick: handleNext,
-            disabled: !canContinuePassword
+            disabled: !canContinuePassword || isLoading
           }}
         />
       </div>
@@ -297,17 +444,24 @@ export function Signup() {
             value={phoneVerificationCode}
             onChange={setPhoneVerificationCode}
           />
+
+          {/* Error Message */}
+          {error && (
+            <div className="text-sm text-red-700 text-center">
+              {error}
+            </div>
+          )}
         </div>
       </main>
 
       <FixedBottomAction
         primaryAction={{
-          label: "Continuar",
+          label: isLoading ? "Verificando..." : "Continuar",
           onClick: handleNext,
-          disabled: !canContinuePhoneVerification
+          disabled: !canContinuePhoneVerification || isLoading
         }}
         secondaryAction={canResend ? {
-          label: "Reenviar código",
+          label: isLoading ? "Reenviando..." : "Reenviar código",
           onClick: handleResendCode
         } : {
           label: `Reenviar em ${formatTime(countdown)}`,

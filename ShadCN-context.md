@@ -13,6 +13,31 @@
 
 - **Dialog** (`src/components/ui/dialog.tsx`) - For modal dialogs (auto-installed with other components)
 
+## Clerk Authentication Integration (NEW - January 2025):
+- **@clerk/nextjs** (`@clerk/nextjs@latest`) - Complete authentication solution for Next.js App Router
+- **ClerkProvider** - Wraps the entire application in `src/app/layout.tsx`
+- **clerkMiddleware** - Authentication middleware in `src/middleware.ts` with explicit route protection
+- **Custom Authentication Components** (Preserving EmaPay UI/UX):
+  - `Login` (`src/components/login.tsx`) - Custom login form using `useSignIn` hook with EmaPay styling + Google OAuth
+  - `Signup` (`src/components/signup.tsx`) - Custom multi-step signup using `useSignUp` hook with EmaPay styling + Google OAuth
+  - `GoogleAuthButton` (`src/components/ui/google-auth-button.tsx`) - Reusable Google OAuth button using EmaPay's secondary-action-button styling
+  - `ClerkAuth` (`src/components/auth/clerk-auth.tsx`) - Sign in/up buttons with EmaPay styling (for dashboard)
+  - `ProtectedRoute` (`src/components/auth/protected-route.tsx`) - Route protection wrapper
+  - `UserProfile` (`src/components/auth/user-profile.tsx`) - User information display
+  - OAuth Callback (`src/app/oauth-callback/page.tsx`) - Handles Google OAuth redirects
+- **Integration Approach**:
+  - **Backend**: Clerk handles all authentication logic, session management, and security
+  - **Frontend**: Custom EmaPay UI components preserved with existing design system
+  - **URLs**: Maintains existing `/login` and `/signup` URLs and user experience
+  - **Flow**: Multi-step signup (email → email verification → phone → phone verification → password) integrated with Clerk
+  - **Google OAuth**: Integrated Google sign-in/sign-up as secondary action buttons (gray-100 background), positioned below primary forms, bypasses multi-step flow for Google users
+- **Updated Pages**:
+  - Login page (`src/app/login/page.tsx`) - Uses custom Login component with Clerk integration
+  - Signup page (`src/app/signup/page.tsx`) - Uses custom Signup component with Clerk integration
+  - Dashboard (`src/components/dashboard.tsx`) - Integrated with Clerk authentication, shows auth state
+- **Protected Routes**: All EmaPay routes automatically protected via middleware (dashboard, kyc, buy, sell, send, etc.)
+- **Error Handling**: Clerk errors integrated into EmaPay's design system with red error messages
+
 ## EmaPay Validation Styling Standards:
 
 ### Default Validation System:
@@ -195,8 +220,8 @@
 Review the current reusable component library:
 
 **Form & Input Components:**
-- `FormField` - Standard form inputs with labels (h-10, border-black styling) - **SHADCN HYBRID**
-- `AuthFormField` - Authentication-style form inputs (h-10 styling) - **SHADCN HYBRID**
+- `FormField` - Standard form inputs with labels (h-12, border-black styling) - **MODERN FINTECH STANDARD**
+- `AuthFormField` - Authentication-style form inputs (h-12 styling) - **MODERN FINTECH STANDARD**
 - `AmountInput` - Currency amount inputs with selectors (h-16 styling for amount prominence)
 
 **Display Components:**
@@ -751,12 +776,12 @@ New UI Need Identified
   - **`.back-button`**: Navigation back buttons (`p-0 mb-6`) - used with ShadCN Button variant="ghost" size="icon"
   - **`.copy-button`**: Copy action buttons (`h-8 px-4 text-xs rounded-full bg-gray-100 border-gray-100`) with state feedback (gray-100 → black when copied)
   - **`.secondary-action-button`**: Secondary actions (`h-12 bg-gray-100 hover:bg-gray-100 rounded-full border-gray-100`) - used for "Vender", "Comprar"
-  - **`.outline-secondary-button`**: Alternative actions (`h-16 border-black text-black hover:bg-gray-100 rounded-full`) - used for "Voltar ao início"
+  - **`.outline-secondary-button`**: Alternative actions (`h-12 border-black text-black hover:bg-gray-100 rounded-full px-4`) - used for "Voltar ao início"
   - **`.small-action-button`**: Small actions (`h-8 px-3 text-sm rounded-full bg-gray-100 border-gray-100`) - used for "Trocar", "Enviar"
   - **`.icon-action-button`**: Dashboard icon buttons (`flex flex-col items-center space-y-2`) with hover effects
   - **`.icon-action-circle`**: Icon containers (`w-12 h-12 bg-gray-100 rounded-full border border-gray-100`)
 - **State Management**: Copy buttons include `.copied` state class for visual feedback
-- **Consistent Sizing**: Standardized heights (32px, 48px, 64px) and padding for different button types
+- **Consistent Sizing**: Standardized heights (32px, 48px) and padding for different button types - aligned with modern fintech standards
 - **Hover Effects**: Smooth transitions with appropriate color changes for each button type
 - **Centralized Maintenance**: All secondary button styling changes can be made in one location (`globals.css`)
 - **Complete Design Consistency**: All secondary buttons now share the same visual foundation (gray-100 background, gray-100 border, gray-900 text, rounded-full, gray-100 hover) for perfect visual harmony
@@ -822,18 +847,19 @@ New UI Need Identified
 
 ### Form Element Standards - SHADCN HYBRID APPROACH:
 - **Universal CSS Classes**: Implemented in `src/app/globals.css` for consistent form styling across all EmaPay components
-- **Form Input Classes** (ShadCN size with EmaPay borders):
-  - **`.search-input`**: Search fields across components (`h-10 text-base text-gray-900 placeholder:text-gray-500 rounded-md border-black bg-white`)
-  - **`.form-input-standard`**: Regular form inputs (`h-10 text-base border-black rounded-md bg-white`)
-  - **`.form-input-auth`**: Authentication-style forms (`h-10 border-gray-300 rounded-md bg-white text-base`)
+- **Form Input Classes** (Modern fintech sizing with EmaPay borders):
+  - **`.search-input`**: Search fields across components (`h-12 px-3 text-base text-gray-900 placeholder:text-gray-500 rounded-md border-black bg-white`)
+  - **`.form-input-standard`**: Regular form inputs (`h-12 px-3 text-base border-black rounded-md bg-white`)
+  - **`.form-input-auth`**: Authentication-style forms (`h-12 px-3 border-gray-300 rounded-md bg-white text-base`)
 - **Form Spacing Classes**:
   - **`.form-input-with-subtitle`**: Standard 12px spacing between form inputs and validation/subtitle text (`space-y-3`)
-- **Hybrid Approach**: Combines ShadCN default sizing (h-10/40px) with EmaPay custom styling (black borders, white backgrounds)
+- **Modern Fintech Approach**: Uses modern fintech sizing (h-12/48px) with EmaPay custom styling (black borders, white backgrounds)
 - **Benefits**:
-  - **ShadCN Consistency**: Uses standard h-10 height matching ShadCN ecosystem
+  - **Modern Fintech Alignment**: Uses h-12 height (48px) matching modern fintech standards and button sizing
   - **EmaPay Branding**: Maintains black borders and white backgrounds for brand consistency
   - **Focus States**: Custom 2px black border on focus instead of ring-based focus
-  - **Simplified Maintenance**: Fewer height variations to manage
+  - **Visual Harmony**: Input height matches primary button height for cohesive form design
+  - **Simplified Maintenance**: Consistent sizing across all form elements
 - **Standardization Approach**: Uses AuthFormField component everywhere for consistency and maintainability
 - **Components Standardized**: signup.tsx, withdraw.tsx, send.tsx all use unified form input styling
 
@@ -861,10 +887,11 @@ New UI Need Identified
 ### Primary Action Buttons:
 - **Universal CSS Class**: `.primary-action-button` implemented in `src/app/globals.css` for consistent styling across all primary action buttons
 - **Styling Features**:
-  - 64px height (4rem) for prominent touch targets
+  - 48px height (3rem) - modern fintech standard for optimal touch targets
   - Full width with black background (#000000)
-  - 18px font-size (text-lg equivalent) with medium weight
+  - 16px font-size (text-base equivalent) with medium weight - optimized for readability
   - Full rounded corners (border-radius: 9999px)
+  - 16px horizontal padding (px-4) for proper proportions
   - Smooth hover transition to gray-800 (#374151)
   - Proper disabled states with opacity and cursor changes
   - White text color for optimal contrast

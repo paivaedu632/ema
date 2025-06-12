@@ -115,10 +115,10 @@
 
   /* EmaPay Universal Primary Action Button Styling */
   .primary-action-button {
-    @apply w-full text-white font-medium;
-    height: 4rem !important; /* 64px - equivalent to h-16 */
+    @apply w-full text-white font-medium px-4;
+    height: 3rem !important; /* 48px - equivalent to h-12 - modern fintech standard */
     background-color: #000000 !important; /* Black background */
-    font-size: 1.125rem !important; /* 18px - equivalent to text-lg */
+    font-size: 1rem !important; /* 16px - equivalent to text-base - optimized for readability */
     border-radius: 9999px !important; /* Full rounded */
     transition: background-color 0.2s ease-in-out !important;
   }
@@ -278,12 +278,12 @@
 
   /* Outline Secondary Button - Used for alternative actions like "Voltar ao início" */
   .outline-secondary-button {
-    @apply w-full text-black font-medium;
-    height: 4rem !important; /* 64px - equivalent to h-16 */
+    @apply w-full text-black font-medium px-4;
+    height: 3rem !important; /* 48px - equivalent to h-12 - matches primary button */
     background-color: transparent !important;
     border: 1px solid #000000 !important; /* black border */
     border-radius: 9999px !important; /* rounded-full */
-    font-size: 1.125rem !important; /* 18px - equivalent to text-lg */
+    font-size: 1rem !important; /* 16px - equivalent to text-base - matches primary button */
     transition: background-color 0.2s ease-in-out !important;
   }
 
@@ -376,27 +376,27 @@
 
   /* Standard Search Input - Used for search fields across components */
   .search-input {
-    @apply h-10 text-base text-gray-900 placeholder:text-gray-500 rounded-md border-black bg-white;
+    @apply h-12 px-3 text-base text-gray-900 placeholder:text-gray-500 rounded-md border-black bg-white;
   }
 
   /* Standard Form Input - Used for regular form inputs */
   .form-input-standard {
-    @apply h-10 text-base border-black rounded-md bg-white;
+    @apply h-12 px-3 text-base border-black rounded-md bg-white;
   }
 
   /* Auth Form Input - Used for authentication-style forms */
   .form-input-auth {
-    @apply h-10 border-gray-300 rounded-md bg-white text-base;
+    @apply h-12 px-3 border-gray-300 rounded-md bg-white text-base;
   }
 
   /* Auth Form Input with Validation - Used for authentication-style forms with validation states */
   .form-input-auth-validation {
-    @apply h-10 border-2 rounded-md bg-white text-base focus:border-2 focus:border-black;
+    @apply h-12 px-3 border-2 rounded-md bg-white text-base focus:border-2 focus:border-black;
   }
 
   /* Default EmaPay Form Input with Validation - Standard validation styling for all forms */
   .form-input-validation {
-    @apply h-10 border-2 border-black rounded-md bg-white text-base focus:border-2 focus:border-black;
+    @apply h-12 px-3 border-2 border-black rounded-md bg-white text-base focus:border-2 focus:border-black;
   }
 
   /* EmaPay Validation Border Colors - Applied dynamically based on validation state */
