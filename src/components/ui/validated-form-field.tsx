@@ -3,8 +3,8 @@
 import React, { useState } from 'react'
 import { Input } from "@/components/ui/input"
 import { Eye, EyeOff } from "lucide-react"
-
-export type ValidationState = 'valid' | 'invalid' | 'neutral' | null
+import { getValidationBorderClass, getValidationTextClass, getFormInputClasses } from '@/utils/styling-utils'
+import type { ValidationState } from '@/types/component-props'
 
 interface ValidatedFormFieldProps {
   label: string
@@ -37,24 +37,8 @@ export function ValidatedFormField({
   const hasPasswordToggle = type === 'password'
   const inputType = hasPasswordToggle && showPassword ? 'text' : type
 
-  // Determine border color based on validation state
-  const getBorderClass = () => {
-    switch (validationState) {
-      case 'valid':
-        return 'validation-valid' // Black border for valid state
-      case 'invalid':
-        return 'validation-invalid' // Dark red for invalid state
-      case 'neutral':
-      case null:
-      default:
-        return 'validation-neutral' // Default EmaPay black border
-    }
-  }
-
-  // Determine error message text color
-  const getErrorTextClass = () => {
-    return validationState === 'invalid' ? 'text-red-700' : 'text-gray-600'
-  }
+  // Use centralized styling utilities
+  const errorTextClass = getValidationTextClass(validationState)
 
   return (
     <div className={`space-y-2 ${className}`}>
@@ -72,7 +56,7 @@ export function ValidatedFormField({
           type={inputType}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className={`form-input-validation ${getBorderClass()} ${hasPasswordToggle ? 'pr-12' : ''}`}
+          className={getFormInputClasses('validation', validationState, hasPasswordToggle ? 'pr-12' : '')}
           placeholder={placeholder}
           required={required}
         />
@@ -92,7 +76,7 @@ export function ValidatedFormField({
       </div>
       
       {errorMessage && (
-        <p className={`text-sm ${getErrorTextClass()} mt-1`}>
+        <p className={`text-sm ${errorTextClass} mt-1`}>
           {errorMessage}
         </p>
       )}

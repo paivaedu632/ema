@@ -55,7 +55,6 @@ export function CameraCapture({
         setIsStreaming(true)
       }
     } catch (err) {
-      console.error('Error accessing camera:', err)
       setError('Não foi possível acessar a câmera. Verifique as permissões.')
     } finally {
       setIsLoading(false)

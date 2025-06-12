@@ -26,8 +26,6 @@ export interface KYCDocumentMetadata {
  * Handle AWS service errors and convert to user-friendly messages
  */
 export function handleAWSError(error: any): never {
-  console.error('AWS Service Error:', error);
-  
   const awsError = error as AWSError;
   
   // Handle specific AWS error codes

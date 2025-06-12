@@ -40,8 +40,7 @@ export async function GET(
         { status: 503 }
       )
     }
-  } catch (error) {
-    console.error('Error validating BI:', error)
+  } catch {
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

@@ -1,30 +1,44 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { useState } from "react"
 import { useSignIn } from "@clerk/nextjs"
 import { PageHeader } from "@/components/ui/page-header"
 import { AuthFormField } from "@/components/ui/form-field"
 import { FixedBottomAction } from "@/components/ui/fixed-bottom-action"
 import { GoogleAuthButton } from "@/components/ui/google-auth-button"
+import { useAsyncOperation } from "@/hooks/use-async-operation"
+import { useAuthNavigation } from "@/hooks/use-navigation"
+import { useFormValidation, ValidationRules } from "@/hooks/use-form-validation"
 
 export function Login() {
-  const router = useRouter()
   const { isLoaded, signIn, setActive } = useSignIn()
+  const navigation = useAuthNavigation()
+  const { isLoading, error, execute, setError } = useAsyncOperation({
+    defaultErrorMessage: "Ocorreu um erro durante o login"
+  })
+
   const [emailOrPhone, setEmailOrPhone] = useState("")
   const [password, setPassword] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState("")
 
-  const canContinue = emailOrPhone.trim() !== "" && password.trim() !== ""
+  // Validation for login form
+  const emailOrPhoneValidation = useFormValidation(emailOrPhone, {
+    rules: [ValidationRules.nonEmpty],
+    required: true,
+    requiredMessage: "Email ou telefone é obrigatório"
+  })
+
+  const passwordValidation = useFormValidation(password, {
+    rules: [ValidationRules.nonEmpty],
+    required: true,
+    requiredMessage: "Senha é obrigatória"
+  })
+
+  const canContinue = emailOrPhoneValidation.canContinue && passwordValidation.canContinue
 
   const handleLogin = async () => {
     if (!canContinue || !isLoaded) return
 
-    setIsLoading(true)
-    setError("")
-
-    try {
+    await execute(async () => {
       // Determine if input is email or phone
       const isEmail = emailOrPhone.includes("@")
       const identifier = isEmail ? emailOrPhone : emailOrPhone
@@ -38,28 +52,16 @@ export function Login() {
       if (result.status === "complete") {
         // Sign-in successful, set the active session
         await setActive({ session: result.createdSessionId })
-        router.push("/dashboard")
+        navigation.navigateAfterAuth()
       } else {
         // Handle other statuses (e.g., needs verification)
-        console.log("Sign-in status:", result.status)
-        setError("Login requires additional verification")
+        throw new Error("Login requires additional verification")
       }
-    } catch (err: any) {
-      console.error("Login error:", err)
-      // Handle Clerk-specific errors
-      if (err.errors) {
-        const errorMessage = err.errors[0]?.message || "Login failed"
-        setError(errorMessage)
-      } else {
-        setError("An error occurred during login")
-      }
-    } finally {
-      setIsLoading(false)
-    }
+    })
   }
 
   const handleBack = () => {
-    router.push("/")
+    navigation.navigateToHome()
   }
 
   const handleGoogleSignIn = async () => {
@@ -75,7 +77,6 @@ export function Login() {
         redirectUrlComplete: "/dashboard"
       })
     } catch (err: any) {
-      console.error("Google sign-in error:", err)
       if (err.errors) {
         const errorMessage = err.errors[0]?.message || "Google sign-in failed"
         setError(errorMessage)
@@ -87,11 +88,10 @@ export function Login() {
 
   const handleForgotPassword = () => {
     // TODO: Navigate to forgot password flow
-    console.log("Forgot password clicked")
   }
 
   const handleSignUp = () => {
-    router.push("/signup")
+    navigation.navigateToSignup()
   }
 
   return (

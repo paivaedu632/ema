@@ -12,10 +12,18 @@ import {
   createSuccessResponse 
 } from './aws-utils'
 
-export interface APIHandlerOptions<T = any> {
+export interface APIHandlerOptions<T = Record<string, unknown>> {
   requiredFields: string[]
-  validationRules?: Record<string, (value: any) => boolean | string>
-  operation: (body: T) => Promise<any>
+  validationRules?: Record<string, (value: unknown) => boolean | string>
+  operation: (body: T) => Promise<unknown>
+  successMessage?: string
+  operationName: string
+}
+
+export interface FormDataAPIHandlerOptions<T = Record<string, unknown>> {
+  requiredFields: string[]
+  validationRules?: Record<string, (value: unknown) => boolean | string>
+  operation: (formData: FormData, parsedData: T) => Promise<unknown>
   successMessage?: string
   operationName: string
 }
@@ -24,18 +32,17 @@ export interface APIHandlerOptions<T = any> {
  * Generic AWS API handler that eliminates duplicate error handling patterns
  * Used across detect-face, compare-faces, extract-text, and liveness-check APIs
  */
-export async function createAWSAPIHandler<T = any>(
+export async function createAWSAPIHandler<T = Record<string, unknown>>(
   options: APIHandlerOptions<T>
 ) {
   return async function handler(request: NextRequest) {
     try {
       const body = await request.json()
-      const { 
-        requiredFields, 
-        validationRules = {}, 
-        operation, 
-        successMessage = 'Operation completed successfully',
-        operationName 
+      const {
+        requiredFields,
+        validationRules = {},
+        operation,
+        successMessage = 'Operation completed successfully'
       } = options
 
       // Validate required fields
@@ -73,8 +80,87 @@ export async function createAWSAPIHandler<T = any>(
       )
 
     } catch (error) {
-      console.error(`Error in ${operationName} API:`, error)
+      try {
+        handleAWSError(error)
+      } catch (handledError) {
+        return NextResponse.json(
+          createErrorResponse(handledError.message, 500),
+          { status: 500 }
+        )
+      }
 
+      return NextResponse.json(
+        createErrorResponse(`Failed to ${operationName.toLowerCase()}`, 500),
+        { status: 500 }
+      )
+    }
+  }
+}
+
+/**
+ * Generic FormData API handler for file uploads and form data processing
+ */
+export async function createFormDataAPIHandler<T = Record<string, unknown>>(
+  options: FormDataAPIHandlerOptions<T>
+) {
+  return async function handler(request: NextRequest) {
+    try {
+      const formData = await request.formData()
+      const {
+        requiredFields,
+        validationRules = {},
+        operation,
+        successMessage = 'Operation completed successfully'
+      } = options
+
+      // Parse form data into an object for validation
+      const parsedData: Record<string, unknown> = {}
+      for (const field of requiredFields) {
+        parsedData[field] = formData.get(field)
+      }
+
+      // Add optional fields that might have validation rules
+      for (const field of Object.keys(validationRules)) {
+        if (!parsedData[field]) {
+          parsedData[field] = formData.get(field)
+        }
+      }
+
+      // Validate required fields
+      for (const field of requiredFields) {
+        if (!parsedData[field]) {
+          return NextResponse.json(
+            createErrorResponse(`${field} is required`, 400),
+            { status: 400 }
+          )
+        }
+      }
+
+      // Apply custom validation rules
+      for (const [field, validator] of Object.entries(validationRules)) {
+        if (parsedData[field] !== undefined && parsedData[field] !== null) {
+          const validationResult = validator(parsedData[field])
+          if (validationResult !== true) {
+            const errorMessage = typeof validationResult === 'string'
+              ? validationResult
+              : `Invalid ${field}`
+            return NextResponse.json(
+              createErrorResponse(errorMessage, 400),
+              { status: 400 }
+            )
+          }
+        }
+      }
+
+      // Execute the operation
+      const result = await operation(formData, parsedData)
+
+      return NextResponse.json(
+        createSuccessResponse(result, successMessage),
+        { status: 200 }
+      )
+
+    } catch (error) {
       try {
         handleAWSError(error)
       } catch (handledError) {
@@ -96,7 +182,7 @@ export async function createAWSAPIHandler<T = any>(
  * Standard GET handler that returns method not allowed
  */
 export function createMethodNotAllowedHandler() {
-  return async function GET(request: NextRequest) {
+  return async function GET() {
     return NextResponse.json(
       createErrorResponse('Method not allowed', 405),
       { status: 405 }
@@ -153,7 +239,7 @@ export const KYCAPIHandlers = {
   /**
    * Face detection API handler
    */
-  createFaceDetectionHandler: (detectFacesOperation: Function) => 
+  createFaceDetectionHandler: (detectFacesOperation: (body: Record<string, unknown>) => Promise<unknown>) =>
     createAWSAPIHandler({
       requiredFields: ['s3Key'],
       validationRules: {
@@ -167,7 +253,7 @@ export const KYCAPIHandlers = {
   /**
    * Face comparison API handler
    */
-  createFaceComparisonHandler: (compareFacesOperation: Function) =>
+  createFaceComparisonHandler: (compareFacesOperation: (body: Record<string, unknown>) => Promise<unknown>) =>
     createAWSAPIHandler({
       requiredFields: ['sourceS3Key', 'targetS3Key'],
       validationRules: {
@@ -183,7 +269,7 @@ export const KYCAPIHandlers = {
   /**
    * Text extraction API handler
    */
-  createTextExtractionHandler: (extractTextOperation: Function) =>
+  createTextExtractionHandler: (extractTextOperation: (body: Record<string, unknown>) => Promise<unknown>) =>
     createAWSAPIHandler({
       requiredFields: ['s3Key'],
       validationRules: {
@@ -198,7 +284,7 @@ export const KYCAPIHandlers = {
   /**
    * Liveness check API handler
    */
-  createLivenessCheckHandler: (livenessCheckOperation: Function) =>
+  createLivenessCheckHandler: (livenessCheckOperation: (body: Record<string, unknown>) => Promise<unknown>) =>
     createAWSAPIHandler({
       requiredFields: ['s3Key'],
       validationRules: {
@@ -210,16 +296,16 @@ export const KYCAPIHandlers = {
     }),
 
   /**
-   * Document upload API handler
+   * Document upload API handler (FormData)
    */
-  createDocumentUploadHandler: (uploadOperation: Function) =>
-    createAWSAPIHandler({
-      requiredFields: ['userId', 'documentType'],
+  createDocumentUploadHandler: (uploadOperation: (formData: FormData, parsedData: Record<string, unknown>) => Promise<unknown>) =>
+    createFormDataAPIHandler({
+      requiredFields: ['file', 'userId', 'documentType'],
       validationRules: {
         userId: KYCValidationRules.userId,
-        documentType: (value: string) => {
+        documentType: (value: unknown) => {
           const validTypes = ['id-front', 'id-back', 'selfie', 'id-upload']
-          if (!validTypes.includes(value)) {
+          if (typeof value !== 'string' || !validTypes.includes(value)) {
             return `Invalid document type. Must be one of: ${validTypes.join(', ')}`
           }
           return true

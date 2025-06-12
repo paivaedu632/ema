@@ -53,7 +53,6 @@ export default function KYCIdMatchingPage() {
           throw new Error('Erro ao processar comparação')
         }
       } catch (error) {
-        console.error('Error performing face comparison:', error)
         setError('Erro ao comparar faces. Tente novamente.')
         setMatchResult({ success: false })
       } finally {

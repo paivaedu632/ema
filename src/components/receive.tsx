@@ -20,7 +20,7 @@ export function ReceivePayment() {
 
   const handleShare = () => {
     // Handle sharing payment information
-    console.log("Share payment info clicked")
+    // TODO: Implement share functionality
   }
 
   return (

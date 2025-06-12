@@ -45,7 +45,6 @@ export default function KYCLivenessCheckPage() {
       updateData({ livenessCheckPassed: result.passed })
       router.push("/kyc/id-matching")
     } catch (error) {
-      console.error('Error processing liveness check:', error)
       setError('Erro ao processar verificação. Tente novamente.')
       setMode('instructions')
     }

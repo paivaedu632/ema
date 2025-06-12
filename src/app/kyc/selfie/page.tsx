@@ -43,7 +43,6 @@ export default function KYCSelfiePage() {
       // Navigate to next step
       router.push("/kyc/liveness-check")
     } catch (error) {
-      console.error('Error processing selfie:', error)
       setError('Erro ao processar selfie. Tente novamente.')
     } finally {
       setIsProcessing(false)

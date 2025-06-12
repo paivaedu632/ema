@@ -15,7 +15,6 @@ export default function SSOCallback() {
         // Redirect to dashboard after successful authentication
         router.push('/dashboard')
       } catch (error) {
-        console.error('SSO callback error:', error)
         // Redirect to login on error
         router.push('/login')
       }

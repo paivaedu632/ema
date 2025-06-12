@@ -132,7 +132,7 @@ export function KYCProvider({ children }: { children: React.ReactNode }) {
       try {
         setData(JSON.parse(savedData))
       } catch (error) {
-        console.error('Error loading KYC data from localStorage:', error)
+        // Handle localStorage error silently
       }
     }
   }, [])
@@ -175,7 +175,6 @@ export function KYCProvider({ children }: { children: React.ReactNode }) {
         })
       }
     } catch (error) {
-      console.error('Error validating BI:', error)
       updateData({
         isValidBI: false,
         biValidationError: 'Erro ao validar BI. Tente novamente.'
@@ -220,7 +219,6 @@ export function KYCProvider({ children }: { children: React.ReactNode }) {
 
       return s3Key
     } catch (error) {
-      console.error('Error uploading document:', error)
       updateData({ documentUploadStatus: 'failed' })
       throw error
     }
@@ -260,7 +258,6 @@ export function KYCProvider({ children }: { children: React.ReactNode }) {
         await validateBI(result.data.extractedData.biNumber)
       }
     } catch (error) {
-      console.error('Error extracting text:', error)
       updateData({ textExtractionStatus: 'failed' })
       throw error
     }
@@ -291,7 +288,6 @@ export function KYCProvider({ children }: { children: React.ReactNode }) {
         }
       })
     } catch (error) {
-      console.error('Error detecting face:', error)
       updateData({ faceDetectionStatus: 'failed' })
       throw error
     }
@@ -323,7 +319,6 @@ export function KYCProvider({ children }: { children: React.ReactNode }) {
         livenessCheckPassed: result.data.isLive
       })
     } catch (error) {
-      console.error('Error performing liveness check:', error)
       updateData({ livenessCheckStatus: 'failed' })
       throw error
     }
@@ -355,7 +350,6 @@ export function KYCProvider({ children }: { children: React.ReactNode }) {
         idMatchingPassed: result.data.isMatch
       })
     } catch (error) {
-      console.error('Error comparing faces:', error)
       updateData({ faceComparisonStatus: 'failed' })
       throw error
     }

@@ -69,7 +69,6 @@ export function GooglePlacesInput({
         setIsGoogleLoaded(true)
         setError(null)
       } catch (err) {
-        console.error("Error loading Google Maps:", err)
         setError("Failed to load Google Maps")
       } finally {
         setIsLoading(false)

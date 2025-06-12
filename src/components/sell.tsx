@@ -63,13 +63,12 @@ export function SellFlow() {
 
   const handleConfirmSell = () => {
     // Handle sell completion
-    console.log("Sell completed:", { amount, sellCurrency })
+    // TODO: Process sell transaction
     setCurrentStep("success")
   }
 
   const handleShare = () => {
-    // Handle share functionality
-    console.log("Share sell")
+    // TODO: Handle share functionality
   }
 
   const handleBackToHome = () => {

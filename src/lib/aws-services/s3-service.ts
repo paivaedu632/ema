@@ -76,7 +76,6 @@ export async function uploadDocument(options: UploadOptions): Promise<DocumentUp
       etag: result.ETag || ''
     };
   } catch (error) {
-    console.error('Error uploading document to S3:', error);
     throw new Error('Failed to upload document. Please try again.');
   }
 }
@@ -96,7 +95,6 @@ export async function getPresignedUrl(options: PresignedUrlOptions): Promise<str
     const url = await getSignedUrl(s3Client, command, { expiresIn });
     return url;
   } catch (error) {
-    console.error('Error generating presigned URL:', error);
     throw new Error('Failed to generate secure document URL');
   }
 }
@@ -133,7 +131,6 @@ export async function deleteDocument(key: string): Promise<void> {
     
     await s3Client.send(command);
   } catch (error) {
-    console.error('Error deleting document from S3:', error);
     throw new Error('Failed to delete document');
   }
 }
@@ -151,7 +148,6 @@ export async function getDocumentMetadata(key: string): Promise<Record<string, s
     const result = await s3Client.send(command);
     return result.Metadata || {};
   } catch (error) {
-    console.error('Error getting document metadata:', error);
     throw new Error('Failed to get document metadata');
   }
 }

@@ -41,13 +41,11 @@ export function TransactionDetails({ transactionId = "#155034567" }: Transaction
   }
 
   const handleHelp = () => {
-    // Handle help action
-    console.log("Help clicked")
+    // TODO: Handle help action
   }
 
   const handleMenu = () => {
-    // Handle menu action
-    console.log("Menu clicked")
+    // TODO: Handle menu action
   }
 
   return (

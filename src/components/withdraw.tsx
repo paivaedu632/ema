@@ -44,7 +44,7 @@ export function WithdrawFlow() {
       setCurrentStep("confirm")
     } else if (currentStep === "confirm") {
       // Handle withdrawal submission and show success
-      console.log("Complete withdrawal:", { amount, currency, ibanOrPhone })
+      // TODO: Process withdrawal transaction
       setCurrentStep("success")
     }
   }

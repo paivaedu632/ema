@@ -3,6 +3,8 @@
 // EmaPay Fee Calculation Utilities
 // Centralized fee calculation logic for all transaction types
 
+import { CurrencyUtils, NumberUtils } from './formatting-utils'
+
 export const EMAPAY_FEE_PERCENTAGE = 0.02 // 2% fee as per user preference
 
 export interface FeeCalculationResult {
@@ -26,57 +28,57 @@ export interface TransactionSummary {
  * Calculate fee amount for a given amount and currency
  */
 export function calculateFeeAmount(amount: string | number, currency: string): string {
-  if (!amount || amount === "0" || amount === "") return "0"
-  
-  const inputAmount = typeof amount === 'string' ? Number(amount) : amount
-  if (isNaN(inputAmount) || inputAmount <= 0) return "0"
-  
+  if (!CurrencyUtils.isValid(amount)) return "0"
+
+  const inputAmount = CurrencyUtils.parse(amount.toString())
+  if (inputAmount <= 0) return "0"
+
   const feeAmount = inputAmount * EMAPAY_FEE_PERCENTAGE
-  return `${feeAmount.toFixed(2)} ${currency} (2%)`
+  return `${CurrencyUtils.formatAmount(feeAmount)} ${currency} (${NumberUtils.formatPercentage(EMAPAY_FEE_PERCENTAGE * 100)})`
 }
 
 /**
  * Calculate detailed fee breakdown for buy/sell transactions
  */
 export function calculateTransactionFees(
-  amount: string | number, 
+  amount: string | number,
   currency: string
 ): FeeCalculationResult {
-  if (!amount || amount === "0" || amount === "") {
+  if (!CurrencyUtils.isValid(amount)) {
     return {
       feeAmount: 0,
       netAmount: 0,
       totalAmount: 0,
-      feeFormatted: `0.00 ${currency}`,
-      netFormatted: `0.00 ${currency}`,
-      totalFormatted: `0.00 ${currency}`,
+      feeFormatted: CurrencyUtils.format(0, currency),
+      netFormatted: CurrencyUtils.format(0, currency),
+      totalFormatted: CurrencyUtils.format(0, currency),
       currency
     }
   }
 
-  const inputAmount = typeof amount === 'string' ? Number(amount) : amount
-  if (isNaN(inputAmount) || inputAmount <= 0) {
+  const inputAmount = CurrencyUtils.parse(amount.toString())
+  if (inputAmount <= 0) {
     return {
       feeAmount: 0,
       netAmount: 0,
       totalAmount: 0,
-      feeFormatted: `0.00 ${currency}`,
-      netFormatted: `0.00 ${currency}`,
-      totalFormatted: `0.00 ${currency}`,
+      feeFormatted: CurrencyUtils.format(0, currency),
+      netFormatted: CurrencyUtils.format(0, currency),
+      totalFormatted: CurrencyUtils.format(0, currency),
       currency
     }
   }
 
   const feeAmount = inputAmount * EMAPAY_FEE_PERCENTAGE
   const netAmount = inputAmount - feeAmount
-  
+
   return {
     feeAmount,
     netAmount,
     totalAmount: inputAmount,
-    feeFormatted: `${feeAmount.toFixed(2)} ${currency}`,
-    netFormatted: `${netAmount.toFixed(2)} ${currency}`,
-    totalFormatted: `${inputAmount.toFixed(2)} ${currency}`,
+    feeFormatted: CurrencyUtils.format(feeAmount, currency),
+    netFormatted: CurrencyUtils.format(netAmount, currency),
+    totalFormatted: CurrencyUtils.format(inputAmount, currency),
     currency
   }
 }
@@ -101,19 +103,18 @@ export function getTransactionSummary(
 
 /**
  * Validate if amount is valid for transaction
+ * @deprecated Use CurrencyUtils.isValid instead
  */
 export function isValidTransactionAmount(amount: string | number): boolean {
-  if (!amount || amount === "0" || amount === "") return false
-  
-  const numAmount = typeof amount === 'string' ? Number(amount) : amount
-  return !isNaN(numAmount) && numAmount > 0
+  return CurrencyUtils.isValid(amount)
 }
 
 /**
  * Format currency amount with proper decimals
+ * @deprecated Use CurrencyUtils.format instead
  */
 export function formatCurrencyAmount(amount: number, currency: string): string {
-  return `${amount.toFixed(2)} ${currency}`
+  return CurrencyUtils.format(amount, currency)
 }
 
 /**
@@ -131,6 +132,6 @@ export function calculateExchangeConversion(
   const convertedAmount = amount * exchangeRate
   return {
     convertedAmount,
-    formattedResult: formatCurrencyAmount(convertedAmount, toCurrency)
+    formattedResult: CurrencyUtils.format(convertedAmount, toCurrency)
   }
 }

@@ -134,7 +134,6 @@ export default function SSOCallback() {
         await handleRedirectCallback()
         router.push('/dashboard')
       } catch (error) {
-        console.error('SSO callback error:', error)
         router.push('/login')
       }
     }
@@ -191,7 +190,7 @@ export function CustomLogin() {
         redirectUrlComplete: "/dashboard"
       })
     } catch (error) {
-      console.error('OAuth error:', error)
+      // Handle OAuth error silently
     }
   }
 
@@ -358,7 +357,7 @@ export function Dashboard() {
       await signOut()
       router.push('/login')
     } catch (error) {
-      console.error('Sign out error:', error)
+      // Handle sign out error silently
     }
   }
 

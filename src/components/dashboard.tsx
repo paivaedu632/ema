@@ -29,7 +29,7 @@ export default function Dashboard() {
       await signOut()
       router.push('/login')
     } catch (error) {
-      console.error('Sign out error:', error)
+      // Handle sign out error silently
     }
   }
 

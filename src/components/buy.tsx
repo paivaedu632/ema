@@ -45,7 +45,7 @@ export function BuyFlow() {
       setStep("confirmation")
     } else if (currentStep === "confirmation") {
       // Process the transaction and go to success
-      console.log("Confirming buy:", { amount, currency })
+      // TODO: Process buy transaction
       setStep("success")
     }
   }

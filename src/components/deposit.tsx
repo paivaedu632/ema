@@ -76,7 +76,7 @@ export function DepositFlow() {
               value="Transferência bancária"
               actionButton={{
                 label: "Trocar",
-                onClick: () => console.log("Change payment method")
+                onClick: () => {/* TODO: Change payment method */}
               }}
             />
 

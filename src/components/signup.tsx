@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
 import { useSignUp } from "@clerk/nextjs"
 import { PageHeader } from "@/components/ui/page-header"
 import { AuthFormField } from "@/components/ui/form-field"
@@ -9,12 +8,24 @@ import { FixedBottomAction } from "@/components/ui/fixed-bottom-action"
 import { CodeInput } from "@/components/ui/code-input"
 import { PhoneInput } from "@/components/ui/phone-input"
 import { GoogleAuthButton } from "@/components/ui/google-auth-button"
+import { useAsyncOperation } from "@/hooks/use-async-operation"
+import { useAuthNavigation } from "@/hooks/use-navigation"
+import {
+  useEmailValidation,
+  usePasswordValidation,
+  usePhoneValidation,
+  useVerificationCodeValidation
+} from "@/hooks/use-form-validation"
 
 type Step = "email" | "email-verification" | "phone" | "phone-verification" | "password"
 
 export function Signup() {
-  const router = useRouter()
   const { isLoaded, signUp, setActive } = useSignUp()
+  const navigation = useAuthNavigation()
+  const { isLoading, error, execute, setError } = useAsyncOperation({
+    defaultErrorMessage: "Ocorreu um erro durante o cadastro"
+  })
+
   const [currentStep, setCurrentStep] = useState<Step>("email")
   const [email, setEmail] = useState("")
   const [emailVerificationCode, setEmailVerificationCode] = useState("")
@@ -23,8 +34,13 @@ export function Signup() {
   const [password, setPassword] = useState("")
   const [countdown, setCountdown] = useState(119) // 1:59 in seconds
   const [canResend, setCanResend] = useState(false)
-  const [error, setError] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
+
+  // Validation hooks
+  const emailValidation = useEmailValidation(email)
+  const passwordValidation = usePasswordValidation(password)
+  const phoneValidation = usePhoneValidation(phoneNumber)
+  const emailCodeValidation = useVerificationCodeValidation(emailVerificationCode)
+  const phoneCodeValidation = useVerificationCodeValidation(phoneVerificationCode)
 
   // Countdown timer effect
   useEffect(() => {
@@ -58,17 +74,14 @@ export function Signup() {
     } else if (currentStep === "email-verification") {
       setCurrentStep("email")
     } else {
-      router.back()
+      navigation.navigateBack()
     }
   }
 
   const handleNext = async () => {
     if (!isLoaded) return
 
-    setIsLoading(true)
-    setError("")
-
-    try {
+    await execute(async () => {
       if (currentStep === "email") {
         // Start the sign-up process with Clerk
         await signUp.create({
@@ -92,7 +105,7 @@ export function Signup() {
           // Email verified, move to phone step
           setCurrentStep("phone")
         } else {
-          setError("Invalid verification code")
+          throw new Error("Invalid verification code")
         }
       } else if (currentStep === "phone") {
         // Add phone number to the sign-up
@@ -117,7 +130,7 @@ export function Signup() {
           // Phone verified, move to password step
           setCurrentStep("password")
         } else {
-          setError("Invalid verification code")
+          throw new Error("Invalid verification code")
         }
       } else {
         // Handle password creation and complete signup
@@ -128,23 +141,12 @@ export function Signup() {
         if (result.status === "complete") {
           // Sign-up complete, set active session
           await setActive({ session: result.createdSessionId })
-          router.push("/dashboard")
+          navigation.navigateAfterAuth()
         } else {
-          setError("Failed to complete signup")
+          throw new Error("Failed to complete signup")
         }
       }
-    } catch (err: any) {
-      console.error("Signup error:", err)
-      // Handle Clerk-specific errors
-      if (err.errors) {
-        const errorMessage = err.errors[0]?.message || "Signup failed"
-        setError(errorMessage)
-      } else {
-        setError("An error occurred during signup")
-      }
-    } finally {
-      setIsLoading(false)
-    }
+    })
   }
 
   const handleGoogleSignUp = async () => {
@@ -160,7 +162,6 @@ export function Signup() {
         redirectUrlComplete: "/dashboard"
       })
     } catch (err: any) {
-      console.error("Google sign-up error:", err)
       if (err.errors) {
         const errorMessage = err.errors[0]?.message || "Google sign-up failed"
         setError(errorMessage)
@@ -173,10 +174,7 @@ export function Signup() {
   const handleResendCode = async () => {
     if (!canResend || !isLoaded) return
 
-    setIsLoading(true)
-    setError("")
-
-    try {
+    await execute(async () => {
       if (currentStep === "email-verification") {
         // Resend email verification code
         await signUp.prepareEmailAddressVerification({ strategy: "email_code" })
@@ -187,29 +185,15 @@ export function Signup() {
 
       setCountdown(119) // Reset countdown
       setCanResend(false)
-    } catch (err: any) {
-      console.error("Resend error:", err)
-      if (err.errors) {
-        const errorMessage = err.errors[0]?.message || "Failed to resend code"
-        setError(errorMessage)
-      } else {
-        setError("Failed to resend verification code")
-      }
-    } finally {
-      setIsLoading(false)
-    }
+    })
   }
 
-  // Password validation: minimum 8 characters, contains letters and numbers
-  const validatePassword = (pwd: string) => {
-    return pwd.length >= 8 && /[a-zA-Z]/.test(pwd) && /\d/.test(pwd)
-  }
-
-  const canContinueEmail = email.trim() !== "" && email.includes("@")
-  const canContinueEmailVerification = emailVerificationCode.trim().length === 6
-  const canContinuePhone = phoneNumber.trim().length >= 9 // Basic phone validation
-  const canContinuePhoneVerification = phoneVerificationCode.trim().length === 6
-  const canContinuePassword = validatePassword(password)
+  // Validation states for each step
+  const canContinueEmail = emailValidation.canContinue
+  const canContinueEmailVerification = emailCodeValidation.canContinue
+  const canContinuePhone = phoneValidation.canContinue
+  const canContinuePhoneVerification = phoneCodeValidation.canContinue
+  const canContinuePassword = passwordValidation.canContinue
 
   // Step 1: Email input
   if (currentStep === "email") {
@@ -356,7 +340,7 @@ export function Signup() {
                 Já tem conta?{" "}
                 <button
                   className="text-black underline font-medium"
-                  onClick={() => router.push("/login")}
+                  onClick={() => navigation.navigateToLogin()}
                 >
                   Entrar
                 </button>

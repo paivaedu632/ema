@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useCallback } from "react"
 import { Upload, Camera, FileImage, X, Check } from "lucide-react"
+import { useFileUpload } from "@/hooks/use-async-operation"
 
 interface DocumentUploadProps {
   onUpload: (file: File) => void
@@ -30,8 +31,10 @@ export function DocumentUpload({
   const [dragActive, setDragActive] = useState(false)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
-  const [error, setError] = useState<string | null>(null)
-  const [isUploading, setIsUploading] = useState(false)
+
+  const { isLoading: isUploading, error, uploadFile, setError } = useFileUpload({
+    defaultErrorMessage: 'Erro ao enviar arquivo. Tente novamente.'
+  })
 
   // Validate file
   const validateFile = useCallback((file: File): string | null => {
@@ -103,16 +106,9 @@ export function DocumentUpload({
   // Confirm upload
   const confirmUpload = useCallback(async () => {
     if (!selectedFile) return
-    
-    setIsUploading(true)
-    try {
-      await onUpload(selectedFile)
-    } catch (error) {
-      setError('Erro ao enviar arquivo. Tente novamente.')
-    } finally {
-      setIsUploading(false)
-    }
-  }, [selectedFile, onUpload])
+
+    await uploadFile(selectedFile, onUpload)
+  }, [selectedFile, onUpload, uploadFile])
 
   // Clear selection
   const clearSelection = useCallback(() => {

@@ -50,7 +50,6 @@ export default function KYCIdUploadPage() {
           setBiValidationComplete(true)
         }
       } catch (error) {
-        console.error('Error processing documents:', error)
         setError('Erro ao processar documentos. Tente novamente.')
       } finally {
         setIsProcessing(false)
@@ -77,7 +76,6 @@ export default function KYCIdUploadPage() {
           await validateBI(data.ocrExtractedBI)
           setBiValidationComplete(true)
         } catch (error) {
-          console.error('Error validating BI:', error)
           setError('Erro ao validar BI. Tente novamente.')
         }
       }

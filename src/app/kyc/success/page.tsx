@@ -14,27 +14,7 @@ export default function KYCSuccessPage() {
 
   const handleContinue = () => {
     // Save all KYC data and redirect to dashboard
-    console.log("KYC Data:", {
-      notificationsEnabled: data.notificationsEnabled,
-      passcode: data.passcode,
-      fullName: data.fullName,
-      dateOfBirth: data.dateOfBirth,
-      selectedCountry: data.selectedCountry,
-      address: data.address,
-      idUploadImage: !!data.idUploadImage,
-      biNumber: data.biNumber,
-      isValidBI: data.isValidBI,
-      selfieImage: !!data.selfieImage,
-      livenessCheckPassed: data.livenessCheckPassed,
-      idMatchingPassed: data.idMatchingPassed,
-      idFrontImage: !!data.idFrontImage,
-      idBackImage: !!data.idBackImage,
-      occupation: data.occupation,
-      incomeSource: data.incomeSource,
-      monthlyIncome: data.monthlyIncome,
-      isPEP: data.isPEP,
-      appUse: data.appUse
-    })
+    // TODO: Save KYC data to backend
     
     // Clear KYC data after successful completion
     clearData()

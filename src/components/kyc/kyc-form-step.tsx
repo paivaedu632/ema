@@ -5,6 +5,7 @@ import { PageHeader } from "@/components/ui/page-header"
 import { FixedBottomAction } from "@/components/ui/fixed-bottom-action"
 import { AuthFormField } from "@/components/ui/form-field"
 import { useKYC } from "@/contexts/kyc-context"
+import { DateUtils } from "@/utils/formatting-utils"
 
 interface KYCFormStepProps {
   title: string
@@ -113,26 +114,9 @@ export function KYCDateFormStep({
   className = ""
 }: Omit<KYCFormStepProps, 'validation' | 'formatValue' | 'inputType' | 'placeholder'>) {
   
-  // Date formatting function
-  const formatDateValue = (value: string) => {
-    // Remove non-numeric characters
-    const numbers = value.replace(/\D/g, '')
-    
-    // Format as DD/MM/AAAA
-    if (numbers.length <= 2) {
-      return numbers
-    } else if (numbers.length <= 4) {
-      return `${numbers.slice(0, 2)}/${numbers.slice(2)}`
-    } else {
-      return `${numbers.slice(0, 2)}/${numbers.slice(2, 4)}/${numbers.slice(4, 8)}`
-    }
-  }
-
-  // Date validation function
-  const validateDate = (date: string) => {
-    const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/
-    return dateRegex.test(date)
-  }
+  // Use centralized date utilities
+  const formatDateValue = DateUtils.formatInput
+  const validateDate = DateUtils.isValid
 
   return (
     <KYCFormStep

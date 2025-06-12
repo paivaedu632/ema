@@ -99,7 +99,6 @@ export async function detectFaces(options: FaceDetectionOptions): Promise<Rekogn
       landmarks
     };
   } catch (error) {
-    console.error('Error detecting faces with Rekognition:', error);
     throw new Error('Failed to detect faces in image. Please ensure the image is clear and contains a visible face.');
   }
 }
@@ -153,7 +152,6 @@ export async function compareFaces(options: FaceComparisonOptions): Promise<Face
       confidence
     };
   } catch (error) {
-    console.error('Error comparing faces with Rekognition:', error);
     throw new Error('Failed to compare faces. Please ensure both images contain clear, visible faces.');
   }
 }
@@ -206,7 +204,6 @@ export async function detectInappropriateContent(options: FaceDetectionOptions):
     
     return hasInappropriateContent || false;
   } catch (error) {
-    console.error('Error detecting inappropriate content:', error);
     // If moderation fails, allow the image to proceed
     return false;
   }
@@ -254,7 +251,6 @@ export async function performLivenessCheck(options: FaceDetectionOptions): Promi
       spoofingDetected: false
     };
   } catch (error) {
-    console.error('Error performing liveness check:', error);
     throw new Error('Failed to perform liveness check. Please try again.');
   }
 }
@@ -298,7 +294,6 @@ export async function validateSelfieQuality(options: FaceDetectionOptions): Prom
       confidence
     };
   } catch (error) {
-    console.error('Error validating selfie quality:', error);
     return {
       isValid: false,
       issues: ['Failed to analyze image quality'],
