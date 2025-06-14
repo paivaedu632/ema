@@ -85,6 +85,44 @@ interface ApiResponse<T = any> {
 }
 ```
 
+#### GET /api/verify-webhook
+**Purpose**: Verify webhook implementation and database state
+**Authentication**: None required
+**Response**:
+```json
+{
+  "success": true,
+  "data": {
+    "summary": {
+      "total_users": 3,
+      "total_wallets": 6,
+      "wallet_user_ratio": 2
+    },
+    "verification": {
+      "webhook_endpoint_exists": true,
+      "database_connection": true,
+      "user_creation_working": true,
+      "wallet_creation_working": true
+    }
+  }
+}
+```
+
+#### POST /api/test-webhook
+**Purpose**: Test webhook functionality without Clerk
+**Authentication**: None required
+**Response**:
+```json
+{
+  "success": true,
+  "message": "Test user created successfully",
+  "data": {
+    "user_id": "uuid",
+    "wallets_created": 2
+  }
+}
+```
+
 ### User Management
 
 #### GET /api/user/profile
@@ -489,6 +527,42 @@ interface ApiResponse<T = any> {
 - **Document upload**: 5 requests per minute per user
 
 ## Webhooks
+
+### Clerk User Registration Webhook ✅ **IMPLEMENTED**
+**URL**: `/api/webhooks/clerk`
+**Method**: POST
+**Purpose**: Automatically create users and wallets when new users register via Clerk
+**Authentication**: Webhook signature verification (svix)
+**Events Supported**:
+- `user.created` - Creates user and initializes AOA/EUR wallets
+- `user.updated` - Logs event (processing not implemented)
+- `user.deleted` - Logs event (processing not implemented)
+
+**Payload Example**:
+```json
+{
+  "type": "user.created",
+  "data": {
+    "id": "user_xxx",
+    "email_addresses": [{"email_address": "user@example.com"}],
+    "first_name": "João",
+    "last_name": "Silva",
+    "image_url": "https://..."
+  }
+}
+```
+
+**Response**:
+```json
+{
+  "success": true,
+  "message": "User created successfully",
+  "data": {
+    "user_id": "uuid",
+    "wallets_created": ["AOA", "EUR"]
+  }
+}
+```
 
 ### Transaction Status Updates
 **URL**: Configured in environment
