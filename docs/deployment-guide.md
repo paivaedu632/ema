@@ -100,55 +100,16 @@ NEXTAUTH_URL=https://emapay.com
 
 ## Database Deployment
 
-### Supabase Setup
+**Note**: For detailed database setup and integration, see `docs/database-integration.md`
 
-1. **Create Production Project**
+### Quick Database Setup
 ```bash
-# Login to Supabase
-npx supabase login
-
-# Create new project (or use existing)
-npx supabase projects create emapay-prod --region us-east-1
-```
-
-2. **Deploy Database Schema**
-```bash
-# Link to production project
+# Deploy to production
 npx supabase link --project-ref your_prod_project_id
-
-# Deploy migrations
 npx supabase db push
 
 # Verify deployment
-npx supabase db remote query "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public';"
-```
-
-3. **Configure RLS Policies**
-All RLS policies are included in the migration files and will be deployed automatically.
-
-4. **Insert Initial Data**
-```bash
-# Insert exchange rates
-npx supabase db remote query "
-INSERT INTO exchange_rates (from_currency, to_currency, rate, rate_type) VALUES
-('EUR', 'AOA', 850.00, 'automatic'),
-('AOA', 'EUR', 0.00118, 'automatic');
-"
-```
-
-### Database Backup Strategy
-
-1. **Automated Backups**
-- Supabase provides automated daily backups
-- Point-in-time recovery available for 7 days (Pro plan)
-
-2. **Manual Backups**
-```bash
-# Create manual backup
-npx supabase db dump --file backup-$(date +%Y%m%d).sql
-
-# Restore from backup
-npx supabase db reset --file backup-20250614.sql
+curl https://your-domain.com/api/test-db
 ```
 
 ## AWS Services Setup

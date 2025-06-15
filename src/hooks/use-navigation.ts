@@ -146,7 +146,9 @@ export function useAuthNavigation() {
   }, [navigation])
 
   const navigateAfterAuth = useCallback(() => {
-    navigation.navigateToDashboard()
+    // Always redirect to dashboard after successful authentication
+    // KYC will be triggered contextually based on user actions
+    navigation.navigateTo('/dashboard')
   }, [navigation])
 
   return {

@@ -1,19 +1,43 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { PrimaryActionButtons } from '@/components/ui/primary-action-buttons'
 import { IconActionButtons } from '@/components/ui/icon-action-buttons'
 import { BalanceCard } from '@/components/ui/balance-card'
 import { AngolaFlag, EurFlag } from '@/components/ui/flag-icon'
-import { ShoppingBag, ArrowUpRight, ArrowDownLeft, CreditCard, LogOut } from 'lucide-react'
+import { ShoppingBag, ArrowUpRight, ArrowDownLeft, CreditCard, LogOut, AlertCircle } from 'lucide-react'
 import { SignedIn, SignedOut, UserButton, useClerk } from '@clerk/nextjs'
 import { ClerkAuth } from '@/components/auth/clerk-auth'
+
+// KYC Status Types
+type KYCStatus = 'not_started' | 'in_progress' | 'pending_review' | 'approved' | 'rejected'
+
+interface KYCStatusInfo {
+  status: KYCStatus
+  currentStep: number
+  totalSteps: number
+  completionPercentage: number
+}
 
 export default function Dashboard() {
   const router = useRouter()
   const { signOut } = useClerk()
+  const [kycStatus, setKycStatus] = useState<KYCStatusInfo | null>(null)
+  const [showKycBanner, setShowKycBanner] = useState(true)
+
+  // Mock KYC status - In real implementation, fetch from API
+  useEffect(() => {
+    // Simulate fetching KYC status
+    const mockKycStatus: KYCStatusInfo = {
+      status: 'not_started',
+      currentStep: 1,
+      totalSteps: 16,
+      completionPercentage: 0
+    }
+    setKycStatus(mockKycStatus)
+  }, [])
 
   const handleCardClick = (account: typeof accounts[0]) => {
     const params = new URLSearchParams({
@@ -31,6 +55,10 @@ export default function Dashboard() {
     } catch (error) {
       // Handle sign out error silently
     }
+  }
+
+  const handleStartKYC = () => {
+    router.push('/kyc/notifications')
   }
 
 
@@ -126,6 +154,49 @@ export default function Dashboard() {
             <LogOut className="w-5 h-5 text-gray-700" />
           </button>
         </div>
+
+        {/* KYC Status Banner - Clickable Card with Clear CTA */}
+        {showKycBanner && kycStatus && kycStatus.status !== 'approved' && (
+          <div
+            className="mb-6 bg-rose-50 rounded-2xl p-4 cursor-pointer hover:bg-rose-100 transition-colors"
+            onClick={handleStartKYC}
+          >
+            <div className="flex items-start space-x-3">
+              <div className="flex items-center justify-center flex-shrink-0 mt-0.5">
+                <AlertCircle className="w-5 h-5 text-gray-700" />
+              </div>
+              <div className="flex-1">
+                <h3 className="heading-small mb-1">
+                  {kycStatus.status === 'not_started' && 'Complete sua verificação'}
+                  {kycStatus.status === 'in_progress' && 'Continue sua verificação'}
+                  {kycStatus.status === 'pending_review' && 'Verificação em análise'}
+                  {kycStatus.status === 'rejected' && 'Verificação rejeitada'}
+                </h3>
+                <p className="text-sm text-gray-600 mb-3">
+                  {kycStatus.status === 'not_started' && 'Verifique sua identidade para usar todos os recursos do EmaPay.'}
+                  {kycStatus.status === 'in_progress' && `Você completou ${kycStatus.currentStep} de ${kycStatus.totalSteps} etapas.`}
+                  {kycStatus.status === 'pending_review' && 'Seus documentos estão sendo analisados. Você receberá uma notificação em breve.'}
+                  {kycStatus.status === 'rejected' && 'Alguns documentos precisam ser reenviados. Clique para continuar.'}
+                </p>
+                {kycStatus.status === 'in_progress' && (
+                  <div className="w-full bg-rose-200 rounded-full h-2 mb-3">
+                    <div
+                      className="bg-black h-2 rounded-full transition-all duration-300"
+                      style={{ width: `${kycStatus.completionPercentage}%` }}
+                    ></div>
+                  </div>
+                )}
+                {(kycStatus.status === 'not_started' || kycStatus.status === 'in_progress' || kycStatus.status === 'rejected') && (
+                  <p className="text-sm font-medium text-black">
+                    {kycStatus.status === 'not_started' && 'Toque para iniciar verificação →'}
+                    {kycStatus.status === 'in_progress' && 'Toque para continuar verificação →'}
+                    {kycStatus.status === 'rejected' && 'Toque para corrigir documentos →'}
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Account Cards Section */}
         <div className="mb-8">

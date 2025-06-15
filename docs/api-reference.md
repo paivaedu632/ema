@@ -2,45 +2,14 @@
 
 ## Overview
 
-EmaPay uses a **hybrid REST/RPC architecture** optimized for different use cases:
+EmaPay API provides endpoints for user management, transactions, and KYC verification. All endpoints require Clerk authentication unless otherwise specified.
 
-- **Financial Transactions**: Supabase RPC functions for atomic operations
-- **Simple CRUD**: REST API endpoints for user management and queries
-- **Form Operations**: Next.js Server Actions for KYC and profile updates
-- **External Services**: REST APIs for AWS integration and webhooks
-
-All endpoints require authentication via Clerk unless otherwise specified.
+**Database Integration**: See `docs/database-integration.md` for database setup and patterns.
 
 ## Base URL
 ```
 Development: http://localhost:3000/api
 Production: https://emapay.com/api
-```
-
-## Architecture Patterns
-
-### 1. Supabase RPC Functions (Financial Operations)
-```typescript
-// Direct database function calls for atomic operations
-const { data, error } = await supabase.rpc('process_buy_transaction', {
-  p_user_id: userId,
-  p_eur_amount: 100.00,
-  p_exchange_rate: 850.00
-})
-```
-
-### 2. REST API Endpoints (CRUD Operations)
-```http
-Authorization: Bearer <clerk_session_token>
-```
-
-### 3. Server Actions (Form Operations)
-```typescript
-// Direct form submission without API layer
-async function updateKYCStep(formData: FormData) {
-  'use server'
-  // Direct database operations
-}
 ```
 
 ## Response Format
@@ -119,6 +88,119 @@ interface ApiResponse<T = any> {
   "data": {
     "user_id": "uuid",
     "wallets_created": 2
+  }
+}
+```
+
+#### GET /api/kyc/status ✅ **NEW**
+**Purpose**: Get user's KYC verification status and progress
+**Authentication**: Clerk JWT required
+**Response**:
+```json
+{
+  "success": true,
+  "data": {
+    "status": "not_started",
+    "current_step": 1,
+    "total_steps": 16,
+    "completion_percentage": 0.00,
+    "last_updated": "2025-06-14T23:23:44.499Z",
+    "next_step_url": "/kyc/notifications",
+    "benefits": ["Increase transaction limits", "Access all features"]
+  }
+}
+```
+
+#### PUT /api/kyc/status ✅ **NEW**
+**Purpose**: Update user's KYC status (admin/system use)
+**Authentication**: Clerk JWT required
+**Request Body**:
+```json
+{
+  "status": "in_progress",
+  "current_step": 5,
+  "completion_percentage": 31.25
+}
+```
+
+#### GET /api/user/limits ✅ **NEW**
+**Purpose**: Get user's transaction limits and usage
+**Authentication**: Clerk JWT required
+**Query Parameters**: `currency` (EUR|AOA, default: EUR)
+**Response**:
+```json
+{
+  "success": true,
+  "data": {
+    "current_currency": "EUR",
+    "limits": {
+      "EUR": {
+        "daily_limit": 500.00,
+        "monthly_limit": 2000.00,
+        "transaction_limit": 100.00,
+        "daily_used": 0.00,
+        "monthly_used": 0.00,
+        "daily_remaining": 500.00,
+        "monthly_remaining": 2000.00
+      },
+      "AOA": {
+        "daily_limit": 42500.00,
+        "monthly_limit": 170000.00,
+        "transaction_limit": 8500.00
+      }
+    },
+    "kyc_status": "not_started",
+    "upgrade_benefits": {
+      "transaction_limit": {"current": "€100", "after_kyc": "€5,000"}
+    }
+  }
+}
+```
+
+#### POST /api/user/limits/check ✅ **NEW**
+**Purpose**: Check if transaction amount is within user limits
+**Authentication**: Clerk JWT required
+**Request Body**:
+```json
+{
+  "amount": 150.00,
+  "currency": "EUR",
+  "transaction_type": "send_money"
+}
+```
+**Response (Within Limits)**:
+```json
+{
+  "success": true,
+  "data": {
+    "within_limits": true,
+    "amount_requested": 150.00,
+    "currency": "EUR",
+    "requires_kyc": false,
+    "suggested_action": {
+      "action": "proceed",
+      "message": "Transaction can proceed"
+    }
+  }
+}
+```
+**Response (Exceeds Limits)**:
+```json
+{
+  "success": true,
+  "data": {
+    "within_limits": false,
+    "limit_check": {
+      "limit_type": "transaction",
+      "current_limit": 100.00,
+      "would_exceed_by": 50.00
+    },
+    "requires_kyc": true,
+    "suggested_action": {
+      "action": "verify_identity",
+      "message": "Complete identity verification to proceed",
+      "kyc_url": "/kyc/notifications"
+    }
   }
 }
 ```

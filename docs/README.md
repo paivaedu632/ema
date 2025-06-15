@@ -189,9 +189,8 @@ EmaPay is a modern fintech application built for the Angolan diaspora, enabling 
 
 #### Core Documentation
 - **[📊 Project Status](./project-status.md)** - Current completion status and next priorities
-- **[🏗️ Database Schema](./database-schema.md)** - Deployed database structure and relationships
-- **[🔌 API Reference](./api-reference.md)** - Hybrid REST/RPC API documentation
-- **[⚙️ Development Guide](./development-guide.md)** - Database integration development guide
+- **[🗄️ Database Integration](./database-integration.md)** - Complete database setup and integration guide
+- **[🔌 API Reference](./api-reference.md)** - API endpoints and usage
 - **[🚀 Deployment Guide](./deployment-guide.md)** - Production deployment procedures
 
 ### 🔗 External Resources
@@ -202,8 +201,8 @@ EmaPay is a modern fintech application built for the Angolan diaspora, enabling 
 - [AWS SDK Documentation](https://docs.aws.amazon.com/sdk-for-javascript/)
 
 ### 🆘 Quick Help
-- **Database Issues**: Check `docs/database-schema.md` and test with `/api/test-db`
-- **Integration Questions**: Follow `docs/development-guide.md`
+- **Database Issues**: Check `docs/database-integration.md` and test with `/api/test-db`
+- **Integration Questions**: Follow `docs/database-integration.md`
 - **Deployment Questions**: Follow `docs/deployment-guide.md`
 - **Current Status**: Check `docs/project-status.md`
 
