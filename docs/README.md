@@ -97,9 +97,10 @@ curl http://localhost:3000/api/verify-webhook
 
 ## Documentation
 
+- **[Form Validation](./form-validation.md)** - ✅ **Official Standard**: React Hook Form + Zod validation system
 - **[Database Integration](./database-integration.md)** - Complete database setup and patterns
 - **[API Reference](./api-reference.md)** - Detailed API endpoints and usage
-- **[Test Deposit Guide](./test-deposit-guide.md)** - Temporary testing endpoint documentation
+- **[Authentication Workflow](./authentication-workflow.md)** - Clerk integration and user management
 
 ---
 
