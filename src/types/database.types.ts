@@ -143,7 +143,7 @@ export type Database = {
           {
             foreignKeyName: "kyc_records_user_id_fkey"
             columns: ["user_id"]
-            isOneToOne: false
+            isOneToOne: true
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
@@ -208,6 +208,74 @@ export type Database = {
           },
         ]
       }
+      user_limits: {
+        Row: {
+          created_at: string | null
+          currency: string | null
+          current_daily_limit: number | null
+          current_monthly_limit: number | null
+          current_transaction_limit: number | null
+          daily_limit_post_kyc: number | null
+          daily_limit_pre_kyc: number | null
+          daily_used: number | null
+          id: string
+          last_reset_date: string | null
+          monthly_limit_post_kyc: number | null
+          monthly_limit_pre_kyc: number | null
+          monthly_used: number | null
+          transaction_limit_post_kyc: number | null
+          transaction_limit_pre_kyc: number | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          currency?: string | null
+          current_daily_limit?: number | null
+          current_monthly_limit?: number | null
+          current_transaction_limit?: number | null
+          daily_limit_post_kyc?: number | null
+          daily_limit_pre_kyc?: number | null
+          daily_used?: number | null
+          id?: string
+          last_reset_date?: string | null
+          monthly_limit_post_kyc?: number | null
+          monthly_limit_pre_kyc?: number | null
+          monthly_used?: number | null
+          transaction_limit_post_kyc?: number | null
+          transaction_limit_pre_kyc?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          currency?: string | null
+          current_daily_limit?: number | null
+          current_monthly_limit?: number | null
+          current_transaction_limit?: number | null
+          daily_limit_post_kyc?: number | null
+          daily_limit_pre_kyc?: number | null
+          daily_used?: number | null
+          id?: string
+          last_reset_date?: string | null
+          monthly_limit_post_kyc?: number | null
+          monthly_limit_pre_kyc?: number | null
+          monthly_used?: number | null
+          transaction_limit_post_kyc?: number | null
+          transaction_limit_pre_kyc?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_limits_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       users: {
         Row: {
           clerk_user_id: string
@@ -215,13 +283,13 @@ export type Database = {
           email: string
           full_name: string | null
           id: string
+          kyc_completion_percentage: number | null
+          kyc_current_step: number | null
+          kyc_last_updated: string | null
+          kyc_status: string | null
           phone_number: string | null
           profile_image_url: string | null
           updated_at: string | null
-          kyc_status: string | null
-          kyc_current_step: number | null
-          kyc_completion_percentage: number | null
-          kyc_last_updated: string | null
         }
         Insert: {
           clerk_user_id: string
@@ -229,13 +297,13 @@ export type Database = {
           email: string
           full_name?: string | null
           id?: string
+          kyc_completion_percentage?: number | null
+          kyc_current_step?: number | null
+          kyc_last_updated?: string | null
+          kyc_status?: string | null
           phone_number?: string | null
           profile_image_url?: string | null
           updated_at?: string | null
-          kyc_status?: string | null
-          kyc_current_step?: number | null
-          kyc_completion_percentage?: number | null
-          kyc_last_updated?: string | null
         }
         Update: {
           clerk_user_id?: string
@@ -243,44 +311,41 @@ export type Database = {
           email?: string
           full_name?: string | null
           id?: string
+          kyc_completion_percentage?: number | null
+          kyc_current_step?: number | null
+          kyc_last_updated?: string | null
+          kyc_status?: string | null
           phone_number?: string | null
           profile_image_url?: string | null
           updated_at?: string | null
-          kyc_status?: string | null
-          kyc_current_step?: number | null
-          kyc_completion_percentage?: number | null
-          kyc_last_updated?: string | null
         }
         Relationships: []
       }
       wallets: {
         Row: {
           available_balance: number
-          balance: number
           created_at: string | null
           currency: string
           id: string
-          pending_balance: number
+          reserved_balance: number
           updated_at: string | null
           user_id: string | null
         }
         Insert: {
           available_balance?: number
-          balance?: number
           created_at?: string | null
           currency: string
           id?: string
-          pending_balance?: number
+          reserved_balance?: number
           updated_at?: string | null
           user_id?: string | null
         }
         Update: {
           available_balance?: number
-          balance?: number
           created_at?: string | null
           currency?: string
           id?: string
-          pending_balance?: number
+          reserved_balance?: number
           updated_at?: string | null
           user_id?: string | null
         }
@@ -294,166 +359,20 @@ export type Database = {
           },
         ]
       }
-      user_limits: {
-        Row: {
-          id: string
-          user_id: string | null
-          daily_limit_pre_kyc: number | null
-          monthly_limit_pre_kyc: number | null
-          transaction_limit_pre_kyc: number | null
-          daily_limit_post_kyc: number | null
-          monthly_limit_post_kyc: number | null
-          transaction_limit_post_kyc: number | null
-          current_daily_limit: number | null
-          current_monthly_limit: number | null
-          current_transaction_limit: number | null
-          daily_used: number | null
-          monthly_used: number | null
-          last_reset_date: string | null
-          currency: string | null
-          created_at: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          id?: string
-          user_id?: string | null
-          daily_limit_pre_kyc?: number | null
-          monthly_limit_pre_kyc?: number | null
-          transaction_limit_pre_kyc?: number | null
-          daily_limit_post_kyc?: number | null
-          monthly_limit_post_kyc?: number | null
-          transaction_limit_post_kyc?: number | null
-          current_daily_limit?: number | null
-          current_monthly_limit?: number | null
-          current_transaction_limit?: number | null
-          daily_used?: number | null
-          monthly_used?: number | null
-          last_reset_date?: string | null
-          currency?: string | null
-          created_at?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          id?: string
-          user_id?: string | null
-          daily_limit_pre_kyc?: number | null
-          monthly_limit_pre_kyc?: number | null
-          transaction_limit_pre_kyc?: number | null
-          daily_limit_post_kyc?: number | null
-          monthly_limit_post_kyc?: number | null
-          transaction_limit_post_kyc?: number | null
-          current_daily_limit?: number | null
-          current_monthly_limit?: number | null
-          current_transaction_limit?: number | null
-          daily_used?: number | null
-          monthly_used?: number | null
-          last_reset_date?: string | null
-          currency?: string | null
-          created_at?: string | null
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "user_limits_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
     }
     Views: {
-      user_dashboard_data: {
-        Row: {
-          id: string | null
-          clerk_user_id: string | null
-          email: string | null
-          full_name: string | null
-          phone_number: string | null
-          profile_image_url: string | null
-          kyc_status: string | null
-          kyc_current_step: number | null
-          kyc_completion_percentage: number | null
-          kyc_last_updated: string | null
-          created_at: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          id?: string | null
-          clerk_user_id?: string | null
-          email?: string | null
-          full_name?: string | null
-          phone_number?: string | null
-          profile_image_url?: string | null
-          kyc_status?: string | null
-          kyc_current_step?: number | null
-          kyc_completion_percentage?: number | null
-          kyc_last_updated?: string | null
-          created_at?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          id?: string | null
-          clerk_user_id?: string | null
-          email?: string | null
-          full_name?: string | null
-          phone_number?: string | null
-          profile_image_url?: string | null
-          kyc_status?: string | null
-          kyc_current_step?: number | null
-          kyc_completion_percentage?: number | null
-          kyc_last_updated?: string | null
-          created_at?: string | null
-          updated_at?: string | null
-        }
-      }
-      user_limits_data: {
-        Row: {
-          id: string | null
-          user_id: string | null
-          current_daily_limit: number | null
-          current_monthly_limit: number | null
-          current_transaction_limit: number | null
-          daily_used: number | null
-          monthly_used: number | null
-          daily_remaining: number | null
-          monthly_remaining: number | null
-          currency: string | null
-          last_reset_date: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          id?: string | null
-          user_id?: string | null
-          current_daily_limit?: number | null
-          current_monthly_limit?: number | null
-          current_transaction_limit?: number | null
-          daily_used?: number | null
-          monthly_used?: number | null
-          daily_remaining?: number | null
-          monthly_remaining?: number | null
-          currency?: string | null
-          last_reset_date?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          id?: string | null
-          user_id?: string | null
-          current_daily_limit?: number | null
-          current_monthly_limit?: number | null
-          current_transaction_limit?: number | null
-          daily_used?: number | null
-          monthly_used?: number | null
-          daily_remaining?: number | null
-          monthly_remaining?: number | null
-          currency?: string | null
-          last_reset_date?: string | null
-          updated_at?: string | null
-        }
-      }
+      [_ in never]: never
     }
     Functions: {
+      check_transaction_limits: {
+        Args: { user_uuid: string; amount: number; currency_code?: string }
+        Returns: {
+          within_limits: boolean
+          limit_type: string
+          current_limit: number
+          would_exceed_by: number
+        }[]
+      }
       get_active_exchange_rate: {
         Args: { from_curr: string; to_curr: string }
         Returns: number
@@ -469,6 +388,34 @@ export type Database = {
       get_user_balance: {
         Args: { user_uuid: string; currency_code: string }
         Returns: number
+      }
+      get_user_limits: {
+        Args: { user_uuid: string; currency_code?: string }
+        Returns: {
+          daily_limit: number
+          monthly_limit: number
+          transaction_limit: number
+          daily_used: number
+          monthly_used: number
+          daily_remaining: number
+          monthly_remaining: number
+        }[]
+      }
+      get_user_reserved_balance: {
+        Args: { user_uuid: string; currency_code: string }
+        Returns: number
+      }
+      map_kyc_status: {
+        Args: { kyc_records_status: string }
+        Returns: string
+      }
+      reserve_balance: {
+        Args: { user_uuid: string; currency_code: string; amount: number }
+        Returns: boolean
+      }
+      unreserve_balance: {
+        Args: { user_uuid: string; currency_code: string; amount: number }
+        Returns: boolean
       }
       user_owns_resource: {
         Args: { resource_user_id: string }

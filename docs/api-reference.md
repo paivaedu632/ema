@@ -264,13 +264,13 @@ interface ApiResponse<T = any> {
       "currency": "AOA",
       "balance": 85000.00,
       "available_balance": 80000.00,
-      "pending_balance": 5000.00
+      "reserved_balance": 5000.00
     },
     {
       "currency": "EUR",
       "balance": 100.00,
       "available_balance": 100.00,
-      "pending_balance": 0.00
+      "reserved_balance": 0.00
     }
   ]
 }
@@ -288,7 +288,7 @@ interface ApiResponse<T = any> {
     "currency": "AOA",
     "balance": 85000.00,
     "available_balance": 80000.00,
-    "pending_balance": 5000.00
+    "reserved_balance": 5000.00
   }
 }
 ```

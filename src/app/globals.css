@@ -113,6 +113,28 @@
     color: #111827 !important; /* gray-900 - same as text color */
   }
 
+  /* EmaPay Balance Selector Styling - Similar to currency selector but for balance type selection */
+  .balance-selector {
+    @apply w-auto font-medium text-lg;
+    background-color: transparent !important;
+    border: none !important;
+    color: #111827 !important; /* gray-900 */
+    border-radius: 9999px !important; /* rounded-full */
+    padding: 0.25rem 0.75rem !important; /* py-1 px-3 */
+    box-shadow: none !important;
+    transition: background-color 0.2s ease-in-out !important;
+  }
+
+  .balance-selector:hover {
+    background-color: #f3f4f6 !important; /* gray-100 */
+  }
+
+  /* Increase arrow contrast for balance selector */
+  .balance-selector svg {
+    opacity: 1 !important; /* Full opacity for better contrast */
+    color: #111827 !important; /* gray-900 - same as text color */
+  }
+
   /* EmaPay Universal Primary Action Button Styling */
   .primary-action-button {
     @apply w-full text-white font-medium px-4;

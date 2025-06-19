@@ -24,10 +24,10 @@ export default function TransactionsPage() {
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const response = await fetch('/api/wallet/transactions')
+        const response = await fetch('/api/transactions')
         if (response.ok) {
           const result = await response.json()
-          if (result.success && result.data) {
+          if (result.success) {
             // Transform API data to component format
             const formattedTransactions = result.data.map((tx: any) => ({
               id: tx.id,
@@ -39,21 +39,15 @@ export default function TransactionsPage() {
             }))
             setTransactions(formattedTransactions)
           } else {
-            // Fallback to sample data if no transactions
-            setTransactions([
-              { id: 'sample-1', description: 'Bem-vindo ao EmaPay', amount: '+ 0 EUR', date: 'Hoje', type: 'received', status: 'completed' }
-            ])
+            setTransactions([])
           }
         } else {
-          throw new Error('Failed to fetch transactions')
+          throw new Error(`Failed to fetch transactions: ${response.status}`)
         }
       } catch (error) {
         console.error('Error fetching transactions:', error)
         setError('Erro ao carregar transações')
-        // Fallback to sample data on error
-        setTransactions([
-          { id: 'sample-1', description: 'Bem-vindo ao EmaPay', amount: '+ 0 EUR', date: 'Hoje', type: 'received', status: 'completed' }
-        ])
+        setTransactions([])
       } finally {
         setLoading(false)
       }
@@ -75,13 +69,15 @@ export default function TransactionsPage() {
         return 'Depósito'
       case 'withdraw':
         return 'Levantamento'
+      case 'receive':
+        return 'Recebimento'
       default:
         return 'Transação'
     }
   }
 
   const formatAmount = (amount: number, currency: string, type: string) => {
-    const sign = ['buy', 'deposit'].includes(type) ? '+ ' : '- '
+    const sign = ['buy', 'deposit', 'receive'].includes(type) ? '+ ' : '- '
     return `${sign}${amount.toFixed(2)} ${currency}`
   }
 
@@ -104,16 +100,19 @@ export default function TransactionsPage() {
 
   // Function to get transaction icon based on type and status
   const getTransactionIcon = (type: string, status: string) => {
-    if (status === 'declined') {
+    if (status === 'failed' || status === 'declined') {
       return <ShoppingBag className="w-5 h-5 text-gray-600" />
     }
-    
+
     switch (type) {
-      case 'received':
+      case 'receive':
+      case 'deposit':
         return <ArrowDownLeft className="w-5 h-5 text-green-600" />
-      case 'sent':
+      case 'send':
+      case 'withdraw':
         return <ArrowUpRight className="w-5 h-5 text-red-600" />
-      case 'purchase':
+      case 'buy':
+      case 'sell':
         return <ShoppingBag className="w-5 h-5 text-gray-600" />
       default:
         return <CreditCard className="w-5 h-5 text-gray-600" />

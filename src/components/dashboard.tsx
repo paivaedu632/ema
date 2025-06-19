@@ -115,14 +115,7 @@ export default function Dashboard() {
     fetchWalletData()
   }, [])
 
-  const handleCardClick = (account: typeof accounts[0]) => {
-    const params = new URLSearchParams({
-      currency: account.currency,
-      type: account.type,
-      amount: account.amount
-    })
-    router.push(`/wallet?${params.toString()}`)
-  }
+
 
   const handleSignOut = async () => {
     try {
@@ -137,9 +130,18 @@ export default function Dashboard() {
     router.push('/kyc/notifications')
   }
 
+  const handleCardClick = (account: typeof accounts[0]) => {
+    const params = new URLSearchParams({
+      currency: account.currency,
+      type: account.type,
+      amount: account.amount
+    })
+    router.push(`/wallet?${params.toString()}`)
+  }
 
 
-  // Generate account cards from real wallet balances
+
+  // Generate account cards from real wallet balances - 4 cards total (2 per currency)
   const accounts = walletBalances.flatMap((wallet) => [
     {
       type: 'Conta',
@@ -150,7 +152,7 @@ export default function Dashboard() {
     {
       type: 'Reservado',
       currency: wallet.currency,
-      amount: wallet.pending_balance.toFixed(2),
+      amount: wallet.reserved_balance.toFixed(2),
       flag: wallet.currency === 'AOA' ? <AngolaFlag /> : <EurFlag />
     }
   ])

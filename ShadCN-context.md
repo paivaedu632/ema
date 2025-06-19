@@ -105,6 +105,14 @@
 - **isValidTransactionAmount** - Validate if amount is valid for transaction
 - **formatCurrencyAmount** - Format currency amount with proper decimals
 - **calculateExchangeConversion** - Calculate exchange rate conversion
+- **Amount Validation** (`src/utils/amount-validation.ts`) - Client-side validation utilities for EmaPay transaction amounts with currency-specific rules
+- **validateAmount** - Validates amount for specific transaction type and currency with Portuguese error messages
+- **formatAmountForDisplay** - Formats numbers with appropriate thousand separators for AOA/EUR display
+- **getMinimumAmount** / **getMaximumAmount** - Get validation limits for transaction types and currencies
+- **TransactionType** - Type definitions for 'buy', 'sell', 'send', 'exchange', 'deposit' validation contexts
+- **Validation Rules**: AOA (min 10,000 buy/sell, max 1M send), EUR (min 10 buy/sell, max 50K buy, max 100K sell, max 10K send)
+- **Shortened Error Messages**: "Valor mínimo: 10,000 AOA", "Valor máximo: 50,000 EUR", "Mínimo: acima de 0 AOA" (concise format for better UX)
+- **Backend Limit Checking**: Preserved all backend validation and security while hiding UI error messages for cleaner user experience
 
 ### AWS KYC Utilities ✅ FULLY IMPLEMENTED (January 2025):
 - **API Handler Utilities** (`src/lib/aws-services/api-handler-utils.ts`) - Reusable utilities for handling AWS API routes with consistent error handling, validation, and response formatting
@@ -122,7 +130,7 @@
 ### Layout & UI Components:
 - **PageHeader** (`src/components/ui/page-header.tsx`) - Reusable page header with back button, title, and optional subtitle
 - **BackButton** (`src/components/ui/back-button.tsx`) - Reusable back navigation button with ArrowLeft icon and consistent styling
-- **AmountInput** (`src/components/ui/amount-input.tsx`) - Reusable amount input field with integrated currency selector and flag
+- **AmountInput** (`src/components/ui/amount-input.tsx`) - Reusable amount input field with integrated currency selector, flag, and client-side validation with real-time error messages (backend limit checking preserved but UI hidden for cleaner UX)
 - **FixedBottomAction** (`src/components/ui/fixed-bottom-action.tsx`) - Reusable fixed bottom container for primary/secondary action buttons
 - **SuccessScreen** (`src/components/ui/success-screen.tsx`) - Reusable success/confirmation screen with icon, message, and action buttons
 - **TransactionItem** (`src/components/ui/transaction-item.tsx`) - Reusable transaction/recipient list item with avatar, details, and optional action button
@@ -157,7 +165,9 @@
 - **ValidatedFormField** (`src/components/ui/validated-form-field.tsx`) - Default EmaPay validation form field with standardized border color validation (green for valid, red for invalid, black for neutral)
 - **DetailRow** (`src/components/ui/detail-row.tsx`) - Reusable detail display components (DetailRow, SimpleDetailRow) with copy-to-clipboard functionality and consistent styling
 - **InfoSection** (`src/components/ui/info-section.tsx`) - Reusable info display components (InfoSection, SimpleInfoSection) with icons, labels, values, and optional action buttons
-- **BalanceCard** (`src/components/ui/balance-card.tsx`) - Reusable balance display card with flag, type, amount, and click handler for consistent account balance displays
+- **BalanceCard** (`src/components/ui/balance-card.tsx`) - Reusable balance display card with flag, type, amount, and click handler for consistent account balance displays (optimized spacing: space-y-3 and space-x-2)
+- **BalanceSelector** (`src/components/ui/balance-selector.tsx`) - Dropdown selector for switching between available and reserved balance views with flag icons and EmaPay styling
+- **EnhancedBalanceCard** (`src/components/ui/enhanced-balance-card.tsx`) - Advanced balance card with integrated balance selector dropdown for 2-balance system (available/reserved)
 - **AvailableBalance** (`src/components/ui/available-balance.tsx`) - Reusable balance display component with standardized "Seu saldo:" label, .label-info typography class, and consistent styling across all EmaPay components
 - **StepIndicator** (`src/components/ui/step-indicator.tsx`) - Reusable step progress indicator with dots for multi-step flows
 - **CurrencyAmount** (`src/components/ui/currency-amount.tsx`) - Reusable currency amount display with consistent formatting and sizing options

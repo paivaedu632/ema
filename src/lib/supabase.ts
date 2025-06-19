@@ -191,6 +191,38 @@ export const getUserAvailableBalance = async (userId: string, currency: string) 
       user_uuid: userId,
       currency_code: currency
     })
-  
+
+  return { data, error }
+}
+
+export const getUserReservedBalance = async (userId: string, currency: string) => {
+  const { data, error } = await supabase
+    .rpc('get_user_reserved_balance', {
+      user_uuid: userId,
+      currency_code: currency
+    })
+
+  return { data, error }
+}
+
+export const reserveUserBalance = async (userId: string, currency: string, amount: number) => {
+  const { data, error } = await supabase
+    .rpc('reserve_balance', {
+      user_uuid: userId,
+      currency_code: currency,
+      amount: amount
+    })
+
+  return { data, error }
+}
+
+export const unreserveUserBalance = async (userId: string, currency: string, amount: number) => {
+  const { data, error } = await supabase
+    .rpc('unreserve_balance', {
+      user_uuid: userId,
+      currency_code: currency,
+      amount: amount
+    })
+
   return { data, error }
 }

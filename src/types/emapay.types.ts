@@ -114,9 +114,8 @@ export interface TransactionMetadata {
 // Wallet balance types
 export interface WalletBalance {
   currency: Currency
-  balance: number
   available_balance: number
-  pending_balance: number
+  reserved_balance: number
 }
 
 // Exchange rate types

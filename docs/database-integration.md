@@ -30,9 +30,10 @@ npx supabase db push
 - **Key Fields**: `clerk_user_id`, `email`, `kyc_status`, `kyc_current_step`
 - **RLS**: Users see only their own data
 
-#### wallets  
-- **Purpose**: Multi-currency balances (AOA/EUR)
-- **Key Fields**: `user_id`, `currency`, `balance`, `available_balance`
+#### wallets
+- **Purpose**: Multi-currency balances (AOA/EUR) with 2-balance system
+- **Key Fields**: `user_id`, `currency`, `balance`, `available_balance`, `reserved_balance`
+- **Balance System**: `available_balance` (spendable) + `reserved_balance` (locked for sales)
 - **Constraint**: One wallet per currency per user
 
 #### transactions
@@ -167,8 +168,17 @@ Post-KYC:
 -- Get user balance
 SELECT * FROM get_user_balance(user_uuid, 'EUR');
 
--- Get available balance  
+-- Get available balance
 SELECT * FROM get_user_available_balance(user_uuid, 'EUR');
+
+-- Get reserved balance (NEW - for trading system)
+SELECT * FROM get_user_reserved_balance(user_uuid, 'EUR');
+
+-- Reserve balance for trading (NEW)
+SELECT * FROM reserve_balance(user_uuid, 'EUR', 100.00);
+
+-- Unreserve balance (cancel sale) (NEW)
+SELECT * FROM unreserve_balance(user_uuid, 'EUR', 100.00);
 
 -- Get exchange rate
 SELECT * FROM get_active_exchange_rate('EUR', 'AOA');

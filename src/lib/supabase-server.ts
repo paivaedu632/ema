@@ -1,14 +1,9 @@
 import { createClient } from '@supabase/supabase-js'
 import { Database } from '@/types/database.types'
 
-// Use local Supabase for development, remote for production
-const supabaseUrl = process.env.NODE_ENV === 'development'
-  ? 'http://127.0.0.1:54321'
-  : process.env.NEXT_PUBLIC_SUPABASE_URL!
-
-const supabaseServiceKey = process.env.NODE_ENV === 'development'
-  ? 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImV4cCI6MTk4MzgxMjk5Nn0.EGIM96RAZx35lJzdJsyH-qQwv8Hdp7fsn3W0YpN81IU'
-  : process.env.SUPABASE_SERVICE_ROLE_KEY!
+// Use remote Supabase for both development and production
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
 
 // Server-side client with service role key for admin operations
 export const supabaseAdmin = createClient<Database>(supabaseUrl, supabaseServiceKey, {
@@ -44,6 +39,20 @@ export const createUser = async (userData: {
   phone_number?: string
   profile_image_url?: string
 }) => {
+  // First check if user already exists
+  const { data: existingUser } = await supabaseAdmin
+    .from('users')
+    .select('*')
+    .eq('clerk_user_id', userData.clerk_user_id)
+    .single()
+
+  if (existingUser) {
+    return {
+      data: existingUser,
+      error: { message: 'User already exists', code: 'USER_EXISTS' }
+    }
+  }
+
   const { data, error } = await supabaseAdmin
     .from('users')
     .insert({
@@ -61,47 +70,42 @@ export const createUser = async (userData: {
 
 export const createUserWallets = async (userId: string) => {
   const wallets = [
-    { user_id: userId, currency: 'AOA', balance: 0, available_balance: 0, pending_balance: 0 },
-    { user_id: userId, currency: 'EUR', balance: 0, available_balance: 0, pending_balance: 0 }
+    { user_id: userId, currency: 'AOA', available_balance: 0, reserved_balance: 0 },
+    { user_id: userId, currency: 'EUR', available_balance: 0, reserved_balance: 0 }
   ]
-  
+
   const { data, error } = await supabaseAdmin
     .from('wallets')
     .insert(wallets)
     .select()
-  
+
   return { data, error }
 }
 
 export const updateUserBalance = async (
-  userId: string, 
-  currency: string, 
+  userId: string,
+  currency: string,
   amount: number,
   type: 'add' | 'subtract' = 'add'
 ) => {
   const { data: wallet, error: fetchError } = await supabaseAdmin
     .from('wallets')
-    .select('*')
+    .select('available_balance, reserved_balance')
     .eq('user_id', userId)
     .eq('currency', currency)
     .single()
-  
+
   if (fetchError || !wallet) {
     return { data: null, error: fetchError || new Error('Wallet not found') }
   }
-  
-  const newBalance = type === 'add' 
-    ? wallet.balance + amount 
-    : wallet.balance - amount
-  
+
   const newAvailableBalance = type === 'add'
     ? wallet.available_balance + amount
     : wallet.available_balance - amount
-  
+
   const { data, error } = await supabaseAdmin
     .from('wallets')
-    .update({ 
-      balance: newBalance,
+    .update({
       available_balance: newAvailableBalance,
       updated_at: new Date().toISOString()
     })
@@ -109,7 +113,7 @@ export const updateUserBalance = async (
     .eq('currency', currency)
     .select()
     .single()
-  
+
   return { data, error }
 }
 

@@ -31,9 +31,9 @@ export function BalanceCard({
         ${className}
       `}
     >
-      <div className="space-y-6">
+      <div className="space-y-3">
         {/* Flag and Account Type */}
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-2">
           {flag}
           <h3 className="heading-card">{type}</h3>
         </div>

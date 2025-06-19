@@ -43,7 +43,7 @@ export async function GET(
     // Get wallet balance for specific currency
     const { data: wallet, error: walletError } = await supabaseAdmin
       .from('wallets')
-      .select('currency, balance, available_balance, pending_balance, updated_at')
+      .select('currency, available_balance, reserved_balance, updated_at')
       .eq('user_id', user.id)
       .eq('currency', currency)
       .single()
@@ -55,9 +55,8 @@ export async function GET(
           success: true,
           data: {
             currency,
-            balance: 0.00,
             available_balance: 0.00,
-            pending_balance: 0.00,
+            reserved_balance: 0.00,
             last_updated: new Date().toISOString()
           },
           timestamp: new Date().toISOString()
@@ -70,9 +69,8 @@ export async function GET(
     // Format response data
     const formattedWallet = {
       currency: wallet.currency,
-      balance: parseFloat(wallet.balance.toString()),
       available_balance: parseFloat(wallet.available_balance.toString()),
-      pending_balance: parseFloat(wallet.pending_balance.toString()),
+      reserved_balance: parseFloat(wallet.reserved_balance.toString()),
       last_updated: wallet.updated_at
     }
 

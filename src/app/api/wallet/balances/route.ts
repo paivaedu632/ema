@@ -31,7 +31,7 @@ export async function GET() {
     // Get user wallets for all currencies
     const { data: wallets, error: walletsError } = await supabaseAdmin
       .from('wallets')
-      .select('currency, balance, available_balance, pending_balance, updated_at')
+      .select('currency, available_balance, reserved_balance, updated_at')
       .eq('user_id', user.id)
       .order('currency', { ascending: true })
 
@@ -42,9 +42,8 @@ export async function GET() {
     // Format response data
     const formattedWallets = wallets?.map(wallet => ({
       currency: wallet.currency,
-      balance: parseFloat(wallet.balance.toString()),
       available_balance: parseFloat(wallet.available_balance.toString()),
-      pending_balance: parseFloat(wallet.pending_balance.toString()),
+      reserved_balance: parseFloat(wallet.reserved_balance.toString()),
       last_updated: wallet.updated_at
     })) || []
 

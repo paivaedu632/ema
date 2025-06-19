@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { RefreshCw, Clock, Wallet, AlertTriangle } from "lucide-react"
+import { RefreshCw, Clock, Wallet } from "lucide-react"
 import { PageHeader } from "@/components/ui/page-header"
 import { AmountInput } from "@/components/ui/amount-input"
 import { FixedBottomAction } from "@/components/ui/fixed-bottom-action"
@@ -15,6 +15,7 @@ import { useCanContinue } from "@/hooks/use-amount-validation"
 import { calculateFeeAmount, getTransactionSummary } from "@/utils/fee-calculations"
 import { checkTransactionLimitsClient } from "@/lib/supabase"
 
+
 export function BuyFlow() {
   const [amount, setAmount] = useState("")
   const [currency, setCurrency] = useState("AOA")
@@ -22,6 +23,7 @@ export function BuyFlow() {
   const [limitCheck, setLimitCheck] = useState<any>(null)
   const [limitError, setLimitError] = useState<string | null>(null)
   const [checkingLimits, setCheckingLimits] = useState(false)
+  const [validationError, setValidationError] = useState<string>("")
 
   // Static exchange rates as per user preference
   const exchangeRate = "1.00 EUR = 924.0675 AOA"
@@ -39,7 +41,7 @@ export function BuyFlow() {
 
   // Use reusable validation hook with limit checking
   const baseCanContinue = useCanContinue(amount)
-  const canContinue = baseCanContinue && !limitError && !checkingLimits && (limitCheck?.within_limits !== false)
+  const canContinue = baseCanContinue && !limitError && !checkingLimits && (limitCheck?.within_limits !== false) && !validationError
 
   // Use reusable fee calculation utilities
   const feeAmount = calculateFeeAmount(amount, currency)
@@ -89,6 +91,8 @@ export function BuyFlow() {
     const timeoutId = setTimeout(checkLimits, 500)
     return () => clearTimeout(timeoutId)
   }, [amount])
+
+
 
   const handleContinue = () => {
     if (currentStep === "amount") {
@@ -141,6 +145,12 @@ export function BuyFlow() {
             currency={currency}
             onAmountChange={setAmount}
             onCurrencyChange={setCurrency}
+            transactionType="buy"
+            showValidation={true}
+            onValidationChange={(isValid, errorMessage) => {
+              setValidationError(errorMessage || "")
+            }}
+            className="mb-6"
           />
 
           <AvailableBalance
@@ -172,31 +182,7 @@ export function BuyFlow() {
                   fee={transactionSummary.fee}
                 />
 
-                {/* Limit Check Status */}
-                {checkingLimits && (
-                  <div className="bg-gray-50 rounded-2xl p-4 flex items-center space-x-3">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600"></div>
-                    <span className="text-sm text-gray-600">Verificando limites...</span>
-                  </div>
-                )}
 
-                {limitError && (
-                  <div className="bg-red-50 rounded-2xl p-4 flex items-start space-x-3">
-                    <AlertTriangle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-                    <div className="flex-1">
-                      <p className="text-sm text-red-800 font-medium">Limite excedido</p>
-                      <p className="text-sm text-red-600 mt-1">{limitError}</p>
-                      {limitCheck?.requires_kyc && (
-                        <button
-                          onClick={() => window.location.href = '/kyc/notifications'}
-                          className="text-sm text-red-700 underline mt-2 hover:text-red-800"
-                        >
-                          Iniciar verificação KYC →
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                )}
               </div>
             )}
           </div>
