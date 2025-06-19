@@ -1,8 +1,14 @@
 import { createClient } from '@supabase/supabase-js'
 import { Database } from '@/types/database.types'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+// Use local Supabase for development, remote for production
+const supabaseUrl = process.env.NODE_ENV === 'development'
+  ? 'http://127.0.0.1:54321'
+  : process.env.NEXT_PUBLIC_SUPABASE_URL!
+
+const supabaseServiceKey = process.env.NODE_ENV === 'development'
+  ? 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImV4cCI6MTk4MzgxMjk5Nn0.EGIM96RAZx35lJzdJsyH-qQwv8Hdp7fsn3W0YpN81IU'
+  : process.env.SUPABASE_SERVICE_ROLE_KEY!
 
 // Server-side client with service role key for admin operations
 export const supabaseAdmin = createClient<Database>(supabaseUrl, supabaseServiceKey, {
@@ -21,6 +27,16 @@ export const createServerSupabaseClient = () => {
 }
 
 // Helper functions for server-side operations
+export const getUserByClerkId = async (clerkUserId: string) => {
+  const { data, error } = await supabaseAdmin
+    .from('users')
+    .select('*')
+    .eq('clerk_user_id', clerkUserId)
+    .single()
+
+  return { data, error }
+}
+
 export const createUser = async (userData: {
   clerk_user_id: string
   email: string

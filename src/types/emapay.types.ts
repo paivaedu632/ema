@@ -95,9 +95,7 @@ export interface RecipientInfo {
   name?: string
   email?: string
   phone?: string
-  bank_account?: string
-  iban?: string
-  swift_code?: string
+  notes?: string
 }
 
 export interface TransactionMetadata {

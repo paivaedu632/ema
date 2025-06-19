@@ -26,17 +26,93 @@ export default function Dashboard() {
   const { signOut } = useClerk()
   const [kycStatus, setKycStatus] = useState<KYCStatusInfo | null>(null)
   const [showKycBanner, setShowKycBanner] = useState(true)
+  const [loading, setLoading] = useState(true)
+  const [walletBalances, setWalletBalances] = useState<any[]>([])
+  const [transactions, setTransactions] = useState<any[]>([])
+  const [balancesLoading, setBalancesLoading] = useState(true)
 
-  // Mock KYC status - In real implementation, fetch from API
+  // Fetch real KYC status from API
   useEffect(() => {
-    // Simulate fetching KYC status
-    const mockKycStatus: KYCStatusInfo = {
-      status: 'not_started',
-      currentStep: 1,
-      totalSteps: 16,
-      completionPercentage: 0
+    const fetchKycStatus = async () => {
+      try {
+        const response = await fetch('/api/kyc/status')
+        if (response.ok) {
+          const result = await response.json()
+          setKycStatus({
+            status: result.data.status,
+            currentStep: result.data.current_step,
+            totalSteps: result.data.total_steps,
+            completionPercentage: result.data.completion_percentage
+          })
+        } else {
+          console.warn('Failed to fetch KYC status:', response.status)
+        }
+      } catch (error) {
+        console.error('Error fetching KYC status:', error)
+      } finally {
+        setLoading(false)
+      }
     }
-    setKycStatus(mockKycStatus)
+
+    fetchKycStatus()
+  }, [])
+
+  // Fetch wallet balances and transactions
+  useEffect(() => {
+    const fetchWalletData = async () => {
+      try {
+        // Fetch wallet balances
+        const balancesResponse = await fetch('/api/wallet/balances')
+        if (balancesResponse.ok) {
+          const balancesResult = await balancesResponse.json()
+          setWalletBalances(balancesResult.data || [])
+        } else {
+          console.warn('Failed to fetch wallet balances:', balancesResponse.status)
+        }
+
+        // Fetch recent transactions
+        const transactionsResponse = await fetch('/api/transactions?limit=3')
+        if (transactionsResponse.ok) {
+          const transactionsResult = await transactionsResponse.json()
+          setTransactions(transactionsResult.data || [])
+        } else {
+          console.warn('Failed to fetch transactions:', transactionsResponse.status)
+        }
+      } catch (error) {
+        console.error('Error fetching wallet data:', error)
+      } finally {
+        setBalancesLoading(false)
+      }
+    }
+
+    fetchWalletData()
+  }, [])
+
+  // Fetch wallet balances and transactions
+  useEffect(() => {
+    const fetchWalletData = async () => {
+      try {
+        // Fetch wallet balances
+        const balancesResponse = await fetch('/api/wallet/balances')
+        if (balancesResponse.ok) {
+          const balancesResult = await balancesResponse.json()
+          setWalletBalances(balancesResult.data || [])
+        }
+
+        // Fetch recent transactions
+        const transactionsResponse = await fetch('/api/transactions?limit=3')
+        if (transactionsResponse.ok) {
+          const transactionsResult = await transactionsResponse.json()
+          setTransactions(transactionsResult.data || [])
+        }
+      } catch (error) {
+        console.error('Error fetching wallet data:', error)
+      } finally {
+        setBalancesLoading(false)
+      }
+    }
+
+    fetchWalletData()
   }, [])
 
   const handleCardClick = (account: typeof accounts[0]) => {
@@ -63,40 +139,65 @@ export default function Dashboard() {
 
 
 
-  // Mock data for account balances (matching reference design)
-  const accounts = [
+  // Generate account cards from real wallet balances
+  const accounts = walletBalances.flatMap((wallet) => [
     {
       type: 'Conta',
-      currency: 'AOA',
-      amount: '100',
-      flag: <AngolaFlag />
+      currency: wallet.currency,
+      amount: wallet.available_balance.toFixed(2),
+      flag: wallet.currency === 'AOA' ? <AngolaFlag /> : <EurFlag />
     },
     {
       type: 'Reservado',
-      currency: 'AOA',
-      amount: '100',
-      flag: <AngolaFlag />
-    },
-    {
-      type: 'Conta',
-      currency: 'EUR',
-      amount: '50',
-      flag: <EurFlag />
-    },
-    {
-      type: 'Reservado',
-      currency: 'EUR',
-      amount: '25',
-      flag: <EurFlag />
-    },
-  ]
+      currency: wallet.currency,
+      amount: wallet.pending_balance.toFixed(2),
+      flag: wallet.currency === 'AOA' ? <AngolaFlag /> : <EurFlag />
+    }
+  ])
 
-  // Mock data for transactions (matching reference design)
-  const transactions = [
-    { id: '155034567', description: 'Google Services', amount: '+ 100 AOA', date: 'Today, 4:32pm', type: 'received', status: 'completed' },
-    { id: '155034568', description: 'Ai Builder Club', amount: '25.90 USD', date: 'Today', type: 'purchase', status: 'declined' },
-    { id: '155034569', description: 'Ai Builder Club', amount: '25.90 USD', date: 'Yesterday', type: 'purchase', status: 'declined' },
-  ]
+  // Format real transactions for display
+  const formatTransactionAmount = (transaction: any) => {
+    const sign = transaction.type === 'deposit' || transaction.type === 'receive' ? '+ ' : ''
+    return `${sign}${transaction.amount.toFixed(2)} ${transaction.currency}`
+  }
+
+  const formatTransactionDate = (dateString: string) => {
+    const date = new Date(dateString)
+    const now = new Date()
+    const diffTime = Math.abs(now.getTime() - date.getTime())
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+
+    if (diffDays === 1) {
+      return `Today, ${date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}`
+    } else if (diffDays === 2) {
+      return 'Yesterday'
+    } else {
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+    }
+  }
+
+  const getTransactionDescription = (transaction: any) => {
+    if (transaction.metadata?.description) {
+      return transaction.metadata.description
+    }
+
+    switch (transaction.type) {
+      case 'deposit':
+        return 'Deposit'
+      case 'withdraw':
+        return 'Withdrawal'
+      case 'send':
+        return transaction.recipient_info?.name || 'Transfer Sent'
+      case 'receive':
+        return 'Transfer Received'
+      case 'buy':
+        return 'Currency Purchase'
+      case 'sell':
+        return 'Currency Sale'
+      default:
+        return 'Transaction'
+    }
+  }
 
   // Function to get transaction icon based on type and status
   const getTransactionIcon = (type: string, status: string) => {
@@ -202,16 +303,25 @@ export default function Dashboard() {
         <div className="mb-8">
           <h2 className="heading-section mb-4">Saldo</h2>
           <div className="flex space-x-4 overflow-x-auto pb-2">
-            {accounts.map((account, index) => (
-              <BalanceCard
-                key={index}
-                type={account.type}
-                currency={account.currency}
-                amount={account.amount}
-                flag={account.flag}
-                onClick={() => handleCardClick(account)}
-              />
-            ))}
+            {balancesLoading ? (
+              // Loading skeleton for balance cards
+              <>
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="flex-shrink-0 w-32 h-20 bg-gray-100 rounded-2xl animate-pulse" />
+                ))}
+              </>
+            ) : (
+              accounts.map((account, index) => (
+                <BalanceCard
+                  key={index}
+                  type={account.type}
+                  currency={account.currency}
+                  amount={account.amount}
+                  flag={account.flag}
+                  onClick={() => handleCardClick(account)}
+                />
+              ))
+            )}
           </div>
 
           {/* Primary Action Buttons */}
@@ -234,7 +344,22 @@ export default function Dashboard() {
           </div>
 
           <div className="space-y-4">
-            {transactions.map((transaction) => (
+            {balancesLoading ? (
+              // Loading skeleton for transactions
+              <>
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="flex items-center space-x-3 p-3">
+                    <div className="w-10 h-10 bg-gray-100 rounded-full animate-pulse" />
+                    <div className="flex-1 space-y-2">
+                      <div className="h-4 bg-gray-100 rounded animate-pulse w-3/4" />
+                      <div className="h-3 bg-gray-100 rounded animate-pulse w-1/2" />
+                    </div>
+                    <div className="h-4 bg-gray-100 rounded animate-pulse w-16" />
+                  </div>
+                ))}
+              </>
+            ) : transactions.length > 0 ? (
+              transactions.map((transaction) => (
               <button
                 key={transaction.id}
                 onClick={() => router.push(`/transaction/${transaction.id}`)}
@@ -247,21 +372,30 @@ export default function Dashboard() {
 
                 {/* Transaction Details */}
                 <div className="flex-1 text-left">
-                  <p className="value-secondary">{transaction.description}</p>
+                  <p className="value-secondary">{getTransactionDescription(transaction)}</p>
                   <p className="label-form">
-                    {transaction.status === 'declined' && (
-                      <span className="text-red-600">Declined · </span>
+                    {transaction.status === 'failed' && (
+                      <span className="text-red-600">Failed · </span>
                     )}
-                    {transaction.date}
+                    {transaction.status === 'pending' && (
+                      <span className="text-yellow-600">Pending · </span>
+                    )}
+                    {formatTransactionDate(transaction.created_at)}
                   </p>
                 </div>
 
                 {/* Transaction Amount */}
                 <div className="text-right">
-                  <p className="value-secondary">{transaction.amount}</p>
+                  <p className="value-secondary">{formatTransactionAmount(transaction)}</p>
                 </div>
               </button>
-            ))}
+              ))
+            ) : (
+              // Empty state for transactions
+              <div className="text-center py-8">
+                <p className="text-gray-500 text-sm">Nenhuma transação encontrada</p>
+              </div>
+            )}
           </div>
         </div>
         </main>

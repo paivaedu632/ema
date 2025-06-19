@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
-import { RefreshCw, Clock, Wallet } from "lucide-react"
+import { useState, useEffect } from "react"
+import { RefreshCw, Clock, Wallet, AlertTriangle } from "lucide-react"
 import { PageHeader } from "@/components/ui/page-header"
 import { AmountInput } from "@/components/ui/amount-input"
 import { FixedBottomAction } from "@/components/ui/fixed-bottom-action"
@@ -13,11 +13,15 @@ import { TransactionSummary } from "@/components/ui/transaction-summary"
 import { useTransactionFlow } from "@/hooks/use-multi-step-flow"
 import { useCanContinue } from "@/hooks/use-amount-validation"
 import { calculateFeeAmount, getTransactionSummary } from "@/utils/fee-calculations"
+import { checkTransactionLimitsClient } from "@/lib/supabase"
 
 export function BuyFlow() {
   const [amount, setAmount] = useState("")
   const [currency, setCurrency] = useState("AOA")
   const [availableBalance] = useState("100 EUR")
+  const [limitCheck, setLimitCheck] = useState<any>(null)
+  const [limitError, setLimitError] = useState<string | null>(null)
+  const [checkingLimits, setCheckingLimits] = useState(false)
 
   // Static exchange rates as per user preference
   const exchangeRate = "1.00 EUR = 924.0675 AOA"
@@ -33,20 +37,93 @@ export function BuyFlow() {
     steps: ["amount", "confirmation", "success"]
   })
 
-  // Use reusable validation hook
-  const canContinue = useCanContinue(amount)
+  // Use reusable validation hook with limit checking
+  const baseCanContinue = useCanContinue(amount)
+  const canContinue = baseCanContinue && !limitError && !checkingLimits && (limitCheck?.within_limits !== false)
 
   // Use reusable fee calculation utilities
   const feeAmount = calculateFeeAmount(amount, currency)
   const transactionSummary = getTransactionSummary(amount, currency)
 
+  // Check transaction limits when amount changes
+  useEffect(() => {
+    const checkLimits = async () => {
+      if (!amount || amount === "0" || isNaN(Number(amount))) {
+        setLimitCheck(null)
+        setLimitError(null)
+        return
+      }
+
+      setCheckingLimits(true)
+      setLimitError(null)
+
+      try {
+        const { data, error } = await checkTransactionLimitsClient(
+          Number(amount),
+          'EUR', // Buy operations use EUR as base currency
+          'buy'
+        )
+
+        if (error) {
+          setLimitError('Erro ao verificar limites. Tente novamente.')
+          setLimitCheck(null)
+        } else {
+          setLimitCheck(data)
+          if (data && !data.within_limits) {
+            if (data.requires_kyc) {
+              setLimitError('Verificação KYC necessária para esta transação.')
+            } else {
+              setLimitError(`Limite ${data.limit_type} excedido. Limite atual: ${data.current_limit} EUR`)
+            }
+          }
+        }
+      } catch (error) {
+        setLimitError('Erro ao verificar limites. Tente novamente.')
+        setLimitCheck(null)
+      } finally {
+        setCheckingLimits(false)
+      }
+    }
+
+    // Debounce the limit check
+    const timeoutId = setTimeout(checkLimits, 500)
+    return () => clearTimeout(timeoutId)
+  }, [amount])
+
   const handleContinue = () => {
     if (currentStep === "amount") {
       setStep("confirmation")
     } else if (currentStep === "confirmation") {
-      // Process the transaction and go to success
-      // TODO: Process buy transaction
-      setStep("success")
+      processBuyTransaction()
+    }
+  }
+
+  const processBuyTransaction = async () => {
+    try {
+      const response = await fetch('/api/transactions/buy', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          amount: Number(amount),
+          exchangeRate: 924.0675 // Static rate as per user preference
+        })
+      })
+
+      const result = await response.json()
+
+      if (result.success) {
+        // Transaction successful, go to success screen
+        setStep("success")
+      } else {
+        // Handle transaction error
+        console.error('Transaction failed:', result.error)
+        alert(`Erro na transação: ${result.error}`)
+      }
+    } catch (error) {
+      console.error('Error processing buy transaction:', error)
+      alert('Erro ao processar transação. Tente novamente.')
     }
   }
 
@@ -94,6 +171,32 @@ export function BuyFlow() {
                   amount={transactionSummary.total}
                   fee={transactionSummary.fee}
                 />
+
+                {/* Limit Check Status */}
+                {checkingLimits && (
+                  <div className="bg-gray-50 rounded-2xl p-4 flex items-center space-x-3">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600"></div>
+                    <span className="text-sm text-gray-600">Verificando limites...</span>
+                  </div>
+                )}
+
+                {limitError && (
+                  <div className="bg-red-50 rounded-2xl p-4 flex items-start space-x-3">
+                    <AlertTriangle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                    <div className="flex-1">
+                      <p className="text-sm text-red-800 font-medium">Limite excedido</p>
+                      <p className="text-sm text-red-600 mt-1">{limitError}</p>
+                      {limitCheck?.requires_kyc && (
+                        <button
+                          onClick={() => window.location.href = '/kyc/notifications'}
+                          className="text-sm text-red-700 underline mt-2 hover:text-red-800"
+                        >
+                          Iniciar verificação KYC →
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>

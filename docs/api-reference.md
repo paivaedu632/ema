@@ -293,6 +293,39 @@ interface ApiResponse<T = any> {
 }
 ```
 
+#### POST /api/test-deposit ⚠️ **TESTING ONLY**
+**Purpose**: Add money to user wallets for testing purposes (simulates deposit functionality)
+**Authentication**: Clerk JWT required
+**⚠️ Note**: This is a temporary endpoint for testing only. Will be replaced with actual payment gateway integration.
+**Request Body**:
+```json
+{
+  "amount": 100.00,
+  "currency": "EUR"
+}
+```
+**Response**:
+```json
+{
+  "success": true,
+  "message": "Depósito de teste processado com sucesso",
+  "data": {
+    "wallet": {
+      "currency": "EUR",
+      "balance": 200.00,
+      "available_balance": 200.00,
+      "last_updated": "2025-06-19T10:30:00.000Z"
+    },
+    "deposit": {
+      "amount": 100.00,
+      "currency": "EUR",
+      "timestamp": "2025-06-19T10:30:00.000Z"
+    }
+  },
+  "timestamp": "2025-06-19T10:30:00.000Z"
+}
+```
+
 ### Transaction Management
 
 #### GET /api/transactions

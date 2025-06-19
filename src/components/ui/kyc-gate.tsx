@@ -49,24 +49,70 @@ export function KYCGate({
   const [showKYCModal, setShowKYCModal] = useState(false)
   const [userLimits, setUserLimits] = useState<UserLimits | null>(null)
 
-  // Mock user limits - In real implementation, fetch from API based on KYC status
+  // Fetch real user limits from API
   useEffect(() => {
-    const mockLimits: UserLimits = {
-      current: {
-        dailyLimit: 100,
-        monthlyLimit: 500,
-        transactionLimit: 100,
-        currency: 'EUR'
-      },
-      afterKYC: {
-        dailyLimit: 10000,
-        monthlyLimit: 50000,
-        transactionLimit: 5000,
-        currency: 'EUR'
-      },
-      kycStatus: 'not_started' // This would come from API
+    const fetchUserLimits = async () => {
+      try {
+        const response = await fetch('/api/user/limits')
+        if (response.ok) {
+          const result = await response.json()
+          const limits: UserLimits = {
+            current: {
+              dailyLimit: result.data.current_limits.daily_limit,
+              monthlyLimit: result.data.current_limits.monthly_limit,
+              transactionLimit: result.data.current_limits.transaction_limit,
+              currency: result.data.current_limits.currency
+            },
+            afterKYC: {
+              dailyLimit: result.data.kyc_limits.daily_limit,
+              monthlyLimit: result.data.kyc_limits.monthly_limit,
+              transactionLimit: result.data.kyc_limits.transaction_limit,
+              currency: result.data.kyc_limits.currency
+            },
+            kycStatus: result.data.kyc_status
+          }
+          setUserLimits(limits)
+        } else {
+          console.warn('Failed to fetch user limits:', response.status)
+          // Fallback to default limits if API fails
+          setUserLimits({
+            current: {
+              dailyLimit: 100,
+              monthlyLimit: 500,
+              transactionLimit: 100,
+              currency: 'EUR'
+            },
+            afterKYC: {
+              dailyLimit: 10000,
+              monthlyLimit: 50000,
+              transactionLimit: 5000,
+              currency: 'EUR'
+            },
+            kycStatus: 'not_started'
+          })
+        }
+      } catch (error) {
+        console.error('Error fetching user limits:', error)
+        // Fallback to default limits if API fails
+        setUserLimits({
+          current: {
+            dailyLimit: 100,
+            monthlyLimit: 500,
+            transactionLimit: 100,
+            currency: 'EUR'
+          },
+          afterKYC: {
+            dailyLimit: 10000,
+            monthlyLimit: 50000,
+            transactionLimit: 5000,
+            currency: 'EUR'
+          },
+          kycStatus: 'not_started'
+        })
+      }
     }
-    setUserLimits(mockLimits)
+
+    fetchUserLimits()
   }, [])
 
   // Check if transaction requires KYC
@@ -188,22 +234,42 @@ export function KYCGate({
  */
 export function useKYCCheck() {
   const [kycStatus, setKycStatus] = useState<'not_started' | 'in_progress' | 'pending_review' | 'approved' | 'rejected'>('not_started')
+  const [limits, setLimits] = useState({
+    transactionLimit: 100,
+    dailyLimit: 500,
+    monthlyLimit: 2000
+  })
 
-  const checkKYCRequired = (action: string, amount?: number) => {
-    // Mock implementation - replace with actual API call
-    const limits = {
-      transactionLimit: 100,
-      dailyLimit: 500,
-      monthlyLimit: 2000
+  // Fetch real limits from API
+  React.useEffect(() => {
+    const fetchLimits = async () => {
+      try {
+        const response = await fetch('/api/user/limits')
+        if (response.ok) {
+          const result = await response.json()
+          setKycStatus(result.data.kyc_status)
+          setLimits({
+            transactionLimit: result.data.current_limits.transaction_limit,
+            dailyLimit: result.data.current_limits.daily_limit,
+            monthlyLimit: result.data.current_limits.monthly_limit
+          })
+        }
+      } catch (error) {
+        console.error('Error fetching limits for KYC check:', error)
+      }
     }
 
+    fetchLimits()
+  }, [])
+
+  const checkKYCRequired = (action: string, amount?: number) => {
     if (kycStatus === 'approved') return false
-    
+
     const alwaysRequireKYC = ['withdraw', 'send_external']
     if (alwaysRequireKYC.includes(action)) return true
-    
+
     if (amount && amount > limits.transactionLimit) return true
-    
+
     return false
   }
 

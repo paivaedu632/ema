@@ -10,11 +10,10 @@ import { ChevronRight, ShoppingBag, ArrowUpRight, ArrowDownLeft, CreditCard, Ref
 
 interface WalletProps {
   currency?: string
-  accountType?: string
   amount?: string
 }
 
-export default function Wallet({ currency = 'EUR', accountType = 'Conta', amount = '0.00' }: WalletProps) {
+export default function Wallet({ currency = 'EUR', amount = '0.00' }: WalletProps) {
   const router = useRouter()
 
   // Get the appropriate flag component based on currency
@@ -29,14 +28,7 @@ export default function Wallet({ currency = 'EUR', accountType = 'Conta', amount
     }
   }
 
-  // Get account number based on currency and account type
-  const getAccountNumber = () => {
-    if (currency === 'AOA') {
-      return accountType === 'Conta' ? 'AO06 0040 0000 1234 5678 1011' : 'AO06 0040 0000 9876 5432 1011'
-    } else {
-      return accountType === 'Conta' ? 'BE53 9670 0847 6853' : 'BE53 9670 0847 9999'
-    }
-  }
+
 
   // Mock transaction data with standardized icon system
   const transactions = [
@@ -95,7 +87,7 @@ export default function Wallet({ currency = 'EUR', accountType = 'Conta', amount
           {/* Flag and Title */}
           <div className="flex items-center justify-center space-x-3 mb-4">
             {getFlagComponent()}
-            <h1 className="text-lg font-medium text-gray-900">{accountType}</h1>
+            <h1 className="text-lg font-medium text-gray-900">Carteira {currency}</h1>
           </div>
 
           {/* Balance Amount */}
@@ -103,13 +95,7 @@ export default function Wallet({ currency = 'EUR', accountType = 'Conta', amount
             <p className="text-4xl font-bold text-black">{amount} {currency}</p>
           </div>
 
-          {/* Account Number */}
-          <div className="mb-8">
-            <div className="inline-flex items-center bg-gray-100 rounded-full px-4 py-2 space-x-2">
-              <span className="text-sm font-medium text-gray-900">{getAccountNumber()}</span>
-              <ChevronRight className="w-4 h-4 text-gray-900" />
-            </div>
-          </div>
+
         </div>
 
         {/* Action Buttons */}

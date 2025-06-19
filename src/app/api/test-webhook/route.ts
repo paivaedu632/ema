@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createUser, createUserWallets } from '@/lib/supabase-server'
+import { createUser, supabaseAdmin } from '@/lib/supabase-server'
 
 /**
  * Test endpoint to verify webhook functionality without Clerk
@@ -64,14 +64,18 @@ export async function POST(req: NextRequest) {
 
     console.log('✅ User created in Supabase:', user.id)
 
-    // Create AOA and EUR wallets for the new user
-    const { data: wallets, error: walletsError } = await createUserWallets(user.id)
+    // Wallets are automatically created by database trigger
+    // Fetch the created wallets to return in response
+    const { data: wallets, error: walletsError } = await supabaseAdmin
+      .from('wallets')
+      .select('*')
+      .eq('user_id', user.id)
 
     if (walletsError) {
-      throw new Error(`Failed to create wallets: ${walletsError.message}`)
+      console.warn('⚠️ Could not fetch wallets:', walletsError.message)
     }
 
-    console.log('✅ Wallets created for user:', wallets?.length || 0, 'wallets')
+    console.log('✅ Wallets found for user:', wallets?.length || 0, 'wallets')
 
     return NextResponse.json({
       success: true,

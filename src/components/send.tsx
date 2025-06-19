@@ -1,8 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { Search } from "lucide-react"
+import { Search, AlertTriangle } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -12,6 +12,7 @@ import { FixedBottomAction } from "@/components/ui/fixed-bottom-action"
 import { SuccessScreen } from "@/components/ui/success-screen"
 import { ConfirmationSection, ConfirmationRow, ConfirmationWarning } from "@/components/ui/confirmation-section"
 import { AvailableBalance } from "@/components/ui/available-balance"
+import { checkTransactionLimitsClient } from "@/lib/supabase"
 
 type Step = "amount" | "recipient" | "confirmation" | "success"
 
@@ -33,6 +34,9 @@ export function WiseStyleTransfer() {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedRecipient, setSelectedRecipient] = useState<Recipient | null>(null)
   const [availableBalance] = useState("100 EUR")
+  const [limitCheck, setLimitCheck] = useState<any>(null)
+  const [limitError, setLimitError] = useState<string | null>(null)
+  const [checkingLimits, setCheckingLimits] = useState(false)
 
   // Sample recipients list
   const [recipients] = useState<Recipient[]>([
@@ -96,17 +100,93 @@ export function WiseStyleTransfer() {
     setCurrentStep("confirmation")
   }
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!selectedRecipient) return
-    // Handle transfer completion
-    setCurrentStep("success")
+
+    try {
+      const response = await fetch('/api/transactions/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          amount: Number(amount),
+          currency: currency,
+          recipient: {
+            name: selectedRecipient.name,
+            email: `${selectedRecipient.name.toLowerCase().replace(' ', '.')}@emapay.com`, // Mock email
+            phone: selectedRecipient.phone
+          }
+        })
+      })
+
+      const result = await response.json()
+
+      if (result.success) {
+        // Transaction successful, go to success screen
+        setCurrentStep("success")
+      } else {
+        // Handle transaction error
+        console.error('Send transaction failed:', result.error)
+        alert(`Erro na transação: ${result.error}`)
+      }
+    } catch (error) {
+      console.error('Error processing send transaction:', error)
+      alert('Erro ao processar transação. Tente novamente.')
+    }
   }
 
   const handleBackToHome = () => {
     router.push("/")
   }
 
-  const canContinue = amount && !isNaN(Number(amount)) && Number(amount) > 0
+  // Check transaction limits when amount changes
+  useEffect(() => {
+    const checkLimits = async () => {
+      if (!amount || amount === "0" || isNaN(Number(amount))) {
+        setLimitCheck(null)
+        setLimitError(null)
+        return
+      }
+
+      setCheckingLimits(true)
+      setLimitError(null)
+
+      try {
+        const { data, error } = await checkTransactionLimitsClient(
+          Number(amount),
+          currency,
+          'send'
+        )
+
+        if (error) {
+          setLimitError('Erro ao verificar limites. Tente novamente.')
+          setLimitCheck(null)
+        } else {
+          setLimitCheck(data)
+          if (data && !data.within_limits) {
+            if (data.requires_kyc) {
+              setLimitError('Verificação KYC necessária para esta transação.')
+            } else {
+              setLimitError(`Limite ${data.limit_type} excedido. Limite atual: ${data.current_limit} ${currency}`)
+            }
+          }
+        }
+      } catch (error) {
+        setLimitError('Erro ao verificar limites. Tente novamente.')
+        setLimitCheck(null)
+      } finally {
+        setCheckingLimits(false)
+      }
+    }
+
+    // Debounce the limit check
+    const timeoutId = setTimeout(checkLimits, 500)
+    return () => clearTimeout(timeoutId)
+  }, [amount, currency])
+
+  const baseCanContinue = amount && !isNaN(Number(amount)) && Number(amount) > 0
+  const canContinue = baseCanContinue && !limitError && !checkingLimits && (limitCheck?.within_limits !== false)
 
   // Filter recipients based on search query
   const filteredRecipients = recipients.filter(recipient =>
@@ -131,6 +211,36 @@ export function WiseStyleTransfer() {
           />
 
           <AvailableBalance amount={availableBalance} />
+
+          {/* Limit Check Status */}
+          {amount && amount !== "0" && amount !== "" && (
+            <div className="mb-8 space-y-4">
+              {checkingLimits && (
+                <div className="bg-gray-50 rounded-2xl p-4 flex items-center space-x-3">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600"></div>
+                  <span className="text-sm text-gray-600">Verificando limites...</span>
+                </div>
+              )}
+
+              {limitError && (
+                <div className="bg-red-50 rounded-2xl p-4 flex items-start space-x-3">
+                  <AlertTriangle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                  <div className="flex-1">
+                    <p className="text-sm text-red-800 font-medium">Limite excedido</p>
+                    <p className="text-sm text-red-600 mt-1">{limitError}</p>
+                    {limitCheck?.requires_kyc && (
+                      <button
+                        onClick={() => window.location.href = '/kyc/notifications'}
+                        className="text-sm text-red-700 underline mt-2 hover:text-red-800"
+                      >
+                        Iniciar verificação KYC →
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </main>
 
         <FixedBottomAction

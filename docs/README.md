@@ -1,213 +1,107 @@
-# EmaPay - Digital Wallet Platform
+# EmaPay Backend Documentation
 
 ## Overview
 
-EmaPay is a modern fintech application built for the Angolan diaspora, enabling seamless currency exchange between EUR and AOA (Angolan Kwanza) with integrated KYC verification and secure transaction processing.
+EmaPay is a fintech application for EUR ↔ AOA currency exchange with integrated KYC verification. This documentation covers essential backend and database integration information.
 
-**Current Status**: ✅ **Database Deployed & Verified** - Ready for frontend integration
+**Status**: ✅ Production Ready
+**Database**: Supabase PostgreSQL (Project ID: kjqcfedvilcnwzfjlqtq)
+**Authentication**: Clerk with custom UI
 
-## 🏗️ Architecture
+## Quick Start
 
-### Technology Stack
-- **Frontend**: Next.js 15.3.3 with App Router
-- **Authentication**: Clerk (deployed & configured)
-- **Database**: Supabase (PostgreSQL) - ✅ **Deployed**
-- **Cloud Services**: AWS (S3, Textract, Rekognition) - ✅ **Configured**
-- **Styling**: Tailwind CSS + ShadCN/UI
-- **Language**: TypeScript
-- **Development**: Turbopack
+### Database Connection Test
+```bash
+curl http://localhost:3000/api/test-db
+```
 
-### Core Features
-- ✅ Multi-currency wallet (AOA/EUR) - Database ready
-- ✅ Currency exchange with 2% fee - Schema implemented
-- ✅ 16-step KYC verification process - Database ready
-- ✅ Document verification with AWS AI services - Integration ready
-- ✅ Secure transaction processing - Database schema deployed
-- ✅ User authentication and authorization - Clerk integrated
+### Environment Variables
+```bash
+# Database (Supabase)
+SUPABASE_PROJECT_ID=kjqcfedvilcnwzfjlqtq
+NEXT_PUBLIC_SUPABASE_URL=https://kjqcfedvilcnwzfjlqtq.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
+SUPABASE_SERVICE_ROLE_KEY=eyJ...
 
-### Backend Architecture Decision
-**Hybrid REST/RPC Approach**:
-- **Financial Transactions**: Supabase RPC functions (atomic operations)
-- **Simple CRUD**: REST API endpoints (user management, queries)
-- **Form Operations**: Next.js Server Actions (KYC forms, profile updates)
-- **External Services**: REST APIs (AWS integration, webhooks)
+# Authentication (Clerk)
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
+CLERK_SECRET_KEY=sk_test_...
+CLERK_WEBHOOK_SECRET=whsec_...
 
-## 📊 Database Schema (✅ Deployed & Verified)
+# AWS Services
+AWS_ACCESS_KEY_ID=AKIA...
+AWS_SECRET_ACCESS_KEY=...
+AWS_S3_BUCKET_NAME=emapay-kyc-documents
+```
 
-### Tables Overview
-1. **users** - User profiles synced with Clerk ✅
-2. **wallets** - Multi-currency balances (AOA & EUR) ✅
-3. **transactions** - All transaction types with fee calculation ✅
-4. **kyc_records** - 16-step KYC verification workflow ✅
-5. **documents** - KYC document storage with AWS S3 integration ✅
-6. **exchange_rates** - Static EUR ↔ AOA exchange rates ✅
+## Database Schema
 
-**Database Status**: All tables deployed with RLS policies, indexes, and functions
-**Project ID**: kjqcfedvilcnwzfjlqtq
-**Region**: us-east-2
-**Connection Test**: ✅ Verified via `/api/test-db`
+### Core Tables
+- **users**: User profiles with KYC status tracking
+- **wallets**: Multi-currency balances (AOA/EUR)
+- **transactions**: All financial transactions with fee calculation
+- **kyc_records**: 16-step KYC verification workflow
+- **user_limits**: Transaction limits (pre/post KYC)
+- **exchange_rates**: Static EUR ↔ AOA conversion rates
 
 ### Key Relationships
-- Users → Wallets (1:many) - ✅ Foreign keys implemented
-- Users → Transactions (1:many) - ✅ Foreign keys implemented
-- Users → KYC Records (1:many) - ✅ Foreign keys implemented
-- KYC Records → Documents (1:many) - ✅ Foreign keys implemented
+- Users → Wallets (1:many)
+- Users → Transactions (1:many)
+- Users → KYC Records (1:many)
 
-## 🔐 Authentication & Security (✅ Implemented)
+## API Endpoints
 
-### Clerk Integration
-- ✅ Custom UI components with EmaPay branding
-- ✅ Portuguese language interface
-- ✅ Google OAuth integration
-- ✅ Secure session management
-- ✅ User profile synchronization ready
+### Core Endpoints
+- `GET /api/test-db` - Database connection test
+- `GET /api/kyc/status` - User KYC status and progress
+- `GET /api/user/limits` - Current transaction limits
+- `POST /api/user/limits/check` - Validate transaction amount
+- `GET /api/wallet/balances` - Real wallet balances
+- `POST /api/transactions/buy` - Process EUR → AOA transactions
+- `POST /api/transactions/sell` - Process AOA → EUR transactions
+- `POST /api/transactions/send` - Process money transfers
+
+### Webhooks
+- `POST /api/webhooks/clerk` - User registration automation
+
+## Transaction Limits
+
+### Pre-KYC Limits
+- **EUR**: €100 transaction, €500 daily, €2,000 monthly
+- **AOA**: 85,000 transaction, 425,000 daily, 1,700,000 monthly
+
+### Post-KYC Limits
+- **EUR**: €5,000 transaction, €10,000 daily, €50,000 monthly
+- **AOA**: 4,250,000 transaction, 8,500,000 daily, 42,500,000 monthly
+
+## Security
 
 ### Row Level Security (RLS)
-- ✅ User-based data isolation implemented
-- ✅ RLS policies deployed on all tables
-- ✅ Service role configured for admin operations
-- ✅ JWT integration with Clerk ready
+- All tables have RLS policies
+- Users access only their own data
+- Service role for admin operations
+- JWT integration with Clerk
 
-## 💰 Transaction System
+## Essential Commands
 
-### Supported Operations
-- **Buy**: Purchase AOA with EUR
-- **Sell**: Convert AOA to EUR
-- **Send**: Transfer money between users
-- **Deposit**: Add funds to wallet
-- **Withdraw**: Remove funds from wallet
-
-### Fee Structure
-- 2% transaction fee on all buy operations
-- Transparent fee calculation and display
-
-## 📋 KYC Verification Process
-
-### 16-Step Workflow
-1. Enable Notifications
-2. Set Passcode/PIN
-3. Personal Information
-4. Document Upload
-5. Document Verification
-6. Biometric Verification (Selfie)
-7. Occupation Details
-8. Income Information
-9. PEP (Politically Exposed Person) Status
-10. App Usage Purpose
-11-16. Additional verification steps
-
-### Document Types Supported
-- Identity Card (front/back)
-- Passport
-- Driver's License (front/back)
-- Proof of Address
-- Selfie verification
-
-## 🌍 Internationalization
-
-### Supported Languages
-- Portuguese (primary)
-- English (fallback)
-
-### Regional Features
-- Angola BI (Identity Card) validation API
-- Angolan address formats
-- Local currency formatting (Kz for AOA)
-
-## 📱 User Interface
-
-### Design System
-- Clean, minimalistic design
-- White backgrounds with grey cards
-- Black primary buttons (48px height)
-- Consistent form styling
-- No borders/shadows except inputs
-- Modern fintech aesthetics
-
-### Key Components
-- Currency selectors
-- Phone input with international support
-- Address autocomplete (Google Places)
-- Document upload with camera integration
-- Transaction history
-- Balance display
-
-## 🔧 Development Setup
-
-### Environment Configuration
 ```bash
-/.env.local          
+# Generate types after schema changes
+npx supabase gen types typescript --project-id kjqcfedvilcnwzfjlqtq --schema public > src/types/database.types.ts
+
+# Deploy schema changes
+npx supabase db push
+
+# Test system status
+curl http://localhost:3000/api/verify-webhook
 ```
-## 🚀 Current Implementation Status
 
-### ✅ Completed (Production Ready)
-- **Database**: All tables, RLS policies, functions deployed
-- **Authentication**: Clerk integration with custom EmaPay UI
-- **AWS Integration**: S3, Textract, Rekognition configured
-- **TypeScript**: Full type safety with auto-generated types
-- **UI Components**: Complete dashboard and transaction flows
-- **Development Environment**: Next.js 15.3.3 with Turbopack
+## Documentation
 
-### 🔄 Next Phase (Database Integration)
-- **User Registration**: Connect Clerk signup to database
-- **Dashboard Data**: Replace mock data with real database queries
-- **Transaction Processing**: Implement real buy/sell/send operations
-- **KYC Integration**: Connect KYC forms to database storage
-- **Real-time Updates**: Add Supabase subscriptions for live data
-
-## 📈 Immediate Next Steps
-
-### Phase 1: Database Integration (Priority 1)
-1. **User Registration Flow**: Connect Clerk webhooks to create database users
-2. **Dashboard Integration**: Replace mock data with real Supabase queries
-3. **Transaction Processing**: Implement buy/sell operations with database persistence
-4. **Balance Management**: Add real-time wallet balance updates
-
-### Phase 2: Advanced Features (Priority 2)
-1. **KYC Database Integration**: Connect KYC forms to database storage
-2. **Document Management**: Integrate AWS document verification with database
-3. **Real-time Subscriptions**: Add live updates for transactions and balances
-4. **API Development**: Build REST endpoints for external integrations
-
-## 🧪 Testing
-
-### Database Testing
-- Connection verification: `/api/test-db`
-- Sample data insertion
-- Function testing
-- Type safety validation
-
-### Manual Testing Approach
-- UI navigation testing
-- Form validation testing
-- Transaction flow testing
-- KYC process testing
-
-## 📞 Support & Documentation
-
-### 📚 Essential Documentation
-
-#### Core Documentation
-- **[📊 Project Status](./project-status.md)** - Current completion status and next priorities
-- **[🗄️ Database Integration](./database-integration.md)** - Complete database setup and integration guide
-- **[🔌 API Reference](./api-reference.md)** - API endpoints and usage
-- **[🚀 Deployment Guide](./deployment-guide.md)** - Production deployment procedures
-
-### 🔗 External Resources
-- [Supabase Documentation](https://supabase.com/docs)
-- [Clerk Documentation](https://clerk.com/docs)
-- [Next.js Documentation](https://nextjs.org/docs)
-- [ShadCN/UI Components](https://ui.shadcn.com)
-- [AWS SDK Documentation](https://docs.aws.amazon.com/sdk-for-javascript/)
-
-### 🆘 Quick Help
-- **Database Issues**: Check `docs/database-integration.md` and test with `/api/test-db`
-- **Integration Questions**: Follow `docs/database-integration.md`
-- **Deployment Questions**: Follow `docs/deployment-guide.md`
-- **Current Status**: Check `docs/project-status.md`
+- **[Database Integration](./database-integration.md)** - Complete database setup and patterns
+- **[API Reference](./api-reference.md)** - Detailed API endpoints and usage
+- **[Test Deposit Guide](./test-deposit-guide.md)** - Temporary testing endpoint documentation
 
 ---
 
-**Last Updated**: June 14, 2025  
-**Version**: 0.1.0  
-**Status**: Development Phase
+**Last Updated**: June 19, 2025
+**Status**: ✅ Production Ready
