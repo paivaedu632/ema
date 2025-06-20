@@ -483,4 +483,80 @@
   .transaction-list-item {
     @apply flex items-center justify-between py-4 hover:bg-gray-50 transition-colors rounded-lg cursor-pointer;
   }
+
+  /* ===== ADDITIONAL EMAPAY UTILITIES ===== */
+
+  /* Form Result Screen Utilities */
+  .result-screen-success {
+    @apply text-center;
+  }
+
+  .result-icon-success {
+    @apply w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-6;
+  }
+
+  .result-icon-error {
+    @apply w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-6;
+  }
+
+  /* Loading State Utilities */
+  .loading-spinner-ema {
+    @apply animate-spin rounded-full h-4 w-4 border-2 border-gray-300 border-t-black;
+  }
+
+  /* Status Badge Utilities */
+  .status-badge-success {
+    @apply text-green-600 bg-green-100 px-2 py-1 rounded-full text-xs font-medium;
+  }
+
+  .status-badge-pending {
+    @apply text-yellow-600 bg-yellow-100 px-2 py-1 rounded-full text-xs font-medium;
+  }
+
+  .status-badge-error {
+    @apply text-red-600 bg-red-100 px-2 py-1 rounded-full text-xs font-medium;
+  }
+
+  /* Banner Utilities */
+  .banner-ema-base {
+    @apply rounded-2xl p-4 cursor-pointer transition-colors;
+  }
+
+  .banner-warning-ema {
+    @apply bg-red-50 hover:bg-red-100;
+  }
+
+  .banner-info-ema {
+    @apply bg-blue-50 hover:bg-blue-100;
+  }
+
+  /* Form Layout Utilities */
+  .form-layout-ema {
+    @apply min-h-screen bg-gray-50;
+  }
+
+  .form-content-ema {
+    @apply max-w-md mx-auto pt-8 px-4;
+  }
+
+  .form-section-ema {
+    @apply bg-white rounded-2xl p-6 mb-6;
+  }
+
+  .form-field-ema {
+    @apply mb-4;
+  }
+
+  .form-label-ema {
+    @apply block text-sm font-medium text-gray-700 mb-2;
+  }
+
+  .form-error-ema {
+    @apply text-red-700 text-sm mt-1;
+  }
+
+  /* Button Loading State */
+  .btn-loading {
+    @apply opacity-75 cursor-not-allowed;
+  }
 }

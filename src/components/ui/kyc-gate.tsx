@@ -73,7 +73,6 @@ export function KYCGate({
           }
           setUserLimits(limits)
         } else {
-          console.warn('Failed to fetch user limits:', response.status)
           // Fallback to default limits if API fails
           setUserLimits({
             current: {
@@ -92,7 +91,6 @@ export function KYCGate({
           })
         }
       } catch (error) {
-        console.error('Error fetching user limits:', error)
         // Fallback to default limits if API fails
         setUserLimits({
           current: {

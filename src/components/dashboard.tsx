@@ -67,36 +67,7 @@ export default function Dashboard() {
           const balancesResult = await balancesResponse.json()
           setWalletBalances(balancesResult.data || [])
         } else {
-          console.warn('Failed to fetch wallet balances:', balancesResponse.status)
-        }
-
-        // Fetch recent transactions
-        const transactionsResponse = await fetch('/api/transactions?limit=3')
-        if (transactionsResponse.ok) {
-          const transactionsResult = await transactionsResponse.json()
-          setTransactions(transactionsResult.data || [])
-        } else {
-          console.warn('Failed to fetch transactions:', transactionsResponse.status)
-        }
-      } catch (error) {
-        console.error('Error fetching wallet data:', error)
-      } finally {
-        setBalancesLoading(false)
-      }
-    }
-
-    fetchWalletData()
-  }, [])
-
-  // Fetch wallet balances and transactions
-  useEffect(() => {
-    const fetchWalletData = async () => {
-      try {
-        // Fetch wallet balances
-        const balancesResponse = await fetch('/api/wallet/balances')
-        if (balancesResponse.ok) {
-          const balancesResult = await balancesResponse.json()
-          setWalletBalances(balancesResult.data || [])
+          console.error('Failed to fetch wallet balances:', balancesResponse.status)
         }
 
         // Fetch recent transactions
@@ -146,13 +117,13 @@ export default function Dashboard() {
     {
       type: 'Conta',
       currency: wallet.currency,
-      amount: wallet.available_balance.toFixed(2),
+      amount: (wallet.available_balance || 0).toFixed(2),
       flag: wallet.currency === 'AOA' ? <AngolaFlag /> : <EurFlag />
     },
     {
       type: 'Reservado',
       currency: wallet.currency,
-      amount: wallet.reserved_balance.toFixed(2),
+      amount: (wallet.reserved_balance || 0).toFixed(2),
       flag: wallet.currency === 'AOA' ? <AngolaFlag /> : <EurFlag />
     }
   ])

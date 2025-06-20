@@ -38,8 +38,6 @@ export default function Wallet({ currency = 'EUR', amount = '0.00' }: WalletProp
         if (balanceResponse.ok) {
           const balanceResult = await balanceResponse.json()
           setWalletData(balanceResult.data)
-        } else {
-          console.warn('Failed to fetch wallet data:', balanceResponse.status)
         }
 
         // Fetch transactions
@@ -47,8 +45,6 @@ export default function Wallet({ currency = 'EUR', amount = '0.00' }: WalletProp
         if (transactionsResponse.ok) {
           const transactionsResult = await transactionsResponse.json()
           setTransactions(transactionsResult.data || [])
-        } else {
-          console.warn('Failed to fetch transactions:', transactionsResponse.status)
         }
       } catch (error) {
         console.error('Error fetching wallet data:', error)

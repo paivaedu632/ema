@@ -1,118 +1,134 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@clerk/nextjs/server'
-import { getUserByClerkId, supabaseAdmin } from '@/lib/supabase-server'
+import { NextRequest } from 'next/server'
+import { supabaseAdmin } from '@/lib/supabase-server'
+import {
+  getAuthenticatedUser,
+  parseRequestBody,
+  validateAmount,
+  handleApiError,
+  createSuccessResponse,
+  validateCurrency
+} from '@/lib/api-utils'
+import { ExchangeRateUtils } from '@/utils/exchange-rate-validation'
 
 /**
- * POST /api/transactions/sell
- * Process a sell transaction (AOA -> EUR)
+ * POST /api/sell
+ * Create a peer-to-peer currency exchange offer
+ * Moves funds from available_balance to reserved (via offers table)
  */
 export async function POST(request: NextRequest) {
   try {
     // Get authenticated user
-    const { userId: clerkUserId } = await auth()
-    
-    if (!clerkUserId) {
-      return NextResponse.json(
-        { success: false, error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
+    const { user } = await getAuthenticatedUser()
 
-    // Parse request body
-    const body = await request.json()
-    const { amount, exchangeRate } = body
+    // Parse and validate request body
+    const body = await parseRequestBody(request)
+    const { amount, exchangeRate, currency = 'AOA' } = body
 
     // Validate input
-    if (!amount || isNaN(Number(amount)) || Number(amount) <= 0) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid amount. Must be a positive number.' },
-        { status: 400 }
+    const validAmount = validateAmount(amount)
+    const validCurrency = validateCurrency(currency)
+
+    // Handle exchange rate validation - ensure we have a valid number
+    if (!exchangeRate || isNaN(Number(exchangeRate)) || Number(exchangeRate) <= 0) {
+      return createSuccessResponse(
+        {
+          success: false,
+          error: 'Taxa de câmbio inválida. Deve ser um número positivo.'
+        },
+        'Taxa de câmbio inválida',
+        400
       )
     }
 
-    if (exchangeRate && (isNaN(Number(exchangeRate)) || Number(exchangeRate) <= 0)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid exchange rate. Must be a positive number.' },
-        { status: 400 }
+    const validExchangeRate = Number(exchangeRate)
+
+    // Validate exchange rate against market offers or API baseline
+    const rateValidation = await ExchangeRateUtils.validate(validCurrency, validExchangeRate)
+
+    if (!rateValidation.isValid) {
+      return createSuccessResponse(
+        {
+          success: false,
+          error: ExchangeRateUtils.formatError(rateValidation, validCurrency)
+        },
+        'Taxa de câmbio inválida',
+        400
       )
     }
 
-    // Get user from database
-    const { data: user, error: userError } = await getUserByClerkId(clerkUserId)
-    
-    if (userError || !user) {
-      return NextResponse.json(
-        { success: false, error: 'User not found' },
-        { status: 404 }
-      )
-    }
-
-    // Call the RPC function to process the sell transaction
-    const { data: result, error: transactionError } = await supabaseAdmin
-      .rpc('process_sell_transaction', {
+    // Create the currency offer using the database function
+    const { data: offerId, error: offerError } = await supabaseAdmin
+      .rpc('create_currency_offer', {
         user_uuid: user.id,
-        amount_aoa: Number(amount),
-        exchange_rate_value: exchangeRate ? Number(exchangeRate) : null
+        currency_code: validCurrency,
+        amount_to_reserve: validAmount,
+        rate: validExchangeRate
       })
 
-    if (transactionError) {
-      console.error('❌ Sell transaction failed:', transactionError)
-      
+    if (offerError) {
+      console.error('Error creating offer:', offerError)
+
       // Handle specific error cases
-      if (transactionError.message.includes('Insufficient AOA balance')) {
-        return NextResponse.json(
-          { success: false, error: 'Saldo AOA insuficiente para esta transação.' },
-          { status: 400 }
-        )
-      }
-      
-      if (transactionError.message.includes('Exchange rate not available')) {
-        return NextResponse.json(
-          { success: false, error: 'Taxa de câmbio não disponível. Tente novamente.' },
-          { status: 503 }
+      if (offerError.message.includes('Insufficient available balance')) {
+        return createSuccessResponse(
+          {
+            success: false,
+            error: 'Saldo insuficiente para criar a oferta'
+          },
+          'Saldo insuficiente',
+          400
         )
       }
 
-      return NextResponse.json(
-        { 
-          success: false, 
-          error: 'Falha ao processar transação de venda.',
-          details: transactionError.message 
-        },
-        { status: 500 }
-      )
+      if (offerError.message.includes('Exchange rate') && offerError.message.includes('outside acceptable range')) {
+        return createSuccessResponse(
+          {
+            success: false,
+            error: 'Taxa de câmbio fora do intervalo aceitável'
+          },
+          'Taxa de câmbio inválida',
+          400
+        )
+      }
+
+      throw new Error(`Failed to create offer: ${offerError.message}`)
     }
 
-    // Format response
+    // Get the created offer details
+    const { data: offerDetails, error: fetchError } = await supabaseAdmin
+      .from('offers')
+      .select('*')
+      .eq('id', offerId)
+      .single()
+
+    if (fetchError) {
+      console.error('Error fetching offer details:', fetchError)
+      throw new Error('Failed to fetch offer details')
+    }
+
+    // Format response similar to transaction response
     const formattedResult = {
-      transactionId: result.transaction_id,
-      status: result.status,
-      amountAoa: parseFloat(result.amount_aoa),
-      eurAmount: parseFloat(result.eur_amount),
-      netAmount: parseFloat(result.net_amount),
-      feeAmount: parseFloat(result.fee_amount),
-      exchangeRate: parseFloat(result.exchange_rate),
-      timestamp: result.timestamp
+      offer_id: offerDetails.id,
+      user_id: offerDetails.user_id,
+      currency: offerDetails.currency_type,
+      amount: parseFloat(offerDetails.reserved_amount.toString()),
+      exchange_rate: parseFloat(offerDetails.exchange_rate.toString()),
+      status: offerDetails.status,
+      created_at: offerDetails.created_at,
+      validation_info: {
+        source: rateValidation.source,
+        market_rate: rateValidation.marketRate,
+        allowed_range: rateValidation.allowedRange
+      }
     }
 
-    return NextResponse.json({
-      success: true,
-      message: 'Transação de venda processada com sucesso',
-      data: formattedResult,
-      timestamp: new Date().toISOString()
-    })
+    return createSuccessResponse(
+      formattedResult,
+      'Oferta de venda criada com sucesso'
+    )
 
   } catch (error) {
-    console.error('❌ Error processing sell transaction:', error)
-    
-    return NextResponse.json(
-      {
-        success: false,
-        error: 'Erro interno do servidor',
-        details: error instanceof Error ? error.message : 'Unknown error',
-        timestamp: new Date().toISOString()
-      },
-      { status: 500 }
-    )
+    console.error('Error in sell endpoint:', error)
+    return handleApiError(error)
   }
 }

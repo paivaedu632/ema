@@ -149,47 +149,6 @@ export type Database = {
           },
         ]
       }
-      offers: {
-        Row: {
-          created_at: string
-          currency_type: string
-          exchange_rate: number
-          id: string
-          reserved_amount: number
-          status: string
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          currency_type: string
-          exchange_rate: number
-          id?: string
-          reserved_amount: number
-          status?: string
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          currency_type?: string
-          exchange_rate?: number
-          id?: string
-          reserved_amount?: number
-          status?: string
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "offers_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       transactions: {
         Row: {
           amount: number
@@ -368,6 +327,7 @@ export type Database = {
           created_at: string | null
           currency: string
           id: string
+          reserved_balance: number
           updated_at: string | null
           user_id: string | null
         }
@@ -376,6 +336,7 @@ export type Database = {
           created_at?: string | null
           currency: string
           id?: string
+          reserved_balance?: number
           updated_at?: string | null
           user_id?: string | null
         }
@@ -384,6 +345,7 @@ export type Database = {
           created_at?: string | null
           currency?: string
           id?: string
+          reserved_balance?: number
           updated_at?: string | null
           user_id?: string | null
         }
@@ -399,26 +361,7 @@ export type Database = {
       }
     }
     Views: {
-      wallet_balances_with_reserved: {
-        Row: {
-          available_balance: number
-          created_at: string | null
-          currency: string
-          reserved_balance: number
-          total_balance: number
-          updated_at: string | null
-          user_id: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "wallets_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
+      [_ in never]: never
     }
     Functions: {
       check_transaction_limits: {
@@ -429,6 +372,10 @@ export type Database = {
           current_limit: number
           would_exceed_by: number
         }[]
+      }
+      complete_pending_deposit: {
+        Args: { p_transaction_id: string; p_user_id: string }
+        Returns: Json
       }
       get_active_exchange_rate: {
         Args: { from_curr: string; to_curr: string }
@@ -462,37 +409,37 @@ export type Database = {
         Args: { user_uuid: string; currency_code: string }
         Returns: number
       }
-      get_user_total_balance: {
-        Args: { user_uuid: string; currency_code: string }
-        Returns: number
-      }
-      check_available_balance: {
-        Args: { user_uuid: string; currency_code: string; required_amount: number }
-        Returns: boolean
-      }
-      create_currency_offer: {
-        Args: { user_uuid: string; currency_code: string; amount_to_reserve: number; rate: number }
-        Returns: string
-      }
-      cancel_currency_offer: {
-        Args: { offer_uuid: string; user_uuid: string }
-        Returns: boolean
-      }
-      validate_exchange_rate: {
-        Args: { currency_code: string; proposed_rate: number }
-        Returns: boolean
-      }
-      reserve_balance_for_offer: {
-        Args: { user_uuid: string; currency_code: string; amount: number; rate: number }
-        Returns: string
-      }
-      unreserve_balance_from_offer: {
-        Args: { offer_uuid: string; user_uuid: string }
-        Returns: boolean
-      }
       map_kyc_status: {
         Args: { kyc_records_status: string }
         Returns: string
+      }
+      process_deposit_atomic: {
+        Args: {
+          p_user_id: string
+          p_amount: number
+          p_currency: string
+          p_reference_id: string
+          p_payment_method?: string
+          p_user_reference?: string
+        }
+        Returns: Json
+      }
+      process_send_transaction: {
+        Args: {
+          sender_uuid: string
+          recipient_info: Json
+          amount_value: number
+          currency_code: string
+        }
+        Returns: Json
+      }
+      reserve_balance: {
+        Args: { user_uuid: string; currency_code: string; amount: number }
+        Returns: boolean
+      }
+      unreserve_balance: {
+        Args: { user_uuid: string; currency_code: string; amount: number }
+        Returns: boolean
       }
       user_owns_resource: {
         Args: { resource_user_id: string }

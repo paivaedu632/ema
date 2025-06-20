@@ -28,28 +28,39 @@ export async function GET() {
       )
     }
 
-    // Get user wallets for all currencies
-    const { data: wallets, error: walletsError } = await supabaseAdmin
-      .from('wallets')
-      .select('currency, available_balance, reserved_balance, updated_at')
-      .eq('user_id', user.id)
-      .order('currency', { ascending: true })
+    // Get user wallets with reserved balances using the security function
+    const { data: walletBalances, error: walletsError } = await supabaseAdmin
+      .rpc('get_user_wallet_balances_secure', {
+        requesting_user_id: user.id
+      })
 
     if (walletsError) {
-      throw new Error(`Failed to fetch wallets: ${walletsError.message}`)
+      throw new Error(`Failed to fetch wallet balances: ${walletsError.message}`)
     }
 
     // Format response data
-    const formattedWallets = wallets?.map(wallet => ({
+    const formattedWallets = walletBalances?.map(wallet => ({
       currency: wallet.currency,
       available_balance: parseFloat(wallet.available_balance.toString()),
       reserved_balance: parseFloat(wallet.reserved_balance.toString()),
       last_updated: wallet.updated_at
     })) || []
 
+    // Ensure we have both currencies (AOA and EUR) even if user has no balance
+    const currencies = ['AOA', 'EUR']
+    const completeWallets = currencies.map(currency => {
+      const existingWallet = formattedWallets.find(w => w.currency === currency)
+      return existingWallet || {
+        currency,
+        available_balance: 0.00,
+        reserved_balance: 0.00,
+        last_updated: new Date().toISOString()
+      }
+    })
+
     return NextResponse.json({
       success: true,
-      data: formattedWallets,
+      data: completeWallets,
       timestamp: new Date().toISOString()
     })
 

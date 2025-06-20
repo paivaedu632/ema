@@ -6,8 +6,6 @@ import { supabaseAdmin } from '@/lib/supabase-server'
  */
 export async function GET() {
   try {
-    console.log('🔍 Verifying webhook implementation...')
-
     // Check users table
     const { data: users, error: usersError } = await supabaseAdmin
       .from('users')

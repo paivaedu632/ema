@@ -8,6 +8,24 @@ EmaPay is a fintech application for EUR ↔ AOA currency exchange with integrate
 **Database**: Supabase PostgreSQL (Project ID: kjqcfedvilcnwzfjlqtq)
 **Authentication**: Clerk with custom UI
 
+## Recent Accomplishments
+
+### ✅ **Enhanced Manual Exchange Rate Input** (June 2025)
+- **Live API Integration**: Real-time exchange rates from Banco BAI API via dedicated endpoint
+- **Client-Safe Architecture**: New `/api/exchange-rate/banco-bai` endpoint for secure client-side consumption
+- **Dynamic Placeholder**: Empty input with live rate placeholder (e.g., "Ex: 1078.44")
+- **Simplified EUR-Only Format**: Removed currency selector complexity, always EUR to AOA input
+- **Enhanced Validation**: Portuguese error messages with dynamic range checking (±20% of live rates)
+- **Right-Aligned Rate Reference**: "Taxa atual: 1 EUR = X AOA" with real-time updates
+- **Graceful Error Handling**: Fallback rates and comprehensive error states for API failures
+- **Fixed Runtime Error**: Resolved client-side import issues with server-dependent utilities
+
+### ✅ **Exchange Rate Direction Fix** (June 2025)
+- **Root Cause Resolution**: Fixed currency direction mismatch between frontend and API
+- **Proper Conversion Logic**: Corrected EUR↔AOA rate conversion for database storage
+- **API Validation**: Fixed 400 Bad Request errors in sell transaction flow
+- **Debugging Integration**: Added comprehensive error tracking and resolution
+
 ## Quick Start
 
 ### Database Connection Test
@@ -98,11 +116,12 @@ curl http://localhost:3000/api/verify-webhook
 ## Documentation
 
 - **[Form Validation](./form-validation.md)** - ✅ **Official Standard**: React Hook Form + Zod validation system
+- **[Exchange Rate System](./exchange-rate-system.md)** - ✅ **Live API Integration**: Banco BAI real-time rates with enhanced UX
 - **[Database Integration](./database-integration.md)** - Complete database setup and patterns
 - **[API Reference](./api-reference.md)** - Detailed API endpoints and usage
 - **[Authentication Workflow](./authentication-workflow.md)** - Clerk integration and user management
 
 ---
 
-**Last Updated**: June 19, 2025
+**Last Updated**: June 20, 2025
 **Status**: ✅ Production Ready
