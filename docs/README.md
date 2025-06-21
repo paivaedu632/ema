@@ -8,7 +8,7 @@ Ema is a fintech application for EUR ↔ AOA currency exchange with integrated K
 **Database**: Supabase PostgreSQL (Project ID: kjqcfedvilcnwzfjlqtq)
 **Authentication**: Clerk with custom UI
 
-**⚠️ TESTING MODE**: KYC enforcement temporarily disabled - all users can transact with maximum limits. See `docs/TEMPORARY_KYC_DISABLED.md` for details.
+**🎯 SIMPLIFIED ARCHITECTURE**: Complex KYC limit system removed for cleaner codebase. Future KYC will be a simple binary gate (approved/not approved). See `docs/SIMPLIFIED_ARCHITECTURE.md` for details.
 
 ## Current System Architecture
 
@@ -71,8 +71,6 @@ AWS_S3_BUCKET_NAME=emapay-kyc-documents
 ### Core Endpoints
 - `GET /api/test-db` - Database connection test
 - `GET /api/kyc/status` - User KYC status and progress
-- `GET /api/user/limits` - Current transaction limits
-- `POST /api/user/limits/check` - Validate transaction amount
 - `GET /api/wallet/balances` - Real wallet balances
 - `POST /api/transactions/buy` - Process EUR → AOA with order matching
 - `POST /api/transactions/sell` - Create P2P exchange offers
@@ -94,26 +92,26 @@ AWS_S3_BUCKET_NAME=emapay-kyc-documents
 - `POST /api/liveness-check` - Perform liveness detection on selfie images
 - `GET /api/validate-bi/[biNumber]` - Validate Angolan BI number format
 
-### Removed Endpoints (Backend Functionality Removed)
+### Removed Endpoints (Simplified Architecture)
+- ~~`POST /api/user/limits/check`~~ - Complex KYC limit checking (removed for simplicity)
+- ~~`GET /api/user/limits`~~ - Transaction limits API (removed for simplicity)
 - ~~`POST /api/transactions/deposit/instructions`~~ - Deposit instruction generation (UI preserved)
 - ~~`POST /api/transactions/deposit/complete`~~ - Deposit completion (UI preserved)
 - ~~`POST /api/transactions/deposit`~~ - Direct deposit processing (UI preserved)
 - ~~`POST /api/admin/complete-deposit`~~ - Admin deposit completion (UI preserved)
 
-**Note**: Deposit UI components remain intact for future implementation. Deposit processing will be handled via external API integration when users click "Paguei" (payment confirmation).
+**Note**: Deposit UI components remain intact for future implementation. Complex KYC limit system removed in favor of simple binary KYC gate for future implementation.
 
 ### Webhooks
 - `POST /api/webhooks/clerk` - User registration automation
 
-## Transaction Limits
+## Transaction Validation
 
-### Pre-KYC Limits
-- **EUR**: €100 transaction, €500 daily, €2,000 monthly
-- **AOA**: 85,000 transaction, 425,000 daily, 1,700,000 monthly
-
-### Post-KYC Limits
-- **EUR**: €5,000 transaction, €10,000 daily, €50,000 monthly
-- **AOA**: 4,250,000 transaction, 8,500,000 daily, 42,500,000 monthly
+### Basic Limits (Simplified)
+- **EUR**: €1 - €10,000 per transaction
+- **AOA**: 1,000 - 10,000,000 per transaction
+- **Balance Checking**: Sufficient available balance required
+- **Future KYC**: Simple binary gate (approved users can transact, others cannot)
 
 ## Security
 

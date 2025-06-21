@@ -58,24 +58,7 @@ export interface KYCStatusInfo {
   benefits?: string[]
 }
 
-export interface TransactionLimits {
-  daily_limit: number
-  monthly_limit: number
-  transaction_limit: number
-  daily_used: number
-  monthly_used: number
-  daily_remaining: number
-  monthly_remaining: number
-  currency: string
-}
-
-export interface LimitCheckResult {
-  within_limits: boolean
-  limit_type?: 'transaction' | 'daily' | 'monthly'
-  current_limit?: number
-  would_exceed_by?: number
-  requires_kyc?: boolean
-}
+// Removed complex limit checking interfaces - keeping only basic validation
 
 // Helper functions for common database operations
 export const getUserById = async (userId: string) => {
@@ -132,42 +115,7 @@ export const getUserKYCStatusClient = async (clerkUserId: string): Promise<{ dat
   }
 }
 
-export const getUserLimitsClient = async (currency: string = 'EUR'): Promise<{ data: TransactionLimits | null, error: any }> => {
-  try {
-    const response = await fetch(`/api/user/limits?currency=${currency}`)
-    if (!response.ok) {
-      throw new Error('Failed to fetch user limits')
-    }
-    const result = await response.json()
-    return { data: result.data.limits[currency], error: null }
-  } catch (error) {
-    return { data: null, error }
-  }
-}
-
-export const checkTransactionLimitsClient = async (
-  amount: number,
-  currency: string = 'EUR',
-  transactionType?: string
-): Promise<{ data: LimitCheckResult | null, error: any }> => {
-  try {
-    const response = await fetch('/api/user/limits/check', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ amount, currency, transaction_type: transactionType })
-    })
-
-    const result = await response.json()
-
-    if (!response.ok) {
-      return { data: result.data, error: result.error }
-    }
-
-    return { data: result.data, error: null }
-  } catch (error) {
-    return { data: null, error }
-  }
-}
+// Removed complex limit checking functions - keeping only basic validation
 
 // getActiveExchangeRate function removed - exchange rates now come from:
 // 1. Static rates in buy component (924.0675 AOA per EUR)

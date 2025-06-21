@@ -15,7 +15,7 @@ import { AvailableBalance } from "@/components/ui/available-balance"
 import { TransactionSummary } from "@/components/ui/transaction-summary"
 import { useTransactionFlow } from "@/hooks/use-multi-step-flow"
 import { calculateFeeAmount, getTransactionSummary } from "@/utils/fee-calculations"
-import { checkTransactionLimitsClient } from "@/lib/supabase"
+
 import {
   TRANSACTION_LIMITS,
   VALIDATION_MESSAGES,
@@ -75,9 +75,7 @@ type BuyAmountForm = z.infer<ReturnType<typeof createBuyAmountSchema>>
 export function BuyFlow() {
   const [walletBalances, setWalletBalances] = useState<WalletBalance[]>([])
   const [balancesLoading, setBalancesLoading] = useState(true)
-  const [limitCheck, setLimitCheck] = useState<any>(null)
-  const [limitError, setLimitError] = useState<string | null>(null)
-  const [checkingLimits, setCheckingLimits] = useState(false)
+
   const [exchangeRateData, setExchangeRateData] = useState<any>(null)
   const [rateLoading, setRateLoading] = useState(false)
   const [rateError, setRateError] = useState<string | null>(null)
@@ -177,12 +175,9 @@ export function BuyFlow() {
     steps: ["amount", "confirmation", "success"]
   })
 
-  // Get primary error message following error hierarchy
+  // Get primary error message - simplified to only form validation
   const getPrimaryErrorMessage = (): string | null => {
-    // 1. Transaction limits (highest priority)
-    if (limitError) return limitError
-
-    // 2. Form validation errors (balance, amount validation)
+    // Form validation errors (balance, amount validation)
     // Note: Insufficient balance is handled separately with deposit button
     if (errors.amount?.message && !insufficientBalanceState.hasInsufficientBalance) {
       return errors.amount.message
@@ -191,12 +186,8 @@ export function BuyFlow() {
     return null
   }
 
-  // Continue button logic - form must be valid, limits must be within bounds, and balance must be sufficient
-  const canContinue = isValid &&
-    !limitError &&
-    !checkingLimits &&
-    (limitCheck?.within_limits !== false) &&
-    !insufficientBalanceState.hasInsufficientBalance
+  // Continue button logic - simplified to only form validation and balance checking
+  const canContinue = isValid && !insufficientBalanceState.hasInsufficientBalance
 
   // Use dynamic fee calculation from exchange rate data
   const feeAmount = exchangeRateData?.fee_amount
@@ -314,51 +305,7 @@ export function BuyFlow() {
     }
   }, [amount, watchedCurrency])
 
-  // Check transaction limits when amount changes
-  useEffect(() => {
-    const checkLimits = async () => {
-      if (!amount || amount === "0" || isNaN(Number(amount))) {
-        setLimitCheck(null)
-        setLimitError(null)
-        return
-      }
-
-      setCheckingLimits(true)
-      setLimitError(null)
-
-      try {
-        const { data, error } = await checkTransactionLimitsClient(
-          Number(amount),
-          watchedCurrency, // Use selected currency for limit checks
-          'buy'
-        )
-
-        if (error) {
-          setLimitError('Erro ao verificar limites. Tente novamente.')
-          setLimitCheck(null)
-        } else {
-          setLimitCheck(data)
-          if (data && !data.within_limits) {
-            // Temporarily disable KYC enforcement for testing
-            // if (data.requires_kyc) {
-            //   setLimitError('Verificação KYC necessária para esta transação.')
-            // } else {
-              setLimitError(`Limite ${data.limit_type} excedido. Limite atual: ${data.current_limit} ${watchedCurrency}`)
-            // }
-          }
-        }
-      } catch (error) {
-        setLimitError('Erro ao verificar limites. Tente novamente.')
-        setLimitCheck(null)
-      } finally {
-        setCheckingLimits(false)
-      }
-    }
-
-    // Debounce the limit check
-    const timeoutId = setTimeout(checkLimits, 500)
-    return () => clearTimeout(timeoutId)
-  }, [amount, watchedCurrency])
+  // Removed complex limit checking logic - keeping only basic validation
 
 
 
