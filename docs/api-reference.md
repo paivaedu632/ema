@@ -368,15 +368,16 @@ interface ApiResponse<T = any> {
 
 ### Transaction Processing Functions
 
-#### process_buy_transaction(p_user_id, p_eur_amount, p_exchange_rate)
-**Purpose**: Process EUR to AOA purchase atomically
+#### process_buy_transaction_with_matching(user_uuid, amount_eur, use_order_matching, max_rate)
+**Purpose**: Process EUR to AOA purchase with order matching and dynamic fees
 **Authentication**: Required (via Supabase client)
 **Parameters**:
 ```typescript
 {
-  p_user_id: string,      // User UUID
-  p_eur_amount: number,   // EUR amount to spend
-  p_exchange_rate: number // Current EUR to AOA rate
+  user_uuid: string,           // User UUID
+  amount_eur: number,          // EUR amount to spend
+  use_order_matching: boolean, // Whether to use order matching (default: true)
+  max_rate: number            // Maximum acceptable rate (optional)
 }
 ```
 **Returns**:
@@ -389,17 +390,19 @@ interface ApiResponse<T = any> {
 }
 ```
 
-#### process_sell_transaction(p_user_id, p_aoa_amount, p_exchange_rate)
-**Purpose**: Process AOA to EUR sale atomically
+#### create_currency_offer(user_uuid, currency_code, amount_to_reserve, rate)
+**Purpose**: Create P2P exchange offer with reserved balance
 **Authentication**: Required
 **Parameters**:
 ```typescript
 {
-  p_user_id: string,      // User UUID
-  p_aoa_amount: number,   // AOA amount to sell
-  p_exchange_rate: number // Current AOA to EUR rate
+  user_uuid: string,        // User UUID
+  currency_code: string,    // Currency being offered (AOA or EUR)
+  amount_to_reserve: number, // Amount to reserve for offer
+  rate: number              // Exchange rate for offer
 }
 ```
+**Returns**: `UUID` - Offer ID
 
 #### process_send_transaction(p_sender_id, p_recipient_id, p_amount, p_currency)
 **Purpose**: Transfer money between users atomically
@@ -424,9 +427,20 @@ interface ApiResponse<T = any> {
 **Purpose**: Get user's available balance for transactions
 **Returns**: `number` - Available balance
 
-#### get_active_exchange_rate(from_curr, to_curr)
-**Purpose**: Get current active exchange rate
-**Returns**: `number` - Exchange rate
+#### cancel_currency_offer(offer_uuid, user_uuid)
+**Purpose**: Cancel P2P exchange offer and return reserved balance
+**Returns**: `boolean` - Success status
+
+#### validate_exchange_rate(currency_code, proposed_rate)
+**Purpose**: Validate exchange rate against market offers or API baseline
+**Returns**: `boolean` - Validation result
+
+#### Exchange Rate System (Current)
+**Note**: Exchange rates are now handled via:
+- Order matching system for buy transactions (match_buy_order_aoa)
+- Seller-defined rates in offers table for sell transactions
+- Static fallback rate (924.0675 AOA per EUR) when insufficient liquidity
+- Banco BAI API for reference only (sell component validation)
 
 #### GET /api/transactions/:id
 **Purpose**: Get specific transaction details
@@ -458,49 +472,51 @@ interface ApiResponse<T = any> {
 
 ### Exchange Rates
 
-#### GET /api/exchange-rates
-**Purpose**: Get current active exchange rates
+#### GET /api/exchange-rate/banco-bai ✅ **NEW**
+**Purpose**: Get real-time exchange rates from Banco BAI API
 **Authentication**: None required
-**Response**:
-```json
-{
-  "success": true,
-  "data": [
-    {
-      "from_currency": "EUR",
-      "to_currency": "AOA",
-      "rate": 850.00,
-      "rate_type": "automatic",
-      "is_active": true,
-      "updated_at": "2025-06-14T20:53:21.476Z"
-    },
-    {
-      "from_currency": "AOA",
-      "to_currency": "EUR",
-      "rate": 0.00118,
-      "rate_type": "automatic",
-      "is_active": true,
-      "updated_at": "2025-06-14T20:53:21.476Z"
-    }
-  ]
-}
-```
-
-#### GET /api/exchange-rates/:from/:to
-**Purpose**: Get specific exchange rate
-**Authentication**: None required
-**Parameters**: 
-- `from` - Source currency (AOA or EUR)
-- `to` - Target currency (AOA or EUR)
 **Response**:
 ```json
 {
   "success": true,
   "data": {
-    "rate": 850.00,
-    "from_currency": "EUR",
-    "to_currency": "AOA",
-    "rate_type": "automatic"
+    "sellValue": 1100.0124,
+    "buyValue": 1078.4435,
+    "currency": "EUR",
+    "quotationDate": "2025-06-20T11:00:00.000Z"
+  },
+  "timestamp": "2025-06-20T11:30:57.709Z"
+}
+```
+
+#### POST /api/exchange/rates ✅ **NEW**
+**Purpose**: Calculate real-time exchange rates using order matching
+**Authentication**: Required
+**Request**:
+```json
+{
+  "amount": 100.00,
+  "currency": "AOA",
+  "type": "buy"
+}
+```
+**Response**:
+```json
+{
+  "success": true,
+  "data": {
+    "amount_eur": 100.00,
+    "fee_amount": 2.00,
+    "net_amount": 98.00,
+    "aoa_amount": 105717.40,
+    "exchange_rate": 1078.7487,
+    "fee_percentage": 0.02,
+    "order_matching": {
+      "success": true,
+      "matches": [...],
+      "match_count": 1
+    },
+    "rate_source": "order_matching"
   }
 }
 ```

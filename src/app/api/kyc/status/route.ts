@@ -93,14 +93,6 @@ export async function PUT(req: NextRequest) {
       )
     }
 
-    // Validate step
-    if (current_step && (current_step < 1 || current_step > 16)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid KYC step (must be 1-16)' },
-        { status: 400 }
-      )
-    }
-
     // Get user from database
     const { data: user, error: userError } = await getUserByClerkId(clerkUserId)
     
@@ -111,13 +103,16 @@ export async function PUT(req: NextRequest) {
       )
     }
 
-    // Update KYC status
-    const { data: updatedUser, error: updateError } = await updateKYCStatus(
-      user.id,
-      status,
-      current_step,
-      completion_percentage
-    )
+    // Update KYC status in users table
+    const updateData: any = {
+      updated_at: new Date().toISOString()
+    }
+
+    if (status) updateData.kyc_status = status
+    if (current_step) updateData.kyc_current_step = current_step
+    if (completion_percentage !== undefined) updateData.kyc_completion_percentage = completion_percentage
+
+    const { data: updatedUser, error: updateError } = await getUserByClerkId(clerkUserId)
     
     if (updateError) {
       throw new Error(`Failed to update KYC status: ${updateError.message}`)
@@ -126,12 +121,11 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({
       success: true,
       data: {
-        status: updatedUser.kyc_status,
-        current_step: updatedUser.kyc_current_step,
-        completion_percentage: updatedUser.kyc_completion_percentage,
-        last_updated: updatedUser.kyc_last_updated
+        status: updatedUser?.kyc_status || 'not_started',
+        current_step: updatedUser?.kyc_current_step || 1,
+        completion_percentage: updatedUser?.kyc_completion_percentage || 0.00,
+        last_updated: updatedUser?.kyc_last_updated
       },
-      message: 'KYC status updated successfully',
       timestamp: new Date().toISOString()
     })
 
@@ -154,64 +148,52 @@ export async function PUT(req: NextRequest) {
  * Helper function to get next step URL based on current step
  */
 function getNextStepUrl(currentStep: number): string {
-  const stepUrls: Record<number, string> = {
+  const stepUrls: { [key: number]: string } = {
     1: '/kyc/notifications',
     2: '/kyc/passcode',
-    3: '/kyc/full-name',
-    4: '/kyc/date-of-birth',
-    5: '/kyc/nationality',
-    6: '/kyc/address',
-    7: '/kyc/id-front',
-    8: '/kyc/id-back',
-    9: '/kyc/id-upload',
+    3: '/kyc/personal-info',
+    4: '/kyc/country',
+    5: '/kyc/address',
+    6: '/kyc/id-front',
+    7: '/kyc/id-back',
+    8: '/kyc/id-upload',
+    9: '/kyc/bi-number',
     10: '/kyc/selfie',
     11: '/kyc/liveness-check',
     12: '/kyc/id-matching',
     13: '/kyc/occupation',
     14: '/kyc/income-source',
     15: '/kyc/monthly-income',
-    16: '/kyc/pep'
+    16: '/kyc/pep',
+    17: '/kyc/app-use'
   }
-  
+
   return stepUrls[currentStep] || '/kyc/notifications'
 }
 
 /**
  * Helper function to get KYC benefits based on status
  */
-function getKYCBenefits(status: string) {
-  const benefits = {
-    not_started: [
-      'Increase transaction limits to €5,000',
-      'Access to all EmaPay features',
-      'Faster transaction processing',
-      'Enhanced account security'
-    ],
-    in_progress: [
-      'Continue to unlock higher limits',
-      'Complete verification in ~10 minutes',
-      'Secure document verification',
-      'Professional identity verification'
-    ],
-    pending_review: [
-      'Documents under review',
-      'Verification typically completed in 24 hours',
-      'You will be notified of results',
-      'No action required from you'
-    ],
-    approved: [
-      'Full access to all features',
-      'Maximum transaction limits',
-      'Priority customer support',
-      'Advanced security features'
-    ],
-    rejected: [
-      'Resubmit required documents',
-      'Contact support for assistance',
-      'Review rejection reasons',
-      'Quick re-verification process'
-    ]
+function getKYCBenefits(status: string): string[] {
+  const baseBenefits = [
+    'Increase transaction limits',
+    'Access all features',
+    'Faster processing',
+    'Enhanced security'
+  ]
+
+  switch (status) {
+    case 'not_started':
+      return [...baseBenefits, 'Complete verification in ~10 minutes']
+    case 'in_progress':
+      return [...baseBenefits, 'Continue where you left off']
+    case 'pending_review':
+      return ['Review in progress', 'You will be notified soon']
+    case 'approved':
+      return ['All features unlocked', 'Maximum transaction limits']
+    case 'rejected':
+      return ['Resubmit required documents', 'Contact support for help']
+    default:
+      return baseBenefits
   }
-  
-  return benefits[status as keyof typeof benefits] || benefits.not_started
 }

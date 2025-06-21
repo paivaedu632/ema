@@ -54,30 +54,23 @@ export function DepositFlow() {
     setError("")
 
     try {
-      const response = await fetch('/api/transactions/deposit/instructions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          amount: parseFloat(amount),
-          currency: currency,
-          payment_method: 'bank_transfer'
-        }),
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to generate payment instructions')
+      // Simulate payment instructions generation since backend is removed
+      // In production, this would be handled by external API integration
+      const simulatedInstructions: PaymentInstructions = {
+        payee_name: 'EMA AGOSTINHO',
+        phone_number: '244923300064',
+        iban: '12345',
+        reference: `REF-${Date.now().toString().slice(-8)}`,
+        amount: parseFloat(amount),
+        currency: currency,
+        transaction_id: `TXN-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
       }
 
-      if (data.success) {
-        setPaymentInstructions(data.data)
-        setCurrentStep("payment")
-      } else {
-        throw new Error(data.error || 'Failed to generate payment instructions')
-      }
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 1000))
+
+      setPaymentInstructions(simulatedInstructions)
+      setCurrentStep("payment")
     } catch (error) {
       console.error('Error generating payment instructions:', error)
       setError(error instanceof Error ? error.message : 'Failed to generate payment instructions')
@@ -93,28 +86,29 @@ export function DepositFlow() {
     setError("")
 
     try {
-      const response = await fetch('/api/transactions/deposit/complete', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      // Simulate deposit completion since backend is removed
+      // In production, this would be handled by external API integration
+      const simulatedResult: DepositResult = {
+        transaction: {
+          id: paymentInstructions.transaction_id,
+          reference_id: paymentInstructions.reference,
+          amount: paymentInstructions.amount,
+          currency: paymentInstructions.currency,
+          status: 'completed',
+          created_at: new Date().toISOString()
         },
-        body: JSON.stringify({
-          transaction_id: paymentInstructions.transaction_id
-        }),
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to complete deposit')
+        wallet: {
+          currency: paymentInstructions.currency,
+          available_balance: paymentInstructions.amount, // Simulated new balance
+          updated_at: new Date().toISOString()
+        }
       }
 
-      if (data.success) {
-        setDepositResult(data.data)
-        setCurrentStep("success")
-      } else {
-        throw new Error(data.error || 'Failed to complete deposit')
-      }
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 2000))
+
+      setDepositResult(simulatedResult)
+      setCurrentStep("success")
     } catch (error) {
       console.error('Error completing deposit:', error)
       setError(error instanceof Error ? error.message : 'Failed to complete deposit')

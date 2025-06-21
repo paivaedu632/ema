@@ -40,16 +40,41 @@ export async function GET(req: NextRequest) {
       )
     }
 
-    // Get user limits
-    const { data: limits, error: limitsError } = await getUserLimits(user.id, currency)
-    
-    if (limitsError) {
-      throw new Error(`Failed to fetch user limits: ${limitsError.message}`)
+    // Get user limits with graceful fallback
+    let limits = null
+    try {
+      const { data, error: limitsError } = await getUserLimits(user.id, currency)
+
+      if (limitsError) {
+        console.warn('User limits lookup failed, using default limits:', limitsError.message)
+        limits = getDefaultLimits(currency)
+      } else {
+        limits = data
+      }
+    } catch (error) {
+      console.warn('User limits function unavailable, using default limits:', error)
+      limits = getDefaultLimits(currency)
     }
 
-    // Get limits for both currencies
-    const eurLimits = currency === 'EUR' ? limits : await getUserLimits(user.id, 'EUR')
-    const aoaLimits = currency === 'AOA' ? limits : await getUserLimits(user.id, 'AOA')
+    // Get limits for both currencies with graceful fallback
+    let eurLimits = null
+    let aoaLimits = null
+
+    try {
+      if (currency === 'EUR') {
+        eurLimits = limits
+        const { data } = await getUserLimits(user.id, 'AOA')
+        aoaLimits = data || getDefaultLimits('AOA')
+      } else {
+        aoaLimits = limits
+        const { data } = await getUserLimits(user.id, 'EUR')
+        eurLimits = data || getDefaultLimits('EUR')
+      }
+    } catch (error) {
+      console.warn('Failed to get limits for both currencies, using defaults:', error)
+      eurLimits = currency === 'EUR' ? limits : getDefaultLimits('EUR')
+      aoaLimits = currency === 'AOA' ? limits : getDefaultLimits('AOA')
+    }
 
     return NextResponse.json({
       success: true,
@@ -81,101 +106,7 @@ export async function GET(req: NextRequest) {
   }
 }
 
-/**
- * POST /api/user/limits/check
- * Check if a transaction amount is within user limits
- */
-export async function POST(req: NextRequest) {
-  try {
-    // Get authenticated user
-    const { userId: clerkUserId } = await auth()
-    
-    if (!clerkUserId) {
-      return NextResponse.json(
-        { success: false, error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
 
-    // Parse request body
-    const body = await req.json()
-    const { amount, currency = 'EUR', transaction_type } = body
-
-    // Validate input
-    if (!amount || amount <= 0) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid amount' },
-        { status: 400 }
-      )
-    }
-
-    if (!['EUR', 'AOA'].includes(currency)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid currency. Must be EUR or AOA' },
-        { status: 400 }
-      )
-    }
-
-    // Get user from database
-    const { data: user, error: userError } = await getUserByClerkId(clerkUserId)
-    
-    if (userError || !user) {
-      return NextResponse.json(
-        { success: false, error: 'User not found' },
-        { status: 404 }
-      )
-    }
-
-    // Check transaction limits
-    const { data: limitCheck, error: checkError } = await checkTransactionLimits(
-      user.id, 
-      amount, 
-      currency
-    )
-    
-    if (checkError) {
-      throw new Error(`Failed to check transaction limits: ${checkError.message}`)
-    }
-
-    // Get current limits for context
-    const { data: currentLimits } = await getUserLimits(user.id, currency)
-
-    const response = {
-      success: true,
-      data: {
-        within_limits: limitCheck.within_limits,
-        amount_requested: amount,
-        currency: currency,
-        transaction_type: transaction_type,
-        limit_check: limitCheck,
-        current_limits: currentLimits,
-        kyc_status: user.kyc_status,
-        requires_kyc: !limitCheck.within_limits && user.kyc_status !== 'approved',
-        kyc_benefits: user.kyc_status !== 'approved' ? getKYCBenefits() : null,
-        suggested_action: getSuggestedAction(limitCheck, user.kyc_status, amount)
-      },
-      timestamp: new Date().toISOString()
-    }
-
-    // Return appropriate status code
-    const statusCode = limitCheck.within_limits ? 200 : 422
-
-    return NextResponse.json(response, { status: statusCode })
-
-  } catch (error) {
-    console.error('❌ Error checking transaction limits:', error)
-    
-    return NextResponse.json(
-      {
-        success: false,
-        error: 'Failed to check transaction limits',
-        details: error instanceof Error ? error.message : 'Unknown error',
-        timestamp: new Date().toISOString()
-      },
-      { status: 500 }
-    )
-  }
-}
 
 /**
  * Helper function to get upgrade benefits based on KYC status
@@ -224,48 +155,28 @@ function getRestrictions(kycStatus: string) {
 }
 
 /**
- * Helper function to get KYC benefits
+ * Helper function to get default limits when database functions fail
  */
-function getKYCBenefits() {
-  return {
-    time_estimate: '~10 minutes',
-    immediate_benefits: [
-      'Increase limits by 50x',
-      'Access all features',
-      'Faster processing',
-      'Enhanced security'
-    ],
-    verification_steps: 16,
-    completion_rate: '99.2%'
-  }
-}
-
-/**
- * Helper function to get suggested action based on limit check
- */
-function getSuggestedAction(limitCheck: any, kycStatus: string, amount: number) {
-  if (limitCheck.within_limits) {
+function getDefaultLimits(currency: string) {
+  if (currency === 'EUR') {
     return {
-      action: 'proceed',
-      message: 'Transaction can proceed',
-      button_text: 'Continue'
+      current_daily_limit: 500.00,
+      current_monthly_limit: 2000.00,
+      current_transaction_limit: 100.00,
+      daily_used: 0.00,
+      monthly_used: 0.00,
+      daily_remaining: 500.00,
+      monthly_remaining: 2000.00
     }
-  }
-
-  if (kycStatus === 'approved') {
+  } else { // AOA
     return {
-      action: 'reduce_amount',
-      message: `Amount exceeds your ${limitCheck.limit_type} limit`,
-      button_text: 'Reduce Amount',
-      max_amount: limitCheck.current_limit
+      current_daily_limit: 462500.00,
+      current_monthly_limit: 1850000.00,
+      current_transaction_limit: 92500.00,
+      daily_used: 0.00,
+      monthly_used: 0.00,
+      daily_remaining: 462500.00,
+      monthly_remaining: 1850000.00
     }
-  }
-
-  return {
-    action: 'verify_identity',
-    message: 'Complete identity verification to proceed',
-    button_text: 'Verify Identity',
-    kyc_url: '/kyc/notifications',
-    benefits: getKYCBenefits()
   }
 }

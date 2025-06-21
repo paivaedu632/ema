@@ -1,7 +1,10 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { RefreshCw, Clock, Wallet } from "lucide-react"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { z } from "zod"
 import { PageHeader } from "@/components/ui/page-header"
 import { AmountInput } from "@/components/ui/amount-input"
 import { FixedBottomAction } from "@/components/ui/fixed-bottom-action"
@@ -11,22 +14,157 @@ import { InfoSection } from "@/components/ui/info-section"
 import { AvailableBalance } from "@/components/ui/available-balance"
 import { TransactionSummary } from "@/components/ui/transaction-summary"
 import { useTransactionFlow } from "@/hooks/use-multi-step-flow"
-import { useCanContinue } from "@/hooks/use-amount-validation"
 import { calculateFeeAmount, getTransactionSummary } from "@/utils/fee-calculations"
 import { checkTransactionLimitsClient } from "@/lib/supabase"
+import {
+  TRANSACTION_LIMITS,
+  VALIDATION_MESSAGES,
+  type Currency
+} from "@/utils/transaction-validation"
+import {
+  checkInsufficientBalance,
+  shouldDisableComponentsForBalance,
+  type InsufficientBalanceState
+} from "@/utils/insufficient-balance-utils"
+import { InsufficientBalanceError } from "@/components/ui/insufficient-balance-error"
 
+interface WalletBalance {
+  currency: Currency
+  available_balance: number
+  reserved_balance: number
+  last_updated: string
+}
+
+// Zod validation schema with proper error hierarchy
+const createBuyAmountSchema = (availableBalance: number, currency: Currency) => {
+  const limits = TRANSACTION_LIMITS[currency]
+
+  return z.object({
+    amount: z.string()
+      .min(1, VALIDATION_MESSAGES.AMOUNT.REQUIRED)
+      .refine((val) => {
+        const num = Number(val)
+        return !isNaN(num) && num > 0
+      }, {
+        message: VALIDATION_MESSAGES.AMOUNT.INVALID
+      })
+      .refine((val) => {
+        const num = Number(val)
+        return num >= limits.min
+      }, {
+        message: VALIDATION_MESSAGES.AMOUNT.MIN(limits.min, currency)
+      })
+      .refine((val) => {
+        const num = Number(val)
+        return num <= limits.max
+      }, {
+        message: VALIDATION_MESSAGES.AMOUNT.MAX(limits.max, currency)
+      })
+      .refine((val) => {
+        const num = Number(val)
+        return num <= availableBalance
+      }, {
+        message: VALIDATION_MESSAGES.AMOUNT.INSUFFICIENT_BALANCE
+      }),
+    currency: z.enum(["EUR", "AOA"])
+  })
+}
+
+type BuyAmountForm = z.infer<ReturnType<typeof createBuyAmountSchema>>
 
 export function BuyFlow() {
-  const [amount, setAmount] = useState("")
-  const [currency, setCurrency] = useState("AOA")
-  const [availableBalance] = useState("100 EUR")
+  const [walletBalances, setWalletBalances] = useState<WalletBalance[]>([])
+  const [balancesLoading, setBalancesLoading] = useState(true)
   const [limitCheck, setLimitCheck] = useState<any>(null)
   const [limitError, setLimitError] = useState<string | null>(null)
   const [checkingLimits, setCheckingLimits] = useState(false)
-  const [validationError, setValidationError] = useState<string>("")
+  const [exchangeRateData, setExchangeRateData] = useState<any>(null)
+  const [rateLoading, setRateLoading] = useState(false)
+  const [rateError, setRateError] = useState<string | null>(null)
+  const [countdown, setCountdown] = useState(10)
+  const intervalRef = useRef<NodeJS.Timeout | null>(null)
+  const countdownRef = useRef<NodeJS.Timeout | null>(null)
 
-  // Static exchange rates as per user preference
-  const exchangeRate = "1.00 EUR = 924.0675 AOA"
+  // Insufficient balance state
+  const [insufficientBalanceState, setInsufficientBalanceState] = useState<InsufficientBalanceState>({
+    hasInsufficientBalance: false,
+    errorMessage: null,
+    shouldShowDepositButton: false,
+    shouldDisableComponents: false
+  })
+
+  // Get current available balance for selected currency
+  const getCurrentBalance = (currency: Currency): number => {
+    const wallet = walletBalances.find(w => w.currency === currency)
+    return wallet?.available_balance || 0
+  }
+
+  // React Hook Form setup with dynamic schema
+  const form = useForm<BuyAmountForm>({
+    resolver: zodResolver(createBuyAmountSchema(getCurrentBalance("EUR"), "EUR")),
+    mode: "onChange",
+    defaultValues: {
+      amount: "",
+      currency: "EUR"
+    }
+  })
+
+  const { watch, setValue, formState: { errors, isValid } } = form
+  const watchedCurrency = watch("currency")
+  const watchedAmount = watch("amount")
+
+  // Use watched values for compatibility with existing code
+  const amount = watchedAmount
+  const currency = watchedCurrency
+
+  // Update form schema when currency or balance changes
+  useEffect(() => {
+    const currentBalance = getCurrentBalance(watchedCurrency)
+    const newSchema = createBuyAmountSchema(currentBalance, watchedCurrency)
+
+    // Update the resolver with new schema
+    form.clearErrors()
+    // Re-validate current amount with new schema
+    if (watchedAmount) {
+      form.trigger("amount")
+    }
+  }, [watchedCurrency, walletBalances, form, watchedAmount])
+
+  // Check insufficient balance when amount or currency changes
+  useEffect(() => {
+    const currentBalance = getCurrentBalance(watchedCurrency)
+    const balanceState = checkInsufficientBalance(watchedAmount, currentBalance, watchedCurrency, 'buy')
+    setInsufficientBalanceState(balanceState)
+  }, [watchedAmount, watchedCurrency, walletBalances])
+
+  // Dynamic exchange rate display with countdown
+  const getExchangeRateDisplay = (): string => {
+    if (rateLoading) return "Calculando taxa..."
+
+    // Default display based on selected currency
+    const defaultDisplay = watchedCurrency === 'EUR'
+      ? "1.00 EUR = 924.0675 AOA"
+      : "1.00 AOA = 0.0011 EUR"
+
+    if (rateError) return defaultDisplay
+
+    const baseDisplay = exchangeRateData?.exchange_rate
+      ? watchedCurrency === 'EUR'
+        ? `1.00 EUR = ${exchangeRateData.exchange_rate.toFixed(4)} AOA`
+        : `1.00 AOA = ${(1 / exchangeRateData.exchange_rate).toFixed(4)} EUR`
+      : defaultDisplay
+
+    // Only show countdown if amount is valid and timer is running
+    const shouldShowCountdown = amount && amount !== "0" && !isNaN(Number(amount))
+    return shouldShowCountdown ? `${baseDisplay} (${countdown}s)` : baseDisplay
+  }
+
+  // Format balance for display based on selected currency
+  const getFormattedBalance = (currency: Currency): string => {
+    const wallet = walletBalances.find(w => w.currency === currency)
+    if (!wallet) return `0.00 ${currency}`
+    return `${wallet.available_balance.toFixed(2)} ${currency}`
+  }
 
   // Use reusable transaction flow hook
   const {
@@ -39,13 +177,142 @@ export function BuyFlow() {
     steps: ["amount", "confirmation", "success"]
   })
 
-  // Use reusable validation hook with limit checking
-  const baseCanContinue = useCanContinue(amount)
-  const canContinue = baseCanContinue && !limitError && !checkingLimits && (limitCheck?.within_limits !== false) && !validationError
+  // Get primary error message following error hierarchy
+  const getPrimaryErrorMessage = (): string | null => {
+    // 1. Transaction limits (highest priority)
+    if (limitError) return limitError
 
-  // Use reusable fee calculation utilities
-  const feeAmount = calculateFeeAmount(amount, currency)
+    // 2. Form validation errors (balance, amount validation)
+    // Note: Insufficient balance is handled separately with deposit button
+    if (errors.amount?.message && !insufficientBalanceState.hasInsufficientBalance) {
+      return errors.amount.message
+    }
+
+    return null
+  }
+
+  // Continue button logic - form must be valid, limits must be within bounds, and balance must be sufficient
+  const canContinue = isValid &&
+    !limitError &&
+    !checkingLimits &&
+    (limitCheck?.within_limits !== false) &&
+    !insufficientBalanceState.hasInsufficientBalance
+
+  // Use dynamic fee calculation from exchange rate data
+  const feeAmount = exchangeRateData?.fee_amount
+    ? `${exchangeRateData.fee_amount.toFixed(2)} ${watchedCurrency}`
+    : calculateFeeAmount(amount, currency)
+
+  // Calculate the amount user will receive (opposite currency)
+  const receiveCurrency = watchedCurrency === 'EUR' ? 'AOA' : 'EUR'
+  const receiveAmount = exchangeRateData?.aoa_amount || exchangeRateData?.eur_amount
+    ? `${(exchangeRateData.aoa_amount || exchangeRateData.eur_amount).toFixed(2)} ${receiveCurrency}`
+    : getTransactionSummary(amount, currency).total
+
+  // Calculate transaction summary for display
   const transactionSummary = getTransactionSummary(amount, currency)
+
+  // Fetch wallet balances on component mount
+  useEffect(() => {
+    const fetchWalletBalances = async () => {
+      try {
+        const response = await fetch('/api/wallet/balances')
+        if (response.ok) {
+          const result = await response.json()
+          setWalletBalances(result.data || [])
+        }
+      } catch (error) {
+        console.error('Error fetching wallet balances:', error)
+      } finally {
+        setBalancesLoading(false)
+      }
+    }
+
+    fetchWalletBalances()
+  }, [])
+
+  // Fetch exchange rate function
+  const fetchExchangeRate = async () => {
+    if (!amount || parseFloat(amount) <= 0) {
+      setExchangeRateData(null)
+      setRateError(null)
+      return
+    }
+
+    setRateLoading(true)
+    setRateError(null)
+
+    try {
+      const response = await fetch('/api/exchange/rates', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          amount: parseFloat(amount),
+          currency: watchedCurrency === 'EUR' ? 'AOA' : 'EUR', // Buy opposite currency
+          type: 'buy'
+        })
+      })
+
+      const result = await response.json()
+
+      if (result.success) {
+        setExchangeRateData(result.data)
+      } else {
+        setRateError(result.error || 'Erro ao calcular taxa')
+      }
+    } catch (error) {
+      console.error('Error fetching exchange rate:', error)
+      setRateError('Erro de conexão')
+    } finally {
+      setRateLoading(false)
+    }
+  }
+
+  // Countdown timer and exchange rate fetching effect
+  useEffect(() => {
+    // Clear existing timers
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current)
+      intervalRef.current = null
+    }
+    if (countdownRef.current) {
+      clearInterval(countdownRef.current)
+      countdownRef.current = null
+    }
+
+    // Only start timer if amount is valid
+    if (!amount || amount === "0" || isNaN(Number(amount))) {
+      setCountdown(10)
+      return
+    }
+
+    // Initial fetch
+    fetchExchangeRate()
+    setCountdown(10)
+
+    // Start countdown timer (updates every second)
+    countdownRef.current = setInterval(() => {
+      setCountdown(prev => {
+        if (prev <= 1) {
+          // Reset countdown and fetch new rate
+          fetchExchangeRate()
+          return 10
+        }
+        return prev - 1
+      })
+    }, 1000)
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current)
+      }
+      if (countdownRef.current) {
+        clearInterval(countdownRef.current)
+      }
+    }
+  }, [amount, watchedCurrency])
 
   // Check transaction limits when amount changes
   useEffect(() => {
@@ -62,7 +329,7 @@ export function BuyFlow() {
       try {
         const { data, error } = await checkTransactionLimitsClient(
           Number(amount),
-          'EUR', // Buy operations use EUR as base currency
+          watchedCurrency, // Use selected currency for limit checks
           'buy'
         )
 
@@ -75,7 +342,7 @@ export function BuyFlow() {
             if (data.requires_kyc) {
               setLimitError('Verificação KYC necessária para esta transação.')
             } else {
-              setLimitError(`Limite ${data.limit_type} excedido. Limite atual: ${data.current_limit} EUR`)
+              setLimitError(`Limite ${data.limit_type} excedido. Limite atual: ${data.current_limit} ${watchedCurrency}`)
             }
           }
         }
@@ -90,7 +357,7 @@ export function BuyFlow() {
     // Debounce the limit check
     const timeoutId = setTimeout(checkLimits, 500)
     return () => clearTimeout(timeoutId)
-  }, [amount])
+  }, [amount, watchedCurrency])
 
 
 
@@ -104,6 +371,9 @@ export function BuyFlow() {
 
   const processBuyTransaction = async () => {
     try {
+      // Use the exchange rate from our dynamic calculation
+      const exchangeRate = exchangeRateData?.exchange_rate || 924.0675
+
       const response = await fetch('/api/transactions/buy', {
         method: 'POST',
         headers: {
@@ -111,14 +381,17 @@ export function BuyFlow() {
         },
         body: JSON.stringify({
           amount: Number(amount),
-          exchangeRate: 924.0675 // Static rate as per user preference
+          currency: watchedCurrency,
+          exchangeRate: exchangeRate,
+          useOrderMatching: exchangeRateData?.rate_source === 'order_matching'
         })
       })
 
       const result = await response.json()
 
       if (result.success) {
-        // Transaction successful, go to success screen
+        // Transaction successful, refresh balances and go to success screen
+        await refreshWalletBalances()
         setStep("success")
       } else {
         // Handle transaction error
@@ -128,6 +401,19 @@ export function BuyFlow() {
     } catch (error) {
       console.error('Error processing buy transaction:', error)
       alert('Erro ao processar transação. Tente novamente.')
+    }
+  }
+
+  // Function to refresh wallet balances
+  const refreshWalletBalances = async () => {
+    try {
+      const response = await fetch('/api/wallet/balances')
+      if (response.ok) {
+        const result = await response.json()
+        setWalletBalances(result.data || [])
+      }
+    } catch (error) {
+      console.error('Error refreshing wallet balances:', error)
     }
   }
 
@@ -141,21 +427,36 @@ export function BuyFlow() {
           />
 
           <AmountInput
-            amount={amount}
-            currency={currency}
-            onAmountChange={setAmount}
-            onCurrencyChange={setCurrency}
+            amount={watchedAmount}
+            currency={watchedCurrency}
+            onAmountChange={(value) => setValue("amount", value)}
+            onCurrencyChange={(value) => setValue("currency", value as "EUR" | "AOA")}
             transactionType="buy"
-            showValidation={true}
-            onValidationChange={(isValid, errorMessage) => {
-              setValidationError(errorMessage || "")
-            }}
+            showValidation={false}
             className="mb-6"
+            disabled={insufficientBalanceState.shouldDisableComponents}
           />
 
-          <AvailableBalance
-            amount={availableBalance}
-          />
+          {/* Primary validation error - shows highest priority error only */}
+          {getPrimaryErrorMessage() && (
+            <p className="form-error-ema">{getPrimaryErrorMessage()}</p>
+          )}
+
+          {/* Insufficient balance error with deposit button */}
+          {insufficientBalanceState.hasInsufficientBalance && (
+            <InsufficientBalanceError
+              currency={watchedCurrency}
+              className="mb-3"
+            />
+          )}
+
+          {balancesLoading ? (
+            <div className="mb-3">
+              <div className="h-5 w-32 bg-gray-100 rounded animate-pulse"></div>
+            </div>
+          ) : (
+            <AvailableBalance amount={getFormattedBalance(watchedCurrency)} />
+          )}
 
           <div>
             {amount && amount !== "0" && amount !== "" && (
@@ -164,7 +465,7 @@ export function BuyFlow() {
                 <InfoSection
                   icon={RefreshCw}
                   label="Câmbio"
-                  value={exchangeRate}
+                  value={getExchangeRateDisplay()}
                 />
 
                 {/* Arrival Time Section */}
@@ -192,7 +493,7 @@ export function BuyFlow() {
           primaryAction={{
             label: "Continuar",
             onClick: handleContinue,
-            disabled: !canContinue
+            disabled: !canContinue || balancesLoading || insufficientBalanceState.shouldDisableComponents
           }}
         />
       </div>
@@ -212,10 +513,10 @@ export function BuyFlow() {
           <div className="space-y-6">
             {/* Transaction Details */}
             <ConfirmationSection title="">
-              <ConfirmationRow label="Seu saldo" value="100 EUR" />
-              <ConfirmationRow label="Compra" value="100 EUR" />
+              <ConfirmationRow label="Seu saldo" value={getFormattedBalance(watchedCurrency)} />
+              <ConfirmationRow label="Compra" value={`${amount} ${watchedCurrency}`} />
               <ConfirmationRow label="Taxa" value={feeAmount} />
-              <ConfirmationRow label="Você recebe" value={transactionSummary.total} highlight />
+              <ConfirmationRow label="Você recebe" value={receiveAmount} highlight />
               <ConfirmationRow label="Tempo" value="Segundos" />
             </ConfirmationSection>
           </div>
@@ -232,10 +533,11 @@ export function BuyFlow() {
   }
 
   // Step 3: Success
+  const successReceiveCurrency = watchedCurrency === 'EUR' ? 'AOA' : 'EUR'
   return (
     <SuccessScreen
       title="Compra confirmada!"
-      message={`Você recebeu ${amount} ${currency} na sua carteira.`}
+      message={`Você comprou ${amount} ${watchedCurrency} e recebeu ${successReceiveCurrency} na sua carteira.`}
       primaryAction={{
         label: "Voltar ao início",
         onClick: handleBackToHome

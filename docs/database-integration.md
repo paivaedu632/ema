@@ -31,10 +31,16 @@ npx supabase db push
 - **RLS**: Users see only their own data
 
 #### wallets
-- **Purpose**: Multi-currency balances (AOA/EUR) with 2-balance system
-- **Key Fields**: `user_id`, `currency`, `balance`, `available_balance`, `reserved_balance`
-- **Balance System**: `available_balance` (spendable) + `reserved_balance` (locked for sales)
+- **Purpose**: Multi-currency balances (AOA/EUR) with available balance tracking
+- **Key Fields**: `user_id`, `currency`, `available_balance`
+- **Balance System**: `available_balance` (spendable), reserved balances managed via offers table
 - **Constraint**: One wallet per currency per user
+
+#### offers ✅ **NEW**
+- **Purpose**: P2P exchange offers with reserved balance management
+- **Key Fields**: `user_id`, `currency_type`, `reserved_amount`, `exchange_rate`, `status`
+- **Status Types**: active, completed, cancelled
+- **Balance Integration**: Reserved amounts calculated from active offers
 
 #### transactions
 - **Purpose**: All financial transactions
@@ -104,6 +110,16 @@ const response = await fetch('/api/user/limits/check', {
 ### KYC (✅ INTEGRATED)
 - `GET /api/kyc/status` - User KYC status and progress
 - `PUT /api/kyc/status` - Update KYC status
+- `GET /api/kyc/progress` - Get detailed KYC progress and step data
+- `POST /api/kyc/progress` - Update KYC progress and step completion
+
+### AWS KYC Processing (✅ RESTORED)
+- `POST /api/upload-document` - Upload KYC documents to AWS S3
+- `POST /api/extract-text` - Extract text from documents using AWS Textract
+- `POST /api/detect-face` - Detect faces in images using AWS Rekognition
+- `POST /api/compare-faces` - Compare faces between two images
+- `POST /api/liveness-check` - Perform liveness detection on selfie images
+- `GET /api/validate-bi/[biNumber]` - Validate Angolan BI number format
 
 ### Limits (✅ INTEGRATED)
 - `GET /api/user/limits` - Current transaction limits
@@ -113,13 +129,24 @@ const response = await fetch('/api/user/limits/check', {
 - `GET /api/wallet/balances` - Real wallet balances
 - `GET /api/wallet/transactions` - Transaction history
 
-### Transaction Processing (✅ NEW)
+### Transaction Processing (✅ UPDATED)
 - `POST /api/transactions/buy` - Process EUR → AOA transactions
-- `POST /api/transactions/sell` - Process AOA → EUR transactions
+- `POST /api/transactions/sell` - Create P2P exchange offers (marketplace)
 - `POST /api/transactions/send` - Process money transfers
+
+### Exchange Rates (✅ NEW)
+- `GET /api/exchange-rate/banco-bai` - Real-time Banco BAI API rates
 
 ### Webhooks
 - `POST /api/webhooks/clerk` - User registration automation
+
+### Removed Endpoints (Backend Functionality Removed)
+- ~~`POST /api/transactions/deposit/instructions`~~ - Deposit instruction generation (UI preserved)
+- ~~`POST /api/transactions/deposit/complete`~~ - Deposit completion (UI preserved)
+- ~~`POST /api/transactions/deposit`~~ - Direct deposit processing (UI preserved)
+- ~~`POST /api/admin/complete-deposit`~~ - Admin deposit completion (UI preserved)
+
+**Note**: Deposit UI components remain intact for future implementation. Deposit processing will be handled via external API integration when users click "Paguei" (payment confirmation). Database functions `process_deposit_atomic` and `complete_pending_deposit` have been removed.
 
 ## Environment Configuration
 
@@ -180,8 +207,11 @@ SELECT * FROM reserve_balance(user_uuid, 'EUR', 100.00);
 -- Unreserve balance (cancel sale) (NEW)
 SELECT * FROM unreserve_balance(user_uuid, 'EUR', 100.00);
 
--- Get exchange rate
-SELECT * FROM get_active_exchange_rate('EUR', 'AOA');
+-- Exchange rates are now handled via:
+-- 1. Order matching system for buy transactions (match_buy_order_aoa)
+-- 2. Seller-defined rates in offers table for sell transactions
+-- 3. Static fallback rate (924.0675 AOA per EUR) when insufficient liquidity
+-- 4. Banco BAI API for reference only (sell component validation)
 ```
 
 ### Limit Functions (NEW)

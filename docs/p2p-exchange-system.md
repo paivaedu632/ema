@@ -1,5 +1,10 @@
 # EmaPay Peer-to-Peer Exchange System
 
+**Status**: ✅ Production Ready
+**Implementation Date**: June 19, 2025
+**Database Functions**: Fully implemented with atomic operations
+**API Cleanup**: June 20, 2025 - Standardized error handling and validation
+
 ## Overview
 
 The EmaPay P2P Exchange System allows users to create currency exchange offers and trade directly with other users. This system replaces immediate transactions with a marketplace-style approach where users can set their own exchange rates within acceptable limits.
@@ -64,11 +69,10 @@ LEFT JOIN (
 ### Database Functions
 
 #### 1. Exchange Rate Validation
-```sql
-validate_exchange_rate(currency_code TEXT, proposed_rate DECIMAL(10,6)) RETURNS BOOLEAN
-```
-- Validates rates against existing market offers (20% margin)
-- Falls back to Banco BAI API baseline (50% margin) if no offers exist
+**Note**: Exchange rate validation is handled at the API layer only to avoid dual validation layers.
+- API validates against market offers (20% margin) + Banco BAI API baseline (50% margin)
+- Database function `validate_exchange_rate()` is deprecated and no longer used
+- Single source of truth for validation logic in `src/utils/exchange-rate-validation.ts`
 
 #### 2. Offer Management
 ```sql

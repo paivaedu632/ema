@@ -1,30 +1,26 @@
-# EmaPay Backend Documentation
+# Ema Backend Documentation
 
 ## Overview
 
-EmaPay is a fintech application for EUR ↔ AOA currency exchange with integrated KYC verification. This documentation covers essential backend and database integration information.
+Ema is a fintech application for EUR ↔ AOA currency exchange with integrated KYC verification. This documentation covers essential backend and database integration information.
 
 **Status**: ✅ Production Ready
 **Database**: Supabase PostgreSQL (Project ID: kjqcfedvilcnwzfjlqtq)
 **Authentication**: Clerk with custom UI
 
-## Recent Accomplishments
+## Current System Architecture
 
-### ✅ **Enhanced Manual Exchange Rate Input** (June 2025)
-- **Live API Integration**: Real-time exchange rates from Banco BAI API via dedicated endpoint
-- **Client-Safe Architecture**: New `/api/exchange-rate/banco-bai` endpoint for secure client-side consumption
-- **Dynamic Placeholder**: Empty input with live rate placeholder (e.g., "Ex: 1078.44")
-- **Simplified EUR-Only Format**: Removed currency selector complexity, always EUR to AOA input
-- **Enhanced Validation**: Portuguese error messages with dynamic range checking (±20% of live rates)
-- **Right-Aligned Rate Reference**: "Taxa atual: 1 EUR = X AOA" with real-time updates
-- **Graceful Error Handling**: Fallback rates and comprehensive error states for API failures
-- **Fixed Runtime Error**: Resolved client-side import issues with server-dependent utilities
+### ✅ **Order Matching System** (June 2025)
+- **Buy Transactions**: Order matching against existing sell offers with static fallback
+- **Dynamic Fee System**: Database-driven fee configuration (2% buy, 0% send/sell)
+- **Real-Time Rates**: Live rate calculation based on market liquidity
+- **Atomic Transactions**: Proper balance updates with rollback on failure
 
-### ✅ **Exchange Rate Direction Fix** (June 2025)
-- **Root Cause Resolution**: Fixed currency direction mismatch between frontend and API
-- **Proper Conversion Logic**: Corrected EUR↔AOA rate conversion for database storage
-- **API Validation**: Fixed 400 Bad Request errors in sell transaction flow
-- **Debugging Integration**: Added comprehensive error tracking and resolution
+### ✅ **P2P Exchange System** (June 2025)
+- **Sell Transactions**: User-defined rates stored in offers table
+- **Balance Management**: Available/reserved balance separation
+- **Market Validation**: Banco BAI API used for reference only (sell component)
+- **Order Fulfillment**: Partial order matching across multiple offers
 
 ## Quick Start
 
@@ -56,11 +52,12 @@ AWS_S3_BUCKET_NAME=emapay-kyc-documents
 
 ### Core Tables
 - **users**: User profiles with KYC status tracking
-- **wallets**: Multi-currency balances (AOA/EUR)
-- **transactions**: All financial transactions with fee calculation
+- **wallets**: Multi-currency balances (AOA/EUR) with available/reserved balance
+- **offers**: P2P exchange offers with seller-defined rates
+- **transactions**: All financial transactions with dynamic fee calculation
+- **fees**: Dynamic fee configuration by transaction type and currency
 - **kyc_records**: 16-step KYC verification workflow
 - **user_limits**: Transaction limits (pre/post KYC)
-- **exchange_rates**: Static EUR ↔ AOA conversion rates
 
 ### Key Relationships
 - Users → Wallets (1:many)
@@ -75,9 +72,33 @@ AWS_S3_BUCKET_NAME=emapay-kyc-documents
 - `GET /api/user/limits` - Current transaction limits
 - `POST /api/user/limits/check` - Validate transaction amount
 - `GET /api/wallet/balances` - Real wallet balances
-- `POST /api/transactions/buy` - Process EUR → AOA transactions
-- `POST /api/transactions/sell` - Process AOA → EUR transactions
+- `POST /api/transactions/buy` - Process EUR → AOA with order matching
+- `POST /api/transactions/sell` - Create P2P exchange offers
 - `POST /api/transactions/send` - Process money transfers
+- `POST /api/exchange/rates` - Real-time rate calculation via order matching
+- `GET /api/exchange-rate/banco-bai` - Banco BAI API (reference only for sell component)
+
+### KYC Endpoints
+- `GET /api/kyc/status` - Get user's KYC verification status and progress
+- `PUT /api/kyc/status` - Update user's KYC status (admin/system use)
+- `GET /api/kyc/progress` - Get detailed KYC progress and step data
+- `POST /api/kyc/progress` - Update KYC progress and step completion
+
+### AWS KYC Processing Endpoints
+- `POST /api/upload-document` - Upload KYC documents to AWS S3
+- `POST /api/extract-text` - Extract text from documents using AWS Textract
+- `POST /api/detect-face` - Detect faces in images using AWS Rekognition
+- `POST /api/compare-faces` - Compare faces between two images
+- `POST /api/liveness-check` - Perform liveness detection on selfie images
+- `GET /api/validate-bi/[biNumber]` - Validate Angolan BI number format
+
+### Removed Endpoints (Backend Functionality Removed)
+- ~~`POST /api/transactions/deposit/instructions`~~ - Deposit instruction generation (UI preserved)
+- ~~`POST /api/transactions/deposit/complete`~~ - Deposit completion (UI preserved)
+- ~~`POST /api/transactions/deposit`~~ - Direct deposit processing (UI preserved)
+- ~~`POST /api/admin/complete-deposit`~~ - Admin deposit completion (UI preserved)
+
+**Note**: Deposit UI components remain intact for future implementation. Deposit processing will be handled via external API integration when users click "Paguei" (payment confirmation).
 
 ### Webhooks
 - `POST /api/webhooks/clerk` - User registration automation
@@ -115,11 +136,12 @@ curl http://localhost:3000/api/verify-webhook
 
 ## Documentation
 
-- **[Form Validation](./form-validation.md)** - ✅ **Official Standard**: React Hook Form + Zod validation system
-- **[Exchange Rate System](./exchange-rate-system.md)** - ✅ **Live API Integration**: Banco BAI real-time rates with enhanced UX
 - **[Database Integration](./database-integration.md)** - Complete database setup and patterns
 - **[API Reference](./api-reference.md)** - Detailed API endpoints and usage
 - **[Authentication Workflow](./authentication-workflow.md)** - Clerk integration and user management
+- **[P2P Exchange System](./p2p-exchange-system.md)** - Peer-to-peer marketplace architecture
+- **[Order Matching System](./order-matching-system.md)** - Buy transaction order matching implementation
+- **[Exchange Rate Audit Report](./exchange-rate-audit-report.md)** - System verification and compliance
 
 ---
 

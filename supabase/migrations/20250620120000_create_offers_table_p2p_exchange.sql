@@ -156,10 +156,8 @@ BEGIN
             amount_to_reserve, COALESCE(user_available_balance, 0);
     END IF;
     
-    -- Validate exchange rate
-    IF NOT validate_exchange_rate(currency_code, rate) THEN
-        RAISE EXCEPTION 'Exchange rate % is outside acceptable range for %', rate, currency_code;
-    END IF;
+    -- Exchange rate validation is handled at the API layer
+    -- No need for duplicate validation at database level
     
     -- Start transaction
     BEGIN

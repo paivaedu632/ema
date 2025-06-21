@@ -63,6 +63,10 @@
 - **PrimaryActionButtons** (`src/components/ui/primary-action-buttons.tsx`) - Reusable "Vender" and "Comprar" button pair with navigation
 - **IconActionButtons** (`src/components/ui/icon-action-buttons.tsx`) - Reusable icon-based action buttons: "Depositar", "Enviar", "Receber", "Retirar" with navigation
 
+### Validation Components:
+- **InsufficientBalanceError** (`src/components/ui/insufficient-balance-error.tsx`) - Reusable component for displaying insufficient balance error with clickable "Depositar" button
+- **Insufficient Balance Utils** (`src/utils/insufficient-balance-utils.ts`) - Centralized utilities for handling insufficient balance scenarios across transaction components
+
 ### Custom Hooks:
 - **useMultiStepFlow** (`src/hooks/use-multi-step-flow.ts`) - Reusable hook for managing multi-step flow state with navigation, validation, and step tracking
 - **useTransactionFlow** (`src/hooks/use-multi-step-flow.ts`) - Enhanced hook for transaction flows with common navigation patterns (handleBack, handleBackToDashboard, handleBackToHome)
@@ -636,6 +640,14 @@ New UI Need Identified
   - Components: dashboard.tsx, wallet.tsx, kyc-gate.tsx
 - **Preserved production functionality**: All EmaPay features remain intact including authentication, database integration, UI components, KYC flow, wallet functionality, and deployment configurations
 
+## UI Cleanup & Enhancement (June 2025):
+- **KYC Card Simplification**: Updated dashboard KYC card from complex multi-line text to simple "Complete sua verificação >" with dark red font matching sell step 2 style
+- **Sell Component Exchange Rate Enhancement**:
+  - Fixed exchange rate input to use fetched Banco BAI rate as placeholder only (input starts empty)
+  - Added "Você vende" text display above "Você recebe" with proper thousand separators formatting
+  - Environment variable configuration already implemented correctly for Banco BAI API URL
+- **Database Cleanup**: Verified no unnecessary "View" or "Exchange Rate" tables exist - all database views are required for functionality
+
 ## Code Refactoring & Reusable Components (June 2025):
 
 ### New Reusable Components Added:
@@ -653,14 +665,24 @@ New UI Need Identified
 
 ### Refactored API Routes:
 - **Transaction Routes**: Refactored `/api/transactions/buy`, `/api/transactions/sell`, `/api/transactions/send` to use shared API utilities
+- **Sell Offer API Cleanup**: Standardized error handling patterns, removed mixed response formats, added comprehensive logging
+- **Validation Consistency**: Currency-specific amount validation, shared exchange rate validation utilities
+- **Response Formatting**: Consistent success/error response structures across all transaction endpoints
 - **Reduced code duplication**: ~60% reduction in duplicate code across transaction endpoints
-- **Standardized error handling**: Consistent error messages and response formats
-- **Improved validation**: Centralized input validation with proper TypeScript types
+- **Standardized error handling**: Consistent error messages and response formats using `createErrorResponse()` for all error cases
+- **Improved validation**: Centralized input validation with proper TypeScript types and shared validation constants
 
 ### Enhanced CSS Utilities:
 - **Added utility classes**: Form layouts, result screens, loading states, status badges, banners
 - **Consistent styling**: Standardized button states, form elements, and component patterns
 - **Maintainable styles**: Reduced inline styling duplication across components
+
+### Validation System Consolidation (June 2025):
+- **Shared Validation Constants** (`src/utils/transaction-validation.ts`): Centralized validation rules, error messages, and currency limits
+- **Transaction Limits**: Consistent AOA (min: 1,000, max: 1,000,000,000) and EUR (min: 1, max: 10,000) limits across frontend/backend
+- **Exchange Rate Validation**: Standardized margin calculations (20% for market offers, 50% for API baseline)
+- **Portuguese Error Messages**: Consistent error messages across all validation points
+- **Frontend/Backend Consistency**: Shared validation logic between components and API endpoints
 
 ### Benefits Achieved:
 - **Code reduction**: ~40% reduction in duplicate code patterns
@@ -1106,6 +1128,8 @@ New UI Need Identified
   - **`.form-input-auth`**: Authentication-style forms (`h-12 px-3 border-gray-300 rounded-md bg-white text-base`)
 - **Form Spacing Classes**:
   - **`.form-input-with-subtitle`**: Standard 12px spacing between form inputs and validation/subtitle text (`space-y-3`)
+- **Form Error Classes**:
+  - **`.form-error-ema`**: Standard error message styling (`text-red-700 text-sm mt-1`)
 - **Modern Fintech Approach**: Uses modern fintech sizing (h-12/48px) with EmaPay custom styling (black borders, white backgrounds)
 - **Benefits**:
   - **Modern Fintech Alignment**: Uses h-12 height (48px) matching modern fintech standards and button sizing

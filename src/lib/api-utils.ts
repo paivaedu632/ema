@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
 import { getUserByClerkId } from '@/lib/supabase-server'
+import { TRANSACTION_LIMITS, VALIDATION_MESSAGES, type Currency } from '@/utils/transaction-validation'
 
 // ===== STANDARD API RESPONSE TYPES =====
 
@@ -84,23 +85,37 @@ export async function getAuthenticatedUser() {
 // ===== VALIDATION UTILITIES =====
 
 /**
- * Validate amount input
+ * Validate amount input with optional currency-specific limits
  */
-export function validateAmount(amount: any, fieldName = 'amount'): number {
+export function validateAmount(amount: any, currency?: Currency, fieldName = 'amount'): number {
   if (!amount || isNaN(Number(amount)) || Number(amount) <= 0) {
     throw new ApiError(`Invalid ${fieldName}. Must be a positive number.`, 400)
   }
-  return Number(amount)
+
+  const numAmount = Number(amount)
+
+  // Apply currency-specific limits if currency is provided
+  if (currency) {
+    const limits = TRANSACTION_LIMITS[currency]
+    if (numAmount < limits.min) {
+      throw new ApiError(VALIDATION_MESSAGES.AMOUNT.MIN(limits.min, currency), 400)
+    }
+    if (numAmount > limits.max) {
+      throw new ApiError(VALIDATION_MESSAGES.AMOUNT.MAX(limits.max, currency), 400)
+    }
+  }
+
+  return numAmount
 }
 
 /**
  * Validate currency input
  */
-export function validateCurrency(currency: any): 'EUR' | 'AOA' {
+export function validateCurrency(currency: any): Currency {
   if (!currency || !['EUR', 'AOA'].includes(currency)) {
-    throw new ApiError('Invalid currency. Must be EUR or AOA', 400)
+    throw new ApiError(VALIDATION_MESSAGES.CURRENCY.INVALID, 400)
   }
-  return currency as 'EUR' | 'AOA'
+  return currency as Currency
 }
 
 /**
@@ -111,6 +126,16 @@ export function validateExchangeRate(exchangeRate: any): number | null {
 
   if (isNaN(Number(exchangeRate)) || Number(exchangeRate) <= 0) {
     throw new ApiError('Invalid exchange rate. Must be a positive number.', 400)
+  }
+  return Number(exchangeRate)
+}
+
+/**
+ * Validate exchange rate input (required version for sell offers)
+ */
+export function validateRequiredExchangeRate(exchangeRate: any): number {
+  if (!exchangeRate || isNaN(Number(exchangeRate)) || Number(exchangeRate) <= 0) {
+    throw new ApiError(VALIDATION_MESSAGES.EXCHANGE_RATE.INVALID_POSITIVE, 400)
   }
   return Number(exchangeRate)
 }
@@ -231,6 +256,31 @@ export function handleTransactionError(
   throw new ApiError(defaultMessages[transactionType], 500, message)
 }
 
+/**
+ * Handle sell offer creation errors with localized messages
+ */
+export function handleSellOfferError(error: any): never {
+  const message = error.message || ''
+
+  // Handle insufficient balance errors
+  if (message.includes('Insufficient available balance')) {
+    throw new ApiError('Saldo insuficiente para criar a oferta', 400)
+  }
+
+  // Handle exchange rate validation errors
+  if (message.includes('Exchange rate') && message.includes('outside acceptable range')) {
+    throw new ApiError('Taxa de câmbio fora do intervalo aceitável', 400)
+  }
+
+  // Handle wallet errors
+  if (message.includes('Wallet not found')) {
+    throw new ApiError('Carteira não encontrada', 404)
+  }
+
+  // Default sell offer error
+  throw new ApiError('Falha ao criar oferta de venda', 500, message)
+}
+
 // ===== RESPONSE FORMATTING =====
 
 /**
@@ -275,4 +325,24 @@ export function formatTransactionResponse(result: any, type: 'buy' | 'sell' | 's
   }
 
   return baseFormat
+}
+
+/**
+ * Format sell offer response data
+ */
+export function formatSellOfferResponse(offerDetails: any, rateValidation: any) {
+  return {
+    offer_id: offerDetails.id,
+    user_id: offerDetails.user_id,
+    currency: offerDetails.currency_type,
+    amount: parseFloat(offerDetails.reserved_amount.toString()),
+    exchange_rate: parseFloat(offerDetails.exchange_rate.toString()),
+    status: offerDetails.status,
+    created_at: offerDetails.created_at,
+    validation_info: {
+      source: rateValidation.source,
+      market_rate: rateValidation.marketRate,
+      allowed_range: rateValidation.allowedRange
+    }
+  }
 }

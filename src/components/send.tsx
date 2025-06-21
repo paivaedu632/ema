@@ -15,6 +15,7 @@ import { FixedBottomAction } from "@/components/ui/fixed-bottom-action"
 import { SuccessScreen } from "@/components/ui/success-screen"
 import { ConfirmationSection, ConfirmationRow, ConfirmationWarning } from "@/components/ui/confirmation-section"
 import { AvailableBalance } from "@/components/ui/available-balance"
+import { TRANSACTION_LIMITS, VALIDATION_MESSAGES } from "@/utils/transaction-validation"
 
 
 
@@ -39,35 +40,30 @@ interface Recipient {
 
 // Zod validation schema with proper error hierarchy
 const createSendAmountSchema = (availableBalance: number, currency: string) => {
-  const limits = {
-    EUR: { min: 1, max: 10000 },
-    AOA: { min: 1000, max: 5000000 }
-  }
-
-  const limit = limits[currency as keyof typeof limits] || limits.EUR
+  const limit = TRANSACTION_LIMITS[currency as keyof typeof TRANSACTION_LIMITS] || TRANSACTION_LIMITS.EUR
 
   return z.object({
     amount: z.string()
-      .min(1, "Digite um valor")
+      .min(1, VALIDATION_MESSAGES.AMOUNT.REQUIRED)
       .transform((val) => {
         const num = Number(val)
         if (isNaN(num) || num <= 0) {
           throw new z.ZodError([{
             code: "custom",
-            message: "Digite um valor válido",
+            message: VALIDATION_MESSAGES.AMOUNT.INVALID,
             path: ["amount"]
           }])
         }
         return num
       })
       .refine((val) => val >= limit.min, {
-        message: `Valor mínimo: ${limit.min.toLocaleString()} ${currency}`
+        message: VALIDATION_MESSAGES.AMOUNT.MIN(limit.min, currency)
       })
       .refine((val) => val <= limit.max, {
-        message: `Valor máximo: ${limit.max.toLocaleString()} ${currency}`
+        message: VALIDATION_MESSAGES.AMOUNT.MAX(limit.max, currency)
       })
       .refine((val) => val <= availableBalance, {
-        message: "Seu saldo não é suficiente"
+        message: VALIDATION_MESSAGES.AMOUNT.INSUFFICIENT_BALANCE
       }),
     currency: z.enum(["EUR", "AOA"])
   })

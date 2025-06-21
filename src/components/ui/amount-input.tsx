@@ -17,6 +17,7 @@ interface AmountInputProps {
   transactionType?: TransactionType
   showValidation?: boolean
   onValidationChange?: (isValid: boolean, errorMessage?: string) => void
+  disabled?: boolean
 }
 
 const defaultCurrencies = [
@@ -34,7 +35,8 @@ export function AmountInput({
   className = "",
   transactionType,
   showValidation = false,
-  onValidationChange
+  onValidationChange,
+  disabled = false
 }: AmountInputProps) {
   const [errorMessage, setErrorMessage] = useState<string>("")
   const currentCurrency = availableCurrencies.find(c => c.code === currency) || availableCurrencies[0]
@@ -59,13 +61,14 @@ export function AmountInput({
           type="text"
           value={amount}
           onChange={(e) => onAmountChange(e.target.value)}
-          className={`amount-input-standard pr-32 ${errorMessage ? 'border-red-500 focus:border-red-500' : ''}`}
+          className={`amount-input-standard pr-32 ${errorMessage ? 'border-red-500 focus:border-red-500' : ''} ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
           placeholder={placeholder}
+          disabled={disabled}
         />
         <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1">
           <FlagIcon countryCode={currentCurrency.flag} />
-          <Select value={currency} onValueChange={onCurrencyChange}>
-            <SelectTrigger className="currency-selector">
+          <Select value={currency} onValueChange={onCurrencyChange} disabled={disabled}>
+            <SelectTrigger className={`currency-selector ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>

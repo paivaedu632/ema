@@ -4,59 +4,51 @@ import {
   getAuthenticatedUser,
   parseRequestBody,
   validateAmount,
+  validateCurrency,
+  validateRequiredExchangeRate,
   handleApiError,
+  handleSellOfferError,
   createSuccessResponse,
-  validateCurrency
+  formatSellOfferResponse
 } from '@/lib/api-utils'
 import { ExchangeRateUtils } from '@/utils/exchange-rate-validation'
 
 /**
- * POST /api/sell
+ * POST /api/transactions/sell
  * Create a peer-to-peer currency exchange offer
  * Moves funds from available_balance to reserved (via offers table)
  */
 export async function POST(request: NextRequest) {
   try {
+    console.log('[SELL] Starting sell offer creation request')
+
     // Get authenticated user
     const { user } = await getAuthenticatedUser()
+    console.log(`[SELL] Authenticated user: ${user.id}`)
 
     // Parse and validate request body
     const body = await parseRequestBody(request)
     const { amount, exchangeRate, currency = 'AOA' } = body
+    console.log(`[SELL] Request data: amount=${amount}, currency=${currency}, exchangeRate=${exchangeRate}`)
 
-    // Validate input
-    const validAmount = validateAmount(amount)
+    // Validate input with currency-specific limits
     const validCurrency = validateCurrency(currency)
-
-    // Handle exchange rate validation - ensure we have a valid number
-    if (!exchangeRate || isNaN(Number(exchangeRate)) || Number(exchangeRate) <= 0) {
-      return createSuccessResponse(
-        {
-          success: false,
-          error: 'Taxa de câmbio inválida. Deve ser um número positivo.'
-        },
-        'Taxa de câmbio inválida',
-        400
-      )
-    }
-
-    const validExchangeRate = Number(exchangeRate)
+    const validAmount = validateAmount(amount, validCurrency)
+    const validExchangeRate = validateRequiredExchangeRate(exchangeRate)
+    console.log(`[SELL] Validated: amount=${validAmount}, currency=${validCurrency}, rate=${validExchangeRate}`)
 
     // Validate exchange rate against market offers or API baseline
+    console.log(`[SELL] Validating exchange rate: ${validExchangeRate} for ${validCurrency}`)
     const rateValidation = await ExchangeRateUtils.validate(validCurrency, validExchangeRate)
+    console.log(`[SELL] Rate validation result: ${JSON.stringify(rateValidation)}`)
 
     if (!rateValidation.isValid) {
-      return createSuccessResponse(
-        {
-          success: false,
-          error: ExchangeRateUtils.formatError(rateValidation, validCurrency)
-        },
-        'Taxa de câmbio inválida',
-        400
-      )
+      console.error(`[SELL] Exchange rate validation failed: ${rateValidation.reason}`)
+      throw new Error(`Exchange rate validation failed: ${ExchangeRateUtils.formatError(rateValidation, validCurrency)}`)
     }
 
     // Create the currency offer using the database function
+    console.log(`[SELL] Creating offer: user=${user.id}, currency=${validCurrency}, amount=${validAmount}, rate=${validExchangeRate}`)
     const { data: offerId, error: offerError } = await supabaseAdmin
       .rpc('create_currency_offer', {
         user_uuid: user.id,
@@ -66,33 +58,11 @@ export async function POST(request: NextRequest) {
       })
 
     if (offerError) {
-      console.error('Error creating offer:', offerError)
-
-      // Handle specific error cases
-      if (offerError.message.includes('Insufficient available balance')) {
-        return createSuccessResponse(
-          {
-            success: false,
-            error: 'Saldo insuficiente para criar a oferta'
-          },
-          'Saldo insuficiente',
-          400
-        )
-      }
-
-      if (offerError.message.includes('Exchange rate') && offerError.message.includes('outside acceptable range')) {
-        return createSuccessResponse(
-          {
-            success: false,
-            error: 'Taxa de câmbio fora do intervalo aceitável'
-          },
-          'Taxa de câmbio inválida',
-          400
-        )
-      }
-
-      throw new Error(`Failed to create offer: ${offerError.message}`)
+      console.error(`[SELL] Error creating offer:`, offerError)
+      handleSellOfferError(offerError)
     }
+
+    console.log(`[SELL] Offer created successfully with ID: ${offerId}`)
 
     // Get the created offer details
     const { data: offerDetails, error: fetchError } = await supabaseAdmin
@@ -102,25 +72,13 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (fetchError) {
-      console.error('Error fetching offer details:', fetchError)
+      console.error(`[SELL] Error fetching offer details:`, fetchError)
       throw new Error('Failed to fetch offer details')
     }
 
-    // Format response similar to transaction response
-    const formattedResult = {
-      offer_id: offerDetails.id,
-      user_id: offerDetails.user_id,
-      currency: offerDetails.currency_type,
-      amount: parseFloat(offerDetails.reserved_amount.toString()),
-      exchange_rate: parseFloat(offerDetails.exchange_rate.toString()),
-      status: offerDetails.status,
-      created_at: offerDetails.created_at,
-      validation_info: {
-        source: rateValidation.source,
-        market_rate: rateValidation.marketRate,
-        allowed_range: rateValidation.allowedRange
-      }
-    }
+    // Format response using standardized formatter
+    const formattedResult = formatSellOfferResponse(offerDetails, rateValidation)
+    console.log(`[SELL] Sell offer created successfully: ${JSON.stringify(formattedResult)}`)
 
     return createSuccessResponse(
       formattedResult,
@@ -128,7 +86,7 @@ export async function POST(request: NextRequest) {
     )
 
   } catch (error) {
-    console.error('Error in sell endpoint:', error)
+    console.error(`[SELL] Error in sell endpoint:`, error)
     return handleApiError(error)
   }
 }

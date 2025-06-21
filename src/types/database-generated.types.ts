@@ -373,10 +373,7 @@ export type Database = {
           would_exceed_by: number
         }[]
       }
-      complete_pending_deposit: {
-        Args: { p_transaction_id: string; p_user_id: string }
-        Returns: Json
-      }
+
       get_active_exchange_rate: {
         Args: { from_curr: string; to_curr: string }
         Returns: number
@@ -413,17 +410,7 @@ export type Database = {
         Args: { kyc_records_status: string }
         Returns: string
       }
-      process_deposit_atomic: {
-        Args: {
-          p_user_id: string
-          p_amount: number
-          p_currency: string
-          p_reference_id: string
-          p_payment_method?: string
-          p_user_reference?: string
-        }
-        Returns: Json
-      }
+
       process_send_transaction: {
         Args: {
           sender_uuid: string

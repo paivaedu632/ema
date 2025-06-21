@@ -33,9 +33,7 @@ export type Document = Database['public']['Tables']['documents']['Row']
 export type DocumentInsert = Database['public']['Tables']['documents']['Insert']
 export type DocumentUpdate = Database['public']['Tables']['documents']['Update']
 
-export type ExchangeRate = Database['public']['Tables']['exchange_rates']['Row']
-export type ExchangeRateInsert = Database['public']['Tables']['exchange_rates']['Insert']
-export type ExchangeRateUpdate = Database['public']['Tables']['exchange_rates']['Update']
+// Exchange rates table removed - now using seller-defined rates from offers table
 
 export type UserLimits = Database['public']['Tables']['user_limits']['Row']
 export type UserLimitsInsert = Database['public']['Tables']['user_limits']['Insert']
@@ -171,15 +169,10 @@ export const checkTransactionLimitsClient = async (
   }
 }
 
-export const getActiveExchangeRate = async (fromCurrency: string, toCurrency: string) => {
-  const { data, error } = await supabase
-    .rpc('get_active_exchange_rate', {
-      from_curr: fromCurrency,
-      to_curr: toCurrency
-    })
-  
-  return { data, error }
-}
+// getActiveExchangeRate function removed - exchange rates now come from:
+// 1. Static rates in buy component (924.0675 AOA per EUR)
+// 2. Seller-defined rates in offers table for sell transactions
+// 3. Banco BAI API for real-time rates
 
 export const getUserBalance = async (userId: string, currency: string) => {
   const { data, error } = await supabase

@@ -2,16 +2,14 @@ import { NextResponse } from 'next/server'
 
 // Banco BAI API configuration
 const BANCO_BAI_API = {
-  BASE_URL: process.env.BANCO_BAI_API_URL || 'https://ib.bancobai.ao/portal/api/internet/exchange/table',
-  CURRENCY: 'AKZ', // Angola Kwanza (same as AOA)
-  APP_VERSION: 'v1.11.04'
+  BASE_URL: process.env.BANCO_BAI_API_URL || 'https://ib.bancobai.ao/portal/api/internet/exchange/table?currency=AKZ&appVersion=v1.11.04'
 } as const
 
 interface BancoBaiApiResponse {
   sellValue: number
   buyValue: number
   currency: string
-  quotationDate: string
+  lastUpdateDate: string
 }
 
 /**
@@ -20,16 +18,7 @@ interface BancoBaiApiResponse {
  */
 export async function GET() {
   try {
-    const currentDate = new Date().toISOString()
-    const noCacheHelper = Date.now()
-    
-    const url = new URL(BANCO_BAI_API.BASE_URL)
-    url.searchParams.set('currency', BANCO_BAI_API.CURRENCY)
-    url.searchParams.set('quotationDate', currentDate)
-    url.searchParams.set('noCacheHelper', noCacheHelper.toString())
-    url.searchParams.set('appVersion', BANCO_BAI_API.APP_VERSION)
-
-    const response = await fetch(url.toString(), {
+    const response = await fetch(BANCO_BAI_API.BASE_URL, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -82,7 +71,7 @@ export async function GET() {
       sellValue: parseFloat(eurRate.sellValue),
       buyValue: parseFloat(eurRate.buyValue),
       currency: eurRate.currency,
-      quotationDate: eurRate.quotationDate
+      lastUpdateDate: eurRate.lastUpdateDate
     }
 
     return NextResponse.json({
