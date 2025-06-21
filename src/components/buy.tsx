@@ -339,11 +339,12 @@ export function BuyFlow() {
         } else {
           setLimitCheck(data)
           if (data && !data.within_limits) {
-            if (data.requires_kyc) {
-              setLimitError('Verificação KYC necessária para esta transação.')
-            } else {
+            // Temporarily disable KYC enforcement for testing
+            // if (data.requires_kyc) {
+            //   setLimitError('Verificação KYC necessária para esta transação.')
+            // } else {
               setLimitError(`Limite ${data.limit_type} excedido. Limite atual: ${data.current_limit} ${watchedCurrency}`)
-            }
+            // }
           }
         }
       } catch (error) {

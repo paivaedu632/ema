@@ -107,7 +107,7 @@ export async function POST(req: NextRequest) {
         limit_check: limitCheck,
         current_limits: currentLimits,
         kyc_status: user.kyc_status,
-        requires_kyc: !limitCheck.within_limits && user.kyc_status !== 'approved',
+        requires_kyc: false, // Temporarily disabled for testing
         kyc_benefits: user.kyc_status !== 'approved' ? getKYCBenefits() : null,
         suggested_action: getSuggestedAction(limitCheck, user.kyc_status, amount)
       },
@@ -163,20 +163,29 @@ function getSuggestedAction(limitCheck: any, kycStatus: string, amount: number) 
     }
   }
 
-  if (kycStatus === 'approved') {
-    return {
-      action: 'reduce_amount',
-      message: `Amount exceeds your ${limitCheck.limit_type} limit`,
-      button_text: 'Reduce Amount',
-      max_amount: limitCheck.current_limit
-    }
+  // Temporarily disable KYC enforcement - always suggest reducing amount
+  return {
+    action: 'reduce_amount',
+    message: `Amount exceeds your ${limitCheck.limit_type} limit`,
+    button_text: 'Reduce Amount',
+    max_amount: limitCheck.current_limit
   }
 
-  return {
-    action: 'verify_identity',
-    message: 'Complete identity verification to proceed',
-    button_text: 'Verify Identity',
-    kyc_url: '/kyc/notifications',
-    benefits: getKYCBenefits()
-  }
+  // Original KYC enforcement logic (temporarily disabled)
+  // if (kycStatus === 'approved') {
+  //   return {
+  //     action: 'reduce_amount',
+  //     message: `Amount exceeds your ${limitCheck.limit_type} limit`,
+  //     button_text: 'Reduce Amount',
+  //     max_amount: limitCheck.current_limit
+  //   }
+  // }
+
+  // return {
+  //   action: 'verify_identity',
+  //   message: 'Complete identity verification to proceed',
+  //   button_text: 'Verify Identity',
+  //   kyc_url: '/kyc/notifications',
+  //   benefits: getKYCBenefits()
+  // }
 }

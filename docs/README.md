@@ -8,6 +8,8 @@ Ema is a fintech application for EUR ↔ AOA currency exchange with integrated K
 **Database**: Supabase PostgreSQL (Project ID: kjqcfedvilcnwzfjlqtq)
 **Authentication**: Clerk with custom UI
 
+**⚠️ TESTING MODE**: KYC enforcement temporarily disabled - all users can transact with maximum limits. See `docs/TEMPORARY_KYC_DISABLED.md` for details.
+
 ## Current System Architecture
 
 ### ✅ **Order Matching System** (June 2025)

@@ -25,7 +25,7 @@ export default function Dashboard() {
   const router = useRouter()
   const { signOut } = useClerk()
   const [kycStatus, setKycStatus] = useState<KYCStatusInfo | null>(null)
-  const [showKycBanner, setShowKycBanner] = useState(true)
+  const [showKycBanner, setShowKycBanner] = useState(false) // Temporarily disabled for testing
   const [loading, setLoading] = useState(true)
   const [walletBalances, setWalletBalances] = useState<any[]>([])
   const [transactions, setTransactions] = useState<any[]>([])
@@ -229,8 +229,8 @@ export default function Dashboard() {
           </button>
         </div>
 
-        {/* KYC Status Banner - Simplified Card with Dark Red Theme */}
-        {showKycBanner && kycStatus && kycStatus.status !== 'approved' && (
+        {/* KYC Status Banner - Temporarily disabled for testing */}
+        {/* {showKycBanner && kycStatus && kycStatus.status !== 'approved' && (
           <div
             className="mb-6 bg-rose-50 rounded-2xl p-4 cursor-pointer hover:bg-rose-100 transition-colors"
             onClick={handleStartKYC}
@@ -241,7 +241,7 @@ export default function Dashboard() {
               </p>
             </div>
           </div>
-        )}
+        )} */}
 
         {/* Account Cards Section */}
         <div className="mb-8">
