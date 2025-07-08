@@ -414,7 +414,7 @@ export function WiseStyleTransfer() {
             <ConfirmationRow label="Seu saldo" value={getFormattedBalance()} />
             <ConfirmationRow label="Você envia" value={`${watchedAmount} ${watchedCurrency}`} />
             <ConfirmationRow label={`${selectedRecipient?.name} recebe`} value={`${watchedAmount} ${watchedCurrency}`} highlight />
-            <ConfirmationRow label="Tempo estimado" value="Segundos" />
+            <ConfirmationRow label="Vai chegar" value="Segundos" />
           </ConfirmationSection>
 
           {/* Warning */}

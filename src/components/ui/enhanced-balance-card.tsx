@@ -30,8 +30,8 @@ export function EnhancedBalanceCard({
   }
 
   const getDisplayAmount = (): string => {
-    const amount = selectedBalanceType === 'available' 
-      ? wallet.available_balance 
+    const amount = selectedBalanceType === 'available'
+      ? wallet.available_balance
       : wallet.reserved_balance
     return amount.toFixed(2)
   }

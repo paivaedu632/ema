@@ -120,6 +120,8 @@ export function formatCompactNumber(num: number): string {
   return num.toString()
 }
 
+
+
 // ===== TEXT FORMATTING UTILITIES =====
 
 /**

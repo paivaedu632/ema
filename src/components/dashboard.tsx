@@ -7,9 +7,13 @@ import { PrimaryActionButtons } from '@/components/ui/primary-action-buttons'
 import { IconActionButtons } from '@/components/ui/icon-action-buttons'
 import { BalanceCard } from '@/components/ui/balance-card'
 import { AngolaFlag, EurFlag } from '@/components/ui/flag-icon'
-import { ShoppingBag, ArrowUpRight, ArrowDownLeft, CreditCard, LogOut } from 'lucide-react'
+import { LogOut } from 'lucide-react'
 import { SignedIn, SignedOut, UserButton, useClerk } from '@clerk/nextjs'
 import { ClerkAuth } from '@/components/auth/clerk-auth'
+import { TransactionListItem, TransactionListItemSkeleton, TransactionListEmpty } from '@/components/ui/transaction-list-item'
+import { useTransactions } from '@/hooks/use-transactions'
+import { transformTransactionForDisplay } from '@/utils/transaction-formatting'
+
 
 // KYC Status Types
 type KYCStatus = 'not_started' | 'in_progress' | 'pending_review' | 'approved' | 'rejected'
@@ -28,7 +32,6 @@ export default function Dashboard() {
   const [showKycBanner, setShowKycBanner] = useState(false) // Temporarily disabled for testing
   const [loading, setLoading] = useState(true)
   const [walletBalances, setWalletBalances] = useState<any[]>([])
-  const [transactions, setTransactions] = useState<any[]>([])
   const [balancesLoading, setBalancesLoading] = useState(true)
 
   // Fetch real KYC status from API
@@ -70,12 +73,7 @@ export default function Dashboard() {
           console.error('Failed to fetch wallet balances:', balancesResponse.status)
         }
 
-        // Fetch recent transactions
-        const transactionsResponse = await fetch('/api/transactions?limit=3')
-        if (transactionsResponse.ok) {
-          const transactionsResult = await transactionsResponse.json()
-          setTransactions(transactionsResult.data || [])
-        }
+        // Transactions are now handled by useTransactions hook
       } catch (error) {
         console.error('Error fetching wallet data:', error)
       } finally {
@@ -128,67 +126,12 @@ export default function Dashboard() {
     }
   ])
 
-  // Format real transactions for display
-  const formatTransactionAmount = (transaction: any) => {
-    const sign = transaction.type === 'deposit' || transaction.type === 'receive' ? '+ ' : ''
-    return `${sign}${transaction.amount.toFixed(2)} ${transaction.currency}`
-  }
+  // Transaction formatting is now handled by unified utilities
 
-  const formatTransactionDate = (dateString: string) => {
-    const date = new Date(dateString)
-    const now = new Date()
-    const diffTime = Math.abs(now.getTime() - date.getTime())
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-
-    if (diffDays === 1) {
-      return `Today, ${date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}`
-    } else if (diffDays === 2) {
-      return 'Yesterday'
-    } else {
-      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-    }
-  }
-
-  const getTransactionDescription = (transaction: any) => {
-    if (transaction.metadata?.description) {
-      return transaction.metadata.description
-    }
-
-    switch (transaction.type) {
-      case 'deposit':
-        return 'Deposit'
-      case 'withdraw':
-        return 'Withdrawal'
-      case 'send':
-        return transaction.recipient_info?.name || 'Transfer Sent'
-      case 'receive':
-        return 'Transfer Received'
-      case 'buy':
-        return 'Currency Purchase'
-      case 'sell':
-        return 'Currency Sale'
-      default:
-        return 'Transaction'
-    }
-  }
-
-  // Function to get transaction icon based on type and status
-  const getTransactionIcon = (type: string, status: string) => {
-    if (status === 'declined') {
-      return <ShoppingBag className="w-5 h-5 text-gray-600" />
-    }
-
-    switch (type) {
-      case 'received':
-        return <ArrowDownLeft className="w-5 h-5 text-green-600" />
-      case 'sent':
-        return <ArrowUpRight className="w-5 h-5 text-red-600" />
-      case 'purchase':
-        return <ShoppingBag className="w-5 h-5 text-gray-600" />
-      default:
-        return <CreditCard className="w-5 h-5 text-gray-600" />
-    }
-  }
+  // Use optimized transaction hook for dashboard
+  const { transactions: dashboardTransactions, loading: transactionsLoading } = useTransactions({
+    limit: 3 // Only show 3 recent transactions on dashboard
+  })
 
   return (
     <div className="min-h-screen bg-white">
@@ -288,57 +231,29 @@ export default function Dashboard() {
           </div>
 
           <div className="space-y-4">
-            {balancesLoading ? (
+            {transactionsLoading ? (
               // Loading skeleton for transactions
               <>
                 {[1, 2, 3].map((i) => (
-                  <div key={i} className="flex items-center space-x-3 p-3">
-                    <div className="w-10 h-10 bg-gray-100 rounded-full animate-pulse" />
-                    <div className="flex-1 space-y-2">
-                      <div className="h-4 bg-gray-100 rounded animate-pulse w-3/4" />
-                      <div className="h-3 bg-gray-100 rounded animate-pulse w-1/2" />
-                    </div>
-                    <div className="h-4 bg-gray-100 rounded animate-pulse w-16" />
-                  </div>
+                  <TransactionListItemSkeleton key={i} />
                 ))}
               </>
-            ) : transactions.length > 0 ? (
-              transactions.map((transaction) => (
-              <button
-                key={transaction.id}
-                onClick={() => router.push(`/transaction/${transaction.id}`)}
-                className="w-full transaction-list-item"
-              >
-                {/* Transaction Icon */}
-                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center mr-3">
-                  {getTransactionIcon(transaction.type, transaction.status)}
-                </div>
-
-                {/* Transaction Details */}
-                <div className="flex-1 text-left">
-                  <p className="value-secondary">{getTransactionDescription(transaction)}</p>
-                  <p className="label-form">
-                    {transaction.status === 'failed' && (
-                      <span className="text-red-600">Failed · </span>
-                    )}
-                    {transaction.status === 'pending' && (
-                      <span className="text-yellow-600">Pending · </span>
-                    )}
-                    {formatTransactionDate(transaction.created_at)}
-                  </p>
-                </div>
-
-                {/* Transaction Amount */}
-                <div className="text-right">
-                  <p className="value-secondary">{formatTransactionAmount(transaction)}</p>
-                </div>
-              </button>
+            ) : dashboardTransactions.length > 0 ? (
+              dashboardTransactions.map((transaction) => (
+                <TransactionListItem
+                  key={transaction.id}
+                  id={transaction.id}
+                  displayId={transaction.displayId}
+                  type={transaction.type}
+                  status={transaction.status}
+                  description={transaction.description}
+                  amount={transaction.amount}
+                  date={transaction.date}
+                  onClick={(id) => router.push(`/transaction/${id}`)}
+                />
               ))
             ) : (
-              // Empty state for transactions
-              <div className="text-center py-8">
-                <p className="text-gray-500 text-sm">Nenhuma transação encontrada</p>
-              </div>
+              <TransactionListEmpty title="Nenhuma transação encontrada" />
             )}
           </div>
         </div>

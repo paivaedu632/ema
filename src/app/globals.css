@@ -113,6 +113,16 @@
     color: #111827 !important; /* gray-900 - same as text color */
   }
 
+  /* Currency Selector Container - Tight cohesive spacing for professional appearance */
+  .currency-selector-container {
+    @apply flex items-center gap-1; /* 4px gap for tight, cohesive appearance */
+  }
+
+  /* Flag Icon Sizing for Currency Selectors - Optimized for tight, professional spacing */
+  .flag-icon-currency {
+    @apply w-5 h-5 flex-shrink-0; /* 20px size for cohesive currency pair appearance */
+  }
+
   /* EmaPay Balance Selector Styling - Similar to currency selector but for balance type selection */
   .balance-selector {
     @apply w-auto font-medium text-lg;

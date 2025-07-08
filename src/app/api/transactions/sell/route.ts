@@ -28,8 +28,8 @@ export async function POST(request: NextRequest) {
 
     // Parse and validate request body
     const body = await parseRequestBody(request)
-    const { amount, exchangeRate, currency = 'AOA' } = body
-    console.log(`[SELL] Request data: amount=${amount}, currency=${currency}, exchangeRate=${exchangeRate}`)
+    const { amount, exchangeRate, currency = 'AOA', useDynamicRate = false } = body
+    console.log(`[SELL] Request data: amount=${amount}, currency=${currency}, exchangeRate=${exchangeRate}, useDynamicRate=${useDynamicRate}`)
 
     // Validate input with currency-specific limits
     const validCurrency = validateCurrency(currency)
@@ -48,7 +48,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Create the currency offer using the database function
-    console.log(`[SELL] Creating offer: user=${user.id}, currency=${validCurrency}, amount=${validAmount}, rate=${validExchangeRate}`)
+    console.log(`[SELL] Creating offer: user=${user.id}, currency=${validCurrency}, amount=${validAmount}, rate=${validExchangeRate}, dynamic=${useDynamicRate}`)
+
+    // For now, use the standard create_currency_offer function
+    // TODO: Update to use dynamic rate functions once types are updated
     const { data: offerId, error: offerError } = await supabaseAdmin
       .rpc('create_currency_offer', {
         user_uuid: user.id,

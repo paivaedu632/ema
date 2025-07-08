@@ -65,8 +65,8 @@ export function AmountInput({
           placeholder={placeholder}
           disabled={disabled}
         />
-        <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1">
-          <FlagIcon countryCode={currentCurrency.flag} />
+        <div className="absolute right-4 top-1/2 -translate-y-1/2 currency-selector-container">
+          <FlagIcon countryCode={currentCurrency.flag} className="flag-icon-currency" />
           <Select value={currency} onValueChange={onCurrencyChange} disabled={disabled}>
             <SelectTrigger className={`currency-selector ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}>
               <SelectValue />

@@ -1,28 +1,29 @@
-# Ema Backend Documentation
+# EmaPay Backend Documentation
 
 ## Overview
 
-Ema is a fintech application for EUR ↔ AOA currency exchange with integrated KYC verification. This documentation covers essential backend and database integration information.
+EmaPay is a professional fintech application for EUR ↔ AOA currency exchange with integrated KYC verification and a professional order book trading system. This documentation covers essential backend and database integration information.
 
 **Status**: ✅ Production Ready
 **Database**: Supabase PostgreSQL (Project ID: kjqcfedvilcnwzfjlqtq)
 **Authentication**: Clerk with custom UI
 
-**🎯 SIMPLIFIED ARCHITECTURE**: Complex KYC limit system removed for cleaner codebase. Future KYC will be a simple binary gate (approved/not approved). See `docs/SIMPLIFIED_ARCHITECTURE.md` for details.
+**🎯 SIMPLIFIED ARCHITECTURE**: Complex KYC limit system removed for cleaner codebase. Future KYC will be a simple binary gate (approved/not approved).
 
 ## Current System Architecture
 
-### ✅ **Order Matching System** (June 2025)
-- **Buy Transactions**: Order matching against existing sell offers with static fallback
-- **Dynamic Fee System**: Database-driven fee configuration (2% buy, 0% send/sell)
-- **Real-Time Rates**: Live rate calculation based on market liquidity
-- **Atomic Transactions**: Proper balance updates with rollback on failure
+### ✅ **Professional Order Book System** (January 2025)
+- **Order Management**: Complete limit and market order support with price-time priority matching
+- **Trade Execution**: Atomic trade execution with enhanced fee integration and transaction recording
+- **Fund Management**: Sophisticated fund reservation system with automatic release
+- **Real-Time Analytics**: Comprehensive trade execution analytics and market health monitoring
+- **Performance Optimization**: Advanced settlement optimization and execution duration tracking
 
-### ✅ **P2P Exchange System** (June 2025)
-- **Sell Transactions**: User-defined rates stored in offers table
-- **Balance Management**: Available/reserved balance separation
+### ✅ **Legacy P2P Exchange System** (Deprecated - June 2025)
+- **Sell Transactions**: User-defined rates stored in offers table (legacy)
+- **Balance Management**: Available/reserved balance separation (migrated to order book)
 - **Market Validation**: Banco BAI API used for reference only (sell component)
-- **Order Fulfillment**: Partial order matching across multiple offers
+- **Order Fulfillment**: Partial order matching across multiple offers (replaced by order book)
 
 ## Quick Start
 
@@ -55,16 +56,23 @@ AWS_S3_BUCKET_NAME=emapay-kyc-documents
 ### Core Tables
 - **users**: User profiles with KYC status tracking
 - **wallets**: Multi-currency balances (AOA/EUR) with available/reserved balance
-- **offers**: P2P exchange offers with seller-defined rates
-- **transactions**: All financial transactions with dynamic fee calculation
+- **order_book**: Professional order management with limit/market orders and price-time priority
+- **fund_reservations**: Sophisticated fund management with automatic reservation and release
+- **trades**: Complete trade execution tracking with dual-party transaction recording
+- **transactions**: All financial transactions with dynamic fee calculation and order book integration
 - **fees**: Dynamic fee configuration by transaction type and currency
 - **kyc_records**: 16-step KYC verification workflow
-- **user_limits**: Transaction limits (pre/post KYC)
+- **offers**: Legacy P2P exchange offers (deprecated, replaced by order_book)
 
 ### Key Relationships
 - Users → Wallets (1:many)
+- Users → Order Book (1:many)
+- Users → Fund Reservations (1:many)
+- Users → Trades (1:many as buyer/seller)
 - Users → Transactions (1:many)
 - Users → KYC Records (1:many)
+- Order Book → Fund Reservations (1:1)
+- Order Book → Trades (1:many)
 
 ## API Endpoints
 
@@ -72,10 +80,21 @@ AWS_S3_BUCKET_NAME=emapay-kyc-documents
 - `GET /api/test-db` - Database connection test
 - `GET /api/kyc/status` - User KYC status and progress
 - `GET /api/wallet/balances` - Real wallet balances
-- `POST /api/transactions/buy` - Process EUR → AOA with order matching
-- `POST /api/transactions/sell` - Create P2P exchange offers
 - `POST /api/transactions/send` - Process money transfers
-- `POST /api/exchange/rates` - Real-time rate calculation via order matching
+
+### Order Book Trading Endpoints
+- `POST /api/orders/place` - Place limit or market orders with professional order book
+- `DELETE /api/orders/:orderId` - Cancel pending orders with automatic fund release
+- `GET /api/orders` - Get user's order history with filtering and pagination
+- `GET /api/orders/:orderId` - Get detailed order information with trade history
+- `GET /api/orderbook/:baseCurrency/:quoteCurrency` - Get order book depth and best prices
+- `GET /api/trades/history` - Get user's trade execution history
+- `GET /api/analytics/trading` - Get comprehensive trading analytics and market health
+
+### Legacy Endpoints (Deprecated)
+- `POST /api/transactions/buy` - Process EUR → AOA with order matching (replaced by order book)
+- `POST /api/transactions/sell` - Create P2P exchange offers (replaced by order book)
+- `POST /api/exchange/rates` - Real-time rate calculation via order matching (replaced by order book)
 - `GET /api/exchange-rate/banco-bai` - Banco BAI API (reference only for sell component)
 
 ### KYC Endpoints
@@ -136,14 +155,21 @@ curl http://localhost:3000/api/verify-webhook
 
 ## Documentation
 
+### Core System Documentation
 - **[Database Integration](./database-integration.md)** - Complete database setup and patterns
 - **[API Reference](./api-reference.md)** - Detailed API endpoints and usage
 - **[Authentication Workflow](./authentication-workflow.md)** - Clerk integration and user management
-- **[P2P Exchange System](./p2p-exchange-system.md)** - Peer-to-peer marketplace architecture
-- **[Order Matching System](./order-matching-system.md)** - Buy transaction order matching implementation
-- **[Exchange Rate Audit Report](./exchange-rate-audit-report.md)** - System verification and compliance
+
+### Order Book System Documentation
+- **[Order Book System](./order-book-system.md)** - Complete system overview and implementation guide
+- **[Order Book Technical Specification](./order-book-technical-specification.md)** - Detailed technical implementation and API specifications
+
+### Legacy Documentation (Deprecated)
+- **[P2P Exchange System](./p2p-exchange-system.md)** - Legacy peer-to-peer marketplace architecture
+- **[Order Matching System](./order-matching-system.md)** - Legacy buy transaction order matching implementation
+- **[Dynamic Exchange Rate System](./dynamic-exchange-rate-system.md)** - Legacy VWAP-based rate calculation
 
 ---
 
-**Last Updated**: June 20, 2025
-**Status**: ✅ Production Ready
+**Last Updated**: January 7, 2025
+**Status**: ✅ Production Ready - Professional Order Book System Complete

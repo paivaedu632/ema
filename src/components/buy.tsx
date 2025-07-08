@@ -35,7 +35,7 @@ interface WalletBalance {
   last_updated: string
 }
 
-// Zod validation schema with proper error hierarchy
+// Zod validation schema with proper error hierarchy (same pattern as send/sell)
 const createBuyAmountSchema = (availableBalance: number, currency: Currency) => {
   const limits = TRANSACTION_LIMITS[currency]
 
@@ -97,9 +97,29 @@ export function BuyFlow() {
     return wallet?.available_balance || 0
   }
 
-  // React Hook Form setup with dynamic schema
+  // Get spending currency balance (opposite of what's being bought)
+  const getSpendingBalance = (buyingCurrency: Currency): number => {
+    const spendingCurrency: Currency = buyingCurrency === "AOA" ? "EUR" : "AOA"
+    return getCurrentBalance(spendingCurrency)
+  }
+
+  // React Hook Form setup with custom resolver (same pattern as sell component)
   const form = useForm<BuyAmountForm>({
-    resolver: zodResolver(createBuyAmountSchema(getCurrentBalance("EUR"), "EUR")),
+    resolver: async (data, context, options) => {
+      // Get current currency from form data
+      const currency = (data.currency as Currency) || "EUR"
+      // For buy transactions, we validate against the SPENDING currency balance
+      // When buying EUR, we spend AOA. When buying AOA, we spend EUR.
+      const spendingCurrency: Currency = currency === "AOA" ? "EUR" : "AOA"
+      const spendingBalance = getCurrentBalance(spendingCurrency)
+
+      // Create schema with spending currency balance (not the currency being bought)
+      const schema = createBuyAmountSchema(spendingBalance, currency)
+      const resolver = zodResolver(schema)
+
+      // Use Zod resolver with dynamic schema
+      return resolver(data, context, options)
+    },
     mode: "onChange",
     defaultValues: {
       amount: "",
@@ -115,14 +135,12 @@ export function BuyFlow() {
   const amount = watchedAmount
   const currency = watchedCurrency
 
-  // Update form schema when currency or balance changes
+  // Update form validation when currency or balance changes (same pattern as sell component)
   useEffect(() => {
-    const currentBalance = getCurrentBalance(watchedCurrency)
-    const newSchema = createBuyAmountSchema(currentBalance, watchedCurrency)
-
-    // Update the resolver with new schema
+    // Clear errors and re-validate when currency or balance changes
     form.clearErrors()
-    // Re-validate current amount with new schema
+
+    // Re-validate current amount with new currency/balance context
     if (watchedAmount) {
       form.trigger("amount")
     }
@@ -130,8 +148,9 @@ export function BuyFlow() {
 
   // Check insufficient balance when amount or currency changes
   useEffect(() => {
-    const currentBalance = getCurrentBalance(watchedCurrency)
-    const balanceState = checkInsufficientBalance(watchedAmount, currentBalance, watchedCurrency, 'buy')
+    const spendingBalance = getSpendingBalance(watchedCurrency)
+    const spendingCurrency: Currency = watchedCurrency === "AOA" ? "EUR" : "AOA"
+    const balanceState = checkInsufficientBalance(watchedAmount, spendingBalance, spendingCurrency, 'buy')
     setInsufficientBalanceState(balanceState)
   }, [watchedAmount, watchedCurrency, walletBalances])
 
@@ -157,11 +176,14 @@ export function BuyFlow() {
     return shouldShowCountdown ? `${baseDisplay} (${countdown}s)` : baseDisplay
   }
 
-  // Format balance for display based on selected currency
-  const getFormattedBalance = (currency: Currency): string => {
-    const wallet = walletBalances.find(w => w.currency === currency)
-    if (!wallet) return `0.00 ${currency}`
-    return `${wallet.available_balance.toFixed(2)} ${currency}`
+  // Format balance for display - shows the currency being spent (opposite of what's being bought)
+  const getFormattedBalance = (buyingCurrency: Currency): string => {
+    // When buying AOA, show EUR balance (spending EUR)
+    // When buying EUR, show AOA balance (spending AOA)
+    const spendingCurrency: Currency = buyingCurrency === "AOA" ? "EUR" : "AOA"
+    const wallet = walletBalances.find(w => w.currency === spendingCurrency)
+    if (!wallet) return `0.00 ${spendingCurrency}`
+    return `${wallet.available_balance.toFixed(2)} ${spendingCurrency}`
   }
 
   // Use reusable transaction flow hook
@@ -382,7 +404,7 @@ export function BuyFlow() {
             transactionType="buy"
             showValidation={false}
             className="mb-6"
-            disabled={insufficientBalanceState.shouldDisableComponents}
+            disabled={false} // Never disable input - allow manual correction
           />
 
           {/* Primary validation error - shows highest priority error only */}
@@ -393,7 +415,7 @@ export function BuyFlow() {
           {/* Insufficient balance error with deposit button */}
           {insufficientBalanceState.hasInsufficientBalance && (
             <InsufficientBalanceError
-              currency={watchedCurrency}
+              currency={watchedCurrency === "AOA" ? "EUR" : "AOA"}
               className="mb-3"
             />
           )}
@@ -405,43 +427,14 @@ export function BuyFlow() {
           ) : (
             <AvailableBalance amount={getFormattedBalance(watchedCurrency)} />
           )}
-
-          <div>
-            {amount && amount !== "0" && amount !== "" && (
-              <div className="mb-8 space-y-4">
-                {/* Exchange Rate Section */}
-                <InfoSection
-                  icon={RefreshCw}
-                  label="Câmbio"
-                  value={getExchangeRateDisplay()}
-                />
-
-                {/* Arrival Time Section */}
-                <InfoSection
-                  icon={Clock}
-                  label="Vai chegar"
-                  value="Hoje em segundos"
-                />
-
-                {/* Amount You Receive Section - Using Reusable Component */}
-                <TransactionSummary
-                  icon={Wallet}
-                  label="Você recebe"
-                  amount={transactionSummary.total}
-                  fee={transactionSummary.fee}
-                />
-
-
-              </div>
-            )}
-          </div>
+          
         </main>
 
         <FixedBottomAction
           primaryAction={{
             label: "Continuar",
             onClick: handleContinue,
-            disabled: !canContinue || balancesLoading || insufficientBalanceState.shouldDisableComponents
+            disabled: !canContinue || balancesLoading // Only disable for validation errors and loading, not for input blocking
           }}
         />
       </div>
@@ -462,10 +455,10 @@ export function BuyFlow() {
             {/* Transaction Details */}
             <ConfirmationSection title="">
               <ConfirmationRow label="Seu saldo" value={getFormattedBalance(watchedCurrency)} />
-              <ConfirmationRow label="Compra" value={`${amount} ${watchedCurrency}`} />
+              <ConfirmationRow label="Você compra" value={`${amount} ${watchedCurrency}`} highlight />
               <ConfirmationRow label="Taxa" value={feeAmount} />
               <ConfirmationRow label="Você recebe" value={receiveAmount} highlight />
-              <ConfirmationRow label="Tempo" value="Segundos" />
+              <ConfirmationRow label="Vai chegar" value="Segundos" />
             </ConfirmationSection>
           </div>
         </main>
@@ -482,14 +475,58 @@ export function BuyFlow() {
 
   // Step 3: Success
   const successReceiveCurrency = watchedCurrency === 'EUR' ? 'AOA' : 'EUR'
+  // Calculate the actual received amount from exchange rate data
+  const actualReceivedAmount = exchangeRateData?.aoa_amount || exchangeRateData?.eur_amount
+    ? (exchangeRateData.aoa_amount || exchangeRateData.eur_amount).toFixed(2)
+    : "0.00"
+
+  // Create custom message with JSX for bold formatting
+  const successMessage = (
+    <>
+      Você  recebeu <strong>{actualReceivedAmount} {successReceiveCurrency}</strong> na sua carteira.
+    </>
+  )
+
   return (
-    <SuccessScreen
-      title="Compra confirmada!"
-      message={`Você comprou ${amount} ${watchedCurrency} e recebeu ${successReceiveCurrency} na sua carteira.`}
-      primaryAction={{
-        label: "Voltar ao início",
-        onClick: handleBackToHome
-      }}
-    />
+    <div className="min-h-screen bg-white flex flex-col">
+      <main className="max-w-sm mx-auto px-4 pt-8 pb-24 flex flex-col justify-center items-center text-center flex-1">
+        {/* Success Icon */}
+        <div className="w-24 h-24 flex items-center justify-center mb-8">
+          <svg
+            className="w-20 h-20 text-black"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={3}
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+        </div>
+
+        {/* Success Message */}
+        <div className="mb-8">
+          <h1 className="heading-main mb-4">
+            Compra confirmada!
+          </h1>
+          <p className="text-body">
+            {successMessage}
+          </p>
+        </div>
+      </main>
+
+      {/* Action Button */}
+      <div className="fixed bottom-6 left-4 right-4 max-w-sm mx-auto">
+        <button
+          onClick={handleBackToHome}
+          className="primary-action-button w-full"
+        >
+          Voltar ao início
+        </button>
+      </div>
+    </div>
   )
 }

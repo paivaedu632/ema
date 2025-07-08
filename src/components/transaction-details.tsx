@@ -1,190 +1,233 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { MoreHorizontal, HelpCircle } from "lucide-react"
+import { useEffect, useState } from "react"
+import { RefreshCw, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { BackButton } from "@/components/ui/back-button"
+import { PageHeader } from "@/components/ui/page-header"
+import { ConfirmationSection, ConfirmationRow } from "@/components/ui/confirmation-section"
+import { getTransactionById, formatTransactionForDisplay, getTransactionStatusInfo, type EnhancedTransactionData } from "@/lib/transaction-api"
+import { DateUtils } from "@/utils/formatting-utils"
 
 interface TransactionDetailsProps {
-  transactionId?: string
+  transactionId: string
 }
 
-export function TransactionDetails({ transactionId = "#155034567" }: TransactionDetailsProps) {
+export function TransactionDetails({ transactionId }: TransactionDetailsProps) {
   const router = useRouter()
+  const [transaction, setTransaction] = useState<EnhancedTransactionData | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  // Mock transaction data - in real app this would come from API based on transactionId
-  const transactionData = {
-    sentAmount: "40 EUR",
-    fee: "0.80 EUR",
-    convertedAmount: "39.20 EUR",
-    exchangeRate: "1 EUR = 6.3423 BRL",
-    receivedAmount: "248.62 BRL",
-    transactionNumber: transactionId,
-    recipientDetails: {
-      type: "Private",
-      nickname: "Pagseguro",
-      accountNickname: "Pagseguro",
-      bankCode: "290",
-      branchCode: "0001",
-      accountNumber: "09426976-8",
-      accountType: "Checking",
-      taxRegistration: "23846928879",
-      phoneNumber: "+5511985167926",
-      accountHolderName: "Edgar Agostinho Rodrigues Paiva",
-      email: "paivaedu.br@gmail.com",
-      bankName: "PAGSEGURO INTERNET INSTITUIÇÃO DE PAGAMENTO S.A."
+  useEffect(() => {
+    async function fetchTransaction() {
+      try {
+        setLoading(true)
+        setError(null)
+
+        // Remove # prefix if present for backward compatibility
+        const cleanId = transactionId.startsWith('#') ? transactionId.slice(1) : transactionId
+
+        const data = await getTransactionById(cleanId)
+        if (!data) {
+          setError('Transação não encontrada')
+          return
+        }
+
+        setTransaction(data)
+      } catch (err) {
+        console.error('Error fetching transaction:', err)
+        setError('Erro ao carregar transação')
+      } finally {
+        setLoading(false)
+      }
     }
-  }
+
+    if (transactionId) {
+      fetchTransaction()
+    }
+  }, [transactionId])
 
   const handleBack = () => {
-    router.back()
+    router.push('/dashboard')
   }
 
-  const handleHelp = () => {
-    // TODO: Handle help action
+  if (loading) {
+    return (
+      <div className="page-container-white">
+        <main className="content-container">
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="text-center">
+              <RefreshCw className="w-8 h-8 animate-spin text-gray-400 mx-auto mb-4" />
+              <p className="text-gray-600">Carregando detalhes da transação...</p>
+            </div>
+          </div>
+        </main>
+      </div>
+    )
   }
 
-  const handleMenu = () => {
-    // TODO: Handle menu action
+  if (error || !transaction) {
+    return (
+      <div className="page-container-white">
+        <main className="content-container">
+          <PageHeader
+            title="Transação não encontrada"
+            onBack={handleBack}
+          />
+          <div className="text-center py-12">
+            <p className="text-gray-600 mb-4">{error || 'Transação não encontrada'}</p>
+            <Button onClick={handleBack} className="primary-button">
+              Voltar ao Dashboard
+            </Button>
+          </div>
+        </main>
+      </div>
+    )
+  }
+
+  const formattedTransaction = formatTransactionForDisplay(transaction)
+  const statusInfo = getTransactionStatusInfo(transaction.status)
+
+  // Get transaction type title
+  const getTransactionTitle = (type: string) => {
+    switch (type) {
+      case 'buy': return 'Compra de moeda'
+      case 'sell': return 'Venda de moeda'
+      case 'send': return 'Transferência enviada'
+      case 'receive': return 'Transferência recebida'
+      case 'deposit': return 'Depósito'
+      case 'withdraw': return 'Saque'
+      default: return 'Transação'
+    }
   }
 
   return (
     <div className="page-container-white">
       <main className="content-container">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <BackButton onClick={handleBack} />
+        <PageHeader
+          title={getTransactionTitle(transaction.type)}
+          onBack={handleBack}
+        />
 
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleHelp}
-              className="p-2"
-            >
-              <HelpCircle className="w-6 h-6 text-gray-600" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleMenu}
-              className="p-2"
-            >
-              <MoreHorizontal className="w-6 h-6 text-gray-600" />
-            </Button>
+        <div className="space-y-6">
+          {/* Status and Date */}
+          <div className="flex items-center gap-3">
+            {transaction.status === 'completed' && (
+              <Check className="w-5 h-5 text-green-600" />
+            )}
+            <span className="text-green-600 font-medium">{statusInfo.label}</span>
+            <span className="text-gray-500">
+              {DateUtils.format(new Date(transaction.created_at), 'dd/mm/yyyy')}
+            </span>
           </div>
-        </div>
 
-        {/* Page Title */}
-        <h1 className="heading-main mb-8">Transaction details</h1>
+          {/* Transaction Details */}
+          <ConfirmationSection title="">
+            {/* Buy Transaction */}
+            {transaction.type === 'buy' && (
+              <>
+                <ConfirmationRow label="Valor enviado" value={formattedTransaction.sentAmount || `${transaction.amount} ${transaction.currency}`} />
+                <ConfirmationRow label="Taxa EmaPay" value={formattedTransaction.fee || `${transaction.fee_amount} ${transaction.currency}`} />
+                {formattedTransaction.exchangeRate && (
+                  <ConfirmationRow label="Taxa de câmbio" value={formattedTransaction.exchangeRate} />
+                )}
+                <ConfirmationRow label="Valor recebido" value={formattedTransaction.receivedAmount || `${transaction.metadata?.aoa_amount?.toLocaleString('pt-AO')} Kz`} highlight />
+              </>
+            )}
 
-        {/* Transaction Summary */}
-        <div className="card-content mb-6">
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <span className="text-body">You sent</span>
-              <span className="value-secondary">{transactionData.sentAmount}</span>
-            </div>
-            
-            <div className="flex justify-between items-center">
-              <span className="text-body">Wise&apos;s fees</span>
-              <span className="value-secondary">{transactionData.fee}</span>
-            </div>
-            
-            <div className="flex justify-between items-center">
-              <span className="text-body">We converted</span>
-              <span className="value-secondary">{transactionData.convertedAmount}</span>
-            </div>
-            
-            <div className="flex justify-between items-center">
-              <span className="text-body">Exchange rate</span>
-              <span className="value-secondary">{transactionData.exchangeRate}</span>
-            </div>
-            
-            <div className="border-t border-gray-200 pt-4">
-              <div className="flex justify-between items-center">
-                <span className="value-primary font-semibold">You received</span>
-                <span className="value-large">{transactionData.receivedAmount}</span>
-              </div>
-            </div>
-          </div>
-        </div>
+            {/* Sell Transaction */}
+            {transaction.type === 'sell' && (
+              <>
+                <ConfirmationRow label="Valor vendido" value={formattedTransaction.sentAmount || `${transaction.amount} ${transaction.currency}`} />
+                <ConfirmationRow label="Taxa EmaPay" value={formattedTransaction.fee || `${transaction.fee_amount} ${transaction.currency}`} />
+                {formattedTransaction.exchangeRate && (
+                  <ConfirmationRow label="Taxa de câmbio" value={formattedTransaction.exchangeRate} />
+                )}
+                <ConfirmationRow label="Valor recebido" value={formattedTransaction.receivedAmount || `${transaction.metadata?.eur_amount?.toLocaleString('pt-PT')} €`} highlight />
+              </>
+            )}
 
-        {/* Transaction Number */}
-        <div className="mb-8">
-          <div className="flex justify-between items-center">
-            <span className="text-body">Transaction number</span>
-            <span className="value-secondary">{transactionData.transactionNumber}</span>
-          </div>
-        </div>
+            {/* Send Transaction */}
+            {transaction.type === 'send' && (
+              <>
+                <ConfirmationRow label="Valor enviado" value={formattedTransaction.sentAmount || `${transaction.amount} ${transaction.currency}`} />
+                <ConfirmationRow label="Taxa EmaPay" value={formattedTransaction.fee || `${transaction.fee_amount} ${transaction.currency}`} />
+                <ConfirmationRow label="Valor líquido" value={formattedTransaction.receivedAmount || `${transaction.net_amount} ${transaction.currency}`} highlight />
+              </>
+            )}
 
-        {/* Account Details Section */}
-        <div className="mb-8">
-          <h2 className="heading-section mb-4">Your account details</h2>
-          
-          <div className="card-content">
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-body">Recipient type</span>
-                <span className="value-secondary">{transactionData.recipientDetails.type}</span>
-              </div>
-              
-              <div className="flex justify-between items-center">
-                <span className="text-body">Nickname</span>
-                <span className="value-secondary">{transactionData.recipientDetails.nickname}</span>
-              </div>
-              
-              <div className="flex justify-between items-center">
-                <span className="text-body">Account nickname</span>
-                <span className="value-secondary">{transactionData.recipientDetails.accountNickname}</span>
-              </div>
-              
-              <div className="flex justify-between items-center">
-                <span className="text-body">Bank code</span>
-                <span className="value-secondary">{transactionData.recipientDetails.bankCode}</span>
-              </div>
-              
-              <div className="flex justify-between items-center">
-                <span className="text-body">Branch code</span>
-                <span className="value-secondary">{transactionData.recipientDetails.branchCode}</span>
-              </div>
-              
-              <div className="flex justify-between items-center">
-                <span className="text-body">Account number</span>
-                <span className="value-secondary">{transactionData.recipientDetails.accountNumber}</span>
-              </div>
-              
-              <div className="flex justify-between items-center">
-                <span className="text-body">Account type</span>
-                <span className="value-secondary">{transactionData.recipientDetails.accountType}</span>
-              </div>
-              
-              <div className="flex justify-between items-center">
-                <span className="text-body">Tax registration number (CPF)</span>
-                <span className="value-secondary">{transactionData.recipientDetails.taxRegistration}</span>
-              </div>
-              
-              <div className="flex justify-between items-center">
-                <span className="text-body">Recipient&apos;s phone number</span>
-                <span className="value-secondary">{transactionData.recipientDetails.phoneNumber}</span>
-              </div>
-              
-              <div className="flex justify-between items-center">
-                <span className="text-body">Account holder name</span>
-                <span className="value-secondary">{transactionData.recipientDetails.accountHolderName}</span>
-              </div>
-              
-              <div className="flex justify-between items-center">
-                <span className="text-body">Email (Optional)</span>
-                <span className="value-secondary">{transactionData.recipientDetails.email}</span>
-              </div>
-              
-              <div className="flex justify-between items-start">
-                <span className="text-body">Bank name</span>
-                <span className="value-secondary text-right max-w-[200px]">{transactionData.recipientDetails.bankName}</span>
-              </div>
-            </div>
-          </div>
+            {/* Receive Transaction */}
+            {transaction.type === 'receive' && (
+              <ConfirmationRow label="Valor recebido" value={formattedTransaction.receivedAmount || `${transaction.amount} ${transaction.currency}`} highlight />
+            )}
+
+            {/* Deposit Transaction */}
+            {transaction.type === 'deposit' && (
+              <>
+                <ConfirmationRow label="Valor depositado" value={formattedTransaction.receivedAmount || `${transaction.amount} ${transaction.currency}`} />
+                {transaction.fee_amount > 0 && (
+                  <ConfirmationRow label="Taxa" value={formattedTransaction.fee || `${transaction.fee_amount} ${transaction.currency}`} />
+                )}
+              </>
+            )}
+
+            {/* Withdraw Transaction */}
+            {transaction.type === 'withdraw' && (
+              <>
+                <ConfirmationRow label="Valor sacado" value={formattedTransaction.sentAmount || `${transaction.amount} ${transaction.currency}`} />
+                {transaction.fee_amount > 0 && (
+                  <ConfirmationRow label="Taxa" value={formattedTransaction.fee || `${transaction.fee_amount} ${transaction.currency}`} />
+                )}
+              </>
+            )}
+
+            <ConfirmationRow label="Número da transação" value={transaction.display_id} />
+          </ConfirmationSection>
+
+          {/* Recipient Details (for send transactions) */}
+          {transaction.type === 'send' && transaction.recipient_info && (
+            <ConfirmationSection title="Destinatário">
+              {transaction.recipient_info.name && (
+                <ConfirmationRow label="Nome" value={transaction.recipient_info.name} />
+              )}
+              {transaction.recipient_info.email && (
+                <ConfirmationRow label="Email" value={transaction.recipient_info.email} />
+              )}
+              {transaction.recipient_info.phone && (
+                <ConfirmationRow label="Telefone" value={transaction.recipient_info.phone} />
+              )}
+            </ConfirmationSection>
+          )}
+
+          {/* Counterparty Info (for exchanges) */}
+          {transaction.counterparty_user && (
+            <ConfirmationSection title={transaction.type === 'buy' ? 'Vendedor' : 'Comprador'}>
+              <ConfirmationRow
+                label="Nome"
+                value={transaction.counterparty_user.full_name || 'Usuário EmaPay'}
+              />
+              <ConfirmationRow label="Email" value={transaction.counterparty_user.email} />
+            </ConfirmationSection>
+          )}
+
+          {/* Additional Information */}
+          {(transaction.metadata?.order_matching || transaction.metadata?.fee_percentage || transaction.reference_id) && (
+            <ConfirmationSection title="Informações adicionais">
+              {transaction.metadata?.order_matching && (
+                <ConfirmationRow label="Correspondência de pedidos" value="Ativada" />
+              )}
+              {transaction.metadata?.fee_percentage && (
+                <ConfirmationRow
+                  label="Taxa percentual"
+                  value={`${(transaction.metadata.fee_percentage * 100).toFixed(2)}%`}
+                />
+              )}
+              {transaction.reference_id && (
+                <ConfirmationRow label="ID de referência" value={transaction.reference_id} />
+              )}
+            </ConfirmationSection>
+          )}
         </div>
       </main>
     </div>

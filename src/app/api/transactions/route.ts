@@ -49,6 +49,7 @@ export async function GET(request: NextRequest) {
       .from('transactions')
       .select(`
         id,
+        display_id,
         type,
         amount,
         currency,
@@ -77,39 +78,33 @@ export async function GET(request: NextRequest) {
       query = query.eq('currency', currency.toUpperCase())
     }
 
-    // Execute query
-    const { data: transactions, error: transactionsError } = await query
+    // Execute query with count in single request for better performance
+    const { data: transactions, error: transactionsError, count } = await query
+      .select(`
+        id,
+        display_id,
+        type,
+        amount,
+        currency,
+        fee_amount,
+        net_amount,
+        exchange_rate,
+        status,
+        recipient_info,
+        metadata,
+        reference_id,
+        created_at,
+        updated_at
+      `, { count: 'exact' })
 
     if (transactionsError) {
       throw new Error(`Failed to fetch transactions: ${transactionsError.message}`)
     }
 
-    // Get total count for pagination
-    let countQuery = supabaseAdmin
-      .from('transactions')
-      .select('*', { count: 'exact', head: true })
-      .eq('user_id', user.id)
-
-    // Apply same filters to count query
-    if (type) {
-      countQuery = countQuery.eq('type', type)
-    }
-    if (status) {
-      countQuery = countQuery.eq('status', status)
-    }
-    if (currency) {
-      countQuery = countQuery.eq('currency', currency.toUpperCase())
-    }
-
-    const { count, error: countError } = await countQuery
-
-    if (countError) {
-      console.warn('Failed to get transaction count:', countError.message)
-    }
-
     // Format response data
     const formattedTransactions = transactions?.map(transaction => ({
       id: transaction.id,
+      display_id: transaction.display_id,
       type: transaction.type,
       amount: parseFloat(transaction.amount.toString()),
       currency: transaction.currency,
@@ -128,7 +123,7 @@ export async function GET(request: NextRequest) {
     const totalPages = count ? Math.ceil(count / limit) : 1
     const currentPage = Math.floor(offset / limit) + 1
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
       data: formattedTransactions,
       pagination: {
@@ -147,6 +142,12 @@ export async function GET(request: NextRequest) {
       },
       timestamp: new Date().toISOString()
     })
+
+    // Add caching headers for better performance
+    response.headers.set('Cache-Control', 'private, max-age=30, stale-while-revalidate=60')
+    response.headers.set('ETag', `"transactions-${user.id}-${Date.now()}"`)
+
+    return response
 
   } catch (error) {
     console.error('❌ Error fetching transactions:', error)

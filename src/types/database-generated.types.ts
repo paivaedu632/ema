@@ -7,6 +7,11 @@ export type Json =
   | Json[]
 
 export type Database = {
+  // Allows to automatically instanciate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "12.2.3 (519615d)"
+  }
   public: {
     Tables: {
       documents: {
@@ -72,35 +77,188 @@ export type Database = {
           },
         ]
       }
-      exchange_rates: {
+      dynamic_rates: {
+        Row: {
+          calculated_at: string
+          created_at: string
+          currency_pair: string
+          id: string
+          total_volume: number
+          transaction_count: number
+          updated_at: string
+          vwap_rate: number
+        }
+        Insert: {
+          calculated_at?: string
+          created_at?: string
+          currency_pair: string
+          id?: string
+          total_volume: number
+          transaction_count: number
+          updated_at?: string
+          vwap_rate: number
+        }
+        Update: {
+          calculated_at?: string
+          created_at?: string
+          currency_pair?: string
+          id?: string
+          total_volume?: number
+          transaction_count?: number
+          updated_at?: string
+          vwap_rate?: number
+        }
+        Relationships: []
+      }
+      fees: {
         Row: {
           created_at: string | null
-          from_currency: string
+          currency: string
+          fee_fixed_amount: number | null
+          fee_percentage: number
           id: string
           is_active: boolean | null
-          rate: number
-          rate_type: string
-          to_currency: string
+          transaction_type: string
           updated_at: string | null
         }
         Insert: {
           created_at?: string | null
-          from_currency: string
+          currency: string
+          fee_fixed_amount?: number | null
+          fee_percentage?: number
           id?: string
           is_active?: boolean | null
-          rate: number
-          rate_type: string
-          to_currency: string
+          transaction_type: string
           updated_at?: string | null
         }
         Update: {
           created_at?: string | null
-          from_currency?: string
+          currency?: string
+          fee_fixed_amount?: number | null
+          fee_percentage?: number
           id?: string
           is_active?: boolean | null
-          rate?: number
-          rate_type?: string
-          to_currency?: string
+          transaction_type?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      fund_reservations: {
+        Row: {
+          created_at: string
+          currency: string
+          id: string
+          order_id: string
+          released_amount: number
+          released_at: string | null
+          reserved_amount: number
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          currency: string
+          id?: string
+          order_id: string
+          released_amount?: number
+          released_at?: string | null
+          reserved_amount: number
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          currency?: string
+          id?: string
+          order_id?: string
+          released_amount?: number
+          released_at?: string | null
+          reserved_amount?: number
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fund_reservations_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: true
+            referencedRelation: "order_book"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fund_reservations_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dynamic_rates: {
+        Row: {
+          calculated_at: string
+          created_at: string
+          currency_pair: string
+          id: string
+          total_volume: number
+          transaction_count: number
+          updated_at: string
+          vwap_rate: number
+        }
+        Insert: {
+          calculated_at?: string
+          created_at?: string
+          currency_pair: string
+          id?: string
+          total_volume: number
+          transaction_count: number
+          updated_at?: string
+          vwap_rate: number
+        }
+        Update: {
+          calculated_at?: string
+          created_at?: string
+          currency_pair?: string
+          id?: string
+          total_volume?: number
+          transaction_count?: number
+          updated_at?: string
+          vwap_rate?: number
+        }
+        Relationships: []
+      }
+      fees: {
+        Row: {
+          created_at: string | null
+          currency: string
+          fee_fixed_amount: number | null
+          fee_percentage: number
+          id: string
+          is_active: boolean | null
+          transaction_type: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          currency: string
+          fee_fixed_amount?: number | null
+          fee_percentage?: number
+          id?: string
+          is_active?: boolean | null
+          transaction_type: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          currency?: string
+          fee_fixed_amount?: number | null
+          fee_percentage?: number
+          id?: string
+          is_active?: boolean | null
+          transaction_type?: string
           updated_at?: string | null
         }
         Relationships: []
@@ -149,14 +307,213 @@ export type Database = {
           },
         ]
       }
+      offers: {
+        Row: {
+          created_at: string
+          currency_type: string
+          dynamic_rate: boolean
+          exchange_rate: number
+          id: string
+          reserved_amount: number
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          currency_type: string
+          dynamic_rate?: boolean
+          exchange_rate: number
+          id?: string
+          reserved_amount: number
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          currency_type?: string
+          dynamic_rate?: boolean
+          exchange_rate?: number
+          id?: string
+          reserved_amount?: number
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "offers_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      order_book: {
+        Row: {
+          average_fill_price: number | null
+          base_currency: string
+          cancelled_at: string | null
+          created_at: string
+          filled_at: string | null
+          filled_quantity: number
+          id: string
+          order_type: string
+          price: number | null
+          quantity: number
+          quote_currency: string
+          remaining_quantity: number
+          reserved_amount: number
+          side: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          average_fill_price?: number | null
+          base_currency: string
+          cancelled_at?: string | null
+          created_at?: string
+          filled_at?: string | null
+          filled_quantity?: number
+          id?: string
+          order_type: string
+          price?: number | null
+          quantity: number
+          quote_currency: string
+          remaining_quantity: number
+          reserved_amount: number
+          side: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          average_fill_price?: number | null
+          base_currency?: string
+          cancelled_at?: string | null
+          created_at?: string
+          filled_at?: string | null
+          filled_quantity?: number
+          id?: string
+          order_type?: string
+          price?: number | null
+          quantity?: number
+          quote_currency?: string
+          remaining_quantity?: number
+          reserved_amount?: number
+          side?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_book_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      trades: {
+        Row: {
+          base_amount: number
+          base_currency: string
+          buy_order_id: string
+          buyer_fee: number
+          buyer_id: string
+          created_at: string
+          executed_at: string
+          id: string
+          price: number
+          quantity: number
+          quote_amount: number
+          quote_currency: string
+          sell_order_id: string
+          seller_fee: number
+          seller_id: string
+        }
+        Insert: {
+          base_amount: number
+          base_currency: string
+          buy_order_id: string
+          buyer_fee?: number
+          buyer_id: string
+          created_at?: string
+          executed_at?: string
+          id?: string
+          price: number
+          quantity: number
+          quote_amount: number
+          quote_currency: string
+          sell_order_id: string
+          seller_fee?: number
+          seller_id: string
+        }
+        Update: {
+          base_amount?: number
+          base_currency?: string
+          buy_order_id?: string
+          buyer_fee?: number
+          buyer_id?: string
+          created_at?: string
+          executed_at?: string
+          id?: string
+          price?: number
+          quantity?: number
+          quote_amount?: number
+          quote_currency?: string
+          sell_order_id?: string
+          seller_fee?: number
+          seller_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trades_buy_order_id_fkey"
+            columns: ["buy_order_id"]
+            isOneToOne: false
+            referencedRelation: "order_book"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "trades_buyer_id_fkey"
+            columns: ["buyer_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "trades_sell_order_id_fkey"
+            columns: ["sell_order_id"]
+            isOneToOne: false
+            referencedRelation: "order_book"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "trades_seller_id_fkey"
+            columns: ["seller_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       transactions: {
         Row: {
           amount: number
+          counterparty_user_id: string | null
           created_at: string | null
           currency: string
+          display_id: string | null
+          exchange_id: string | null
           exchange_rate: number | null
           fee_amount: number
           id: string
+          linked_transaction_id: string | null
           metadata: Json | null
           net_amount: number
           recipient_info: Json | null
@@ -168,11 +525,15 @@ export type Database = {
         }
         Insert: {
           amount: number
+          counterparty_user_id?: string | null
           created_at?: string | null
           currency: string
+          display_id?: string | null
+          exchange_id?: string | null
           exchange_rate?: number | null
           fee_amount?: number
           id?: string
+          linked_transaction_id?: string | null
           metadata?: Json | null
           net_amount: number
           recipient_info?: Json | null
@@ -184,11 +545,15 @@ export type Database = {
         }
         Update: {
           amount?: number
+          counterparty_user_id?: string | null
           created_at?: string | null
           currency?: string
+          display_id?: string | null
+          exchange_id?: string | null
           exchange_rate?: number | null
           fee_amount?: number
           id?: string
+          linked_transaction_id?: string | null
           metadata?: Json | null
           net_amount?: number
           recipient_info?: Json | null
@@ -200,75 +565,21 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "transactions_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: "transactions_counterparty_user_id_fkey"
+            columns: ["counterparty_user_id"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
-        ]
-      }
-      user_limits: {
-        Row: {
-          created_at: string | null
-          currency: string | null
-          current_daily_limit: number | null
-          current_monthly_limit: number | null
-          current_transaction_limit: number | null
-          daily_limit_post_kyc: number | null
-          daily_limit_pre_kyc: number | null
-          daily_used: number | null
-          id: string
-          last_reset_date: string | null
-          monthly_limit_post_kyc: number | null
-          monthly_limit_pre_kyc: number | null
-          monthly_used: number | null
-          transaction_limit_post_kyc: number | null
-          transaction_limit_pre_kyc: number | null
-          updated_at: string | null
-          user_id: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          currency?: string | null
-          current_daily_limit?: number | null
-          current_monthly_limit?: number | null
-          current_transaction_limit?: number | null
-          daily_limit_post_kyc?: number | null
-          daily_limit_pre_kyc?: number | null
-          daily_used?: number | null
-          id?: string
-          last_reset_date?: string | null
-          monthly_limit_post_kyc?: number | null
-          monthly_limit_pre_kyc?: number | null
-          monthly_used?: number | null
-          transaction_limit_post_kyc?: number | null
-          transaction_limit_pre_kyc?: number | null
-          updated_at?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          currency?: string | null
-          current_daily_limit?: number | null
-          current_monthly_limit?: number | null
-          current_transaction_limit?: number | null
-          daily_limit_post_kyc?: number | null
-          daily_limit_pre_kyc?: number | null
-          daily_used?: number | null
-          id?: string
-          last_reset_date?: string | null
-          monthly_limit_post_kyc?: number | null
-          monthly_limit_pre_kyc?: number | null
-          monthly_used?: number | null
-          transaction_limit_post_kyc?: number | null
-          transaction_limit_pre_kyc?: number | null
-          updated_at?: string | null
-          user_id?: string | null
-        }
-        Relationships: [
           {
-            foreignKeyName: "user_limits_user_id_fkey"
+            foreignKeyName: "transactions_linked_transaction_id_fkey"
+            columns: ["linked_transaction_id"]
+            isOneToOne: false
+            referencedRelation: "transactions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transactions_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
@@ -327,7 +638,6 @@ export type Database = {
           created_at: string | null
           currency: string
           id: string
-          reserved_balance: number
           updated_at: string | null
           user_id: string | null
         }
@@ -336,7 +646,6 @@ export type Database = {
           created_at?: string | null
           currency: string
           id?: string
-          reserved_balance?: number
           updated_at?: string | null
           user_id?: string | null
         }
@@ -345,7 +654,6 @@ export type Database = {
           created_at?: string | null
           currency?: string
           id?: string
-          reserved_balance?: number
           updated_at?: string | null
           user_id?: string | null
         }
@@ -361,75 +669,49 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      wallet_balances_with_reserved: {
+        Row: {
+          available_balance: number | null
+          created_at: string | null
+          currency: string | null
+          reserved_balance: number | null
+          total_balance: number | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wallets_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
-      check_transaction_limits: {
-        Args: { user_uuid: string; amount: number; currency_code?: string }
-        Returns: {
-          within_limits: boolean
-          limit_type: string
-          current_limit: number
-          would_exceed_by: number
-        }[]
-      }
-
-      get_active_exchange_rate: {
-        Args: { from_curr: string; to_curr: string }
-        Returns: number
-      }
-      get_current_user_id: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
-      get_user_available_balance: {
-        Args: { user_uuid: string; currency_code: string }
-        Returns: number
-      }
-      get_user_balance: {
-        Args: { user_uuid: string; currency_code: string }
-        Returns: number
-      }
-      get_user_limits: {
-        Args: { user_uuid: string; currency_code?: string }
-        Returns: {
-          daily_limit: number
-          monthly_limit: number
-          transaction_limit: number
-          daily_used: number
-          monthly_used: number
-          daily_remaining: number
-          monthly_remaining: number
-        }[]
-      }
-      get_user_reserved_balance: {
-        Args: { user_uuid: string; currency_code: string }
-        Returns: number
-      }
-      map_kyc_status: {
-        Args: { kyc_records_status: string }
-        Returns: string
-      }
-
-      process_send_transaction: {
+      get_order_book_depth: {
         Args: {
-          sender_uuid: string
-          recipient_info: Json
-          amount_value: number
-          currency_code: string
+          p_base_currency: string
+          p_quote_currency: string
+          p_depth_limit?: number
         }
         Returns: Json
       }
-      reserve_balance: {
-        Args: { user_uuid: string; currency_code: string; amount: number }
+      test_order_book_creation: {
+        Args: Record<PropertyKey, never>
         Returns: boolean
       }
-      unreserve_balance: {
-        Args: { user_uuid: string; currency_code: string; amount: number }
-        Returns: boolean
-      }
-      user_owns_resource: {
-        Args: { resource_user_id: string }
+      validate_order_book_entry: {
+        Args: {
+          p_order_type: string
+          p_side: string
+          p_base_currency: string
+          p_quote_currency: string
+          p_quantity: number
+          p_price?: number
+        }
         Returns: boolean
       }
     }
@@ -442,21 +724,25 @@ export type Database = {
   }
 }
 
-type DefaultSchema = Database[Extract<keyof Database, "public">]
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-        Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
-  ? (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-      Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R
     }
     ? R
@@ -474,14 +760,16 @@ export type Tables<
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Insert: infer I
     }
     ? I
@@ -497,14 +785,16 @@ export type TablesInsert<
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Update: infer U
     }
     ? U
@@ -520,14 +810,16 @@ export type TablesUpdate<
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   EnumName extends DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
     : never = never,
-> = DefaultSchemaEnumNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
     ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
     : never
@@ -535,14 +827,16 @@ export type Enums<
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
     : never = never,
-> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
     ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never

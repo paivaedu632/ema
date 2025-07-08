@@ -67,6 +67,10 @@
 - **InsufficientBalanceError** (`src/components/ui/insufficient-balance-error.tsx`) - Reusable component for displaying insufficient balance error with clickable "Depositar" button
 - **Insufficient Balance Utils** (`src/utils/insufficient-balance-utils.ts`) - Centralized utilities for handling insufficient balance scenarios across transaction components
 
+### Transaction Utilities:
+- **Transaction Formatting Utils** (`src/utils/transaction-formatting.ts`) - Unified utilities for consistent transaction display formatting across EmaPay
+- **useTransactions Hook** (`src/hooks/use-transactions.ts`) - Optimized hook for fetching and managing transaction data with caching and pagination
+
 ### Custom Hooks:
 - **useMultiStepFlow** (`src/hooks/use-multi-step-flow.ts`) - Reusable hook for managing multi-step flow state with navigation, validation, and step tracking
 - **useTransactionFlow** (`src/hooks/use-multi-step-flow.ts`) - Enhanced hook for transaction flows with common navigation patterns (handleBack, handleBackToDashboard, handleBackToHome)
@@ -93,6 +97,12 @@
   - **TextUtils** - Text processing utilities (sanitizeFilename, capitalizeWords, formatPhone, mask)
   - **NumberUtils** - Number formatting utilities (formatPercentage, formatCompact, isConfidenceAcceptable)
   - **IdUtils** - ID generation utilities (generate, generateS3Key)
+- **Transaction API Utilities** (`src/lib/transaction-api.ts`) - Enhanced transaction data management ✅ NEW (June 2025)
+  - **getTransactionById()** - Fetch transaction by display_id (EP-2025-XXXXXX) or UUID with linked transaction data
+  - **getUserTransactions()** - Get user's transactions with pagination support
+  - **getExchangeTransactions()** - Get all transactions for a specific exchange_id
+  - **formatTransactionForDisplay()** - Format transaction data for UI display with type-specific content
+  - **getTransactionStatusInfo()** - Get status display information with colors and labels
 - **Styling Utilities** (`src/utils/styling-utils.ts`) - CSS class pattern consolidation and utility functions
   - **Validation Styling** - getValidationBorderClass, getValidationTextClass
   - **Form Styling** - getFormInputClasses, getFormSpacingClasses
@@ -144,6 +154,9 @@
 - **FixedBottomAction** (`src/components/ui/fixed-bottom-action.tsx`) - Reusable fixed bottom container for primary/secondary action buttons
 - **SuccessScreen** (`src/components/ui/success-screen.tsx`) - Reusable success/confirmation screen with icon, message, and action buttons
 - **TransactionItem** (`src/components/ui/transaction-item.tsx`) - Reusable transaction/recipient list item with avatar, details, and optional action button
+- **TransactionListItem** (`src/components/ui/transaction-list-item.tsx`) - Unified transaction list item component for consistent display across dashboard and transactions page
+- **TransactionListItemSkeleton** (`src/components/ui/transaction-list-item.tsx`) - Loading skeleton for transaction list items
+- **TransactionListEmpty** (`src/components/ui/transaction-list-item.tsx`) - Empty state component for transaction lists
 - **TransactionSummary** (`src/components/ui/transaction-summary.tsx`) - Reusable component for displaying transaction summary information with icon, label, amount, and optional fee
 - **TransactionSummaryList** (`src/components/ui/transaction-summary.tsx`) - Container component for multiple transaction summary items with consistent spacing
 - **OptionSelector** (`src/components/ui/option-selector.tsx`) - Reusable option selector for choosing between different options with icons and descriptions
@@ -166,7 +179,7 @@
 - **KYCDocumentProcessingStep** (`src/components/kyc/kyc-processing-step.tsx`) - Specialized processing step for document upload and validation
 - **KYCFaceMatchingStep** (`src/components/kyc/kyc-processing-step.tsx`) - Specialized processing step for face matching
 - **RecipientCard** (`src/components/ui/recipient-card.tsx`) - Optimized recipient selection card with better mobile width utilization, larger avatars, and improved touch targets
-- **FlagIcon** (`src/components/ui/flag-icon.tsx`) - Centralized flag component with predefined country flags (Angola, EUR, USD)
+- **FlagIcon** (`src/components/ui/flag-icon.tsx`) - Enhanced flag component with optimized size variants (sm: 16px, md: 20px, lg: 24px, xl: 32px), tight spacing for professional currency selector appearance, flex-shrink-0 for consistent sizing, and predefined country flags (Angola, EUR, USD)
 - **PhoneInput** (`src/components/ui/phone-input.tsx`) - Professional phone input using react-phone-input-2 library with EmaPay custom styling: h-14 height, rounded-2xl borders, border-2 thickness, gray-300 border color, round SVG flag icons, Angola default country, search functionality, and integrated design matching EmaPay theme standards
 - **CountrySelector** (`src/components/ui/country-selector.tsx`) - Enhanced country selector using react-select and country-state-city libraries with searchable dropdown, SVG flag icons (via FlagIcon component), and complete world countries support (195+ countries)
 - **GooglePlacesInput** (`src/components/ui/google-places-input.tsx`) - Google Places Autocomplete input using @googlemaps/js-api-loader with worldwide address search (no geographic biasing), optional country restrictions, address search functionality, loading states, error handling, clean icon alignment, and EmaPay form-input-auth styling
@@ -767,13 +780,15 @@ New UI Need Identified
 
 ### Transaction Details Flow:
 - **Page Route**: `src/app/transaction/[id]/page.tsx` - Individual transaction details page route (imports `TransactionDetails` component)
-- **Main Component**: `src/components/transaction-details.tsx` - Complete transaction details interface matching Wise design
+- **Main Component**: `src/components/transaction-details.tsx` - Enhanced transaction details interface with dual transaction support
+- **API Integration**: `src/lib/transaction-api.ts` - Transaction data fetching and formatting utilities
 - **Features**:
-  - Back navigation with arrow button
-  - Help and menu action buttons in header
-  - Transaction summary with amounts, fees, and exchange rates
-  - Detailed recipient account information
-  - Clean layout with white cards and consistent spacing
+  - **Dynamic Content**: Different layouts based on transaction type (buy/sell/send/receive/deposit/withdraw)
+  - **Wise-Style IDs**: Displays EP-2025-XXXXXX format transaction IDs
+  - **Dual Transaction Support**: Shows linked transactions and counterparty information for exchanges
+  - **Status Indicators**: Visual status badges with appropriate colors and timestamps
+  - **Real Data Integration**: Fetches actual transaction data with error handling and loading states
+  - **Enhanced Metadata**: Displays exchange rates, fees, and comprehensive transaction information
 - **Design**: Follows EmaPay design patterns with white background, gray cards, black borders, and consistent typography
 - **Layout Structure**: Matches deposit flow (`min-h-screen bg-gray-100`, `max-w-sm mx-auto px-4 pt-8 pb-24`)
 - **Typography**: Consistent with deposit flow (`text-3xl font-bold` for main headings, `text-2xl font-bold` for step headings)
@@ -824,6 +839,7 @@ New UI Need Identified
 - **State Management**: React useState for step navigation and form data persistence
 - **Navigation**: Back button navigates through steps (dashboard → amount → exchange → confirmation → success)
 - **Exchange Options**: Automático (Bot icon) and Manual (Wrench icon) with round gray backgrounds in white cards
+- **Manual Rate Enhancement**: Simplified AOA-only rate entry with "100 EUR per X AOA" format, removes bilateral currency selection for cleaner UX, pre-populates exchange rate input with Banco BAI API rate on step load, dynamic "Câmbio" reference synchronization updates in real-time as user types, maintains EmaPay design patterns with FlagIcon and proper input styling
 - **Icons**: Lucide React icons (Bot, Wrench, ArrowLeft) for clean interface design
 - **Visual Consistency**: Perfect alignment with deposit flow design patterns and EmaPay branding
 
@@ -834,6 +850,7 @@ New UI Need Identified
 - **Typography**: Consistent with other flows (`text-3xl font-bold` for main heading "Quanto você quer comprar:")
 - **Input Styling**: Same as deposit/sell flows (`h-16 rounded-2xl border-black`, integrated currency selectors)
 - **Currency Support**: AOA and EUR currencies with Angola and Euro flag integration
+- **Corrected Balance Logic**: Shows spending currency balance (when buying AOA displays EUR balance, when buying EUR displays AOA balance) for accurate transaction validation
 - **Flag Components**: Uses existing AngolaFlag and EuroFlag components from flagicons.lipis.dev
 - **Available Balance Display**: Shows "Saldo disponível: 100 EUR" as per design
 - **Exchange Details Card**: White rounded card showing:
@@ -852,7 +869,7 @@ New UI Need Identified
 - **Main Component**: `src/components/withdraw.tsx` - Multi-step withdrawal form with streamlined account details step
 - **Account Details Step**: Simplified to only require "IBAN ou celular" field (removed "Nome completo" field)
 - **Form Validation**: Updated to only validate IBAN/phone field in account step
-- **Confirmation Step**: Uses static "Ema Agostinho" name in confirmation details
+- **Confirmation Step**: Uses static "Ema Pay" name in confirmation details
 - **Supported Currencies**: AOA (Angola), EUR (European Union) - BRL and USD removed as requested
 - **Visual Consistency**: Follows EmaPay design patterns with white background, black borders, and rounded corners
 - **Layout Structure**: Uses `page-container-white`, `content-container`, and `space-y-6` classes for consistency
@@ -1147,11 +1164,15 @@ New UI Need Identified
 - **Design Consistency**: Eliminates inline styling variations and ensures uniform form element appearance
 
 ### Currency Selector Components:
-- **Universal CSS Class**: `.currency-selector` implemented in `src/app/globals.css` for consistent styling across all currency selectors
-- **Styling Features**:
-  - Rounded-full border radius (9999px) to match secondary action buttons for design consistency
+- **Universal CSS Classes**: Enhanced currency selector styling implemented in `src/app/globals.css` for consistent styling across all currency selectors
+- **Core Styling Features**:
+  - **`.currency-selector`**: Rounded-full border radius (9999px) to match secondary action buttons for design consistency
   - 18px font-size (text-lg equivalent) with bold weight
   - Gray-100 background with gray-100 hover state (matching secondary action buttons)
+- **Enhanced Flag Icon Spacing**:
+  - **`.currency-selector-container`**: Tight, professional container with 4px gap for cohesive currency pair appearance
+  - **`.flag-icon-currency`**: Optimized 20px flag sizing with flex-shrink-0 for unified currency indicator appearance
+  - **FlagIcon Component**: Enhanced with size variants (sm/md/lg/xl) and tight spacing optimized for professional financial application appearance
   - Gray-100 border for visual consistency
   - Smooth transition effects (0.2s ease-in-out)
   - Auto width with 8px padding

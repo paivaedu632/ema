@@ -60,8 +60,8 @@ export function BalanceSelector({
       <Select value={currentValue} onValueChange={handleValueChange}>
         <SelectTrigger className="balance-selector">
           <SelectValue>
-            <div className="flex items-center gap-2">
-              <FlagIcon countryCode={getFlagCode(currency)} />
+            <div className="currency-selector-container">
+              <FlagIcon countryCode={getFlagCode(currency)} className="flag-icon-currency" />
               <span>{currentLabel}</span>
             </div>
           </SelectValue>
@@ -69,8 +69,8 @@ export function BalanceSelector({
         <SelectContent>
           {allOptions.map((option) => (
             <SelectItem key={option.value} value={option.value}>
-              <div className="flex items-center gap-2">
-                <FlagIcon countryCode={getFlagCode(option.currency)} />
+              <div className="currency-selector-container">
+                <FlagIcon countryCode={getFlagCode(option.currency)} className="flag-icon-currency" />
                 <span>{option.label}</span>
               </div>
             </SelectItem>

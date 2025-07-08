@@ -57,7 +57,7 @@ export function DepositFlow() {
       // Simulate payment instructions generation since backend is removed
       // In production, this would be handled by external API integration
       const simulatedInstructions: PaymentInstructions = {
-        payee_name: 'EMA AGOSTINHO',
+        payee_name: 'EMA PAY',
         phone_number: '244923300064',
         iban: '12345',
         reference: `REF-${Date.now().toString().slice(-8)}`,

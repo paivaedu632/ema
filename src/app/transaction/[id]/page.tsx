@@ -8,5 +8,5 @@ interface TransactionPageProps {
 
 export default async function TransactionPage({ params }: TransactionPageProps) {
   const { id } = await params
-  return <TransactionDetails transactionId={`#${id}`} />
+  return <TransactionDetails transactionId={id} />
 }

@@ -5,24 +5,23 @@ import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
-import { Bot, Wrench, ArrowUpDown } from "lucide-react"
+
 import { PageHeader } from "@/components/ui/page-header"
 import { AmountInput } from "@/components/ui/amount-input"
 import { FixedBottomAction } from "@/components/ui/fixed-bottom-action"
 import { SuccessScreen } from "@/components/ui/success-screen"
 import { ConfirmationSection, ConfirmationRow, ConfirmationWarning } from "@/components/ui/confirmation-section"
 import { AvailableBalance } from "@/components/ui/available-balance"
-import { OptionSelector } from "@/components/ui/option-selector"
+
+
 import {
   TRANSACTION_LIMITS,
   VALIDATION_MESSAGES,
-  EXCHANGE_RATE_VALIDATION,
-  type Currency,
-  validateExchangeRateRange
+  type Currency
 } from "@/utils/transaction-validation"
 
 
-type Step = "amount" | "rateType" | "manualRate" | "confirmation" | "success"
+type Step = "amount" | "desiredAmount" | "rateSelection" | "confirmation" | "success"
 
 interface WalletBalance {
   currency: Currency
@@ -73,14 +72,13 @@ type SellAmountForm = z.infer<ReturnType<typeof createSellAmountSchema>>
 export function SellFlow() {
   const router = useRouter()
   const [currentStep, setCurrentStep] = useState<Step>("amount")
-  const [exchangeRate, setExchangeRate] = useState("")
-  const [rateType, setRateType] = useState<"automatic" | "manual">("automatic")
+  const [desiredAmount, setDesiredAmount] = useState("")
   const [walletBalances, setWalletBalances] = useState<WalletBalance[]>([])
   const [balancesLoading, setBalancesLoading] = useState(true)
-
-  // Banco BAI API state
-  const [bancoBaiRate, setBancoBaiRate] = useState<number | null>(null)
-  const [rateLoading, setRateLoading] = useState(false)
+  const [desiredAmountError, setDesiredAmountError] = useState("")
+  const [useAutomaticRate, setUseAutomaticRate] = useState(true)
+  const [dynamicRateInfo, setDynamicRateInfo] = useState<any>(null)
+  const [dynamicRateLoading, setDynamicRateLoading] = useState(false)
 
   // Get current available balance for selected currency
   const getCurrentBalance = (currency: string): number => {
@@ -88,37 +86,133 @@ export function SellFlow() {
     return wallet?.available_balance || 0
   }
 
-  // Fetch current exchange rate from Banco BAI API
-  const fetchBancoBaiRate = async () => {
-    setRateLoading(true)
+  // Calculate exchange rate from user inputs (always in AOA per EUR format)
+  const calculateExchangeRate = (): number => {
+    const sellAmount = Number(watchedAmount) || 0
+    const desiredAmountNum = Number(desiredAmount) || 0
 
-    try {
-      const response = await fetch('/api/exchange-rate/banco-bai')
+    if (sellAmount === 0 || desiredAmountNum === 0) {
+      return 0
+    }
 
-      if (!response.ok) {
-        throw new Error(`API request failed: ${response.status}`)
-      }
-
-      const result = await response.json()
-
-      if (result.success && result.data) {
-        // Convert to EUR to AOA rate (buyValue is AOA per EUR)
-        setBancoBaiRate(result.data.buyValue)
-      } else {
-        console.warn("Failed to fetch Banco BAI rate, using fallback")
-        setBancoBaiRate(EXCHANGE_RATE_VALIDATION.FALLBACK_RATES.EUR_TO_AOA)
-      }
-    } catch (error) {
-      console.error('Error fetching Banco BAI rate:', error)
-      setBancoBaiRate(EXCHANGE_RATE_VALIDATION.FALLBACK_RATES.EUR_TO_AOA)
-    } finally {
-      setRateLoading(false)
+    if (watchedCurrency === "EUR") {
+      // User is selling EUR, wants AOA
+      // Rate = AOA_desired / EUR_to_sell (AOA per EUR)
+      return desiredAmountNum / sellAmount
+    } else {
+      // User is selling AOA, wants EUR
+      // Convert to AOA per EUR format: AOA_to_sell / EUR_desired
+      return sellAmount / desiredAmountNum
     }
   }
 
-  // React Hook Form setup with dynamic schema
+  // Calculate the amount user will receive
+  const calculateUserReceiveAmount = (): { amount: number; currency: string } => {
+    const sellAmount = Number(watchedAmount) || 0
+    
+    if (useAutomaticRate && dynamicRateInfo) {
+      // Use dynamic rate
+      const rate = dynamicRateInfo.rate // This is in AOA per EUR format
+      
+      if (watchedCurrency === "EUR") {
+        // User selling EUR, will receive AOA
+        return {
+          amount: sellAmount * rate,
+          currency: "AOA"
+        }
+      } else {
+        // User selling AOA, will receive EUR
+        return {
+          amount: sellAmount / rate,
+          currency: "EUR"
+        }
+      }
+    } else {
+      // Use manual rate based on desired amount
+      const receiveCurrency = watchedCurrency === "EUR" ? "AOA" : "EUR"
+      return {
+        amount: Number(desiredAmount) || 0,
+        currency: receiveCurrency
+      }
+    }
+  }
+
+  // Validate desired amount and convert rate limits to user-friendly receive amount limits
+  const validateDesiredAmount = (amount: string): string => {
+    const sellAmount = Number(watchedAmount) || 0
+    const desiredAmountNum = Number(amount) || 0
+
+    if (sellAmount === 0 || desiredAmountNum === 0) {
+      return ""
+    }
+
+    // Calculate the exchange rate that would result from this desired amount
+    const rate = calculateExchangeRate()
+
+    // Check if rate is in reasonable range (500-2000 AOA per EUR)
+    // Convert these rate limits back to receive amount limits for user guidance
+    if (rate < 500 || rate > 2000) {
+      const receiveCurrency = watchedCurrency === "EUR" ? "AOA" : "EUR"
+
+      if (watchedCurrency === "EUR") {
+        // User selling EUR, wants AOA
+        // Min rate 500 AOA/EUR means min receive = sellAmount * 500
+        // Max rate 2000 AOA/EUR means max receive = sellAmount * 2000
+        const minReceive = sellAmount * 500
+        const maxReceive = sellAmount * 2000
+
+        if (desiredAmountNum < minReceive) {
+          return `Mínimo: ${minReceive.toLocaleString('pt-AO')} ${receiveCurrency}`
+        }
+        if (desiredAmountNum > maxReceive) {
+          return `Máximo: ${maxReceive.toLocaleString('pt-AO')} ${receiveCurrency}`
+        }
+      } else {
+        // User selling AOA, wants EUR
+        // Min rate 500 AOA/EUR means max receive = sellAmount / 500
+        // Max rate 2000 AOA/EUR means min receive = sellAmount / 2000
+        const minReceive = sellAmount / 2000
+        const maxReceive = sellAmount / 500
+
+        if (desiredAmountNum < minReceive) {
+          return `Mínimo: ${minReceive.toLocaleString('pt-PT')} ${receiveCurrency}`
+        }
+        if (desiredAmountNum > maxReceive) {
+          return `Máximo: ${maxReceive.toLocaleString('pt-PT')} ${receiveCurrency}`
+        }
+      }
+    }
+
+    return ""
+  }
+
+  // Calculate the exchange rate for display (always show in "AOA per EUR" format)
+  const getCalculatedExchangeRate = (): string => {
+    const rate = calculateExchangeRate()
+
+    if (rate === 0) {
+      return "Taxa não calculada"
+    }
+
+    return `1 EUR = ${rate.toFixed(2)} AOA`
+  }
+
+
+
+  // React Hook Form setup with custom resolver
   const form = useForm<SellAmountForm>({
-    resolver: zodResolver(createSellAmountSchema(getCurrentBalance("AOA"), "AOA")),
+    resolver: async (data, context, options) => {
+      // Get current currency from form data
+      const currency = (data.currency as Currency) || "AOA"
+      const currentBalance = getCurrentBalance(currency)
+
+      // Create schema with current currency and balance
+      const schema = createSellAmountSchema(currentBalance, currency)
+      const resolver = zodResolver(schema)
+
+      // Use Zod resolver with dynamic schema
+      return resolver(data, context, options)
+    },
     mode: "onChange",
     defaultValues: {
       amount: "",
@@ -134,6 +228,7 @@ export function SellFlow() {
   useEffect(() => {
     // Clear errors and re-validate when currency or balance changes
     form.clearErrors()
+
     // Re-validate current amount with new currency/balance context
     if (watchedAmount) {
       form.trigger("amount")
@@ -159,12 +254,17 @@ export function SellFlow() {
     fetchWalletBalances()
   }, [])
 
-  // Fetch Banco BAI rate when entering manual rate step
+  // Validate desired amount when it changes
   useEffect(() => {
-    if (currentStep === "manualRate") {
-      fetchBancoBaiRate()
+    if (desiredAmount && watchedAmount) {
+      const error = validateDesiredAmount(desiredAmount)
+      setDesiredAmountError(error)
+    } else {
+      setDesiredAmountError("")
     }
-  }, [currentStep])
+  }, [desiredAmount, watchedAmount, watchedCurrency])
+
+
 
   // Format balance for display
   const getFormattedBalance = (): string => {
@@ -178,16 +278,12 @@ export function SellFlow() {
   }
 
   const handleBack = () => {
-    if (currentStep === "rateType") {
+    if (currentStep === "desiredAmount") {
       setCurrentStep("amount")
-    } else if (currentStep === "manualRate") {
-      setCurrentStep("rateType")
+    } else if (currentStep === "rateSelection") {
+      setCurrentStep("desiredAmount")
     } else if (currentStep === "confirmation") {
-      if (rateType === "manual") {
-        setCurrentStep("manualRate")
-      } else {
-        setCurrentStep("rateType")
-      }
+      setCurrentStep("rateSelection")
     } else if (currentStep === "success") {
       router.push("/")
     }
@@ -195,44 +291,75 @@ export function SellFlow() {
 
   const handleContinue = () => {
     if (isValid) {
-      setCurrentStep("rateType")
+      setCurrentStep("desiredAmount")
     }
   }
 
-  const handleRateTypeSelect = (type: "automatic" | "manual") => {
-    setRateType(type)
-    if (type === "automatic") {
-      setCurrentStep("confirmation")
-    } else {
-      setCurrentStep("manualRate")
-    }
+  const handleDesiredAmountContinue = () => {
+    setCurrentStep("rateSelection")
   }
 
-  const handleManualRateContinue = () => {
+  const handleRateSelectionContinue = () => {
     setCurrentStep("confirmation")
   }
+
+  // Fetch dynamic exchange rate
+  const fetchDynamicRate = async () => {
+    if (!watchedCurrency) return
+
+    setDynamicRateLoading(true)
+    try {
+      const response = await fetch(`/api/exchange/dynamic-rates?currency=${watchedCurrency}&includeDetails=true`)
+      if (response.ok) {
+        const result = await response.json()
+        setDynamicRateInfo(result.data)
+      }
+    } catch (error) {
+      console.error('Error fetching dynamic rate:', error)
+    } finally {
+      setDynamicRateLoading(false)
+    }
+  }
+
+  // Fetch dynamic rate when currency changes
+  useEffect(() => {
+    if (currentStep === "rateSelection") {
+      fetchDynamicRate()
+    }
+  }, [currentStep, watchedCurrency])
 
   const handleConfirmSell = async () => {
     if (!isValid) return
 
     const formData = form.getValues()
+    const sellAmount = Number(formData.amount)
 
-    // Convert exchange rate to the format expected by API
-    // API expects: 1 EUR = X AOA (simplified format)
+    // Determine exchange rate and dynamic rate flag
     let apiExchangeRate: number
-    if (rateType === "manual") {
-      // Manual rate is entered as "X AOA per 100 EUR" in the UI
-      // Convert to "1 EUR = Y AOA" format: Y = X / 100
-      apiExchangeRate = Number(exchangeRate) / 100
+    let useDynamicRate: boolean
+
+    if (useAutomaticRate && dynamicRateInfo) {
+      // Use dynamic VWAP rate
+      apiExchangeRate = dynamicRateInfo.rate
+      useDynamicRate = true
     } else {
-      // Automatic rates using shared constants (1 EUR = X AOA format)
-      apiExchangeRate = EXCHANGE_RATE_VALIDATION.FALLBACK_RATES.EUR_TO_AOA
+      // Use user-calculated rate from desired amount
+      apiExchangeRate = calculateExchangeRate()
+      useDynamicRate = false
+
+      // Final validation for manual rates
+      const validationError = validateDesiredAmount(desiredAmount)
+      if (validationError) {
+        alert(`Erro de validação: ${validationError}`)
+        return
+      }
     }
 
     const requestData = {
-      amount: Number(formData.amount), // Convert string to number for API
+      amount: sellAmount,
       currency: formData.currency,
-      exchangeRate: apiExchangeRate
+      exchangeRate: apiExchangeRate,
+      useDynamicRate
     }
 
 
@@ -323,232 +450,152 @@ export function SellFlow() {
     )
   }
 
-  if (currentStep === "rateType") {
-    return (
-      <div className="page-container-white">
-        <main className="content-container">
-          <PageHeader
-            title="Como você quer o câmbio?"
-            onBack={handleBack}
-          />
-
-          <div className="mb-8">
-            <OptionSelector
-              items={[
-                {
-                  id: "automatic",
-                  title: "Automático",
-                  description: "Venda mais rápido e com melhor preço.",
-                  icon: Bot,
-                  onClick: () => handleRateTypeSelect("automatic")
-                },
-                {
-                  id: "manual",
-                  title: "Manual",
-                  description: "Você controla o câmbio.",
-                  icon: Wrench,
-                  onClick: () => handleRateTypeSelect("manual")
-                }
-              ]}
-            />
-          </div>
-        </main>
-      </div>
-    )
-  }
-
-  if (currentStep === "manualRate") {
-    // Get placeholder text - fixed at 100 EUR base
-    const getPlaceholderText = () => {
-      if (rateLoading) return "Carregando..."
-      if (bancoBaiRate) return (bancoBaiRate * 100).toFixed(2)
-      return (EXCHANGE_RATE_VALIDATION.FALLBACK_RATES.EUR_TO_AOA * 100).toFixed(2)
-    }
-
-    // Validate exchange rate input using shared validation utilities
-    const validateManualRate = (value: string): string => {
-      if (!value || value.trim() === "") return ""
-
-      const num = Number(value)
-      if (isNaN(num) || num <= 0) {
-        return VALIDATION_MESSAGES.EXCHANGE_RATE.INVALID
-      }
-
-      // Convert user input from 100 EUR base to 1 EUR base for validation
-      // This matches the format that will be sent to the backend
-      const rateIn1EurBase = num / 100
-
-      // Enhanced range validation based on Banco BAI rate (using 1 EUR base format)
-      if (bancoBaiRate) {
-        const baselineRate = bancoBaiRate // Already in 1 EUR base format
-        const validation = validateExchangeRateRange(
-          rateIn1EurBase,
-          baselineRate,
-          EXCHANGE_RATE_VALIDATION.FRONTEND_MARGIN
-        )
-
-        if (!validation.isValid) {
-          return validation.error || VALIDATION_MESSAGES.EXCHANGE_RATE.OUT_OF_RANGE
-        }
-      } else {
-        // Fallback range validation using fallback rate (already in 1 EUR base format)
-        const fallbackRate = EXCHANGE_RATE_VALIDATION.FALLBACK_RATES.EUR_TO_AOA
-        const validation = validateExchangeRateRange(
-          rateIn1EurBase,
-          fallbackRate,
-          EXCHANGE_RATE_VALIDATION.FRONTEND_MARGIN
-        )
-
-        if (!validation.isValid) {
-          return validation.error || VALIDATION_MESSAGES.EXCHANGE_RATE.OUT_OF_RANGE
-        }
-      }
-
-      return ""
-    }
-
-    const validationError = validateManualRate(exchangeRate)
-
-    // Calculate the amount user will receive
-    const calculateReceivedAmount = (): { amount: string; currency: string } => {
-      const sellAmount = Number(watchedAmount) || 0
-      const rate = Number(exchangeRate) || 0
-
-      if (sellAmount === 0 || rate === 0 || validationError) {
-        return { amount: "0.00", currency: watchedCurrency === "AOA" ? "EUR" : "AOA" }
-      }
-
-      if (watchedCurrency === "AOA") {
-        // User is selling AOA to receive EUR
-        // Rate is entered as "X AOA per 100 EUR"
-        // Calculate EUR equivalent: (AOA Amount / Rate) * 100
-        const eurAmount = (sellAmount / rate) * 100
-
-        return {
-          amount: eurAmount.toLocaleString('pt-PT', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-          }),
-          currency: "EUR"
-        }
-      } else {
-        // User is selling EUR to receive AOA
-        // Rate is entered as "X AOA per 100 EUR"
-        // Calculate AOA equivalent: (EUR Amount * Rate) / 100
-        const aoaAmount = (sellAmount * rate) / 100
-
-        return {
-          amount: aoaAmount.toLocaleString('pt-AO', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-          }),
-          currency: "AOA"
-        }
-      }
-    }
+  if (currentStep === "desiredAmount") {
+    // Determine the opposite currency for what user wants to receive
+    const receiveCurrency = watchedCurrency === "EUR" ? "AOA" : "EUR"
 
     return (
       <div className="page-container-white">
         <main className="content-container">
           <PageHeader
-            title="Digite o câmbio"
+            title={`Quanto você quer receber em ${receiveCurrency}?`}
             onBack={handleBack}
           />
 
-          {/* Two-Input Exchange Rate Design */}
-          <div className="space-y-4 mb-6">
-            {/* AOA Input (Top) */}
-            <div className="relative">
-              <input
-                type="text"
-                value={exchangeRate}
-                onChange={(e) => setExchangeRate(e.target.value)}
-                placeholder={getPlaceholderText()}
-                className={`w-full h-16 px-4 text-2xl font-bold rounded-2xl border-2 focus:outline-none transition-colors bg-white ${
-                  validationError
-                    ? 'border-red-700 focus:border-red-700'
-                    : 'border-gray-300 focus:border-black'
-                }`}
-              />
-              {/* AOA Currency Label with Real Flag */}
-              <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
-                <img
-                  src="https://flagicons.lipis.dev/flags/4x3/ao.svg"
-                  alt="Angola flag"
-                  className="w-6 h-6 rounded-sm"
-                />
-                <span className="text-lg font-semibold text-gray-700">AOA</span>
-              </div>
-            </div>
+          <AmountInput
+            amount={desiredAmount}
+            currency={receiveCurrency}
+            onAmountChange={(value) => setDesiredAmount(value)}
+            onCurrencyChange={() => {}} // Currency is fixed based on what user is selling
+            transactionType="sell"
+            showValidation={false}
+            className="mb-3"
+            availableCurrencies={[
+              { code: receiveCurrency, flag: receiveCurrency === "EUR" ? "eu" : "ao" }
+            ]}
+          />
 
-            {/* Validation Error - Below AOA Input */}
-            {validationError && (
-              <p className="form-error-ema -mt-2 mb-2">{validationError}</p>
-            )}
+          {/* Validation Error - User-friendly receive amount limits */}
+          {desiredAmountError && (
+            <p className="form-error-ema mb-3">{desiredAmountError}</p>
+          )}
 
-            {/* Conversion Arrow */}
-            <div className="flex justify-center">
-              <div className="w-10 h-10 rounded-full border-2 border-gray-300 flex items-center justify-center bg-white">
-                <ArrowUpDown className="w-5 h-5 text-gray-600" />
-              </div>
-            </div>
-
-            {/* EUR Input (Bottom) */}
-            <div className="relative">
-              <input
-                type="text"
-                value="100"
-                readOnly
-                className="w-full h-16 px-4 text-2xl font-bold rounded-2xl border-2 border-gray-300 bg-gray-50 text-gray-600"
-              />
-              {/* EUR Currency Label with Real Flag */}
-              <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
-                <img
-                  src="https://flagicons.lipis.dev/flags/4x3/eu.svg"
-                  alt="European Union flag"
-                  className="w-6 h-6 rounded-sm"
-                />
-                <span className="text-lg font-semibold text-gray-700">EUR</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Exchange Rate and Transaction Display */}
+          {/* Transaction Summary */}
           <div className="space-y-2 mb-6">
             <div className="flex justify-between items-center">
               <span className="text-sm text-gray-600">Você vende</span>
               <span className="text-sm font-medium text-gray-900">
-                {Number(watchedAmount).toLocaleString('pt-AO')} AOA
-              </span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">Câmbio</span>
-              <span className="text-sm font-medium text-gray-900">
-                {bancoBaiRate ? `100 EUR = ${(bancoBaiRate * 100).toFixed(2)} AOA` : `100 EUR = ${(EXCHANGE_RATE_VALIDATION.FALLBACK_RATES.EUR_TO_AOA * 100).toFixed(2)} AOA`}
+                {Number(watchedAmount || 0).toLocaleString(watchedCurrency === "EUR" ? "pt-PT" : "pt-AO")} {watchedCurrency}
               </span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-sm text-gray-600">Você recebe</span>
               <span className="text-sm font-medium text-gray-900">
-                {(() => {
-                  const received = calculateReceivedAmount()
-                  return `${received.amount} ${received.currency}`
-                })()}
+                {Number(desiredAmount || 0).toLocaleString(receiveCurrency === "EUR" ? "pt-PT" : "pt-AO")} {receiveCurrency}
               </span>
             </div>
           </div>
-
-          {/* Loading State */}
-          {rateLoading && (
-            <p className="text-center text-sm text-gray-500 mb-4">Carregando taxa atual...</p>
-          )}
         </main>
 
         <FixedBottomAction
           primaryAction={{
             label: "Continuar",
-            onClick: handleManualRateContinue,
-            disabled: !exchangeRate || validationError !== "" || rateLoading
+            onClick: handleDesiredAmountContinue,
+            disabled: !desiredAmount || Number(desiredAmount) <= 0 || !!desiredAmountError
+          }}
+        />
+      </div>
+    )
+  }
+
+  if (currentStep === "rateSelection") {
+    const receiveAmount = calculateUserReceiveAmount()
+    
+    return (
+      <div className="page-container-white">
+        <main className="content-container">
+          <PageHeader
+            title="Melhor oferta:"
+            onBack={handleBack}
+          />
+
+          <div className="space-y-4 mb-6">
+            {/* Automatic Rate Option */}
+            <div
+              className={`p-4 border rounded-lg cursor-pointer transition-colors ${
+                useAutomaticRate
+                  ? 'border-black bg-gray-50'
+                  : 'border-gray-200 hover:border-gray-300'
+              }`}
+              onClick={() => setUseAutomaticRate(true)}
+            >
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <div className={`w-4 h-4 rounded-full border-2 ${
+                      useAutomaticRate ? 'border-black bg-black' : 'border-gray-300'
+                    }`}>
+                      {useAutomaticRate && (
+                        <div className="w-2 h-2 bg-white rounded-full mx-auto mt-0.5"></div>
+                      )}
+                    </div>
+                    <h3 className="font-medium text-gray-900">Aceitar</h3>
+                    <span className="text-xs bg-gray-800 text-gray-100 px-2 py-1 rounded-full">
+                      Recomendado
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-600 mb-3">
+                    Você recebe [best available rateAmount]
+                  </p>
+                      <p className="text-xs text-gray-500">
+                    Atualizamos o valor pra você vender mais rápido e com melhor cambio.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+           {/* Manual Rate Option */}
+            <div
+              className={`p-4 border rounded-lg cursor-pointer transition-colors ${
+                !useAutomaticRate
+                  ? 'border-black bg-gray-50'
+                  : 'border-gray-200 hover:border-gray-300'
+              }`}
+              onClick={() => setUseAutomaticRate(false)}
+            >
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <div className={`w-4 h-4 rounded-full border-2 ${
+                      !useAutomaticRate ? 'border-black bg-black' : 'border-gray-300'
+                    }`}>
+                      {!useAutomaticRate && (
+                        <div className="w-2 h-2 bg-white rounded-full mx-auto mt-0.5"></div>
+                      )}
+                    </div>
+                    <h3 className="font-medium text-gray-900">Recusar</h3>
+                  </div>
+                  <p className="text-sm text-gray-600 mb-3">
+                    Você recebe exatamente {receiveAmount.amount.toLocaleString(receiveAmount.currency === "EUR" ? "pt-PT" : "pt-AO", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2
+                    })} {receiveAmount.currency}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    1. Seu valor ficará reservado até encontrarmos um comprador. Mas você pode retirar sempre que quiser.
+                    2. Após a venda, o valor será depositado em [euros] na sua conta. Não fazemos devolução!
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+
+        <FixedBottomAction
+          primaryAction={{
+            label: "Continuar",
+            onClick: handleRateSelectionContinue,
+            disabled: useAutomaticRate ? dynamicRateLoading || !dynamicRateInfo : false
           }}
         />
       </div>
@@ -573,70 +620,22 @@ export function SellFlow() {
     )
   }
 
-  // Calculate received amount for confirmation step
+  // Calculate received amount for confirmation step using user-derived rate
   const calculateConfirmationReceivedAmount = (): { amount: string; currency: string } => {
-    const sellAmount = Number(watchedAmount) || 0
+    const desiredAmountNum = Number(desiredAmount) || 0
+    const receiveCurrency = watchedCurrency === "EUR" ? "AOA" : "EUR"
 
-    if (sellAmount === 0) {
-      return { amount: "0.00", currency: watchedCurrency === "AOA" ? "EUR" : "AOA" }
+    if (desiredAmountNum === 0) {
+      return { amount: "0.00", currency: receiveCurrency }
     }
 
-    if (rateType === "manual") {
-      const rate = Number(exchangeRate) || 0
-      if (rate === 0) {
-        return { amount: "0.00", currency: watchedCurrency === "AOA" ? "EUR" : "AOA" }
-      }
-
-      if (watchedCurrency === "AOA") {
-        // User is selling AOA to receive EUR
-        // Rate is entered as "X AOA per 100 EUR"
-        // Calculate EUR equivalent: (AOA Amount / Rate) * 100
-        const eurAmount = (sellAmount / rate) * 100
-
-        return {
-          amount: eurAmount.toLocaleString('pt-PT', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-          }),
-          currency: "EUR"
-        }
-      } else {
-        // User is selling EUR to receive AOA
-        // Rate is entered as "X AOA per 100 EUR"
-        // Calculate AOA equivalent: (EUR Amount * Rate) / 100
-        const aoaAmount = (sellAmount * rate) / 100
-
-        return {
-          amount: aoaAmount.toLocaleString('pt-AO', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-          }),
-          currency: "AOA"
-        }
-      }
-    } else {
-      // Automatic rate calculation (future implementation)
-      const fallbackRate = EXCHANGE_RATE_VALIDATION.FALLBACK_RATES.EUR_TO_AOA
-
-      if (watchedCurrency === "AOA") {
-        const eurAmount = sellAmount / fallbackRate
-        return {
-          amount: eurAmount.toLocaleString('pt-PT', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-          }),
-          currency: "EUR"
-        }
-      } else {
-        const aoaAmount = sellAmount * fallbackRate
-        return {
-          amount: aoaAmount.toLocaleString('pt-AO', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-          }),
-          currency: "AOA"
-        }
-      }
+    // Simply return the desired amount that user specified
+    return {
+      amount: desiredAmountNum.toLocaleString(receiveCurrency === "EUR" ? "pt-PT" : "pt-AO", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }),
+      currency: receiveCurrency
     }
   }
 
@@ -653,34 +652,22 @@ export function SellFlow() {
           {/* Transaction Details */}
           <ConfirmationSection title="">
             <ConfirmationRow label="Seu saldo" value={getFormattedBalance()} />
-            <ConfirmationRow label="Você vende" value={`${Number(watchedAmount).toLocaleString()} ${watchedCurrency}`} />
-            <ConfirmationRow label="Câmbio" value={
-              rateType === "manual"
-                ? `100 EUR = ${exchangeRate} AOA`
-                : `100 EUR = ${(EXCHANGE_RATE_VALIDATION.FALLBACK_RATES.EUR_TO_AOA * 100).toFixed(2)} AOA`
-            } />
-            {/* Show received amount for manual rates */}
-            {rateType === "manual" && (
-              <ConfirmationRow
-                label="Você recebe"
-                value={(() => {
-                  const received = calculateConfirmationReceivedAmount()
-                  return `${received.amount} ${received.currency}`
-                })()}
-                highlight
-              />
-            )}
+            <ConfirmationRow label="Você vende" value={`${Number(watchedAmount).toLocaleString()} ${watchedCurrency}`} highlight/>
+            <ConfirmationRow label="Câmbio" value={getCalculatedExchangeRate()} />
+            {/* Show received amount (always show since we now have user-derived rates) */}
+            <ConfirmationRow
+              label="Você recebe"
+              value={(() => {
+                const received = calculateConfirmationReceivedAmount()
+                return `${received.amount} ${received.currency}`
+              })()}
+              highlight
+            />
           </ConfirmationSection>
 
           {/* Warning - Conditional based on rate type */}
           <ConfirmationWarning>
             <div className="space-y-2 text-sm text-gray-600">
-              {rateType === "automatic" && (
-                <>
-                  <p className="label-form">O Ema Pay atualiza o câmbio automaticamente.</p>
-                  <p className="label-form">Por isso, o valor total que você vai receber pode ser diferente.</p>
-                </>
-              )}
               <p className="label-form">Seu valor ficará reservado até encontrarmos um comprador. Mas você pode retirar sempre que quiser.</p>
               <p className="label-form">Após a venda, o valor será depositado em euros na sua conta. Não fazemos devolução!</p>
             </div>

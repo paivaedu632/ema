@@ -144,7 +144,7 @@ export function WithdrawFlow() {
         <div className="space-y-6">
           {/* Recipient Details */}
           <ConfirmationSection title="Enviar para">
-            <ConfirmationRow label="Nome" value="Ema Agostinho" />
+            <ConfirmationRow label="Nome" value="Ema Pay" />
             <ConfirmationRow label="Banco" value="BAI" />
             <ConfirmationRow label="Conta/IBAN" value={ibanOrPhone || "244923300064"} />
           </ConfirmationSection>
@@ -155,7 +155,7 @@ export function WithdrawFlow() {
             <ConfirmationRow label="Você envia" value={`${amount} AOA`} />
             <ConfirmationRow label="Taxa" value="100 AOA" />
             <ConfirmationRow label="Você recebe" value={`${amount} AOA`} highlight />
-            <ConfirmationRow label="Tempo" value="Segundos" />
+            <ConfirmationRow label="Vai chegar" value="Segundos" />
           </ConfirmationSection>
 
           {/* Reference */}
