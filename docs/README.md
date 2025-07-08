@@ -155,14 +155,14 @@ curl http://localhost:3000/api/verify-webhook
 
 ## Documentation
 
-### Core System Documentation
-- **[Database Integration](./database-integration.md)** - Complete database setup and patterns
-- **[API Reference](./api-reference.md)** - Detailed API endpoints and usage
+### Core Documentation
+- **[Database Schema](./database-schema.md)** - Complete database schema, relationships, functions, and migration details
+- **[API Endpoints](./api-endpoints.md)** - All API endpoints organized by functional areas with request/response examples
 - **[Authentication Workflow](./authentication-workflow.md)** - Clerk integration and user management
 
-### Order Book System Documentation
-- **[Order Book System](./order-book-system.md)** - Complete system overview and implementation guide
-- **[Order Book Technical Specification](./order-book-technical-specification.md)** - Detailed technical implementation and API specifications
+### System Documentation
+- **[Order Book System](./order-book-system.md)** - Complete order book system overview and implementation guide
+- **[Order Book Technical Specification](./order-book-technical-specification.md)** - Detailed technical implementation specifications
 
 ### Legacy Documentation (Deprecated)
 - **[P2P Exchange System](./p2p-exchange-system.md)** - Legacy peer-to-peer marketplace architecture
