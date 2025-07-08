@@ -3,10 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack --port 8080",
+    "dev": "next dev --turbopack --port 3001",
     "build": "next build",
     "start": "next start --port 8080",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test:database": "jest --selectProjects=\"Database Functions\"",
+    "test:orderbook": "jest --selectProjects=\"Order Book Integration\"",
+    "test:performance": "jest --selectProjects=\"Performance Tests\"",
+    "test:coverage": "jest --coverage --selectProjects=\"Database Functions\" \"Order Book Integration\"",
+    "test:all": "jest --coverage"
   },
   "dependencies": {
     "@aws-sdk/client-rekognition": "^3.826.0",

@@ -169,8 +169,12 @@ export const unreserveUserBalance = async (userId: string, currency: string, amo
   return { data, error }
 }
 
-// Offers Helper Functions
+// Legacy Offers Helper Functions - DEPRECATED
+// These functions are kept for backward compatibility but should not be used in new code
+// Use the new order book system instead
+
 export const getUserOffers = async (userId: string, status?: string) => {
+  console.warn('getUserOffers is deprecated. Use order book system instead.')
   let query = supabase
     .from('offers')
     .select('*')
@@ -182,52 +186,5 @@ export const getUserOffers = async (userId: string, status?: string) => {
   }
 
   const { data, error } = await query
-  return { data, error }
-}
-
-export const getActiveOffers = async (currencyType?: string) => {
-  let query = supabase
-    .from('offers')
-    .select('*')
-    .eq('status', 'active')
-    .order('created_at', { ascending: false })
-
-  if (currencyType) {
-    query = query.eq('currency_type', currencyType)
-  }
-
-  const { data, error } = await query
-  return { data, error }
-}
-
-export const createOffer = async (userId: string, currencyType: string, amount: number, exchangeRate: number) => {
-  const { data, error } = await supabase
-    .rpc('create_currency_offer', {
-      user_uuid: userId,
-      currency_code: currencyType,
-      amount_to_reserve: amount,
-      rate: exchangeRate
-    })
-
-  return { data, error }
-}
-
-export const cancelOffer = async (offerId: string, userId: string) => {
-  const { data, error } = await supabase
-    .rpc('cancel_currency_offer', {
-      offer_uuid: offerId,
-      user_uuid: userId
-    })
-
-  return { data, error }
-}
-
-export const getUserTotalBalance = async (userId: string, currency: string) => {
-  const { data, error } = await supabase
-    .rpc('get_user_total_balance', {
-      user_uuid: userId,
-      currency_code: currency
-    })
-
   return { data, error }
 }
