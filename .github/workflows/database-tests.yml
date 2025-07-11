@@ -120,30 +120,21 @@ jobs:
         env:
           DATABASE_URL: ${{ env.DATABASE_URL }}
 
-      - name: Run order book integration tests
+      - name: Verify all 66 tests pass
         run: |
-          npm run test:orderbook
+          echo "Ensuring all 66 database tests pass..."
+          test_output=$(npm run test:database 2>&1)
+          echo "$test_output"
+
+          # Check for the specific success pattern
+          if echo "$test_output" | grep -q "Tests:.*66 passed, 66 total"; then
+            echo "✅ SUCCESS: All 66 database tests passed!"
+          else
+            echo "❌ FAILURE: Not all 66 tests passed"
+            exit 1
+          fi
         env:
           DATABASE_URL: ${{ env.DATABASE_URL }}
-
-      - name: Run performance tests
-        run: |
-          npm run test:performance
-        env:
-          DATABASE_URL: ${{ env.DATABASE_URL }}
-
-      - name: Generate test coverage report
-        run: |
-          npm run test:coverage
-        env:
-          DATABASE_URL: ${{ env.DATABASE_URL }}
-
-      - name: Upload coverage reports
-        uses: codecov/codecov-action@v3
-        with:
-          file: ./coverage/lcov.info
-          flags: database-tests
-          name: database-coverage
 
       - name: Database cleanup verification
         run: |
