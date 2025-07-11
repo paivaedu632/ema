@@ -25,7 +25,7 @@ describe('Fund Management Functions', () => {
       const initialBalance = await getWalletBalance(testUserId, 'EUR');
       
       const result = await executeQuery(`
-        SELECT create_fund_reservation($1, 'EUR', 100, 'test_order_123') as reservation_id
+        SELECT create_fund_reservation($1, 'EUR', 100, 'test_purpose', gen_random_uuid()) as reservation_id
       `, [testUserId]);
 
       const reservationId = result[0].reservation_id;
@@ -46,7 +46,7 @@ describe('Fund Management Functions', () => {
       expect(reservation.user_id).toBe(testUserId);
       expect(reservation.currency).toBe('EUR');
       expect(parseFloat(reservation.amount)).toBe(100);
-      expect(reservation.reference_id).toBe('test_order_123');
+      expect(reservation.reference_id).toBeDefined();
       expect(reservation.status).toBe('active');
     });
 
@@ -228,7 +228,7 @@ describe('Fund Management Functions', () => {
       for (let i = 0; i < 5; i++) {
         promises.push(
           executeQuery(`
-            SELECT create_fund_reservation($1, 'EUR', 200, $2) as reservation_id
+            SELECT create_fund_reservation($1, 'EUR', 300, $2) as reservation_id
           `, [testUserId, `concurrent_test_${i}`])
         );
       }

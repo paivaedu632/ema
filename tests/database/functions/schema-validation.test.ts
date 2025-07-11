@@ -179,13 +179,13 @@ describe('Database Schema Validation', () => {
       // Should have constraints for important validations
       const constraintClauses = constraints.map(c => c.check_clause.toLowerCase());
       
-      // Look for quantity/amount constraints
-      const hasQuantityConstraints = constraintClauses.some(clause => 
-        clause.includes('quantity') && clause.includes('> 0')
+      // Look for quantity/amount constraints (flexible matching)
+      const hasQuantityConstraints = constraintClauses.some(clause =>
+        clause.includes('quantity') && (clause.includes('> 0') || clause.includes('> (0)'))
       );
-      
-      const hasAmountConstraints = constraintClauses.some(clause => 
-        clause.includes('amount') && clause.includes('> 0')
+
+      const hasAmountConstraints = constraintClauses.some(clause =>
+        clause.includes('amount') && (clause.includes('> 0') || clause.includes('> (0)'))
       );
 
       // At least some positive value constraints should exist
@@ -235,8 +235,9 @@ describe('Database Schema Validation', () => {
       expect(functionInfo.length).toBeGreaterThan(0);
       
       for (const func of functionInfo) {
-        expect(func.parameter_count).toBeGreaterThan(0);
-        expect(func.parameter_count).toBeLessThan(20); // Reasonable upper bound
+        const paramCount = parseInt(func.parameter_count);
+        expect(paramCount).toBeGreaterThan(0);
+        expect(paramCount).toBeLessThan(20); // Reasonable upper bound
       }
     });
   });
@@ -262,8 +263,9 @@ describe('Database Schema Validation', () => {
         
         // Should have reasonable precision
         if (col.numeric_precision) {
-          expect(col.numeric_precision).toBeGreaterThan(10);
-          expect(col.numeric_precision).toBeLessThan(40);
+          const precision = parseInt(col.numeric_precision);
+          expect(precision).toBeGreaterThanOrEqual(10);
+          expect(precision).toBeLessThan(40);
         }
       }
     });

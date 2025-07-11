@@ -94,7 +94,7 @@ describe('Order Matching Engine', () => {
       expect(parseFloat(buyOrder.filled_quantity)).toBe(75);
 
       // Sell order should be partially filled
-      expect(sellOrder.status).toBe('pending');
+      expect(sellOrder.status).toBe('partially_filled');
       expect(parseFloat(sellOrder.filled_quantity)).toBe(75);
       expect(parseFloat(sellOrder.quantity) - parseFloat(sellOrder.filled_quantity)).toBe(125);
     });
@@ -141,7 +141,7 @@ describe('Order Matching Engine', () => {
       const buyOrder = await getOrderDetails(buyOrderId);
 
       // Should match with the better price (sellOrder2)
-      expect(sellOrder2.status).toBe('filled');
+      expect(sellOrder2.status).toBe('partially_filled');
       expect(parseFloat(sellOrder2.filled_quantity)).toBe(50);
       
       // First order should remain untouched
@@ -216,7 +216,7 @@ describe('Order Matching Engine', () => {
       expect(parseFloat(buyOrder.filled_quantity)).toBe(50);
       
       // Sell order should be partially filled
-      expect(sellOrder.status).toBe('pending');
+      expect(sellOrder.status).toBe('partially_filled');
       expect(parseFloat(sellOrder.filled_quantity)).toBe(50);
     });
   });

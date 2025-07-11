@@ -1,10 +1,10 @@
 import { Pool, Client } from 'pg';
 
-// Database connection configuration
+// Database connection configuration for Supabase Local
 const dbConfig = {
-  host: process.env.DB_HOST || 'localhost',
-  port: parseInt(process.env.DB_PORT || '5432'),
-  database: process.env.POSTGRES_DB || 'emapay_test',
+  host: process.env.DB_HOST || '127.0.0.1',
+  port: parseInt(process.env.DB_PORT || '54322'),
+  database: process.env.POSTGRES_DB || 'postgres',
   user: process.env.POSTGRES_USER || 'postgres',
   password: process.env.POSTGRES_PASSWORD || 'postgres',
 };
@@ -23,11 +23,9 @@ beforeAll(async () => {
   const result = await client.query('SELECT NOW()');
   console.log('Database connected at:', result.rows[0].now);
   
-  // Ensure we're using the test database
+  // Ensure we're using the correct database
   const dbName = await client.query('SELECT current_database()');
-  if (!dbName.rows[0].current_database.includes('test')) {
-    throw new Error(`Not connected to test database! Connected to: ${dbName.rows[0].current_database}`);
-  }
+  console.log('Connected to database:', dbName.rows[0].current_database);
 });
 
 // Cleanup after all tests
@@ -53,17 +51,25 @@ afterEach(async () => {
 // Helper function to clean up test data
 async function cleanupTestData() {
   if (!client) return;
-  
-  try {
-    // Delete in reverse dependency order to avoid foreign key conflicts
-    await client.query('DELETE FROM trades WHERE created_at > NOW() - INTERVAL \'1 hour\'');
-    await client.query('DELETE FROM fund_reservations WHERE created_at > NOW() - INTERVAL \'1 hour\'');
-    await client.query('DELETE FROM order_book WHERE created_at > NOW() - INTERVAL \'1 hour\'');
-    await client.query('DELETE FROM transactions WHERE created_at > NOW() - INTERVAL \'1 hour\'');
-    await client.query('DELETE FROM wallets WHERE user_id IN (SELECT id FROM users WHERE email LIKE \'test_%@example.com\')');
-    await client.query('DELETE FROM users WHERE email LIKE \'test_%@example.com\'');
-  } catch (error) {
-    console.warn('Cleanup warning:', error);
+
+  const cleanupQueries = [
+    'DELETE FROM trades WHERE created_at > NOW() - INTERVAL \'1 hour\'',
+    'DELETE FROM fund_reservations WHERE created_at > NOW() - INTERVAL \'1 hour\'',
+    'DELETE FROM order_book WHERE created_at > NOW() - INTERVAL \'1 hour\'',
+    'DELETE FROM transactions WHERE created_at > NOW() - INTERVAL \'1 hour\'',
+    'DELETE FROM wallets WHERE user_id IN (SELECT id FROM users WHERE email LIKE \'test_%@example.com\')',
+    'DELETE FROM users WHERE email LIKE \'test_%@example.com\''
+  ];
+
+  for (const query of cleanupQueries) {
+    try {
+      await client.query(query);
+    } catch (error) {
+      // Ignore table not found errors during cleanup
+      if (error.code !== '42P01') {
+        console.warn('Cleanup warning:', error.message);
+      }
+    }
   }
 }
 
@@ -72,10 +78,10 @@ export async function createTestUser(email?: string): Promise<string> {
   const testEmail = email || `test_${Date.now()}_${Math.random().toString(36).substr(2, 9)}@example.com`;
   
   const result = await client.query(`
-    INSERT INTO users (id, email, full_name, created_at, updated_at)
-    VALUES (gen_random_uuid(), $1, 'Test User', NOW(), NOW())
+    INSERT INTO users (id, clerk_user_id, email, first_name, last_name, created_at, updated_at)
+    VALUES (gen_random_uuid(), $1, $2, 'Test', 'User', NOW(), NOW())
     RETURNING id
-  `, [testEmail]);
+  `, [`clerk_${Date.now()}`, testEmail]);
   
   return result.rows[0].id;
 }

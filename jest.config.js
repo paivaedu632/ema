@@ -7,8 +7,11 @@ module.exports = {
     '**/tests/**/*.test.ts',
     '**/tests/**/*.test.js'
   ],
+  transform: {
+    '^.+\\.ts$': 'ts-jest',
+  },
+  moduleFileExtensions: ['ts', 'js', 'json'],
   collectCoverageFrom: [
-    'supabase/migrations/**/*.sql',
     'tests/database/**/*.ts',
     '!tests/**/*.d.ts',
     '!tests/**/setup.ts'
@@ -21,18 +24,33 @@ module.exports = {
   projects: [
     {
       displayName: 'Database Functions',
+      preset: 'ts-jest',
+      testEnvironment: 'node',
       testMatch: ['<rootDir>/tests/database/functions/*.test.ts'],
-      setupFilesAfterEnv: ['<rootDir>/tests/database/setup.ts']
+      setupFilesAfterEnv: ['<rootDir>/tests/database/setup.ts'],
+      transform: {
+        '^.+\\.ts$': 'ts-jest',
+      }
     },
     {
       displayName: 'Order Book Integration',
+      preset: 'ts-jest',
+      testEnvironment: 'node',
       testMatch: ['<rootDir>/tests/database/orderbook/*.test.ts'],
-      setupFilesAfterEnv: ['<rootDir>/tests/database/setup.ts']
+      setupFilesAfterEnv: ['<rootDir>/tests/database/setup.ts'],
+      transform: {
+        '^.+\\.ts$': 'ts-jest',
+      }
     },
     {
       displayName: 'Performance Tests',
+      preset: 'ts-jest',
+      testEnvironment: 'node',
       testMatch: ['<rootDir>/tests/database/performance/*.test.ts'],
-      setupFilesAfterEnv: ['<rootDir>/tests/database/setup.ts']
+      setupFilesAfterEnv: ['<rootDir>/tests/database/setup.ts'],
+      transform: {
+        '^.+\\.ts$': 'ts-jest',
+      }
     }
   ]
 };
