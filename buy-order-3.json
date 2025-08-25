@@ -1,9 +1,0 @@
-{
-  "test_user": "TRADER_3",
-  "side": "buy",
-  "type": "limit",
-  "base_currency": "AOA",
-  "quote_currency": "EUR",
-  "quantity": 5000,
-  "price": 0.0008
-}

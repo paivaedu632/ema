@@ -10,19 +10,9 @@ import { BalanceCard } from '@/components/ui/balance-card'
 import { AngolaFlag, EurFlag } from '@/components/ui/flag-icon'
 import { LogOut } from 'lucide-react'
 import { TransactionListItem, TransactionListItemSkeleton, TransactionListEmpty } from '@/components/ui/transaction-list-item'
-import { useTransactions } from '@/hooks/use-transactions'
-import { transformTransactionForDisplay } from '@/utils/transaction-formatting'
 
 
-// KYC Status Types
-type KYCStatus = 'not_started' | 'in_progress' | 'pending_review' | 'approved' | 'rejected'
 
-interface KYCStatusInfo {
-  status: KYCStatus
-  currentStep: number
-  totalSteps: number
-  completionPercentage: number
-}
 
 export default function Dashboard() {
   const router = useRouter()
@@ -46,31 +36,7 @@ export default function Dashboard() {
     }
   ]
 
-  // Fetch real KYC status from API
-  useEffect(() => {
-    const fetchKycStatus = async () => {
-      try {
-        const response = await fetch('/api/kyc/status')
-        if (response.ok) {
-          const result = await response.json()
-          setKycStatus({
-            status: result.data.status,
-            currentStep: result.data.current_step,
-            totalSteps: result.data.total_steps,
-            completionPercentage: result.data.completion_percentage
-          })
-        } else {
-          console.warn('Failed to fetch KYC status:', response.status)
-        }
-      } catch (error) {
-        console.error('Error fetching KYC status:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
 
-    fetchKycStatus()
-  }, [])
 
   // Fetch wallet balances and transactions
   useEffect(() => {
@@ -107,9 +73,7 @@ export default function Dashboard() {
     }
   }
 
-  const handleStartKYC = () => {
-    router.push('/kyc/notifications')
-  }
+
 
   const handleCardClick = (account: typeof accounts[0]) => {
     const params = new URLSearchParams({
