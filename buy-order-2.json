@@ -1,0 +1,8 @@
+{
+  "test_user": "TRADER_2",
+  "side": "buy",
+  "type": "market",
+  "base_currency": "EUR",
+  "quote_currency": "AOA",
+  "quantity": 8
+}

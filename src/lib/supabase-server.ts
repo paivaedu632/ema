@@ -1,5 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
+import { auth } from '@clerk/nextjs/server'
 import { Database } from '@/types/database.types'
+import * as DatabaseFunctions from '@/lib/database-functions'
 
 // Use remote Supabase for both development and production
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
@@ -13,11 +15,16 @@ export const supabaseAdmin = createClient<Database>(supabaseUrl, supabaseService
   }
 })
 
-// Server-side client for authenticated operations
-export const createServerSupabaseClient = () => {
+// Server-side client for authenticated operations with Clerk integration
+export function createServerSupabaseClient() {
   return createClient<Database>(
     supabaseUrl,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      async accessToken() {
+        return (await auth()).getToken()
+      },
+    }
   )
 }
 
@@ -258,3 +265,52 @@ export const updateUserLimitsUsage = async (
 
   return { data, error }
 }
+
+// ===== ORDER BOOK DATABASE FUNCTIONS =====
+// Re-export typed database functions for easy access
+
+export const OrderBookFunctions = {
+  // Order Management
+  placeOrder: DatabaseFunctions.placeOrder,
+  cancelOrder: DatabaseFunctions.cancelOrder,
+  getUserOrders: DatabaseFunctions.getUserOrders,
+  getOrderDetails: DatabaseFunctions.getOrderDetails,
+
+  // Market Data
+  getBestPrices: DatabaseFunctions.getBestPrices,
+  getOrderBookDepth: DatabaseFunctions.getOrderBookDepth,
+  getRecentTrades: DatabaseFunctions.getRecentTrades,
+
+  // Fund Management
+  createFundReservation: DatabaseFunctions.createFundReservation,
+  releaseFundReservation: DatabaseFunctions.releaseFundReservation,
+
+  // Trade Execution
+  executeTradeEnhanced: DatabaseFunctions.executeTradeEnhanced,
+
+  // Wallet Functions
+  getUserWalletBalances: DatabaseFunctions.getUserWalletBalances,
+
+  // Utility Functions
+  validateOrderOwnership: DatabaseFunctions.validateOrderOwnership,
+  getOrderBookSummary: DatabaseFunctions.getOrderBookSummary,
+  checkDatabaseHealth: DatabaseFunctions.checkDatabaseHealth
+}
+
+// Legacy compatibility - re-export individual functions
+export const {
+  placeOrder,
+  cancelOrder,
+  getUserOrders,
+  getOrderDetails,
+  getBestPrices,
+  getOrderBookDepth,
+  getRecentTrades,
+  createFundReservation,
+  releaseFundReservation,
+  executeTradeEnhanced,
+  getUserWalletBalances,
+  validateOrderOwnership,
+  getOrderBookSummary,
+  checkDatabaseHealth
+} = DatabaseFunctions

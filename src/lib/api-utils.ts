@@ -2,84 +2,71 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
 import { getUserByClerkId } from '@/lib/supabase-server'
 import { TRANSACTION_LIMITS, VALIDATION_MESSAGES, type Currency } from '@/utils/transaction-validation'
+import { AuthContext, AuthError, AuthErrorType } from '@/types/auth'
+import { getAuthenticatedUser } from '@/middleware/auth'
+import {
+  createSuccessResponse,
+  createErrorResponse,
+  createPaginatedResponse,
+  createCreatedResponse,
+  createBadRequestResponse,
+  createUnauthorizedResponse,
+  createNotFoundResponse,
+  createValidationErrorResponse,
+  type ApiSuccessResponse,
+  type ApiErrorResponse
+} from '@/lib/api-response'
+import { handleApiError as globalHandleApiError } from '@/lib/error-handler'
 
-// ===== STANDARD API RESPONSE TYPES =====
+// ===== RE-EXPORT RESPONSE TYPES AND BUILDERS =====
+// Note: These are now imported from @/lib/api-response for consistency
 
-export interface ApiSuccessResponse<T = any> {
-  success: true
-  data?: T
-  message?: string
-  timestamp: string
-}
-
-export interface ApiErrorResponse {
-  success: false
-  error: string
-  details?: string
-  timestamp: string
-}
-
-export type ApiResponse<T = any> = ApiSuccessResponse<T> | ApiErrorResponse
-
-// ===== API RESPONSE BUILDERS =====
-
-/**
- * Create a standardized success response
- */
-export function createSuccessResponse<T>(
-  data?: T,
-  message?: string,
-  status = 200
-): NextResponse<ApiSuccessResponse<T>> {
-  return NextResponse.json(
-    {
-      success: true,
-      data,
-      message,
-      timestamp: new Date().toISOString()
-    },
-    { status }
-  )
-}
-
-/**
- * Create a standardized error response
- */
-export function createErrorResponse(
-  error: string,
-  status = 500,
-  details?: string
-): NextResponse<ApiErrorResponse> {
-  return NextResponse.json(
-    {
-      success: false,
-      error,
-      details,
-      timestamp: new Date().toISOString()
-    },
-    { status }
-  )
-}
+export type { ApiSuccessResponse, ApiErrorResponse } from '@/lib/api-response'
+export {
+  createSuccessResponse,
+  createErrorResponse,
+  createPaginatedResponse,
+  createCreatedResponse,
+  createBadRequestResponse,
+  createUnauthorizedResponse,
+  createNotFoundResponse,
+  createValidationErrorResponse
+} from '@/lib/api-response'
 
 // ===== AUTHENTICATION UTILITIES =====
 
 /**
  * Get authenticated user with standardized error handling
+ * @deprecated Use getAuthenticatedUser from @/middleware/auth instead
  */
-export async function getAuthenticatedUser() {
+export async function getAuthenticatedUserLegacy() {
   const { userId: clerkUserId } = await auth()
-  
+
   if (!clerkUserId) {
     throw new ApiError('Unauthorized', 401)
   }
 
   const { data: user, error: userError } = await getUserByClerkId(clerkUserId)
-  
+
   if (userError || !user) {
     throw new ApiError('User not found', 404)
   }
 
   return { user, clerkUserId }
+}
+
+/**
+ * Get authenticated user using new authentication middleware
+ */
+export async function getAuthenticatedUserFromRequest(request: NextRequest): Promise<AuthContext> {
+  try {
+    return await getAuthenticatedUser(request)
+  } catch (error) {
+    if (error instanceof AuthError) {
+      throw new ApiError(error.message, error.statusCode)
+    }
+    throw new ApiError('Authentication failed', 401)
+  }
 }
 
 // ===== VALIDATION UTILITIES =====
@@ -178,25 +165,28 @@ export class ApiError extends Error {
 
 /**
  * Handle API errors with standardized responses
+ * @deprecated Use handleApiError from @/lib/error-handler instead
  */
 export function handleApiError(error: unknown): NextResponse<ApiErrorResponse> {
-  if (error instanceof ApiError) {
-    return createErrorResponse(error.message, error.status, error.details)
+  return globalHandleApiError(error)
+}
+
+/**
+ * Handle authentication errors specifically
+ * @deprecated Use ErrorHandlers.auth from @/lib/error-handler instead
+ */
+export function handleAuthError(error: AuthError): NextResponse<ApiErrorResponse> {
+  const errorMessages = {
+    [AuthErrorType.MISSING_TOKEN]: 'Token de autenticação necessário',
+    [AuthErrorType.INVALID_TOKEN]: 'Token de autenticação inválido',
+    [AuthErrorType.USER_NOT_FOUND]: 'Usuário não encontrado',
+    [AuthErrorType.UNAUTHORIZED]: 'Não autorizado',
+    [AuthErrorType.FORBIDDEN]: 'Acesso negado'
   }
 
-  if (error instanceof Error) {
-    return createErrorResponse(
-      'Erro interno do servidor',
-      500,
-      error.message
-    )
-  }
+  const message = errorMessages[error.type] || error.message
 
-  return createErrorResponse(
-    'Erro interno do servidor',
-    500,
-    'Unknown error'
-  )
+  return createErrorResponse(message, error.statusCode)
 }
 
 // ===== REQUEST BODY PARSING =====

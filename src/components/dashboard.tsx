@@ -2,14 +2,13 @@
 
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { useUser, useClerk } from '@clerk/nextjs'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { PrimaryActionButtons } from '@/components/ui/primary-action-buttons'
 import { IconActionButtons } from '@/components/ui/icon-action-buttons'
 import { BalanceCard } from '@/components/ui/balance-card'
 import { AngolaFlag, EurFlag } from '@/components/ui/flag-icon'
 import { LogOut } from 'lucide-react'
-import { SignedIn, SignedOut, UserButton, useClerk } from '@clerk/nextjs'
-import { ClerkAuth } from '@/components/auth/clerk-auth'
 import { TransactionListItem, TransactionListItemSkeleton, TransactionListEmpty } from '@/components/ui/transaction-list-item'
 import { useTransactions } from '@/hooks/use-transactions'
 import { transformTransactionForDisplay } from '@/utils/transaction-formatting'
@@ -27,12 +26,26 @@ interface KYCStatusInfo {
 
 export default function Dashboard() {
   const router = useRouter()
+  const { user, isLoaded } = useUser()
   const { signOut } = useClerk()
-  const [kycStatus, setKycStatus] = useState<KYCStatusInfo | null>(null)
-  const [showKycBanner, setShowKycBanner] = useState(false) // Temporarily disabled for testing
-  const [loading, setLoading] = useState(true)
-  const [walletBalances, setWalletBalances] = useState<any[]>([])
-  const [balancesLoading, setBalancesLoading] = useState(true)
+
+  // Simple state for testing
+  const [balancesLoading, setBalancesLoading] = useState(false)
+  const [transactionsLoading, setTransactionsLoading] = useState(false)
+
+  // Mock wallet balances
+  const walletBalances = [
+    {
+      currency: 'EUR',
+      available_balance: 1250.50,
+      reserved_balance: 100.00
+    },
+    {
+      currency: 'AOA',
+      available_balance: 125000.75,
+      reserved_balance: 25000.00
+    }
+  ]
 
   // Fetch real KYC status from API
   useEffect(() => {
@@ -108,6 +121,39 @@ export default function Dashboard() {
     router.push(`/wallet?${params.toString()}`)
   }
 
+  // Generate account cards from real wallet balances - 4 cards total (2 per currency)
+  const accounts = walletBalances.flatMap((wallet) => [
+    {
+      type: 'Conta',
+      currency: wallet.currency,
+      amount: (wallet.available_balance || 0).toFixed(2),
+      flag: wallet.currency === 'AOA' ? <AngolaFlag /> : <EurFlag />
+    },
+    {
+      type: 'Reservado',
+      currency: wallet.currency,
+      amount: (wallet.reserved_balance || 0).toFixed(2),
+      flag: wallet.currency === 'AOA' ? <AngolaFlag /> : <EurFlag />
+    }
+  ])
+
+  // Use mock transactions instead of API for now
+  const dashboardTransactions = mockTransactions
+  const transactionsLoading = mockTransactionsLoading
+
+  const handleStartKYC = () => {
+    router.push('/kyc/notifications')
+  }
+
+  const handleCardClick = (account: typeof accounts[0]) => {
+    const params = new URLSearchParams({
+      currency: account.currency,
+      type: account.type,
+      amount: account.amount
+    })
+    router.push(`/wallet?${params.toString()}`)
+  }
+
 
 
   // Generate account cards from real wallet balances - 4 cards total (2 per currency)
@@ -126,43 +172,36 @@ export default function Dashboard() {
     }
   ])
 
-  // Transaction formatting is now handled by unified utilities
+  // Mock transactions for testing (replace with real hook later)
+  const [mockTransactions, setMockTransactions] = useState([])
+  const [mockTransactionsLoading, setMockTransactionsLoading] = useState(true)
 
-  // Use optimized transaction hook for dashboard
-  const { transactions: dashboardTransactions, loading: transactionsLoading } = useTransactions({
-    limit: 3 // Only show 3 recent transactions on dashboard
-  })
+  useEffect(() => {
+    // Mock transaction data
+    setTimeout(() => {
+      setMockTransactions([])
+      setMockTransactionsLoading(false)
+    }, 1000)
+  }, [])
 
   return (
     <div className="min-h-screen bg-white">
-      <SignedOut>
+      {!isLoaded || !user ? (
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center space-y-6">
             <h1 className="text-2xl font-bold text-gray-900">Welcome to EmaPay</h1>
-            <p className="text-gray-600">Please sign in to access your dashboard</p>
-            <ClerkAuth />
+            <p className="text-gray-600">Loading your dashboard...</p>
           </div>
         </div>
-      </SignedOut>
-
-      <SignedIn>
+      ) : (
         <main className="max-w-sm mx-auto px-4 pt-8 pb-6">
         {/* Header with Profile Avatar and Sign Out */}
         <div className="flex justify-between items-center mb-8">
-          <SignedIn>
-            <UserButton
-              appearance={{
-                elements: {
-                  avatarBox: "w-12 h-12"
-                }
-              }}
-            />
-          </SignedIn>
-          <SignedOut>
-            <Avatar className="w-12 h-12">
-              <AvatarFallback>U</AvatarFallback>
-            </Avatar>
-          </SignedOut>
+          <Avatar className="w-12 h-12">
+            <AvatarFallback>
+              {user?.emailAddresses?.[0]?.emailAddress?.charAt(0).toUpperCase() || 'U'}
+            </AvatarFallback>
+          </Avatar>
           <button
             onClick={handleSignOut}
             className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
@@ -258,7 +297,7 @@ export default function Dashboard() {
           </div>
         </div>
         </main>
-      </SignedIn>
+      )}
     </div>
   )
 }

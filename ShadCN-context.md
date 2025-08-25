@@ -60,7 +60,7 @@
 ## Custom Reusable Components:
 
 ### Action Button Components:
-- **PrimaryActionButtons** (`src/components/ui/primary-action-buttons.tsx`) - Reusable "Vender" and "Comprar" button pair with navigation
+- **PrimaryActionButtons** (`src/components/ui/primary-action-buttons.tsx`) - Reusable "Vender" and "Comprar" button pair with secondary-action-button styling (Note: "Negociar" button removed)
 - **IconActionButtons** (`src/components/ui/icon-action-buttons.tsx`) - Reusable icon-based action buttons: "Depositar", "Enviar", "Receber", "Retirar" with navigation
 
 ### Validation Components:

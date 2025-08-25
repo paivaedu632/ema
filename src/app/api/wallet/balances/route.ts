@@ -1,50 +1,28 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
-import { getUserByClerkId, supabaseAdmin } from '@/lib/supabase-server'
+import { getUserByClerkId, supabaseAdmin, OrderBookFunctions } from '@/lib/supabase-server'
+import { getAuthenticatedUserFromRequest, createSuccessResponse, handleApiError } from '@/lib/api-utils'
 
 /**
  * GET /api/wallet/balances
  * Get user's wallet balances for all currencies (AOA and EUR)
  */
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    // Get authenticated user
-    const { userId: clerkUserId } = await auth()
-    
-    if (!clerkUserId) {
-      return NextResponse.json(
-        { success: false, error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
+    // Use new authentication middleware
+    const authContext = await getAuthenticatedUserFromRequest(request)
+    const user = authContext.user
 
-    // Get user from database
-    const { data: user, error: userError } = await getUserByClerkId(clerkUserId)
-
-    if (userError || !user) {
-      return NextResponse.json(
-        { success: false, error: 'User not found' },
-        { status: 404 }
-      )
-    }
-
-    // Get user wallets with reserved balances using the security function
-    const { data: walletBalances, error: walletsError } = await supabaseAdmin
-      .rpc('get_user_wallet_balances_secure', {
-        requesting_user_id: user.id
-      })
-
-    if (walletsError) {
-      throw new Error(`Failed to fetch wallet balances: ${walletsError.message}`)
-    }
+    // Use new database functions layer
+    const walletBalances = await OrderBookFunctions.getUserWalletBalances(user.id)
 
     // Format response data
-    const formattedWallets = walletBalances?.map(wallet => ({
+    const formattedWallets = walletBalances.map(wallet => ({
       currency: wallet.currency,
-      available_balance: parseFloat(wallet.available_balance.toString()),
-      reserved_balance: parseFloat(wallet.reserved_balance.toString()),
+      available_balance: wallet.available_balance,
+      reserved_balance: wallet.reserved_balance,
       last_updated: wallet.updated_at
-    })) || []
+    }))
 
     // Ensure we have both currencies (AOA and EUR) even if user has no balance
     const currencies = ['AOA', 'EUR']
@@ -58,23 +36,10 @@ export async function GET() {
       }
     })
 
-    return NextResponse.json({
-      success: true,
-      data: completeWallets,
-      timestamp: new Date().toISOString()
-    })
+    return createSuccessResponse(completeWallets, 'Wallet balances retrieved successfully')
 
   } catch (error) {
     console.error('❌ Error fetching wallet balances:', error)
-    
-    return NextResponse.json(
-      {
-        success: false,
-        error: 'Failed to fetch wallet balances',
-        details: error instanceof Error ? error.message : 'Unknown error',
-        timestamp: new Date().toISOString()
-      },
-      { status: 500 }
-    )
+    return handleApiError(error)
   }
 }
