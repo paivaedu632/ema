@@ -136,43 +136,12 @@ export default function Dashboard() {
     }
   ])
 
-  // Use mock transactions instead of API for now
-  const dashboardTransactions = mockTransactions
-
-  const handleStartKYC = () => {
-    router.push('/kyc/notifications')
-  }
-
-  const handleCardClick = (account: typeof accounts[0]) => {
-    const params = new URLSearchParams({
-      currency: account.currency,
-      type: account.type,
-      amount: account.amount
-    })
-    router.push(`/wallet?${params.toString()}`)
-  }
-
-
-
-  // Generate account cards from real wallet balances - 4 cards total (2 per currency)
-  const accounts = walletBalances.flatMap((wallet) => [
-    {
-      type: 'Conta',
-      currency: wallet.currency,
-      amount: (wallet.available_balance || 0).toFixed(2),
-      flag: wallet.currency === 'AOA' ? <AngolaFlag /> : <EurFlag />
-    },
-    {
-      type: 'Reservado',
-      currency: wallet.currency,
-      amount: (wallet.reserved_balance || 0).toFixed(2),
-      flag: wallet.currency === 'AOA' ? <AngolaFlag /> : <EurFlag />
-    }
-  ])
-
   // Mock transactions for testing (replace with real hook later)
   const [mockTransactions, setMockTransactions] = useState([])
   const [mockTransactionsLoading, setMockTransactionsLoading] = useState(true)
+
+  // Use mock transactions instead of API for now
+  const dashboardTransactions = mockTransactions
 
   useEffect(() => {
     // Mock transaction data
