@@ -31,7 +31,6 @@ export default function Dashboard() {
 
   // Simple state for testing
   const [balancesLoading, setBalancesLoading] = useState(false)
-  const [transactionsLoading, setTransactionsLoading] = useState(false)
 
   // Mock wallet balances
   const walletBalances = [
@@ -139,7 +138,6 @@ export default function Dashboard() {
 
   // Use mock transactions instead of API for now
   const dashboardTransactions = mockTransactions
-  const transactionsLoading = mockTransactionsLoading
 
   const handleStartKYC = () => {
     router.push('/kyc/notifications')
@@ -270,7 +268,7 @@ export default function Dashboard() {
           </div>
 
           <div className="space-y-4">
-            {transactionsLoading ? (
+            {mockTransactionsLoading ? (
               // Loading skeleton for transactions
               <>
                 {[1, 2, 3].map((i) => (
