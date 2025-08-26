@@ -158,13 +158,13 @@ export default function Dashboard() {
 
         {/* Account Cards Section */}
         <div className="mb-8">
-          <h2 className="heading-section mb-4">Saldo</h2>
-          <div className="flex space-x-4 overflow-x-auto pb-2">
+          <h2 className="heading-section mb-6">Saldo</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {balancesLoading ? (
               // Loading skeleton for balance cards
               <>
                 {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="flex-shrink-0 w-32 h-20 bg-gray-100 rounded-2xl animate-pulse" />
+                  <div key={i} className="w-full h-32 bg-gray-100 rounded-xl animate-pulse" />
                 ))}
               </>
             ) : (

@@ -414,7 +414,7 @@ export function SellFlow() {
       <div className="page-container-white">
         <main className="content-container">
           <PageHeader
-            title={`Quanto você quer receber em ${receiveCurrency}?`}
+            title={`Quanto você quer receber?`}
             onBack={handleBack}
           />
 
