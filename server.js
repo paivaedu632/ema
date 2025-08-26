@@ -28,8 +28,8 @@ app.prepare().then(() => {
 
   // Initialize WebSocket server
   // Note: We'll import this dynamically to avoid issues with ES modules
-  import('./src/lib/websocket-server.ts').then(({ websocketManager }) => {
-    websocketManager.initialize(server)
+  import('./src/lib/websocket-server.js').then(({ initializeWebSocketServer }) => {
+    initializeWebSocketServer(server)
     console.log('🔌 WebSocket server initialized')
   }).catch(err => {
     console.error('❌ Failed to initialize WebSocket server:', err)
@@ -45,8 +45,8 @@ app.prepare().then(() => {
   // Graceful shutdown
   process.on('SIGTERM', () => {
     console.log('🛑 SIGTERM received, shutting down gracefully')
-    import('./src/lib/websocket-server.ts').then(({ websocketManager }) => {
-      websocketManager.shutdown()
+    import('./src/lib/websocket-server.js').then(({ shutdown }) => {
+      shutdown()
     })
     server.close(() => {
       console.log('✅ Server closed')
@@ -56,8 +56,8 @@ app.prepare().then(() => {
 
   process.on('SIGINT', () => {
     console.log('🛑 SIGINT received, shutting down gracefully')
-    import('./src/lib/websocket-server.ts').then(({ websocketManager }) => {
-      websocketManager.shutdown()
+    import('./src/lib/websocket-server.js').then(({ shutdown }) => {
+      shutdown()
     })
     server.close(() => {
       console.log('✅ Server closed')
