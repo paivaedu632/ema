@@ -177,3 +177,100 @@ export function formatForAPI(amount: number | string): string {
   const numericAmount = typeof amount === 'string' ? parsePortugueseNumber(amount) : amount
   return numericAmount.toFixed(2)
 }
+
+/**
+ * Format compact numbers with K/M suffixes (Portuguese locale)
+ * @param num - Number to format compactly
+ * @returns Formatted compact number string
+ */
+export function formatCompactNumber(num: number): string {
+  if (num >= 1000000) {
+    const millions = (num / 1000000).toLocaleString('pt-PT', {
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 1
+    })
+    return `${millions}M`
+  } else if (num >= 1000) {
+    const thousands = (num / 1000).toLocaleString('pt-PT', {
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 1
+    })
+    return `${thousands}K`
+  }
+  return formatCurrency(num, 'EUR', { showCurrency: false })
+}
+
+/**
+ * Format date and time for Portuguese locale
+ * @param dateString - Date string to format
+ * @returns Formatted date and time string
+ */
+export function formatDateTime(dateString: string): string {
+  try {
+    const date = new Date(dateString)
+    return new Intl.DateTimeFormat('pt-PT', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    }).format(date)
+  } catch (error) {
+    return dateString
+  }
+}
+
+/**
+ * Format date only for Portuguese locale
+ * @param dateString - Date string to format
+ * @returns Formatted date string
+ */
+export function formatDate(dateString: string): string {
+  try {
+    const date = new Date(dateString)
+    return new Intl.DateTimeFormat('pt-PT', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    }).format(date)
+  } catch (error) {
+    return dateString
+  }
+}
+
+/**
+ * Format time only for Portuguese locale
+ * @param dateString - Date string to format
+ * @returns Formatted time string
+ */
+export function formatTime(dateString: string): string {
+  try {
+    const date = new Date(dateString)
+    return new Intl.DateTimeFormat('pt-PT', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    }).format(date)
+  } catch (error) {
+    return dateString
+  }
+}
+
+/**
+ * DEPRECATED: Use formatAmountForInput() instead
+ * @deprecated This function is deprecated. Use formatAmountForInput() from @/lib/format
+ */
+export function formatAmountForDisplay(amount: number, currency: Currency): string {
+  console.warn('formatAmountForDisplay is deprecated. Use formatAmountForInput from @/lib/format')
+  return formatAmountForInput(amount, currency)
+}
+
+/**
+ * DEPRECATED: Use formatAmountWithCurrency() instead
+ * @deprecated This function is deprecated. Use formatAmountWithCurrency() from @/lib/format
+ */
+export function formatCurrencyAmount(amount: number, currency: Currency): string {
+  console.warn('formatCurrencyAmount is deprecated. Use formatAmountWithCurrency from @/lib/format')
+  return formatAmountWithCurrency(amount, currency)
+}

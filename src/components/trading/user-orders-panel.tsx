@@ -20,7 +20,7 @@ import {
   AlertCircle
 } from 'lucide-react'
 import { toast } from 'sonner'
-import { formatCurrency, formatNumber, formatDateTime } from '@/lib/utils'
+import { formatAmountWithCurrency, formatDateTime, type Currency } from '@/lib/format'
 
 interface Order {
   id: string

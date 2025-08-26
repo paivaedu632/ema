@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { AlertCircle, Shield, ArrowRight } from 'lucide-react'
 import { useUser } from '@clerk/nextjs'
+import { formatAmountWithCurrency, type Currency } from '@/lib/format'
 
 interface KYCGateProps {
   children: React.ReactNode
@@ -188,9 +189,9 @@ export function KYCGate({
                   Após a verificação você poderá:
                 </h3>
                 <ul className="text-sm text-gray-600 space-y-1">
-                  <li>• Transações até €{userLimits.afterKYC.transactionLimit.toLocaleString()}</li>
-                  <li>• Limite diário de €{userLimits.afterKYC.dailyLimit.toLocaleString()}</li>
-                  <li>• Limite mensal de €{userLimits.afterKYC.monthlyLimit.toLocaleString()}</li>
+                  <li>• Transações até {formatAmountWithCurrency(userLimits.afterKYC.transactionLimit, 'EUR')}</li>
+                  <li>• Limite diário de {formatAmountWithCurrency(userLimits.afterKYC.dailyLimit, 'EUR')}</li>
+                  <li>• Limite mensal de {formatAmountWithCurrency(userLimits.afterKYC.monthlyLimit, 'EUR')}</li>
                   <li>• Acesso a todos os recursos do EmaPay</li>
                 </ul>
               </div>

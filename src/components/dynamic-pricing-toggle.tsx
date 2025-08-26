@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Loader2, TrendingUp, TrendingDown, Activity, Info } from 'lucide-react'
 import { toast } from 'sonner'
+import { formatAmountWithCurrency, formatPercentage, type Currency } from '@/lib/format'
 
 interface DynamicPricingToggleProps {
   orderId: string
@@ -109,7 +110,7 @@ export function DynamicPricingToggle({
           <div>
             <p className="text-sm text-gray-600">Preço Atual</p>
             <p className="text-lg font-semibold">
-              {currentPrice.toLocaleString('pt-AO')} {currency}
+              {formatAmountWithCurrency(currentPrice, currency as Currency)}
             </p>
           </div>
           
@@ -119,7 +120,7 @@ export function DynamicPricingToggle({
               <div className={`flex items-center gap-1 ${getPriceChangeColor()}`}>
                 {getPriceChangeIcon()}
                 <span className="font-medium">
-                  {priceChange > 0 ? '+' : ''}{priceChange.toFixed(2)}%
+                  {priceChange > 0 ? '+' : ''}{formatPercentage(priceChange / 100)}
                 </span>
               </div>
             </div>
@@ -130,7 +131,7 @@ export function DynamicPricingToggle({
         {originalPrice && originalPrice !== currentPrice && (
           <div className="flex items-center justify-between text-sm text-gray-600">
             <span>Preço Original:</span>
-            <span>{originalPrice.toLocaleString('pt-AO')} {currency}</span>
+            <span>{formatAmountWithCurrency(originalPrice, currency as Currency)}</span>
           </div>
         )}
 

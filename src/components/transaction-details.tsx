@@ -8,6 +8,7 @@ import { PageHeader } from "@/components/ui/page-header"
 import { ConfirmationSection, ConfirmationRow } from "@/components/ui/confirmation-section"
 import { getTransactionById, formatTransactionForDisplay, getTransactionStatusInfo, type EnhancedTransactionData } from "@/lib/transaction-api"
 import { DateUtils } from "@/utils/formatting-utils"
+import { formatAmountWithCurrency, type Currency } from '@/lib/format'
 
 interface TransactionDetailsProps {
   transactionId: string
@@ -132,7 +133,7 @@ export function TransactionDetails({ transactionId }: TransactionDetailsProps) {
                 {formattedTransaction.exchangeRate && (
                   <ConfirmationRow label="Taxa de câmbio" value={formattedTransaction.exchangeRate} />
                 )}
-                <ConfirmationRow label="Valor recebido" value={formattedTransaction.receivedAmount || `${transaction.metadata?.aoa_amount?.toLocaleString('pt-AO')} Kz`} highlight />
+                <ConfirmationRow label="Valor recebido" value={formattedTransaction.receivedAmount || formatAmountWithCurrency(transaction.metadata?.aoa_amount || 0, 'AOA')} highlight />
               </>
             )}
 
@@ -144,7 +145,7 @@ export function TransactionDetails({ transactionId }: TransactionDetailsProps) {
                 {formattedTransaction.exchangeRate && (
                   <ConfirmationRow label="Taxa de câmbio" value={formattedTransaction.exchangeRate} />
                 )}
-                <ConfirmationRow label="Valor recebido" value={formattedTransaction.receivedAmount || `${transaction.metadata?.eur_amount?.toLocaleString('pt-PT')} €`} highlight />
+                <ConfirmationRow label="Valor recebido" value={formattedTransaction.receivedAmount || formatAmountWithCurrency(transaction.metadata?.eur_amount || 0, 'EUR')} highlight />
               </>
             )}
 

@@ -31,13 +31,15 @@ export const EXCHANGE_RATE_VALIDATION = {
   }
 } as const
 
+import { formatAmountWithCurrency, type Currency } from '@/lib/format'
+
 // Portuguese error messages for consistency
 export const VALIDATION_MESSAGES = {
   AMOUNT: {
     REQUIRED: "Digite um valor",
     INVALID: "Digite um valor válido",
-    MIN: (min: number, currency: string) => `Valor mínimo: ${min.toLocaleString()} ${currency}`,
-    MAX: (max: number, currency: string) => `Valor máximo: ${max.toLocaleString()} ${currency}`,
+    MIN: (min: number, currency: string) => `Valor mínimo: ${formatAmountWithCurrency(min, currency as Currency)}`,
+    MAX: (max: number, currency: string) => `Valor máximo: ${formatAmountWithCurrency(max, currency as Currency)}`,
     INSUFFICIENT_BALANCE: "Seu saldo não é suficiente"
   },
   EXCHANGE_RATE: {
@@ -150,17 +152,12 @@ export function validateExchangeRateRange(
 }
 
 /**
- * Format currency amount for display
+ * DEPRECATED: Use formatAmountForInput() from @/lib/format instead
+ * @deprecated This function is deprecated. Use formatAmountForInput() from @/lib/format
  */
 export function formatCurrencyAmount(amount: number, currency: Currency): string {
-  if (currency === 'AOA') {
-    return amount.toLocaleString('pt-AO')
-  } else {
-    return amount.toLocaleString('pt-PT', { 
-      minimumFractionDigits: 2, 
-      maximumFractionDigits: 2 
-    })
-  }
+  console.warn('formatCurrencyAmount is deprecated. Use formatAmountForInput from @/lib/format')
+  return formatAmountWithCurrency(amount, currency)
 }
 
 /**

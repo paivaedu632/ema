@@ -109,15 +109,15 @@ export function validateAmount(
   return { isValid: true }
 }
 
+import { formatAmountForInput, type Currency as FormatCurrency } from '@/lib/format'
+
 /**
- * Formats a number with appropriate thousand separators for display
+ * DEPRECATED: Use formatAmountForInput() from @/lib/format instead
+ * @deprecated This function is deprecated. Use formatAmountForInput() from @/lib/format
  */
 export function formatAmountForDisplay(amount: number, currency: Currency): string {
-  if (currency === 'AOA') {
-    return amount.toLocaleString('pt-AO')
-  } else {
-    return amount.toLocaleString('pt-PT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-  }
+  console.warn('formatAmountForDisplay is deprecated. Use formatAmountForInput from @/lib/format')
+  return formatAmountForInput(amount, currency as FormatCurrency)
 }
 
 /**

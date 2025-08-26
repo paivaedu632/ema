@@ -8,6 +8,7 @@ import { validateRequestBody, PlaceOrderSchema } from '@/lib/validation'
 import { OrderBookFunctions } from '@/lib/supabase-server'
 import { createUserContext, hassufficientBalance } from '@/middleware/user-context'
 import { createApiError, ErrorCategory, ErrorSeverity } from '@/lib/error-handler'
+import { formatAmountWithCurrency, type Currency } from '@/lib/format'
 
 /**
  * POST /api/orders/place
@@ -59,7 +60,7 @@ export async function POST(request: NextRequest) {
     const currency = orderData.side === 'buy' ? orderData.quote_currency : orderData.base_currency
     if (!hassufficientBalance(userContext, currency, requiredFunds)) {
       throw createApiError(
-        `Saldo insuficiente. Necessário: ${requiredFunds.toLocaleString('pt-AO')} ${currency}`,
+        `Saldo insuficiente. Necessário: ${formatAmountWithCurrency(requiredFunds, currency as Currency)}`,
         400,
         ErrorCategory.BUSINESS_LOGIC,
         ErrorSeverity.LOW
