@@ -117,6 +117,15 @@ export const PlaceOrderSchema = z.object({
 }, {
   message: 'Preços dinâmicos só se aplicam a ordens de venda limitadas',
   path: ['dynamic_pricing_enabled']
+}).refine((data) => {
+  // Buy orders must be market orders only
+  if (data.side === 'buy' && data.type !== 'market') {
+    return false
+  }
+  return true
+}, {
+  message: 'Apenas ordens de compra de mercado são suportadas. Use ordens de mercado para execução imediata.',
+  path: ['type']
 })
 
 /**

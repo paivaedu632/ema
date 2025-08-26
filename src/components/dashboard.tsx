@@ -10,6 +10,19 @@ import { BalanceCard } from '@/components/ui/balance-card'
 import { AngolaFlag, EurFlag } from '@/components/ui/flag-icon'
 import { LogOut } from 'lucide-react'
 import { TransactionListItem, TransactionListItemSkeleton, TransactionListEmpty } from '@/components/ui/transaction-list-item'
+import { type TransactionData } from '@/utils/transaction-formatting'
+
+// Interface for display-ready transaction data
+interface DisplayTransaction {
+  id: string
+  displayId?: string
+  type: string
+  status: string
+  description: string
+  amount: string
+  currency: string
+  date: string
+}
 
 
 
@@ -19,11 +32,9 @@ export default function Dashboard() {
   const { user, isLoaded } = useUser()
   const { signOut } = useClerk()
 
-  // Simple state for testing
+  // State management for wallet balances
   const [balancesLoading, setBalancesLoading] = useState(false)
-
-  // Mock wallet balances
-  const walletBalances = [
+  const [walletBalances, setWalletBalances] = useState([
     {
       currency: 'EUR',
       available_balance: 1250.50,
@@ -34,7 +45,7 @@ export default function Dashboard() {
       available_balance: 125000.75,
       reserved_balance: 25000.00
     }
-  ]
+  ])
 
 
 
@@ -101,7 +112,7 @@ export default function Dashboard() {
   ])
 
   // Mock transactions for testing (replace with real hook later)
-  const [mockTransactions, setMockTransactions] = useState([])
+  const [mockTransactions, setMockTransactions] = useState<DisplayTransaction[]>([])
   const [mockTransactionsLoading, setMockTransactionsLoading] = useState(true)
 
   // Use mock transactions instead of API for now

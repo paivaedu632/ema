@@ -132,7 +132,7 @@ export async function POST(request: NextRequest) {
     console.log('✅ Business rules validation passed')
 
     // 5. Calculate required funds
-    const requiredFunds = calculateRequiredFunds(orderData)
+    const requiredFunds = await calculateRequiredFunds(orderData)
     console.log('✅ Required funds calculated:', requiredFunds)
 
     // 6. Check sufficient balance
@@ -193,18 +193,71 @@ async function validateOrderPlacement(userContext: any, orderData: any) {
   if (orderData.quantity <= 0) {
     throw new Error('Quantity must be positive')
   }
-  
-  if (orderData.type === 'limit' && (!orderData.price || orderData.price <= 0)) {
+
+  // Buy orders must be market orders only
+  if (orderData.side === 'buy' && orderData.type !== 'market') {
+    throw new Error('Only market buy orders are supported. Use market orders for immediate execution.')
+  }
+
+  // Price validation for sell limit orders only
+  if (orderData.side === 'sell' && orderData.type === 'limit' && (!orderData.price || orderData.price <= 0)) {
     throw new Error('Price must be positive for limit orders')
   }
 }
 
-function calculateRequiredFunds(orderData: any) {
+async function calculateRequiredFunds(orderData: any) {
   if (orderData.side === 'buy') {
-    // For buy orders, need quote currency
-    return {
-      currency: orderData.quote_currency,
-      amount: orderData.quantity * (orderData.price || 0)
+    // For market buy orders, calculate funds based on available sell orders
+    if (orderData.type === 'market') {
+      // Query the order book to get the best available sell orders
+      const { data: sellOrders, error } = await supabaseAdmin
+        .from('order_book')
+        .select('quantity, price')
+        .eq('side', 'sell')
+        .eq('base_currency', orderData.base_currency)
+        .eq('quote_currency', orderData.quote_currency)
+        .eq('status', 'pending')
+        .order('price', { ascending: true }) // Best prices first
+        .order('created_at', { ascending: true }) // Time priority
+
+      if (error || !sellOrders || sellOrders.length === 0) {
+        // No sell orders available, use a default high price for validation
+        // This will likely cause insufficient balance error, which is appropriate
+        return {
+          currency: orderData.quote_currency,
+          amount: orderData.quantity * 2000 // High default price
+        }
+      }
+
+      // Calculate required funds based on available sell orders
+      let remainingQuantity = orderData.quantity
+      let totalCost = 0
+
+      for (const sellOrder of sellOrders) {
+        if (remainingQuantity <= 0) break
+
+        const availableQuantity = parseFloat(sellOrder.quantity)
+        const price = parseFloat(sellOrder.price)
+        const quantityToTake = Math.min(remainingQuantity, availableQuantity)
+
+        totalCost += quantityToTake * price
+        remainingQuantity -= quantityToTake
+      }
+
+      if (remainingQuantity > 0) {
+        // Not enough sell orders to fulfill the entire buy order
+        // Add extra cost for the unfulfilled portion using the last available price
+        const lastPrice = sellOrders.length > 0 ? parseFloat(sellOrders[sellOrders.length - 1].price) : 2000
+        totalCost += remainingQuantity * lastPrice
+      }
+
+      return {
+        currency: orderData.quote_currency,
+        amount: totalCost
+      }
+    } else {
+      // This should not happen due to validation, but handle it
+      throw new Error('Only market buy orders are supported')
     }
   } else {
     // For sell orders, need base currency
