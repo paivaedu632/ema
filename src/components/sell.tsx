@@ -13,6 +13,7 @@ import { FixedBottomAction } from "@/components/ui/fixed-bottom-action"
 import { SuccessScreen } from "@/components/ui/success-screen"
 import { ConfirmationSection, ConfirmationRow, ConfirmationWarning } from "@/components/ui/confirmation-section"
 import { AvailableBalance } from "@/components/ui/available-balance"
+import { formatAmountWithCurrency, formatAmountForInput, formatExchangeRate, parsePortugueseNumber } from "@/lib/format"
 
 import {
   TRANSACTION_LIMITS,
@@ -139,10 +140,10 @@ export function SellFlow() {
         const maxReceive = sellAmount * 2000
 
         if (desiredAmountNum < minReceive) {
-          return `Mínimo: ${minReceive.toLocaleString('pt-AO')} ${receiveCurrency}`
+          return `Mínimo: ${formatAmountWithCurrency(minReceive, receiveCurrency as Currency)}`
         }
         if (desiredAmountNum > maxReceive) {
-          return `Máximo: ${maxReceive.toLocaleString('pt-AO')} ${receiveCurrency}`
+          return `Máximo: ${formatAmountWithCurrency(maxReceive, receiveCurrency as Currency)}`
         }
       } else {
         // User selling AOA, wants EUR
@@ -152,10 +153,10 @@ export function SellFlow() {
         const maxReceive = sellAmount / 500
 
         if (desiredAmountNum < minReceive) {
-          return `Mínimo: ${minReceive.toLocaleString('pt-PT')} ${receiveCurrency}`
+          return `Mínimo: ${formatAmountWithCurrency(minReceive, receiveCurrency as Currency)}`
         }
         if (desiredAmountNum > maxReceive) {
-          return `Máximo: ${maxReceive.toLocaleString('pt-PT')} ${receiveCurrency}`
+          return `Máximo: ${formatAmountWithCurrency(maxReceive, receiveCurrency as Currency)}`
         }
       }
     }
@@ -441,13 +442,13 @@ export function SellFlow() {
             <div className="flex justify-between items-center">
               <span className="text-sm text-gray-600">Você vende</span>
               <span className="text-sm font-medium text-gray-900">
-                {Number(watchedAmount || 0).toLocaleString(watchedCurrency === "EUR" ? "pt-PT" : "pt-AO")} {watchedCurrency}
+                {formatAmountWithCurrency(watchedAmount || 0, watchedCurrency as Currency)}
               </span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-sm text-gray-600">Você recebe</span>
               <span className="text-sm font-medium text-gray-900">
-                {Number(desiredAmount || 0).toLocaleString(receiveCurrency === "EUR" ? "pt-PT" : "pt-AO")} {receiveCurrency}
+                {formatAmountWithCurrency(desiredAmount || 0, receiveCurrency as Currency)}
               </span>
             </div>
           </div>
@@ -466,10 +467,7 @@ export function SellFlow() {
 
   if (currentStep === "rateSelection") {
     const receiveCurrency = watchedCurrency === "EUR" ? "AOA" : "EUR"
-    const formattedReceiveAmount = Number(desiredAmount).toLocaleString(
-      receiveCurrency === "EUR" ? "pt-PT" : "pt-AO",
-      { minimumFractionDigits: 2, maximumFractionDigits: 2 }
-    )
+    const formattedReceiveAmount = formatAmountForInput(desiredAmount, receiveCurrency as Currency)
 
     return (
       <div className="page-container-white">
@@ -579,10 +577,7 @@ export function SellFlow() {
 
     // Simply return the desired amount that user specified
     return {
-      amount: desiredAmountNum.toLocaleString(receiveCurrency === "EUR" ? "pt-PT" : "pt-AO", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      }),
+      amount: formatAmountForInput(desiredAmountNum, receiveCurrency as Currency),
       currency: receiveCurrency
     }
   }
@@ -600,7 +595,7 @@ export function SellFlow() {
           {/* Transaction Details */}
           <ConfirmationSection title="">
             <ConfirmationRow label="Seu saldo" value={getFormattedBalance()} />
-            <ConfirmationRow label="Você vende" value={`${Number(watchedAmount).toLocaleString()} ${watchedCurrency}`} highlight/>
+            <ConfirmationRow label="Você vende" value={formatAmountWithCurrency(watchedAmount, watchedCurrency as Currency)} highlight/>
             <ConfirmationRow label="Câmbio" value={getCalculatedExchangeRate()} />
             {/* Show received amount (always show since we now have user-derived rates) */}
             <ConfirmationRow

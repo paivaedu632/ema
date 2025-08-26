@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react'
+import { formatAmountForInput, type Currency } from '@/lib/format'
 
 interface BalanceCardProps {
   type: string
@@ -21,22 +22,6 @@ export function BalanceCard({
 }: BalanceCardProps) {
   const isClickable = !!onClick
   const Component = isClickable ? 'button' : 'div'
-
-  // Format amount with Portuguese locale
-  const formatAmount = (amount: string, currency: string) => {
-    const numericAmount = parseFloat(amount)
-    if (currency === 'AOA') {
-      return numericAmount.toLocaleString('pt-AO', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      })
-    } else {
-      return numericAmount.toLocaleString('pt-PT', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      })
-    }
-  }
 
   return (
     <Component
@@ -65,7 +50,7 @@ export function BalanceCard({
         {/* Balance Amount */}
         <div>
           <p className="text-2xl font-bold text-gray-900">
-            {formatAmount(amount, currency)}
+            {formatAmountForInput(amount, currency as Currency)}
           </p>
         </div>
       </div>

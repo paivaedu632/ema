@@ -218,6 +218,7 @@ export default function Dashboard() {
                   status={transaction.status}
                   description={transaction.description}
                   amount={transaction.amount}
+                  currency={transaction.currency || 'EUR'}
                   date={transaction.date}
                   onClick={(id) => router.push(`/transaction/${id}`)}
                 />

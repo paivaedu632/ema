@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { ShoppingBag, ArrowUpRight, ArrowDownLeft, CreditCard } from 'lucide-react'
+import { formatAmountWithCurrency, type Currency } from '@/lib/format'
 
 interface TransactionListItemProps {
   id: string
@@ -10,6 +11,7 @@ interface TransactionListItemProps {
   status: string
   description: string
   amount: string
+  currency?: string // Add currency prop for proper formatting
   date: string
   onClick?: (id: string) => void
   className?: string
@@ -27,6 +29,7 @@ export function TransactionListItem({
   status,
   description,
   amount,
+  currency = 'EUR', // Default to EUR if not specified
   date,
   onClick,
   className = ""
@@ -99,7 +102,9 @@ export function TransactionListItem({
 
       {/* Transaction Amount */}
       <div className="text-right">
-        <p className="value-secondary">{amount}</p>
+        <p className="value-secondary">
+          {formatAmountWithCurrency(amount, currency as Currency)}
+        </p>
       </div>
     </button>
   )
