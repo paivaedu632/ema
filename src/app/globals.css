@@ -360,6 +360,15 @@
     @apply bg-gray-100 rounded-2xl border border-gray-100 p-6;
   }
 
+  /* Scrollbar Hide - Used for horizontal scrolling containers */
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Safari and Chrome */
+  }
+
   /* Content Card - Used for exchange details, payment info, confirmation summaries */
   .card-content {
     @apply bg-white rounded-2xl p-4;

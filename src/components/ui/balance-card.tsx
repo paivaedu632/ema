@@ -42,9 +42,9 @@ export function BalanceCard({
     <Component
       onClick={onClick}
       className={`
-        w-full bg-white rounded-xl border border-gray-200 p-5 text-left
-        shadow-sm hover:shadow-md transition-all duration-200
-        ${isClickable ? 'cursor-pointer hover:border-gray-300' : ''}
+        flex-shrink-0 w-52 bg-black text-white rounded-xl p-5 text-left
+        hover:bg-gray-800 transition-all duration-200 shadow-sm
+        ${isClickable ? 'cursor-pointer' : ''}
         ${className}
       `}
     >
@@ -53,18 +53,18 @@ export function BalanceCard({
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             {flag}
-            <h3 className="text-lg font-semibold text-gray-900">{currency}</h3>
+            <h3 className="text-lg font-semibold text-white">{currency}</h3>
           </div>
         </div>
 
         {/* Account Type */}
         <div>
-          <p className="text-sm text-gray-600 mb-1">{type}</p>
+          <p className="text-sm text-gray-300 mb-1">{type}</p>
         </div>
 
         {/* Balance Amount */}
         <div>
-          <p className="text-2xl font-bold text-gray-900">
+          <p className="text-2xl font-bold text-white">
             {formatAmount(amount, currency)}
           </p>
         </div>
