@@ -6,38 +6,27 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 /**
- * Format currency values with proper locale and currency symbol
+ * DEPRECATED: Use formatAmountWithCurrency() from @/lib/format instead
+ * @deprecated This function is deprecated. Use formatAmountWithCurrency() from @/lib/format
  */
 export function formatCurrency(amount: number, currency: 'EUR' | 'AOA'): string {
-  const locale = currency === 'EUR' ? 'pt-PT' : 'pt-AO'
+  console.warn('formatCurrency from utils is deprecated. Use formatAmountWithCurrency from @/lib/format')
 
-  try {
-    return new Intl.NumberFormat(locale, {
-      style: 'currency',
-      currency: currency,
-      minimumFractionDigits: currency === 'AOA' ? 0 : 2,
-      maximumFractionDigits: currency === 'AOA' ? 0 : 2
-    }).format(amount)
-  } catch (error) {
-    // Fallback formatting
-    const symbol = currency === 'EUR' ? '€' : 'AOA'
-    const decimals = currency === 'AOA' ? 0 : 2
-    return `${amount.toFixed(decimals)} ${symbol}`
-  }
+  // Import the centralized function dynamically to avoid circular imports
+  const { formatAmountWithCurrency } = require('@/lib/format')
+  return formatAmountWithCurrency(amount, currency)
 }
 
 /**
- * Format numbers with proper locale formatting
+ * DEPRECATED: Use formatAmountForInput() from @/lib/format instead
+ * @deprecated This function is deprecated. Use formatAmountForInput() from @/lib/format
  */
 export function formatNumber(value: number, decimals?: number): string {
-  try {
-    return new Intl.NumberFormat('pt-PT', {
-      minimumFractionDigits: decimals ?? (value % 1 === 0 ? 0 : 2),
-      maximumFractionDigits: decimals ?? (value % 1 === 0 ? 0 : 2)
-    }).format(value)
-  } catch (error) {
-    return value.toFixed(decimals ?? 2)
-  }
+  console.warn('formatNumber from utils is deprecated. Use formatAmountForInput from @/lib/format')
+
+  // Import the centralized function dynamically to avoid circular imports
+  const { formatAmountForInput } = require('@/lib/format')
+  return formatAmountForInput(value, 'EUR') // Default to EUR for number formatting
 }
 
 /**

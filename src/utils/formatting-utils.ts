@@ -70,23 +70,27 @@ export function getCurrentDateEmapay(): string {
 // ===== CURRENCY & NUMBER FORMATTING UTILITIES =====
 
 /**
- * Format currency amount with proper decimals
- * Consolidates currency formatting across the app
+ * DEPRECATED: Use formatAmountWithCurrency() from @/lib/format instead
+ * @deprecated This function is deprecated. Use formatAmountWithCurrency() from @/lib/format
  */
 export function formatCurrency(amount: number | string, currency: string): string {
-  const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount
-  if (isNaN(numAmount)) return `0.00 ${currency}`
-  return `${numAmount.toFixed(2)} ${currency}`
+  console.warn('formatCurrency from formatting-utils is deprecated. Use formatAmountWithCurrency from @/lib/format')
+
+  // Import the centralized function dynamically to avoid circular imports
+  const { formatAmountWithCurrency } = require('@/lib/format')
+  return formatAmountWithCurrency(amount, currency)
 }
 
 /**
- * Format currency amount without currency symbol
- * Used for input fields and calculations
+ * DEPRECATED: Use formatAmountForInput() from @/lib/format instead
+ * @deprecated This function is deprecated. Use formatAmountForInput() from @/lib/format
  */
 export function formatAmount(amount: number | string): string {
-  const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount
-  if (isNaN(numAmount)) return '0.00'
-  return numAmount.toFixed(2)
+  console.warn('formatAmount from formatting-utils is deprecated. Use formatAmountForInput from @/lib/format')
+
+  // Import the centralized function dynamically to avoid circular imports
+  const { formatAmountForInput } = require('@/lib/format')
+  return formatAmountForInput(amount, 'EUR') // Default to EUR
 }
 
 /**

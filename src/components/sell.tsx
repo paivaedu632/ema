@@ -320,8 +320,8 @@ export function SellFlow() {
   // Format balance for display
   const getFormattedBalance = (): string => {
     const currentWallet = walletBalances.find(wallet => wallet.currency === watchedCurrency)
-    if (!currentWallet) return `0.00 ${watchedCurrency}`
-    return `${currentWallet.available_balance.toFixed(2)} ${watchedCurrency}`
+    if (!currentWallet) return formatAmountWithCurrency(0, watchedCurrency as Currency)
+    return formatAmountWithCurrency(currentWallet.available_balance, watchedCurrency as Currency)
   }
 
   const handleBackToDashboard = () => {

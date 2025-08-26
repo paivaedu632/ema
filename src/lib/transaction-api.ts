@@ -4,6 +4,7 @@
  */
 
 import { supabase } from '@/lib/supabase'
+import { formatAmountWithCurrency, formatExchangeRate, type Currency } from '@/lib/format'
 
 export interface TransactionData {
   id: string
@@ -122,41 +123,23 @@ export async function getExchangeTransactions(exchangeId: string): Promise<Trans
 export function formatTransactionForDisplay(transaction: EnhancedTransactionData) {
   const { type, amount, currency, fee_amount, net_amount, exchange_rate, metadata } = transaction
   
-  // Base formatting
-  const formattedAmount = new Intl.NumberFormat('pt-AO', {
-    style: 'currency',
-    currency: currency,
-    minimumFractionDigits: 2
-  }).format(amount)
-
-  const formattedFee = new Intl.NumberFormat('pt-AO', {
-    style: 'currency', 
-    currency: currency,
-    minimumFractionDigits: 2
-  }).format(fee_amount)
-
-  const formattedNetAmount = new Intl.NumberFormat('pt-AO', {
-    style: 'currency',
-    currency: currency,
-    minimumFractionDigits: 2
-  }).format(net_amount)
+  // Base formatting using centralized system
+  const formattedAmount = formatAmountWithCurrency(amount, currency as Currency)
+  const formattedFee = formatAmountWithCurrency(fee_amount, currency as Currency)
+  const formattedNetAmount = formatAmountWithCurrency(net_amount, currency as Currency)
 
   // Type-specific formatting
   switch (type) {
     case 'buy':
       const aoaReceived = metadata?.aoa_amount || 0
-      const formattedAOA = new Intl.NumberFormat('pt-AO', {
-        style: 'currency',
-        currency: 'AOA',
-        minimumFractionDigits: 2
-      }).format(aoaReceived)
-      
+      const formattedAOA = formatAmountWithCurrency(aoaReceived, 'AOA')
+
       return {
         title: 'Compra de moeda',
         sentAmount: formattedAmount,
         receivedAmount: formattedAOA,
         fee: formattedFee,
-        exchangeRate: exchange_rate ? `1 EUR = ${exchange_rate.toFixed(4)} AOA` : null,
+        exchangeRate: exchange_rate ? formatExchangeRate(exchange_rate, 'EUR', 'AOA') : null,
         description: 'Compra de AOA com EUR'
       }
 

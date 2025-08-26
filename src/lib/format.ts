@@ -9,13 +9,14 @@ export type Currency = 'AOA' | 'EUR'
 
 /**
  * Format a number with Portuguese locale based on currency
+ * Uses dot (.) as thousands separator and comma (,) as decimal separator
  * @param amount - The numeric amount to format
  * @param currency - The currency type (AOA or EUR)
  * @param options - Additional formatting options
- * @returns Formatted string with Portuguese locale
+ * @returns Formatted string with Portuguese locale (dot thousands, comma decimal)
  */
 export function formatCurrency(
-  amount: number | string, 
+  amount: number | string,
   currency: Currency,
   options: {
     minimumFractionDigits?: number
@@ -24,7 +25,7 @@ export function formatCurrency(
   } = {}
 ): string {
   const numericAmount = typeof amount === 'string' ? parseFloat(amount) : amount
-  
+
   if (isNaN(numericAmount)) {
     return '0,00'
   }
@@ -35,23 +36,35 @@ export function formatCurrency(
     showCurrency = false
   } = options
 
-  let formattedAmount: string
-
-  if (currency === 'AOA') {
-    // Use pt-AO locale for AOA (Angolan Kwanza)
-    formattedAmount = numericAmount.toLocaleString('pt-AO', {
-      minimumFractionDigits,
-      maximumFractionDigits
-    })
-  } else {
-    // Use pt-PT locale for EUR (Euro)
-    formattedAmount = numericAmount.toLocaleString('pt-PT', {
-      minimumFractionDigits,
-      maximumFractionDigits
-    })
-  }
+  // Custom formatting for Portuguese locale with dot thousands separator
+  // Format: 1.234.567,89 (dot as thousands, comma as decimal)
+  const formattedAmount = formatPortugueseCurrency(numericAmount, minimumFractionDigits, maximumFractionDigits)
 
   return showCurrency ? `${formattedAmount} ${currency}` : formattedAmount
+}
+
+/**
+ * Internal helper function to format currency with Portuguese conventions
+ * @param amount - Numeric amount to format
+ * @param minDecimals - Minimum decimal places
+ * @param maxDecimals - Maximum decimal places
+ * @returns Formatted string with dot thousands separator and comma decimal separator
+ */
+function formatPortugueseCurrency(amount: number, minDecimals: number = 2, maxDecimals: number = 2): string {
+  // First format with standard locale to get proper decimal handling
+  const standardFormatted = amount.toFixed(maxDecimals)
+
+  // Split into integer and decimal parts
+  const [integerPart, decimalPart] = standardFormatted.split('.')
+
+  // Add dot thousands separators to integer part
+  const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+
+  // Ensure proper decimal places
+  const paddedDecimal = decimalPart.padEnd(minDecimals, '0')
+
+  // Combine with comma as decimal separator
+  return `${formattedInteger},${paddedDecimal}`
 }
 
 /**
@@ -76,7 +89,8 @@ export function formatAmountForInput(amount: number | string, currency: Currency
 
 /**
  * Parse Portuguese formatted string back to number
- * @param formattedAmount - Portuguese formatted string (e.g., "1 250,50" or "125 000,75")
+ * Handles dot thousands separator and comma decimal separator
+ * @param formattedAmount - Portuguese formatted string (e.g., "1.250,50" or "125.000,75")
  * @returns Numeric value
  */
 export function parsePortugueseNumber(formattedAmount: string): number {
@@ -89,12 +103,27 @@ export function parsePortugueseNumber(formattedAmount: string): number {
     .replace(/AOA|EUR/g, '')
     .trim()
 
-  // Handle Portuguese number format:
-  // - Space as thousands separator: "125 000,75" -> "125000,75"
+  // Handle Portuguese number format with dot thousands separator:
+  // - Dot as thousands separator: "125.000,75" -> "125000,75"
   // - Comma as decimal separator: "125000,75" -> "125000.75"
-  cleanAmount = cleanAmount
-    .replace(/\s/g, '') // Remove spaces (thousands separator)
-    .replace(',', '.') // Replace comma with dot (decimal separator)
+
+  // Find the last comma (decimal separator)
+  const lastCommaIndex = cleanAmount.lastIndexOf(',')
+
+  if (lastCommaIndex !== -1) {
+    // Split at the last comma
+    const integerPart = cleanAmount.substring(0, lastCommaIndex)
+    const decimalPart = cleanAmount.substring(lastCommaIndex + 1)
+
+    // Remove dots from integer part (thousands separators)
+    const cleanInteger = integerPart.replace(/\./g, '')
+
+    // Reconstruct with dot as decimal separator
+    cleanAmount = `${cleanInteger}.${decimalPart}`
+  } else {
+    // No decimal part, just remove dots (thousands separators)
+    cleanAmount = cleanAmount.replace(/\./g, '')
+  }
 
   const parsed = parseFloat(cleanAmount)
   return isNaN(parsed) ? 0 : parsed
@@ -127,27 +156,26 @@ export function formatExchangeRate(
 }
 
 /**
- * Format percentage with Portuguese locale
+ * Format percentage with Portuguese locale (dot thousands, comma decimal)
  * @param percentage - Percentage value (e.g., 0.025 for 2.5%)
  * @returns Formatted percentage string
  */
 export function formatPercentage(percentage: number | string): string {
   const numericPercentage = typeof percentage === 'string' ? parseFloat(percentage) : percentage
-  
+
   if (isNaN(numericPercentage)) {
     return '0,00%'
   }
 
-  // Convert to percentage and format with Portuguese locale
+  // Convert to percentage and format with Portuguese conventions
   const percentValue = numericPercentage * 100
-  return `${percentValue.toLocaleString('pt-PT', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  })}%`
+  const formattedPercent = formatPortugueseCurrency(percentValue, 2, 2)
+  return `${formattedPercent}%`
 }
 
 /**
  * Validate if a string is a valid Portuguese formatted number
+ * Handles dot thousands separator and comma decimal separator
  * @param value - String to validate
  * @returns Boolean indicating if valid
  */
@@ -161,10 +189,11 @@ export function isValidPortugueseNumber(value: string): boolean {
     .replace(/AOA|EUR/g, '')
     .trim()
 
-  // Check if it matches Portuguese number format
-  // Allows: "1250,50", "1 250,50", "125 000,75", etc.
-  const portugueseNumberRegex = /^[\d\s]*,?\d{0,2}$/
-  
+  // Check if it matches Portuguese number format with dot thousands separator
+  // Allows: "1250,50", "1.250,50", "125.000,75", etc.
+  // Pattern: optional digits, optional groups of (dot + 3 digits), optional comma + up to 2 digits
+  const portugueseNumberRegex = /^\d{1,3}(?:\.\d{3})*(?:,\d{0,2})?$/
+
   return portugueseNumberRegex.test(cleanValue) && !isNaN(parsePortugueseNumber(value))
 }
 
