@@ -578,10 +578,8 @@ export function SellFlow() {
           </ConfirmationSection>
 
           {/* Warning */}
-          <div className="space-y-2 text-sm text-gray-600">
-            <p className="font-medium text-gray-900">Atenção:</p>
-            <p>Seu valor ficará reservado até encontrarmos um comprador. Mas você pode retirar sempre que quiser.</p>
-            <p>Após a venda, o valor será depositado em euros na sua conta. Não fazemos devolução!</p>
+          <div className="text-sm text-gray-600">
+            <p>Atenção: Seu valor ficará reservado até encontrarmos um comprador. Mas você pode retirar sempre que quiser. Após a venda, o valor será depositado em euros na sua conta. Não fazemos devolução!</p>
           </div>
         </div>
       </main>

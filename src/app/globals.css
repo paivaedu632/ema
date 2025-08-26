@@ -118,6 +118,13 @@
     @apply flex items-center gap-1; /* 4px gap for tight, cohesive appearance */
   }
 
+  /* Static Currency Display - Used when currency selection is disabled */
+  .currency-selector-static {
+    @apply px-3 py-1 font-bold text-gray-900;
+    background-color: transparent;
+    border-radius: 9999px; /* rounded-full - consistent with currency selector */
+  }
+
   /* Flag Icon Sizing for Currency Selectors - Optimized for tight, professional spacing */
   .flag-icon-currency {
     @apply w-5 h-5 flex-shrink-0; /* 20px size for cohesive currency pair appearance */

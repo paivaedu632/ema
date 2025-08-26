@@ -67,18 +67,26 @@ export function AmountInput({
         />
         <div className="absolute right-4 top-1/2 -translate-y-1/2 currency-selector-container">
           <FlagIcon countryCode={currentCurrency.flag} className="flag-icon-currency" />
-          <Select value={currency} onValueChange={onCurrencyChange} disabled={disabled}>
-            <SelectTrigger className={`currency-selector ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {availableCurrencies.map((curr) => (
-                <SelectItem key={curr.code} value={curr.code}>
-                  {curr.code}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          {availableCurrencies.length === 1 ? (
+            // Show static text when only one currency is available
+            <div className="currency-selector-static">
+              <span className="text-sm font-medium text-gray-900">{currency}</span>
+            </div>
+          ) : (
+            // Show dropdown when multiple currencies are available
+            <Select value={currency} onValueChange={onCurrencyChange} disabled={disabled}>
+              <SelectTrigger className={`currency-selector ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {availableCurrencies.map((curr) => (
+                  <SelectItem key={curr.code} value={curr.code}>
+                    {curr.code}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
         </div>
       </div>
 
