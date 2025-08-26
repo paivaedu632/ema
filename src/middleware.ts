@@ -26,7 +26,6 @@ const isPublicRoute = createRouteMatcher([
   '/debug(.*)',
   '/api/debug(.*)',
   '/api/webhooks/(.*)', // Allow webhooks
-  '/api/wallet/balances-temp(.*)' // Allow temporary API endpoint
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
