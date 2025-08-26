@@ -49,35 +49,35 @@ const ERROR_MAPPINGS: Record<string, ErrorInfo> = {
   [AuthErrorType.MISSING_TOKEN]: {
     category: ErrorCategory.AUTHENTICATION,
     severity: ErrorSeverity.MEDIUM,
-    userMessage: 'Autenticação necessária',
+    userMessage: 'Authentication required',
     technicalMessage: 'Missing authentication token',
     statusCode: 401
   },
   [AuthErrorType.INVALID_TOKEN]: {
     category: ErrorCategory.AUTHENTICATION,
     severity: ErrorSeverity.MEDIUM,
-    userMessage: 'Token de autenticação inválido',
+    userMessage: 'Invalid authentication token',
     technicalMessage: 'Invalid authentication token',
     statusCode: 401
   },
   [AuthErrorType.USER_NOT_FOUND]: {
     category: ErrorCategory.AUTHENTICATION,
     severity: ErrorSeverity.HIGH,
-    userMessage: 'Usuário não encontrado',
+    userMessage: 'User not found',
     technicalMessage: 'User not found in database',
     statusCode: 404
   },
   [AuthErrorType.UNAUTHORIZED]: {
     category: ErrorCategory.AUTHORIZATION,
     severity: ErrorSeverity.MEDIUM,
-    userMessage: 'Não autorizado',
+    userMessage: 'Unauthorized',
     technicalMessage: 'Unauthorized access attempt',
     statusCode: 401
   },
   [AuthErrorType.FORBIDDEN]: {
     category: ErrorCategory.AUTHORIZATION,
     severity: ErrorSeverity.MEDIUM,
-    userMessage: 'Acesso negado',
+    userMessage: 'Access denied',
     technicalMessage: 'Forbidden access attempt',
     statusCode: 403
   }
@@ -102,7 +102,7 @@ const DATABASE_ERROR_PATTERNS = [
     info: {
       category: ErrorCategory.DATABASE,
       severity: ErrorSeverity.LOW,
-      userMessage: 'Registro já existe',
+      userMessage: 'Record already exists',
       technicalMessage: 'Duplicate key constraint violation',
       statusCode: 409
     }
@@ -112,7 +112,7 @@ const DATABASE_ERROR_PATTERNS = [
     info: {
       category: ErrorCategory.DATABASE,
       severity: ErrorSeverity.MEDIUM,
-      userMessage: 'Referência inválida',
+      userMessage: 'Invalid reference',
       technicalMessage: 'Foreign key constraint violation',
       statusCode: 400
     }
@@ -122,7 +122,7 @@ const DATABASE_ERROR_PATTERNS = [
     info: {
       category: ErrorCategory.DATABASE,
       severity: ErrorSeverity.CRITICAL,
-      userMessage: 'Serviço temporariamente indisponível',
+      userMessage: 'Service temporarily unavailable',
       technicalMessage: 'Database connection refused',
       statusCode: 503
     }

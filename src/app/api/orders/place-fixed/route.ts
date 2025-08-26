@@ -223,9 +223,23 @@ async function calculateRequiredFunds(orderData: any) {
       if (error || !sellOrders || sellOrders.length === 0) {
         // No sell orders available, use a default high price for validation
         // This will likely cause insufficient balance error, which is appropriate
+        const defaultPrice = 2000 // High default price (AOA per EUR)
+        let defaultCost
+
+        if (orderData.base_currency === 'EUR' && orderData.quote_currency === 'AOA') {
+          // Buying EUR with AOA: cost = quantity * price
+          defaultCost = orderData.quantity * defaultPrice
+        } else if (orderData.base_currency === 'AOA' && orderData.quote_currency === 'EUR') {
+          // Buying AOA with EUR: cost = quantity / price
+          defaultCost = orderData.quantity / defaultPrice
+        } else {
+          // Fallback
+          defaultCost = orderData.quantity * defaultPrice
+        }
+
         return {
           currency: orderData.quote_currency,
-          amount: orderData.quantity * 2000 // High default price
+          amount: defaultCost
         }
       }
 
@@ -240,7 +254,18 @@ async function calculateRequiredFunds(orderData: any) {
         const price = parseFloat(sellOrder.price)
         const quantityToTake = Math.min(remainingQuantity, availableQuantity)
 
-        totalCost += quantityToTake * price
+        // Price calculation depends on currency pair direction
+        if (orderData.base_currency === 'EUR' && orderData.quote_currency === 'AOA') {
+          // Buying EUR with AOA: price is AOA per EUR, so cost = quantity * price
+          totalCost += quantityToTake * price
+        } else if (orderData.base_currency === 'AOA' && orderData.quote_currency === 'EUR') {
+          // Buying AOA with EUR: price is AOA per EUR, so cost = quantity / price
+          totalCost += quantityToTake / price
+        } else {
+          // Fallback for other currency pairs
+          totalCost += quantityToTake * price
+        }
+
         remainingQuantity -= quantityToTake
       }
 
@@ -248,7 +273,15 @@ async function calculateRequiredFunds(orderData: any) {
         // Not enough sell orders to fulfill the entire buy order
         // Add extra cost for the unfulfilled portion using the last available price
         const lastPrice = sellOrders.length > 0 ? parseFloat(sellOrders[sellOrders.length - 1].price) : 2000
-        totalCost += remainingQuantity * lastPrice
+
+        // Apply same price calculation logic for remaining quantity
+        if (orderData.base_currency === 'EUR' && orderData.quote_currency === 'AOA') {
+          totalCost += remainingQuantity * lastPrice
+        } else if (orderData.base_currency === 'AOA' && orderData.quote_currency === 'EUR') {
+          totalCost += remainingQuantity / lastPrice
+        } else {
+          totalCost += remainingQuantity * lastPrice
+        }
       }
 
       return {

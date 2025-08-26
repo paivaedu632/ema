@@ -18,7 +18,7 @@ export const CurrencySchema = z.enum(['EUR', 'AOA'], {
  * Positive number validation with custom error
  */
 export const PositiveNumberSchema = z.number().positive({
-  message: 'Deve ser um número positivo'
+  message: 'Must be a positive number'
 })
 
 /**
@@ -42,7 +42,7 @@ export const StringToNumberSchema = z.string()
     if (isNaN(num)) {
       throw new z.ZodError([{
         code: 'custom',
-        message: 'Deve ser um número válido',
+        message: 'Must be a valid number',
         path: []
       }])
     }
@@ -53,15 +53,15 @@ export const StringToNumberSchema = z.string()
  * UUID validation schema
  */
 export const UUIDSchema = z.string().uuid({
-  message: 'ID inválido'
+  message: 'Invalid ID'
 })
 
 /**
  * Email validation schema
  */
 export const EmailSchema = z.string()
-  .email({ message: 'Email inválido' })
-  .min(1, 'Email é obrigatório')
+  .email({ message: 'Invalid email' })
+  .min(1, 'Email is required')
 
 // ===== ORDER BOOK VALIDATION SCHEMAS =====
 
@@ -97,7 +97,7 @@ export const PlaceOrderSchema = z.object({
   }
   return true
 }, {
-  message: 'Moedas base e cotação devem ser diferentes',
+  message: 'Base and quote currencies must be different',
   path: ['quote_currency']
 }).refine((data) => {
   // Price required for limit orders
@@ -106,7 +106,7 @@ export const PlaceOrderSchema = z.object({
   }
   return true
 }, {
-  message: 'Preço é obrigatório para ordens limitadas',
+  message: 'Price is required for limit orders',
   path: ['price']
 }).refine((data) => {
   // Dynamic pricing only for limit sell orders
@@ -115,7 +115,7 @@ export const PlaceOrderSchema = z.object({
   }
   return true
 }, {
-  message: 'Preços dinâmicos só se aplicam a ordens de venda limitadas',
+  message: 'Dynamic pricing only applies to limit sell orders',
   path: ['dynamic_pricing_enabled']
 }).refine((data) => {
   // Buy orders must be market orders only
@@ -124,7 +124,7 @@ export const PlaceOrderSchema = z.object({
   }
   return true
 }, {
-  message: 'Apenas ordens de compra de mercado são suportadas. Use ordens de mercado para execução imediata.',
+  message: 'Only market buy orders are supported. Use market orders for immediate execution.',
   path: ['type']
 })
 
@@ -249,7 +249,7 @@ export const TradeHistoryQuerySchema = z.object({
 export const TransactionTypeSchema = z.enum([
   'buy', 'sell', 'send', 'deposit', 'withdraw', 'exchange_buy', 'exchange_sell'
 ], {
-  errorMap: () => ({ message: 'Tipo de transação inválido' })
+  errorMap: () => ({ message: 'Invalid transaction type' })
 })
 
 /**
