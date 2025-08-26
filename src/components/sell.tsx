@@ -11,7 +11,7 @@ import { PageHeader } from "@/components/ui/page-header"
 import { AmountInput } from "@/components/ui/amount-input"
 import { FixedBottomAction } from "@/components/ui/fixed-bottom-action"
 import { SuccessScreen } from "@/components/ui/success-screen"
-import { ConfirmationSection, ConfirmationRow, ConfirmationWarning } from "@/components/ui/confirmation-section"
+import { ConfirmationSection, ConfirmationRow } from "@/components/ui/confirmation-section"
 import { AvailableBalance } from "@/components/ui/available-balance"
 import { formatAmountWithCurrency, formatAmountForInput } from "@/lib/format"
 
@@ -103,17 +103,7 @@ export function SellFlow() {
     }
   }
 
-  // Calculate the amount user will receive
-  const calculateUserReceiveAmount = (): { amount: number; currency: string } => {
-    const receiveCurrency = watchedCurrency === "EUR" ? "AOA" : "EUR"
 
-    // For now, always use the desired amount that user specified
-    // TODO: Implement dynamic rate calculation when automatic rate is selected
-    return {
-      amount: Number(desiredAmount) || 0,
-      currency: receiveCurrency
-    }
-  }
 
   // Validate desired amount and convert rate limits to user-friendly receive amount limits
   const validateDesiredAmount = (amount: string): string => {
@@ -432,20 +422,16 @@ export function SellFlow() {
           )}
 
           {/* Transaction Summary */}
-          <div className="space-y-2 mb-6">
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">Você vende</span>
-              <span className="text-sm font-medium text-gray-900">
-                {formatAmountWithCurrency(watchedAmount || 0, watchedCurrency as Currency)}
-              </span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">Você recebe</span>
-              <span className="text-sm font-medium text-gray-900">
-                {formatAmountWithCurrency(desiredAmount || 0, receiveCurrency as Currency)}
-              </span>
-            </div>
-          </div>
+          <ConfirmationSection title="">
+            <ConfirmationRow
+              label="Você vende"
+              value={formatAmountWithCurrency(watchedAmount || 0, watchedCurrency as Currency)}
+            />
+            <ConfirmationRow
+              label="Você recebe"
+              value={formatAmountWithCurrency(desiredAmount || 0, receiveCurrency as Currency)}
+            />
+          </ConfirmationSection>
         </main>
 
         <FixedBottomAction
@@ -560,21 +546,7 @@ export function SellFlow() {
     )
   }
 
-  // Calculate received amount for confirmation step using user-derived rate
-  const calculateConfirmationReceivedAmount = (): { amount: string; currency: string } => {
-    const desiredAmountNum = Number(desiredAmount) || 0
-    const receiveCurrency = watchedCurrency === "EUR" ? "AOA" : "EUR"
 
-    if (desiredAmountNum === 0) {
-      return { amount: "0.00", currency: receiveCurrency }
-    }
-
-    // Simply return the desired amount that user specified
-    return {
-      amount: formatAmountForInput(desiredAmountNum, receiveCurrency as Currency),
-      currency: receiveCurrency
-    }
-  }
 
   // Step 4: Confirmation
   return (
@@ -595,22 +567,22 @@ export function SellFlow() {
             <ConfirmationRow
               label="Você recebe"
               value={(() => {
-                const received = calculateConfirmationReceivedAmount()
+                const receiveCurrency = watchedCurrency === "EUR" ? "AOA" : "EUR"
+                const formattedAmount = formatAmountForInput(Number(desiredAmount) || 0, receiveCurrency as Currency)
                 // Add ± symbol for automatic rate to indicate approximate amount
                 const prefix = useAutomaticRate ? "±" : ""
-                return `${prefix}${received.amount} ${received.currency}`
+                return `${prefix}${formattedAmount} ${receiveCurrency}`
               })()}
               highlight
             />
           </ConfirmationSection>
 
-          {/* Warning - Conditional based on rate type */}
-          <ConfirmationWarning>
-            <div className="space-y-2 text-sm text-gray-600">
-              <p className="label-form">Seu valor ficará reservado até encontrarmos um comprador. Mas você pode retirar sempre que quiser.</p>
-              <p className="label-form">Após a venda, o valor será depositado em euros na sua conta. Não fazemos devolução!</p>
-            </div>
-          </ConfirmationWarning>
+          {/* Warning */}
+          <div className="space-y-2 text-sm text-gray-600">
+            <p className="font-medium text-gray-900">Atenção:</p>
+            <p>Seu valor ficará reservado até encontrarmos um comprador. Mas você pode retirar sempre que quiser.</p>
+            <p>Após a venda, o valor será depositado em euros na sua conta. Não fazemos devolução!</p>
+          </div>
         </div>
       </main>
 
