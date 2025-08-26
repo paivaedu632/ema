@@ -13,7 +13,7 @@ import { FixedBottomAction } from "@/components/ui/fixed-bottom-action"
 import { SuccessScreen } from "@/components/ui/success-screen"
 import { ConfirmationSection, ConfirmationRow, ConfirmationWarning } from "@/components/ui/confirmation-section"
 import { AvailableBalance } from "@/components/ui/available-balance"
-import { formatAmountWithCurrency, formatAmountForInput, formatExchangeRate, parsePortugueseNumber } from "@/lib/format"
+import { formatAmountWithCurrency, formatAmountForInput } from "@/lib/format"
 
 import {
   TRANSACTION_LIMITS,
@@ -171,14 +171,8 @@ export function SellFlow() {
       return "Automático"
     }
 
-    // For manual rate, show the calculated rate
-    const rate = calculateExchangeRate()
-
-    if (rate === 0) {
-      return "Taxa não calculada"
-    }
-
-    return `1 EUR = ${rate.toFixed(2)} AOA`
+    // For manual rate, show "Manual" instead of calculated rate
+    return "Manual"
   }
 
   // React Hook Form setup with custom resolver
