@@ -1,8 +1,20 @@
 /**
  * Portuguese Locale Number Formatting Utilities for EmaPay
- * 
- * This module provides consistent Portuguese locale formatting for all numeric displays
- * across the EmaPay application, supporting both AOA and EUR currencies.
+ *
+ * ⚠️  FRONTEND DISPLAY ONLY ⚠️
+ * This module provides Portuguese locale formatting for USER-FACING DISPLAYS ONLY.
+ *
+ * SCOPE:
+ * ✅ Frontend Components: Balance cards, transaction lists, forms, confirmation screens
+ * ✅ User Interface: All currency amounts displayed to users (1.234,56 format)
+ * ❌ Backend/API: Use standard JSON decimal format (1234.56) for all API operations
+ * ❌ Database: Store raw numeric values without any locale-specific formatting
+ *
+ * USAGE GUIDELINES:
+ * - Frontend Display: Use formatAmountWithCurrency() and formatAmountForInput()
+ * - API Calls: Use formatForAPI() to convert Portuguese input to standard decimal
+ * - Database Operations: Work with raw numbers only, never formatted strings
+ * - JSON Responses: Return standard decimal format, format on frontend
  */
 
 export type Currency = 'AOA' | 'EUR'
@@ -198,9 +210,17 @@ export function isValidPortugueseNumber(value: string): boolean {
 }
 
 /**
- * Format number for API calls (always use dot as decimal separator)
- * @param amount - Amount to format for API
- * @returns String formatted for API consumption
+ * Format number for API calls (always use standard decimal format)
+ *
+ * ⚠️  CRITICAL: Use this function to convert Portuguese formatted user input
+ * to standard JSON decimal format before sending to backend/API.
+ *
+ * EXAMPLES:
+ * - formatForAPI("1.250,50") → "1250.50" (for API calls)
+ * - formatForAPI(1250.50) → "1250.50" (for API calls)
+ *
+ * @param amount - Amount to format for API (Portuguese formatted string or number)
+ * @returns String in standard decimal format (1234.56) for API consumption
  */
 export function formatForAPI(amount: number | string): string {
   const numericAmount = typeof amount === 'string' ? parsePortugueseNumber(amount) : amount
