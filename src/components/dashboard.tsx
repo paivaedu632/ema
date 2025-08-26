@@ -159,12 +159,12 @@ export default function Dashboard() {
         {/* Account Cards Section */}
         <div className="mb-8">
           <h2 className="heading-section mb-6">Saldo</h2>
-          <div className="flex space-x-4 overflow-x-auto pb-2 scrollbar-hide">
+          <div className="flex space-x-3 overflow-x-auto pb-3 px-1 scrollbar-hide">
             {balancesLoading ? (
               // Loading skeleton for balance cards
               <>
                 {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="flex-shrink-0 w-52 h-32 bg-gray-100 rounded-xl animate-pulse" />
+                  <div key={i} className="flex-shrink-0 w-52 h-36 bg-gray-100 rounded-xl animate-pulse border border-gray-200" />
                 ))}
               </>
             ) : (
