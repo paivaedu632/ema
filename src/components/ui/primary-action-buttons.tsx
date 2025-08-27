@@ -15,10 +15,6 @@ export function PrimaryActionButtons({ className = "" }: PrimaryActionButtonsPro
     router.push('/sell')
   }
 
-  const handleComprar = () => {
-    router.push('/buy')
-  }
-
   return (
     <div className={`flex space-x-3 ${className}`}>
       <Button
@@ -26,12 +22,6 @@ export function PrimaryActionButtons({ className = "" }: PrimaryActionButtonsPro
         className="secondary-action-button"
       >
         Vender
-      </Button>
-      <Button
-        onClick={handleComprar}
-        className="secondary-action-button"
-      >
-        Comprar
       </Button>
     </div>
   )

@@ -62,7 +62,7 @@ src/
 │   │   ├── input.tsx        # Input component with custom styling
 │   │   └── select.tsx       # Select dropdown component
 │   ├── dashboard.tsx        # Main EmaPay dashboard component
-│   ├── buy.tsx              # Buy flow component
+
 │   ├── sell.tsx             # Sell flow component
 │   ├── deposit.tsx          # Deposit flow component
 │   ├── withdraw.tsx         # Withdraw flow component

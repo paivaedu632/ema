@@ -60,7 +60,7 @@
 ## Custom Reusable Components:
 
 ### Action Button Components:
-- **PrimaryActionButtons** (`src/components/ui/primary-action-buttons.tsx`) - Reusable "Vender" and "Comprar" button pair with secondary-action-button styling (Note: "Negociar" button removed)
+- **PrimaryActionButtons** (`src/components/ui/primary-action-buttons.tsx`) - Reusable "Vender" button with secondary-action-button styling (Note: "Comprar" and "Negociar" buttons removed)
 - **IconActionButtons** (`src/components/ui/icon-action-buttons.tsx`) - Reusable icon-based action buttons: "Depositar", "Enviar", "Receber", "Retirar" with navigation
 
 ### Validation Components:
@@ -204,11 +204,9 @@
 
 ### Refactoring Results - COMPLETED FLOWS:
 
-#### Buy Flow (COMPLETED - CONFIRMATION REFACTORED):
-- **Before**: 254 lines with duplicated patterns across 3 steps
-- **After**: 167 lines using reusable components (35% code reduction)
-- **Components Used**: PageHeader, AmountInput, FixedBottomAction, SuccessScreen, ConfirmationSection components
-- **Benefits**: Eliminated 87 lines of duplicated code, improved maintainability, ensured consistency, confirmation step refactored to match withdraw.tsx pattern
+#### Buy Flow (REMOVED):
+- **Status**: Deleted from codebase
+- **Reason**: Simplified application to focus on sell-only functionality
 
 ## 🔄 **CODE DUPLICATION ANALYSIS & REFACTORING (COMPLETED)**
 
@@ -230,7 +228,7 @@
 - **Impact**: Eliminated 15+ lines of duplicated info display code per usage
 
 #### **4. Confirmation Patterns** (HIGH IMPACT - ✅ ALREADY RESOLVED)
-- **Pattern Found**: Confirmation steps across buy.tsx, sell.tsx, send.tsx, withdraw.tsx with similar but inconsistent styling
+- **Pattern Found**: Confirmation steps across sell.tsx, send.tsx, withdraw.tsx with similar but inconsistent styling
 - **Solution**: Previously created `ConfirmationSection`, `ConfirmationRow`, `ConfirmationWarning` components
 - **Impact**: Standardized all confirmation flows, eliminated 30+ lines of duplicated code per component
 
@@ -240,7 +238,7 @@
 - **Impact**: Standardized balance displays, eliminated 15+ lines of duplicated card code per usage
 
 #### **6. Available Balance Info Patterns** (MEDIUM IMPACT - ✅ NEW COMPONENT CREATED)
-- **Pattern Found**: "Saldo disponível" display across buy.tsx, sell.tsx, withdraw.tsx, and other flows
+- **Pattern Found**: "Saldo disponível" display across sell.tsx, withdraw.tsx, and other flows
 - **Solution**: Created `AvailableBalance` component with consistent styling and formatting
 - **Impact**: Eliminated 5+ lines of duplicated balance info code per usage, standardized balance display format
 
@@ -265,7 +263,7 @@
 - ✅ **withdraw.tsx**: Form fields → FormField, confirmation → ConfirmationSection components, available balance → AvailableBalance component
 - ✅ **deposit.tsx**: Info sections → InfoSection, detail rows → DetailRow components
 - ✅ **dashboard.tsx**: Account balance cards → BalanceCard component
-- ✅ **buy.tsx**: Available balance → AvailableBalance component, confirmation → ConfirmationSection components
+- ❌ **buy.tsx**: Removed from codebase
 - ✅ **sell.tsx**: Available balance → AvailableBalance component, confirmation → ConfirmationSection components
 - ✅ **send.tsx**: Confirmation steps → ConfirmationSection components (previously completed)
 
@@ -622,7 +620,7 @@ New UI Need Identified
 **EmaPay Deposit Route** - Route page created at `/deposit` for deposit/add money functionality
 **EmaPay Receive Route** - Route page created at `/receive` for payment receive functionality with QR code generation
 **EmaPay Withdraw Route** - Route page created at `/withdraw` for withdrawal functionality
-**EmaPay Buy Route** - Route page created at `/buy` for currency purchase functionality
+
 **EmaPay Sell Route** - Route page created at `/sell` for currency selling functionality
 **EmaPay Transaction Details Route** - Route page created at `/transaction/[id]` for individual transaction details
 
@@ -716,7 +714,7 @@ New UI Need Identified
 - **Navigation**: Implemented click handlers using Next.js useRouter for:
   - **Depositar button** → Navigates to `/deposit` page (DepositFlow component)
   - **Vender button** → Navigates to `/sell` page (SellFlow component)
-  - **Comprar button** → Navigates to `/buy` page (BuyFlow component)
+
   - **Enviar button** → Navigates to `/send` page (WiseStyleTransfer component)
   - **Receber button** → Navigates to `/receive` page (ReceivePayment component)
 - **Transactions**: Google Services transactions with consistent "G" logo branding
@@ -729,7 +727,7 @@ New UI Need Identified
 - **Signup Route**: `src/app/signup/page.tsx` - User registration flow (imports `Signup` component)
 - **Deposit Route**: `src/app/deposit/page.tsx` - Deposit/add money flow (imports `DepositFlow` component)
 - **Sell Route**: `src/app/sell/page.tsx` - Sell flow (imports `SellFlow` component)
-- **Buy Route**: `src/app/buy/page.tsx` - Buy flow (imports `BuyFlow` component)
+
 - **Send Route**: `src/app/send/page.tsx` - Send money flow (imports `WiseStyleTransfer` component)
 - **Receive Route**: `src/app/receive/page.tsx` - Receive payment flow (imports `ReceivePayment` component)
 - **Withdraw Route**: `src/app/withdraw/page.tsx` - Withdrawal flow (imports `WithdrawFlow` component) with dynamic currency flag support
@@ -843,23 +841,9 @@ New UI Need Identified
 - **Icons**: Lucide React icons (Bot, Wrench, ArrowLeft) for clean interface design
 - **Visual Consistency**: Perfect alignment with deposit flow design patterns and EmaPay branding
 
-### Buy Flow (Single Step) - EXACT DESIGN MATCH:
-- **Page Route**: `src/app/buy/page.tsx` - Currency buy page route (imports `BuyFlow` component)
-- **Main Component**: `src/components/buy.tsx` - Single-step currency buy form matching the provided design exactly
-- **Layout Structure**: Matches deposit/sell flow patterns (`min-h-screen bg-gray-50`, `max-w-sm mx-auto px-4 pt-8 pb-24`)
-- **Typography**: Consistent with other flows (`text-3xl font-bold` for main heading "Quanto você quer comprar:")
-- **Input Styling**: Same as deposit/sell flows (`h-16 rounded-2xl border-black`, integrated currency selectors)
-- **Currency Support**: AOA and EUR currencies with Angola and Euro flag integration
-- **Corrected Balance Logic**: Shows spending currency balance (when buying AOA displays EUR balance, when buying EUR displays AOA balance) for accurate transaction validation
-- **Flag Components**: Uses existing AngolaFlag and EuroFlag components from flagicons.lipis.dev
-- **Available Balance Display**: Shows "Saldo disponível: 100 EUR" as per design
-- **Exchange Details Card**: White rounded card showing:
-  - Exchange rate: "1.00 USD = 924.0675 AOA"
-  - Fee: "100 AOA"
-  - Amount received: "100 AOA"
-  - Processing time: "Segundos"
-- **Button Design**: Fixed bottom pattern (`fixed bottom-6`, `h-16 bg-black rounded-full`)
-- **Navigation**: Back arrow navigates to dashboard, Continue button for next step
+### Buy Flow - REMOVED:
+- **Status**: Deleted from codebase
+- **Reason**: Simplified application to focus on sell-only functionality
 - **State Management**: React useState for amount and currency selection
 - **Static Exchange Rates**: Uses static rates as per user preference
 - **Visual Consistency**: Perfect alignment with deposit/sell flow design patterns and EmaPay branding
@@ -1194,7 +1178,7 @@ New UI Need Identified
   - Proper disabled states with opacity and cursor changes
   - White text color for optimal contrast
 - **Centralized Maintenance**: All primary action button styling changes can be made in one location
-- **Components Using Standard**: All primary action buttons in buy, sell, deposit, withdraw, send components use `.primary-action-button` class
+- **Components Using Standard**: All primary action buttons in sell, deposit, withdraw, send components use `.primary-action-button` class
 - **Button Types Covered**: Continue, Confirm, Share, Pay, Back to Home, and other primary actions
 - **Consistency**: Eliminates styling variations and ensures uniform button appearance across all flows
 

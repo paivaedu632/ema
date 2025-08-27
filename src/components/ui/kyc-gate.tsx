@@ -8,7 +8,7 @@ import { formatAmountWithCurrency, type Currency } from '@/lib/format'
 
 interface KYCGateProps {
   children: React.ReactNode
-  requiredForAction: string // e.g., "send money", "buy currency", "withdraw funds"
+  requiredForAction: string // e.g., "send money", "sell currency", "withdraw funds"
   transactionAmount?: number
   transactionCurrency?: string
   className?: string

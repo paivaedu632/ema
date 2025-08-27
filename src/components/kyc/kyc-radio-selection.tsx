@@ -187,7 +187,7 @@ export function KYCAppUseSelection({
   const appUseOptions = [
     "Enviar dinheiro para família",
     "Receber pagamentos internacionais",
-    "Comprar e vender moedas",
+    "Vender moedas",
     "Pagar serviços no exterior",
     "Investimentos internacionais",
     "Negócios e comércio",

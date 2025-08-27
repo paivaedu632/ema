@@ -16,7 +16,7 @@ import { formatAmountWithCurrency, type Currency } from '@/lib/format'
  * 
  * Request Body:
  * {
- *   "side": "buy" | "sell",
+ *   "side": "sell",
  *   "type": "limit" | "market",
  *   "base_currency": "EUR" | "AOA",
  *   "quote_currency": "EUR" | "AOA",

@@ -68,7 +68,7 @@ Text extraction via AWS Textract
 Face detection and comparison via AWS Rekognition
 Angolan BI number validation
 ✅ Dynamic Fee System - Configurable fees by transaction type:
-Buy transactions: 2% fee
+Sell transactions: 2% fee
 All other transactions: 0% fee (free P2P transfers, deposits, etc.)
 Legacy Systems (Deprecated)
 ⚠️ P2P Exchange System (June 2025) - Marketplace-style offers system
@@ -596,7 +596,7 @@ Old API endpoints marked as deprecated but functional
 New users automatically use order book system
 Existing offers can be migrated to order book format
 Deprecated Endpoints
-POST /api/transactions/buy    // Use /api/orders/place instead
+POST /api/transactions/sell   // Use /api/orders/place instead
 POST /api/transactions/sell   // Use /api/orders/place instead  
 POST /api/exchange/rates      // Use /api/orderbook/* instead
 

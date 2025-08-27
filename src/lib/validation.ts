@@ -118,14 +118,14 @@ export const PlaceOrderSchema = z.object({
   message: 'Dynamic pricing only applies to limit sell orders',
   path: ['dynamic_pricing_enabled']
 }).refine((data) => {
-  // Buy orders must be market orders only
-  if (data.side === 'buy' && data.type !== 'market') {
+  // Price is required for limit orders (both buy and sell)
+  if (data.type === 'limit' && (!data.price || data.price <= 0)) {
     return false
   }
   return true
 }, {
-  message: 'Only market buy orders are supported. Use market orders for immediate execution.',
-  path: ['type']
+  message: 'Price is required and must be positive for limit orders',
+  path: ['price']
 })
 
 /**

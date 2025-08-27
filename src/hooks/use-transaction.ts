@@ -76,7 +76,6 @@ export function useTransaction(type: TransactionType) {
 
   const navigateToSuccess = (transactionId?: string) => {
     const successRoutes = {
-      buy: '/buy/success',
       sell: '/sell/success',
       send: '/send/success'
     }
@@ -90,7 +89,6 @@ export function useTransaction(type: TransactionType) {
 
   const navigateToError = (errorMessage?: string) => {
     const errorRoutes = {
-      buy: '/buy/error',
       sell: '/sell/error',
       send: '/send/error'
     }

@@ -1,9 +1,8 @@
 // EmaPay-specific types and enums
 export type Currency = 'AOA' | 'EUR'
 
-export type TransactionType = 
-  | 'buy'      // Buy AOA with EUR
-  | 'sell'     // Sell AOA for EUR  
+export type TransactionType =
+  | 'sell'     // Sell AOA for EUR
   | 'send'     // Send money to another user
   | 'deposit'  // Deposit money into wallet
   | 'withdraw' // Withdraw money from wallet
