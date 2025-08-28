@@ -162,7 +162,7 @@
 - **OptionSelector** (`src/components/ui/option-selector.tsx`) - Reusable option selector for choosing between different options with icons and descriptions
 - **RadioOptionSelector** (`src/components/ui/option-selector.tsx`) - Radio-based option selector for single selection with visual feedback
 - **CardOptionSelector** (`src/components/ui/option-selector.tsx`) - Card-based option selector with clickable cards following EmaPay patterns
-- **LoadingAnimation** (`src/components/ui/loading-animation.tsx`) - Professional Lottie-based loading animation with financial theme, multiple size variants (sm/md/lg/xl), Portuguese messages, and CSS fallback animation for enhanced user experience
+- **LoadingAnimation** (`src/components/ui/loading-animation.tsx`) - Clean, simple loading animation with spinning circle and "Aguarde" text, multiple size variants (sm/md/lg/xl), minimal design for professional appearance
 
 ### KYC Refactoring Components ✅ NEW (January 2025):
 - **KYCFormStep** (`src/components/kyc/kyc-form-step.tsx`) - Reusable KYC form step component for simple text input steps, eliminates duplicate code across full-name, occupation, and other text input steps

@@ -135,18 +135,8 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-white">
       {!isLoaded || !user ? (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50">
-          <div className="text-center space-y-8">
-            <div className="space-y-4">
-              <h1 className="text-3xl font-bold text-gray-900">Bem-vindo ao EmaPay</h1>
-              <p className="text-lg text-gray-600">A sua carteira digital</p>
-            </div>
-            <LoadingAnimation
-              message="Carregando o seu painel..."
-              size="lg"
-              className="py-8"
-            />
-          </div>
+        <div className="min-h-screen flex items-center justify-center">
+          <LoadingAnimation size="lg" />
         </div>
       ) : (
         <main className="max-w-sm mx-auto px-4 pt-8 pb-6">
