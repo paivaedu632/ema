@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Update users table (this will trigger the sync function)
-    const { data: updatedUser, error: userUpdateError } = await supabaseAdmin
+    const { error: userUpdateError } = await supabaseAdmin
       .from('users')
       .update({
         kyc_status: status,

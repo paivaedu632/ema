@@ -1,6 +1,35 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
 
+// BI validation interfaces
+interface ValidationCheck {
+  valid: boolean;
+  message: string;
+}
+
+interface BIValidationResult {
+  isValid: boolean;
+  format: string;
+  validation: {
+    errors: string[];
+    warnings: string[];
+    checks: {
+      length: ValidationCheck;
+      format: ValidationCheck;
+      checksum: ValidationCheck;
+      province: ValidationCheck;
+    };
+  };
+  metadata: {
+    extractedInfo: {
+      province?: string;
+      year?: string;
+      sequence?: string;
+    };
+    confidence: number;
+  };
+}
+
 /**
  * GET /api/validate-bi/[biNumber]
  * Validate Angolan BI (Bilhete de Identidade) number format
@@ -64,7 +93,7 @@ export async function GET(
 /**
  * Helper function to validate Angolan BI number format
  */
-function validateBINumber(biNumber: string): any {
+function validateBINumber(biNumber: string): BIValidationResult {
   const validation = {
     isValid: false,
     format: '',
@@ -175,8 +204,8 @@ function validateBINumber(biNumber: string): any {
   // Determine overall validity
   const hasErrors = validation.validation.errors.length > 0
   const allChecksValid = Object.values(validation.validation.checks)
-    .filter((check: any) => typeof check.valid === 'boolean')
-    .every((check: any) => check.valid)
+    .filter((check: ValidationCheck) => typeof check.valid === 'boolean')
+    .every((check: ValidationCheck) => check.valid)
 
   validation.isValid = !hasErrors && allChecksValid
   validation.format = 'ANGOLAN_BI'

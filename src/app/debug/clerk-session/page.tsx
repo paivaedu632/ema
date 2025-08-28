@@ -5,7 +5,14 @@ import { useEffect, useState } from 'react'
 
 export default function ClerkSessionDebugPage() {
   const { user, isLoaded } = useUser()
-  const [sessionInfo, setSessionInfo] = useState<any>(null)
+  const [sessionInfo, setSessionInfo] = useState<{
+    clerk_user_id: string;
+    email: string;
+    first_name: string | null;
+    last_name: string | null;
+    created_at: string;
+    updated_at: string;
+  } | null>(null)
 
   useEffect(() => {
     if (isLoaded && user) {

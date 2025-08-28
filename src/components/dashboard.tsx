@@ -10,7 +10,6 @@ import { BalanceCard } from '@/components/ui/balance-card'
 import { AngolaFlag, EurFlag } from '@/components/ui/flag-icon'
 import { LogOut } from 'lucide-react'
 import { TransactionListItem, TransactionListItemSkeleton, TransactionListEmpty } from '@/components/ui/transaction-list-item'
-import { type TransactionData } from '@/utils/transaction-formatting'
 
 // Interface for display-ready transaction data
 interface DisplayTransaction {
@@ -79,7 +78,7 @@ export default function Dashboard() {
     try {
       await signOut()
       router.push('/login')
-    } catch (error) {
+    } catch (_error) {
       // Handle sign out error silently
     }
   }

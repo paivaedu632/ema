@@ -12,7 +12,7 @@ import {
   Eye,
   EyeOff
 } from 'lucide-react'
-import { formatAmountWithCurrency, formatAmountForInput, type Currency } from '@/lib/format'
+import { formatCurrency } from '@/lib/format'
 
 interface OrderBookLevel {
   price: number

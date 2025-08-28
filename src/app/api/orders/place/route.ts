@@ -10,6 +10,38 @@ import { createUserContext, hassufficientBalance } from '@/middleware/user-conte
 import { createApiError, ErrorCategory, ErrorSeverity } from '@/lib/error-handler'
 import { formatAmountWithCurrency, type Currency } from '@/lib/format'
 
+// Order placement interfaces
+interface OrderData {
+  side: 'buy' | 'sell';
+  type: 'limit' | 'market';
+  base_currency: string;
+  quote_currency: string;
+  quantity: number;
+  price?: number;
+  dynamic_pricing_enabled?: boolean;
+}
+
+interface OrderResult {
+  order_id: string;
+  status: string;
+  reserved_amount: number;
+  created_at: string;
+  message?: string;
+}
+
+interface UserContext {
+  user: {
+    id: string;
+    email: string;
+  };
+  kycCompleted: boolean;
+  wallets: Array<{
+    currency: string;
+    available_balance: number;
+    reserved_balance: number;
+  }>;
+}
+
 /**
  * POST /api/orders/place
  * Place a new order in the order book
@@ -80,7 +112,18 @@ export async function POST(request: NextRequest) {
     })
 
     // 8. Return success response with dynamic pricing info
-    const responseData: any = {
+    const responseData: {
+      order_id: string;
+      status: string;
+      reserved_amount: number;
+      created_at: string;
+      message: string;
+      dynamic_pricing?: {
+        enabled: boolean;
+        current_rate?: number;
+        next_update?: string;
+      };
+    } = {
       order_id: orderResult.order_id,
       status: orderResult.status,
       reserved_amount: orderResult.reserved_amount,
@@ -106,7 +149,7 @@ export async function POST(request: NextRequest) {
 /**
  * Validate order placement business rules
  */
-async function validateOrderPlacement(userContext: any, orderData: any) {
+async function validateOrderPlacement(userContext: UserContext, orderData: OrderData) {
   // 1. Validate KYC status (based on user preferences - temporarily disabled)
   // if (!userContext.kycCompleted) {
   //   throw createApiError(
@@ -212,7 +255,7 @@ async function validateOrderPlacement(userContext: any, orderData: any) {
 /**
  * Calculate required funds for order
  */
-function calculateRequiredFunds(orderData: any): number {
+function calculateRequiredFunds(orderData: OrderData): number {
   if (orderData.side === 'buy') {
     // For buy orders, need quote currency
     if (orderData.type === 'market') {
@@ -245,7 +288,7 @@ function getMinimumOrderSize(currency: 'EUR' | 'AOA'): number {
 /**
  * Generate success message based on order type and result
  */
-function getOrderSuccessMessage(orderData: any, orderResult: any): string {
+function getOrderSuccessMessage(orderData: OrderData, orderResult: OrderResult): string {
   const orderType = orderData.type === 'limit' ? 'limitada' : 'de mercado'
   const side = orderData.side === 'buy' ? 'compra' : 'venda'
   

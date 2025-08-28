@@ -219,7 +219,7 @@ export async function GET(request: NextRequest) {
       .single()
 
     // 3. Get active dynamic orders count
-    const { data: dynamicOrders, count: dynamicOrdersCount } = await supabaseAdmin
+    const { count: dynamicOrdersCount } = await supabaseAdmin
       .from('order_book')
       .select('*', { count: 'exact', head: true })
       .eq('dynamic_pricing_enabled', true)
@@ -228,7 +228,7 @@ export async function GET(request: NextRequest) {
       .in('status', ['pending', 'partially_filled'])
 
     // 4. Get recent price updates statistics
-    const { data: recentUpdates, count: recentUpdatesCount } = await supabaseAdmin
+    const { count: recentUpdatesCount } = await supabaseAdmin
       .from('price_updates')
       .select('*', { count: 'exact', head: true })
       .gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()) // Last 24 hours

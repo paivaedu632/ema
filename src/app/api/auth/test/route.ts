@@ -3,8 +3,7 @@
 // POST /api/auth/test - Test validation system
 
 import { NextRequest } from 'next/server'
-import { z } from 'zod'
-import { getAuthenticatedUserFromRequest, createSuccessResponse, handleApiError } from '@/lib/api-utils'
+import { getAuthenticatedUserFromRequest, createSuccessResponse } from '@/lib/api-utils'
 import { createUserContext, getUserContextSummary } from '@/middleware/user-context'
 import { validateRequestBody, PlaceOrderSchema } from '@/lib/validation'
 import { handleApiError as globalHandleApiError } from '@/lib/error-handler'

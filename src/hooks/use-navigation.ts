@@ -94,7 +94,7 @@ export function useKYCNavigation() {
 export function useTransactionNavigation() {
   const navigation = useNavigation()
 
-  const navigateToTransaction = useCallback((type: 'sell' | 'send' | 'withdraw') => {
+  const navigateToTransaction = useCallback((type: 'buy' | 'sell' | 'send' | 'withdraw') => {
     navigation.navigateTo(`/${type}`)
   }, [navigation])
 

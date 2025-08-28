@@ -1,7 +1,6 @@
 // System Statistics API Endpoint
 // GET /api/system/stats - Get system performance and monitoring statistics
 
-import { NextRequest } from 'next/server'
 import { createSuccessResponse } from '@/lib/api-response'
 import { handleApiError } from '@/lib/error-handler'
 import { getRateLimitStats } from '@/lib/rate-limiter'
@@ -43,7 +42,7 @@ import { websocketManager } from '@/lib/websocket-server'
  *   }
  * }
  */
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Get server metrics
     const serverStats = {

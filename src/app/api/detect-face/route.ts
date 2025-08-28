@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
-import { RekognitionClient, DetectFacesCommand } from '@aws-sdk/client-rekognition'
+import { RekognitionClient, DetectFacesCommand, type FaceDetail } from '@aws-sdk/client-rekognition'
 
 // Initialize AWS Rekognition client
 const rekognitionClient = new RekognitionClient({
@@ -105,7 +105,12 @@ export async function POST(req: NextRequest) {
 /**
  * Helper function to validate face detection results
  */
-function validateFaceDetection(faces: any[], imageType?: string): any {
+function validateFaceDetection(faces: FaceDetail[], imageType?: string): {
+  isValid: boolean;
+  errors: string[];
+  warnings: string[];
+  recommendations: string[];
+} {
   const validation = {
     isValid: false,
     errors: [] as string[],

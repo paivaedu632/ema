@@ -12,6 +12,20 @@ interface BancoBaiApiResponse {
   lastUpdateDate: string
 }
 
+interface ExchangeRateEntry {
+  currency: string;
+  type: number;
+  sellRate: number;
+  buyRate: number;
+  date: string;
+}
+
+interface BancoBaiFullApiResponse {
+  data: {
+    exchangeTableEntryViewList: ExchangeRateEntry[];
+  };
+}
+
 /**
  * GET /api/exchange-rate/banco-bai
  * Fetch current EUR/AOA exchange rate from Banco BAI API
@@ -40,19 +54,19 @@ export async function GET() {
       )
     }
 
-    const data = await response.json()
+    const data = await response.json() as BancoBaiFullApiResponse
 
     // Handle Banco BAI API response structure
-    let eurRate: any = null
+    let eurRate: ExchangeRateEntry | null = null
 
     if (data && data.data && data.data.exchangeTableEntryViewList) {
       // Find EUR exchange rate in the exchangeTableEntryViewList
       // Prefer type 1 (standard rate) over type 2 (premium rate)
-      const eurRates = data.data.exchangeTableEntryViewList.filter((rate: any) => rate.currency === 'EUR')
+      const eurRates = data.data.exchangeTableEntryViewList.filter((rate: ExchangeRateEntry) => rate.currency === 'EUR')
 
       if (eurRates.length > 0) {
         // Prefer type 1 if available, otherwise use the first one
-        eurRate = eurRates.find((rate: any) => rate.type === 1) || eurRates[0]
+        eurRate = eurRates.find((rate: ExchangeRateEntry) => rate.type === 1) || eurRates[0]
       }
     }
 

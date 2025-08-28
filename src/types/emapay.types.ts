@@ -2,6 +2,7 @@
 export type Currency = 'AOA' | 'EUR'
 
 export type TransactionType =
+  | 'buy'      // Buy AOA with EUR (not yet implemented)
   | 'sell'     // Sell AOA for EUR
   | 'send'     // Send money to another user
   | 'deposit'  // Deposit money into wallet

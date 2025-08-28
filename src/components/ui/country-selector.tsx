@@ -1,8 +1,15 @@
 "use client"
 
 import React from "react"
-import Select, { components } from "react-select"
+import Select, { components, type OptionProps, type SingleValueProps } from "react-select"
 import { Country } from "country-state-city"
+
+// Country option interface
+interface CountryOption {
+  value: string;
+  label: string;
+  countryCode: string;
+}
 
 interface CountrySelectorProps {
   value: string
@@ -34,7 +41,7 @@ const countries = Country.getAllCountries().map((country) => ({
 }))
 
 // Custom option component to display flag and country name
-const CustomOption = (props: any) => {
+const CustomOption = (props: OptionProps<CountryOption>) => {
   const { data } = props
   return (
     <components.Option {...props}>
@@ -47,7 +54,7 @@ const CustomOption = (props: any) => {
 }
 
 // Custom single value component to display selected flag and country
-const CustomSingleValue = (props: any) => {
+const CustomSingleValue = (props: SingleValueProps<CountryOption>) => {
   const { data } = props
   return (
     <components.SingleValue {...props}>

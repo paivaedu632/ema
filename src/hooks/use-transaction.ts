@@ -17,7 +17,15 @@ export interface TransactionRequest {
 
 export interface TransactionResponse {
   success: boolean
-  data?: any
+  data?: {
+    transaction_id?: string;
+    order_id?: string;
+    status?: string;
+    amount?: number;
+    currency?: string;
+    created_at?: string;
+    [key: string]: unknown;
+  }
   error?: string
   message?: string
 }
@@ -33,7 +41,7 @@ export type TransactionType = 'buy' | 'sell' | 'send'
 export function useTransaction(type: TransactionType) {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [result, setResult] = useState<any | null>(null)
+  const [result, setResult] = useState<TransactionResponse['data'] | null>(null)
   const router = useRouter()
 
   const processTransaction = async (request: TransactionRequest): Promise<boolean> => {
@@ -76,6 +84,7 @@ export function useTransaction(type: TransactionType) {
 
   const navigateToSuccess = (transactionId?: string) => {
     const successRoutes = {
+      buy: '/buy/success',
       sell: '/sell/success',
       send: '/send/success'
     }
@@ -89,6 +98,7 @@ export function useTransaction(type: TransactionType) {
 
   const navigateToError = (errorMessage?: string) => {
     const errorRoutes = {
+      buy: '/buy/error',
       sell: '/sell/error',
       send: '/send/error'
     }

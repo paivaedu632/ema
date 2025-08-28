@@ -7,6 +7,15 @@ import { handleApiError } from '@/lib/error-handler'
 import { supabaseAdmin } from '@/lib/supabase-server'
 import { createApiError, ErrorCategory, ErrorSeverity } from '@/lib/error-handler'
 
+// Order book level interface
+interface OrderBookLevel {
+  side: 'buy' | 'sell';
+  price: number;
+  quantity: number;
+  total: number;
+  order_count: number;
+}
+
 /**
  * GET /api/market/order-book
  * Get current order book for a currency pair
@@ -95,12 +104,12 @@ export async function GET(request: NextRequest) {
     }
 
     // Process the data
-    const asks = orderBookData?.filter((level: any) => level.side === 'sell') || []
-    const bids = orderBookData?.filter((level: any) => level.side === 'buy') || []
+    const asks = (orderBookData as OrderBookLevel[])?.filter((level: OrderBookLevel) => level.side === 'sell') || []
+    const bids = (orderBookData as OrderBookLevel[])?.filter((level: OrderBookLevel) => level.side === 'buy') || []
 
     // Sort asks ascending (lowest price first) and bids descending (highest price first)
-    asks.sort((a: any, b: any) => a.price - b.price)
-    bids.sort((a: any, b: any) => b.price - a.price)
+    asks.sort((a: OrderBookLevel, b: OrderBookLevel) => a.price - b.price)
+    bids.sort((a: OrderBookLevel, b: OrderBookLevel) => b.price - a.price)
 
     // Calculate spread
     const bestAsk = asks[0]?.price
@@ -110,13 +119,13 @@ export async function GET(request: NextRequest) {
 
     // Format response
     const response = {
-      asks: asks.map((level: any) => ({
+      asks: asks.map((level: OrderBookLevel) => ({
         price: level.price,
         quantity: level.quantity,
         total: level.total,
         order_count: level.order_count
       })),
-      bids: bids.map((level: any) => ({
+      bids: bids.map((level: OrderBookLevel) => ({
         price: level.price,
         quantity: level.quantity,
         total: level.total,

@@ -21,12 +21,26 @@ interface WalletBalance {
   reserved_balance: number
 }
 
+// Transaction interface
+interface Transaction {
+  id: string;
+  type: string;
+  amount: number;
+  currency: string;
+  status: string;
+  created_at: string;
+  recipient_info?: {
+    name?: string;
+    email?: string;
+  };
+}
+
 export default function Wallet({ currency = 'EUR', amount = '0.00' }: WalletProps) {
   const router = useRouter()
   const [selectedBalanceType, setSelectedBalanceType] = useState<BalanceType>('available')
   const [walletData, setWalletData] = useState<WalletBalance | null>(null)
   const [loading, setLoading] = useState(true)
-  const [transactions, setTransactions] = useState<any[]>([])
+  const [transactions, setTransactions] = useState<Transaction[]>([])
   const [transactionsLoading, setTransactionsLoading] = useState(true)
 
   // Fetch wallet data and transactions for the current currency
@@ -75,7 +89,7 @@ export default function Wallet({ currency = 'EUR', amount = '0.00' }: WalletProp
 
 
   // Helper functions for transaction formatting
-  const getTransactionDescription = (type: string, recipientInfo?: any) => {
+  const getTransactionDescription = (type: string, recipientInfo?: Transaction['recipient_info']) => {
     switch (type) {
       case 'buy':
         return 'Compra de AOA'

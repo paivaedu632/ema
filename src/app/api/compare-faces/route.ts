@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
-import { RekognitionClient, CompareFacesCommand } from '@aws-sdk/client-rekognition'
+import {
+  RekognitionClient,
+  CompareFacesCommand,
+  type CompareFacesCommandOutput,
+  type FaceMatch,
+  type ComparedFace
+} from '@aws-sdk/client-rekognition'
 
 // Initialize AWS Rekognition client
 const rekognitionClient = new RekognitionClient({
@@ -135,10 +141,16 @@ export async function POST(req: NextRequest) {
  * Helper function to validate face comparison results
  */
 function validateFaceComparison(
-  comparisonResult: any, 
-  faceMatches: any[], 
-  unmatchedFaces: any[]
-): any {
+  comparisonResult: CompareFacesCommandOutput,
+  faceMatches: FaceMatch[],
+  unmatchedFaces: ComparedFace[]
+): {
+  isValid: boolean;
+  status: string;
+  errors: string[];
+  confidence?: number;
+  similarity?: number;
+} {
   const validation = {
     isValid: false,
     status: '',

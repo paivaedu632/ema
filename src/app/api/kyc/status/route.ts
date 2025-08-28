@@ -104,7 +104,12 @@ export async function PUT(req: NextRequest) {
     }
 
     // Update KYC status in users table
-    const updateData: any = {
+    const updateData: {
+      updated_at: string;
+      kyc_status?: string;
+      kyc_current_step?: string;
+      kyc_completion_percentage?: number;
+    } = {
       updated_at: new Date().toISOString()
     }
 

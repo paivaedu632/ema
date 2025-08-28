@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useUser } from '@clerk/nextjs'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -15,12 +15,11 @@ import {
   Activity,
   TrendingUp,
   TrendingDown,
-  MoreHorizontal,
   RefreshCw,
   AlertCircle
 } from 'lucide-react'
 import { toast } from 'sonner'
-import { formatAmountWithCurrency, formatDateTime, type Currency } from '@/lib/format'
+import { formatCurrency, formatDateTime, formatAmountForInput, type Currency } from '@/lib/format'
 
 interface Order {
   id: string
@@ -67,7 +66,7 @@ export function UserOrdersPanel({ currentPair, className }: UserOrdersPanelProps
   const [cancellingOrders, setCancellingOrders] = useState<Set<string>>(new Set())
 
   // Fetch user orders and trades
-  const fetchUserData = async (showRefreshing = false) => {
+  const fetchUserData = useCallback(async (showRefreshing = false) => {
     if (!user) return
 
     if (showRefreshing) setIsRefreshing(true)
@@ -96,7 +95,7 @@ export function UserOrdersPanel({ currentPair, className }: UserOrdersPanelProps
       setIsLoading(false)
       setIsRefreshing(false)
     }
-  }
+  }, [user])
 
   // Cancel order
   const handleCancelOrder = async (orderId: string) => {
@@ -178,7 +177,7 @@ export function UserOrdersPanel({ currentPair, className }: UserOrdersPanelProps
 
   useEffect(() => {
     fetchUserData()
-  }, [user, currentPair])
+  }, [user, currentPair, fetchUserData])
 
   // Get status badge
   const getStatusBadge = (status: string) => {
@@ -268,7 +267,7 @@ export function UserOrdersPanel({ currentPair, className }: UserOrdersPanelProps
                         <TrendingDown className="h-4 w-4 text-red-600" />
                       )}
                       <span className="font-medium">
-                        {order.side.toUpperCase()} {formatNumber(order.quantity)} {order.base_currency}
+                        {order.side.toUpperCase()} {formatAmountForInput(order.quantity, order.base_currency as Currency)} {order.base_currency}
                       </span>
                       {order.dynamic_pricing_enabled && (
                         <Badge variant="outline" className="text-xs">
@@ -283,13 +282,13 @@ export function UserOrdersPanel({ currentPair, className }: UserOrdersPanelProps
                     <div>
                       <div className="text-gray-600">Preço</div>
                       <div className="font-medium">
-                        {order.price ? formatCurrency(order.price, order.quote_currency) : 'Mercado'}
+                        {order.price ? formatCurrency(order.price, order.quote_currency as Currency) : 'Mercado'}
                       </div>
                     </div>
                     <div>
                       <div className="text-gray-600">Executado</div>
                       <div className="font-medium">
-                        {formatNumber(order.filled_quantity)} / {formatNumber(order.quantity)}
+                        {formatAmountForInput(order.filled_quantity, order.base_currency as Currency)} / {formatAmountForInput(order.quantity, order.base_currency as Currency)}
                       </div>
                     </div>
                   </div>
@@ -354,7 +353,7 @@ export function UserOrdersPanel({ currentPair, className }: UserOrdersPanelProps
                         <TrendingDown className="h-4 w-4 text-red-600" />
                       )}
                       <span className="font-medium">
-                        {order.side.toUpperCase()} {formatNumber(order.quantity)} {order.base_currency}
+                        {order.side.toUpperCase()} {formatAmountForInput(order.quantity, order.base_currency as Currency)} {order.base_currency}
                       </span>
                     </div>
                     {getStatusBadge(order.status)}
@@ -364,13 +363,13 @@ export function UserOrdersPanel({ currentPair, className }: UserOrdersPanelProps
                     <div>
                       <div className="text-gray-600">Preço</div>
                       <div className="font-medium">
-                        {order.price ? formatCurrency(order.price, order.quote_currency) : 'Mercado'}
+                        {order.price ? formatCurrency(order.price, order.quote_currency as Currency) : 'Mercado'}
                       </div>
                     </div>
                     <div>
                       <div className="text-gray-600">Executado</div>
                       <div className="font-medium">
-                        {formatNumber(order.filled_quantity)}
+                        {formatAmountForInput(order.filled_quantity, order.base_currency as Currency)}
                       </div>
                     </div>
                     <div>
@@ -409,7 +408,7 @@ export function UserOrdersPanel({ currentPair, className }: UserOrdersPanelProps
                         <TrendingDown className="h-4 w-4 text-red-600" />
                       )}
                       <span className="font-medium">
-                        {trade.side.toUpperCase()} {formatNumber(trade.quantity)} {trade.base_currency}
+                        {trade.side.toUpperCase()} {formatAmountForInput(trade.quantity, trade.base_currency as Currency)} {trade.base_currency}
                       </span>
                     </div>
                     <Badge variant="outline" className="text-green-600">
@@ -422,13 +421,13 @@ export function UserOrdersPanel({ currentPair, className }: UserOrdersPanelProps
                     <div>
                       <div className="text-gray-600">Preço</div>
                       <div className="font-medium">
-                        {formatCurrency(trade.price, trade.quote_currency)}
+                        {formatCurrency(trade.price, trade.quote_currency as Currency)}
                       </div>
                     </div>
                     <div>
                       <div className="text-gray-600">Total</div>
                       <div className="font-medium">
-                        {formatCurrency(trade.total_amount, trade.quote_currency)}
+                        {formatCurrency(trade.total_amount, trade.quote_currency as Currency)}
                       </div>
                     </div>
                     <div>

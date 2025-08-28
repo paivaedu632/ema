@@ -12,10 +12,34 @@ import { createApiError, ErrorCategory, ErrorSeverity } from '@/lib/error-handle
 // import { CurrencyPairHandler, type Currency } from '@/lib/currency-pairs'
 type Currency = 'EUR' | 'AOA'
 
+// Reuse interfaces from orders/place
+interface OrderData {
+  side: 'buy' | 'sell';
+  type: 'limit' | 'market';
+  base_currency: string;
+  quote_currency: string;
+  quantity: number;
+  price?: number;
+  dynamic_pricing_enabled?: boolean;
+}
+
+interface UserContext {
+  user: {
+    id: string;
+    email: string;
+  };
+  kycCompleted: boolean;
+  wallets: Array<{
+    currency: string;
+    available_balance: number;
+    reserved_balance: number;
+  }>;
+}
+
 /**
  * Clean, simple authentication using Clerk
  */
-async function getAuthenticatedUser(): Promise<{ user: any; clerkUserId: string }> {
+async function getAuthenticatedUser(): Promise<{ user: { id: string; email: string }; clerkUserId: string }> {
   const { userId: clerkUserId } = auth()
 
   if (!clerkUserId) {
@@ -50,7 +74,7 @@ async function getAuthenticatedUser(): Promise<{ user: any; clerkUserId: string 
  * Development-only test user function
  * Only works when NODE_ENV=development AND ENABLE_TEST_USER=true
  */
-async function getTestUser(): Promise<{ user: any; clerkUserId: string }> {
+async function getTestUser(): Promise<{ user: { id: string; email: string }; clerkUserId: string }> {
   const testClerkId = 'user_31nRQY0A5ik6RjoCHYI4VZAJY4s'
 
   const { data: testUser, error: testError } = await getUserByClerkId(testClerkId)
@@ -223,7 +247,7 @@ export async function POST(request: NextRequest) {
 }
 
 // Helper functions (simplified versions)
-async function validateOrderPlacement(userContext: any, orderData: any) {
+async function validateOrderPlacement(userContext: UserContext, orderData: OrderData) {
   // Basic validation - can be expanded
   if (orderData.quantity <= 0) {
     throw new Error('Quantity must be positive')
@@ -245,7 +269,7 @@ async function validateOrderPlacement(userContext: any, orderData: any) {
   }
 }
 
-async function calculateRequiredFunds(orderData: any) {
+async function calculateRequiredFunds(orderData: OrderData): Promise<number> {
   if (orderData.side === 'buy') {
     // For limit buy orders, calculation is simple
     if (orderData.type === 'limit') {

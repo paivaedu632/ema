@@ -43,7 +43,7 @@ export function KYCCameraStep({
 
   const handleTakePhoto = () => {
     // Simulate taking a photo (in real implementation, this would open camera)
-    updateData({ [fieldKey]: simulatedValue } as any)
+    updateData({ [fieldKey]: simulatedValue } as Record<string, unknown>)
     router.push(nextPath)
   }
 

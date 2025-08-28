@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
-import { TextractClient, AnalyzeDocumentCommand } from '@aws-sdk/client-textract'
+import { TextractClient, AnalyzeDocumentCommand, type Block } from '@aws-sdk/client-textract'
 
 // Initialize AWS Textract client
 const textractClient = new TextractClient({
@@ -98,7 +98,7 @@ export async function POST(req: NextRequest) {
 /**
  * Helper function to extract text from Textract blocks
  */
-function extractTextFromBlocks(blocks: any[]): string {
+function extractTextFromBlocks(blocks: Block[]): string {
   const textBlocks = blocks.filter(block => block.BlockType === 'LINE')
   return textBlocks.map(block => block.Text).join(' ')
 }
@@ -106,7 +106,7 @@ function extractTextFromBlocks(blocks: any[]): string {
 /**
  * Helper function to calculate average confidence
  */
-function calculateAverageConfidence(blocks: any[]): number {
+function calculateAverageConfidence(blocks: Block[]): number {
   const textBlocks = blocks.filter(block => block.BlockType === 'LINE' && block.Confidence)
   if (textBlocks.length === 0) return 0
   
@@ -117,8 +117,8 @@ function calculateAverageConfidence(blocks: any[]): number {
 /**
  * Helper function to extract specific data based on document type
  */
-function extractSpecificData(text: string, documentType: string): any {
-  const extractedData: any = {}
+function extractSpecificData(text: string, documentType: string): Record<string, unknown> {
+  const extractedData: Record<string, unknown> = {}
 
   switch (documentType) {
     case 'id-front':

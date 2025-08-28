@@ -52,7 +52,7 @@ export function KYCFormStep({
 
   const handleChange = (value: string) => {
     const formattedValue = formatValue ? formatValue(value) : value
-    updateData({ [fieldKey]: formattedValue } as any)
+    updateData({ [fieldKey]: formattedValue } as Record<string, unknown>)
   }
 
   // Get current field value

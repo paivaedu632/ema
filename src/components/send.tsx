@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -8,7 +8,7 @@ import { z } from "zod"
 import { Search } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { PageHeader } from "@/components/ui/page-header"
 import { AmountInput } from "@/components/ui/amount-input"
 import { FixedBottomAction } from "@/components/ui/fixed-bottom-action"
@@ -134,7 +134,7 @@ export function WiseStyleTransfer() {
   }, [])
 
   // Search recipients function
-  const searchRecipients = async (query: string) => {
+  const searchRecipients = useCallback(async (query: string) => {
     if (!query || query.trim().length < 2) {
       setRecipients([])
       return
@@ -156,7 +156,7 @@ export function WiseStyleTransfer() {
     } finally {
       setRecipientsLoading(false)
     }
-  }
+  }, [])
 
   // Search recipients with debouncing
   useEffect(() => {
@@ -165,7 +165,7 @@ export function WiseStyleTransfer() {
     }, 300)
 
     return () => clearTimeout(timeoutId)
-  }, [searchQuery])
+  }, [searchQuery, searchRecipients])
 
   // Format balance for display
   const getFormattedBalance = (): string => {

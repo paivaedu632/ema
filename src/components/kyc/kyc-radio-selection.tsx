@@ -43,7 +43,7 @@ export function KYCRadioSelection({
   }
 
   const handleOptionSelect = (option: string) => {
-    updateData({ [fieldKey]: option } as any)
+    updateData({ [fieldKey]: option } as Record<string, unknown>)
   }
 
   // Get current field value

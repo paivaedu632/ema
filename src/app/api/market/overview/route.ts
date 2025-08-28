@@ -1,7 +1,6 @@
 // Market Overview API Endpoint
 // GET /api/market/overview - Get comprehensive market overview for all currency pairs
 
-import { NextRequest } from 'next/server'
 import { createSuccessResponse } from '@/lib/api-response'
 import { handleApiError } from '@/lib/error-handler'
 import { 
@@ -36,7 +35,7 @@ import { CurrencyPair } from '@/types/market-data'
  *   }
  * }
  */
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const supportedPairs: CurrencyPair[] = ['EUR-AOA', 'AOA-EUR']
     
@@ -108,7 +107,7 @@ export async function GET(request: NextRequest) {
     if (process.env.NODE_ENV === 'development') {
       const failedMarkets = marketData.filter(market => market.error !== null)
       if (failedMarkets.length > 0) {
-        (response as any).errors = failedMarkets.map(market => ({
+        (response as typeof response & { errors: Array<{ pair: string; error: unknown }> }).errors = failedMarkets.map(market => ({
           pair: market.pair,
           error: market.error
         }))

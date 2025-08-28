@@ -161,9 +161,10 @@ export function Signup() {
         redirectUrl: "/sso-callback",
         redirectUrlComplete: "/dashboard"
       })
-    } catch (err: any) {
-      if (err.errors) {
-        const errorMessage = err.errors[0]?.message || "Google sign-up failed"
+    } catch (err: unknown) {
+      if (err && typeof err === 'object' && 'errors' in err) {
+        const errors = (err as { errors: Array<{ message?: string }> }).errors
+        const errorMessage = errors[0]?.message || "Google sign-up failed"
         setError(errorMessage)
       } else {
         setError("An error occurred with Google sign-up")

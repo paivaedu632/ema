@@ -7,14 +7,11 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Skeleton } from '@/components/ui/skeleton'
-import { 
-  Activity, 
-  TrendingUp, 
-  Info, 
-  Clock,
+import {
+  Activity,
+  Info,
   Target,
-  BarChart3,
-  Loader2
+  BarChart3
 } from 'lucide-react'
 import { formatCurrency, formatNumber } from '@/lib/utils'
 

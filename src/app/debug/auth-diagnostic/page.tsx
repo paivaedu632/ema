@@ -7,10 +7,30 @@ interface DiagnosticData {
   systemTime: string
   utcTime: string
   timeDifference: number
-  clerkUser: any
-  clerkAuth: any
-  apiTest: any
-  environmentCheck: any
+  clerkUser: {
+    id?: string;
+    emailAddresses?: Array<{ emailAddress: string }>;
+    firstName?: string;
+    lastName?: string;
+    createdAt?: number;
+    updatedAt?: number;
+  } | null
+  clerkAuth: {
+    userId?: string | null;
+    sessionId?: string | null;
+    isLoaded: boolean;
+  }
+  apiTest: {
+    success: boolean;
+    data?: unknown;
+    error?: string;
+  }
+  environmentCheck: {
+    nodeEnv: string;
+    clerkPublishableKey: boolean;
+    clerkSecretKey: boolean;
+    nextPublicAppUrl: boolean;
+  }
 }
 
 export default function AuthDiagnosticPage() {

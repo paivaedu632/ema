@@ -1,10 +1,9 @@
 // Debug endpoint to get Clerk user information
 // GET /api/debug/clerk-info - Get current user's Clerk information
 
-import { NextRequest } from 'next/server'
 import { auth, currentUser } from '@clerk/nextjs/server'
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Get auth information
     const { userId, sessionId } = await auth()

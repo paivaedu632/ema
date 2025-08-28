@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
-import { RekognitionClient, DetectFacesCommand } from '@aws-sdk/client-rekognition'
+import { RekognitionClient, DetectFacesCommand, type FaceDetail, type Emotion } from '@aws-sdk/client-rekognition'
 
 // Initialize AWS Rekognition client
 const rekognitionClient = new RekognitionClient({
@@ -114,7 +114,13 @@ export async function POST(req: NextRequest) {
 /**
  * Helper function to analyze liveness indicators
  */
-function analyzeLiveness(face: any, checkType: string): any {
+function analyzeLiveness(face: FaceDetail, checkType: string): {
+  score: number;
+  isLive: boolean;
+  confidence: number;
+  validation: Record<string, unknown>;
+  indicators: Record<string, unknown>;
+} {
   const analysis = {
     score: 0,
     isLive: false,
@@ -193,8 +199,9 @@ function analyzeLiveness(face: any, checkType: string): any {
     indicators.emotions = face.Emotions
     
     // Look for natural emotional expressions
-    const naturalEmotions = face.Emotions.filter((emotion: any) => 
-      ['HAPPY', 'CALM', 'SURPRISED'].includes(emotion.Type) && emotion.Confidence > 50
+    const naturalEmotions = face.Emotions.filter((emotion: Emotion) =>
+      emotion.Type && ['HAPPY', 'CALM', 'SURPRISED'].includes(emotion.Type) &&
+      emotion.Confidence && emotion.Confidence > 50
     )
     
     if (naturalEmotions.length > 0) {

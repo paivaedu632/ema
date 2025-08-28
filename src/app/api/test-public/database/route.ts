@@ -1,8 +1,7 @@
 // Public Database Test Endpoint (for testing purposes only)
 // GET /api/test-public/database - Test database functions without authentication
 
-import { NextRequest } from 'next/server'
-import { createSuccessResponse, createErrorResponse } from '@/lib/api-response'
+import { createSuccessResponse } from '@/lib/api-response'
 import { handleApiError } from '@/lib/error-handler'
 import { checkDatabaseHealth } from '@/lib/database-functions'
 
@@ -11,7 +10,7 @@ import { checkDatabaseHealth } from '@/lib/database-functions'
  * Test database connection and basic functions (no authentication required)
  * WARNING: This is for testing purposes only and should be removed in production
  */
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     let connectionTest = false
     let connectionError = null

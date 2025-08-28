@@ -39,7 +39,7 @@ export function useUserBalances(): UseUserBalancesReturn {
         // Transform array to object for easier access
         const balanceMap: Partial<UserBalances> = {}
         
-        data.data.forEach((balance: any) => {
+        data.data.forEach((balance: { currency: string; available_balance: number; reserved_balance: number }) => {
           balanceMap[balance.currency as keyof UserBalances] = {
             available_balance: balance.available_balance,
             reserved_balance: balance.reserved_balance,
