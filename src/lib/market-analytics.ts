@@ -204,9 +204,9 @@ export async function calculateMarketDepth(
       ? (bestPrices.best_bid + bestPrices.best_ask) / 2
       : null
 
-    let depth1Percent = { bid: 0, ask: 0 }
-    let depth5Percent = { bid: 0, ask: 0 }
-    let depth10Percent = { bid: 0, ask: 0 }
+    const depth1Percent = { bid: 0, ask: 0 }
+    const depth5Percent = { bid: 0, ask: 0 }
+    const depth10Percent = { bid: 0, ask: 0 }
 
     if (midPrice) {
       const price1Percent = midPrice * 0.01

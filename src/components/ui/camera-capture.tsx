@@ -54,7 +54,7 @@ export function CameraCapture({
         videoRef.current.play()
         setIsStreaming(true)
       }
-    } catch (err) {
+    } catch (_err) {
       setError('Não foi possível acessar a câmera. Verifique as permissões.')
     } finally {
       setIsLoading(false)

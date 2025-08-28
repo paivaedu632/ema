@@ -6,7 +6,7 @@ import { NextResponse } from 'next/server'
 /**
  * Standard API success response format
  */
-export interface ApiSuccessResponse<T = any> {
+export interface ApiSuccessResponse<T = unknown> {
   /** Indicates successful operation */
   success: true
   /** Response data payload */
@@ -16,7 +16,7 @@ export interface ApiSuccessResponse<T = any> {
   /** Response timestamp */
   timestamp: string
   /** Optional metadata */
-  meta?: Record<string, any>
+  meta?: Record<string, unknown>
 }
 
 /**
@@ -40,7 +40,7 @@ export interface ApiErrorResponse {
 /**
  * Union type for all API responses
  */
-export type ApiResponse<T = any> = ApiSuccessResponse<T> | ApiErrorResponse
+export type ApiResponse<T = unknown> = ApiSuccessResponse<T> | ApiErrorResponse
 
 /**
  * Pagination metadata
@@ -65,7 +65,7 @@ export function createSuccessResponse<T>(
   data?: T,
   message?: string,
   status = 200,
-  meta?: Record<string, any>
+  meta?: Record<string, unknown>
 ): NextResponse<ApiSuccessResponse<T>> {
   return NextResponse.json(
     {

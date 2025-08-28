@@ -74,7 +74,7 @@ export async function getAuthenticatedUserFromRequest(request: NextRequest): Pro
 /**
  * Validate amount input with optional currency-specific limits
  */
-export function validateAmount(amount: any, currency?: Currency, fieldName = 'amount'): number {
+export function validateAmount(amount: unknown, currency?: Currency, fieldName = 'amount'): number {
   if (!amount || isNaN(Number(amount)) || Number(amount) <= 0) {
     throw new ApiError(`Invalid ${fieldName}. Must be a positive number.`, 400)
   }
@@ -98,7 +98,7 @@ export function validateAmount(amount: any, currency?: Currency, fieldName = 'am
 /**
  * Validate currency input
  */
-export function validateCurrency(currency: any): Currency {
+export function validateCurrency(currency: unknown): Currency {
   if (!currency || !['EUR', 'AOA'].includes(currency)) {
     throw new ApiError(VALIDATION_MESSAGES.CURRENCY.INVALID, 400)
   }
@@ -108,7 +108,7 @@ export function validateCurrency(currency: any): Currency {
 /**
  * Validate exchange rate input
  */
-export function validateExchangeRate(exchangeRate: any): number | null {
+export function validateExchangeRate(exchangeRate: unknown): number | null {
   if (!exchangeRate) return null
 
   if (isNaN(Number(exchangeRate)) || Number(exchangeRate) <= 0) {
@@ -120,7 +120,7 @@ export function validateExchangeRate(exchangeRate: any): number | null {
 /**
  * Validate exchange rate input (required version for sell offers)
  */
-export function validateRequiredExchangeRate(exchangeRate: any): number {
+export function validateRequiredExchangeRate(exchangeRate: unknown): number {
   if (!exchangeRate || isNaN(Number(exchangeRate)) || Number(exchangeRate) <= 0) {
     throw new ApiError(VALIDATION_MESSAGES.EXCHANGE_RATE.INVALID_POSITIVE, 400)
   }
@@ -130,7 +130,7 @@ export function validateRequiredExchangeRate(exchangeRate: any): number {
 /**
  * Validate recipient information for send transactions
  */
-export function validateRecipient(recipient: any): { name: string; email: string } {
+export function validateRecipient(recipient: unknown): { name: string; email: string } {
   if (!recipient || !recipient.name || !recipient.email) {
     throw new ApiError('Recipient information is required (name and email).', 400)
   }
@@ -208,7 +208,7 @@ export async function parseRequestBody<T = any>(request: NextRequest): Promise<T
  * Handle transaction-specific errors with localized messages
  */
 export function handleTransactionError(
-  error: any,
+  error: Error | { message?: string },
   transactionType: 'buy' | 'sell' | 'send'
 ): never {
   const message = error.message || ''
@@ -249,7 +249,7 @@ export function handleTransactionError(
 /**
  * Handle sell offer creation errors with localized messages
  */
-export function handleSellOfferError(error: any): never {
+export function handleSellOfferError(error: Error | { message?: string }): never {
   const message = error.message || ''
 
   // Handle insufficient balance errors
@@ -276,7 +276,7 @@ export function handleSellOfferError(error: any): never {
 /**
  * Format transaction response data
  */
-export function formatTransactionResponse(result: any, type: 'buy' | 'sell' | 'send') {
+export function formatTransactionResponse(result: Record<string, unknown>, type: 'buy' | 'sell' | 'send') {
   const baseFormat = {
     transactionId: result.transaction_id,
     status: result.status,
@@ -320,7 +320,7 @@ export function formatTransactionResponse(result: any, type: 'buy' | 'sell' | 's
 /**
  * Format sell offer response data
  */
-export function formatSellOfferResponse(offerDetails: any, rateValidation: any) {
+export function formatSellOfferResponse(offerDetails: Record<string, unknown>, rateValidation: Record<string, unknown>) {
   return {
     offer_id: offerDetails.id,
     user_id: offerDetails.user_id,

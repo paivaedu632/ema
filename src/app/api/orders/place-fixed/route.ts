@@ -3,13 +3,13 @@
 
 import { NextRequest } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
-import { createSuccessResponse, createCreatedResponse } from '@/lib/api-utils'
+import { createCreatedResponse } from '@/lib/api-utils'
 import { handleApiError } from '@/lib/error-handler'
-import { validateRequestBody, PlaceOrderSchema } from '@/lib/validation'
-import { OrderBookFunctions, getUserByClerkId, supabaseAdmin } from '@/lib/supabase-server'
+import { PlaceOrderSchema } from '@/lib/validation'
+import { getUserByClerkId, supabaseAdmin } from '@/lib/supabase-server'
 import { createUserContext, hassufficientBalance } from '@/middleware/user-context'
 import { createApiError, ErrorCategory, ErrorSeverity } from '@/lib/error-handler'
-// import { CurrencyPairHandler, type Currency } from '@/lib/currency-pairs'
+// Currency type for this API
 type Currency = 'EUR' | 'AOA'
 
 // Reuse interfaces from orders/place

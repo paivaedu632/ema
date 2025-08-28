@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { formatAmountWithCurrency, formatAmountForInput, type Currency } from '@/lib/format'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -12,8 +13,6 @@ export function cn(...inputs: ClassValue[]) {
 export function formatCurrency(amount: number, currency: 'EUR' | 'AOA'): string {
   console.warn('formatCurrency from utils is deprecated. Use formatAmountWithCurrency from @/lib/format')
 
-  // Import the centralized function dynamically to avoid circular imports
-  const { formatAmountWithCurrency } = require('@/lib/format')
   return formatAmountWithCurrency(amount, currency)
 }
 
@@ -24,8 +23,6 @@ export function formatCurrency(amount: number, currency: 'EUR' | 'AOA'): string 
 export function formatNumber(value: number, decimals?: number): string {
   console.warn('formatNumber from utils is deprecated. Use formatAmountForInput from @/lib/format')
 
-  // Import the centralized function dynamically to avoid circular imports
-  const { formatAmountForInput } = require('@/lib/format')
   return formatAmountForInput(value, 'EUR') // Default to EUR for number formatting
 }
 

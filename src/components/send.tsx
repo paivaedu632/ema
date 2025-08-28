@@ -82,10 +82,10 @@ export function WiseStyleTransfer() {
   const [recipientsLoading, setRecipientsLoading] = useState(false)
 
   // Get current available balance for selected currency
-  const getCurrentBalance = (currency: string): number => {
+  const getCurrentBalance = useCallback((currency: string): number => {
     const wallet = walletBalances.find(w => w.currency === currency)
     return wallet?.available_balance || 0
-  }
+  }, [walletBalances])
 
   // React Hook Form setup with dynamic schema
   const form = useForm<SendAmountForm>({
@@ -104,7 +104,7 @@ export function WiseStyleTransfer() {
   // Update form schema when currency or balance changes
   useEffect(() => {
     const currentBalance = getCurrentBalance(watchedCurrency)
-    const newSchema = createSendAmountSchema(currentBalance, watchedCurrency)
+    createSendAmountSchema(currentBalance, watchedCurrency)
 
     // Update the resolver with new schema
     form.clearErrors()
@@ -112,7 +112,7 @@ export function WiseStyleTransfer() {
     if (watchedAmount) {
       form.trigger("amount")
     }
-  }, [watchedCurrency, walletBalances, form, watchedAmount])
+  }, [watchedCurrency, walletBalances, form, watchedAmount, getCurrentBalance])
 
   // Fetch wallet balances on component mount
   useEffect(() => {

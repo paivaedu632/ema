@@ -269,7 +269,7 @@ export function DepositFlow() {
               A transferência deve estar com o número de referência {paymentInstructions.reference} ou será devolvida.
             </p>
             <p className="label-form text-xs text-gray-600">
-              Após fazer a transferência, clique em "Paguei" para confirmar.
+              Após fazer a transferência, clique em &quot;Paguei&quot; para confirmar.
             </p>
           </div>
 

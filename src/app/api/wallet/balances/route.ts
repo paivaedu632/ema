@@ -1,6 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@clerk/nextjs/server'
-import { getUserByClerkId, supabaseAdmin, OrderBookFunctions } from '@/lib/supabase-server'
+import { NextRequest } from 'next/server'
 import { getAuthenticatedUserFromRequest, createSuccessResponse, handleApiError } from '@/lib/api-utils'
 
 /**
