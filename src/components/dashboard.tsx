@@ -10,6 +10,7 @@ import { BalanceCard } from '@/components/ui/balance-card'
 import { AngolaFlag, EurFlag } from '@/components/ui/flag-icon'
 import { LogOut } from 'lucide-react'
 import { TransactionListItem, TransactionListItemSkeleton, TransactionListEmpty } from '@/components/ui/transaction-list-item'
+import LoadingAnimation from '@/components/ui/loading-animation'
 
 // Interface for display-ready transaction data
 interface DisplayTransaction {
@@ -48,9 +49,15 @@ export default function Dashboard() {
 
 
 
-  // Fetch wallet balances and transactions
+  // Fetch wallet balances and transactions only when user is authenticated
   useEffect(() => {
     const fetchWalletData = async () => {
+      // Only fetch data if user is loaded and authenticated
+      if (!isLoaded || !user) {
+        setBalancesLoading(false)
+        return
+      }
+
       try {
         // Fetch wallet balances
         const balancesResponse = await fetch('/api/wallet/balances')
@@ -70,7 +77,7 @@ export default function Dashboard() {
     }
 
     fetchWalletData()
-  }, [])
+  }, [isLoaded, user])
 
 
 
@@ -128,10 +135,17 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-white">
       {!isLoaded || !user ? (
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="text-center space-y-6">
-            <h1 className="text-2xl font-bold text-gray-900">Welcome to EmaPay</h1>
-            <p className="text-gray-600">Loading your dashboard...</p>
+        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+          <div className="text-center space-y-8">
+            <div className="space-y-4">
+              <h1 className="text-3xl font-bold text-gray-900">Bem-vindo ao EmaPay</h1>
+              <p className="text-lg text-gray-600">A sua carteira digital</p>
+            </div>
+            <LoadingAnimation
+              message="Carregando o seu painel..."
+              size="lg"
+              className="py-8"
+            />
           </div>
         </div>
       ) : (
