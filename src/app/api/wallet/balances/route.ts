@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server'
 import { getAuthenticatedUserFromRequest, createSuccessResponse, handleApiError } from '@/lib/api-utils'
+import { OrderBookFunctions } from '@/lib/supabase-server'
 
 /**
  * GET /api/wallet/balances

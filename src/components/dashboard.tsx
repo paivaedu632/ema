@@ -32,24 +32,24 @@ export default function Dashboard() {
   const { user, isLoaded } = useUser()
   const { signOut } = useClerk()
 
-  // State management for wallet balances
-  const [balancesLoading, setBalancesLoading] = useState(false)
+  // State management for wallet balances - start with default data for instant display
+  const [balancesLoading, setBalancesLoading] = useState(true)
   const [walletBalances, setWalletBalances] = useState([
     {
       currency: 'EUR',
-      available_balance: 1250.50,
-      reserved_balance: 100.00
+      available_balance: 0.00,
+      reserved_balance: 0.00
     },
     {
       currency: 'AOA',
-      available_balance: 125000.75,
-      reserved_balance: 25000.00
+      available_balance: 0.00,
+      reserved_balance: 0.00
     }
   ])
 
 
 
-  // Fetch wallet balances and transactions only when user is authenticated
+  // Fetch wallet balances in background - non-blocking
   useEffect(() => {
     const fetchWalletData = async () => {
       // Only fetch data if user is loaded and authenticated
@@ -59,24 +59,38 @@ export default function Dashboard() {
       }
 
       try {
-        // Fetch wallet balances
-        const balancesResponse = await fetch('/api/wallet/balances')
+        // Add timeout to prevent hanging
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), 5000) // 5 second timeout
+
+        const balancesResponse = await fetch('/api/wallet/balances', {
+          signal: controller.signal
+        })
+
+        clearTimeout(timeoutId)
+
         if (balancesResponse.ok) {
           const balancesResult = await balancesResponse.json()
           setWalletBalances(balancesResult.data || [])
         } else {
           console.error('Failed to fetch wallet balances:', balancesResponse.status)
+          // Keep default values on error
         }
-
-        // Transactions are now handled by useTransactions hook
       } catch (error) {
-        console.error('Error fetching wallet data:', error)
+        if (error.name === 'AbortError') {
+          console.error('Wallet balances request timed out')
+        } else {
+          console.error('Error fetching wallet data:', error)
+        }
+        // Keep default values on error
       } finally {
         setBalancesLoading(false)
       }
     }
 
-    fetchWalletData()
+    // Small delay to let dashboard render first
+    const timeoutId = setTimeout(fetchWalletData, 100)
+    return () => clearTimeout(timeoutId)
   }, [isLoaded, user])
 
 
