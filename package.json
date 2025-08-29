@@ -8,12 +8,7 @@
     "build": "next build",
     "start": "next start --port 3001",
     "start:next": "next start --port 8080",
-    "lint": "next lint",
-    "test:database": "jest --selectProjects=\"Database Functions\"",
-    "test:orderbook": "jest --selectProjects=\"Order Book Integration\"",
-    "test:performance": "jest --selectProjects=\"Performance Tests\"",
-    "test:coverage": "jest --coverage --selectProjects=\"Database Functions\" \"Order Book Integration\"",
-    "test:all": "jest --coverage"
+    "lint": "next lint"
   },
   "dependencies": {
     "@aws-sdk/client-rekognition": "^3.876.0",
@@ -57,22 +52,16 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "@jest/globals": "^30.1.1",
     "@types/google.maps": "^3.58.1",
-    "@types/jest": "^30.0.0",
     "@types/node": "^24.3.0",
-    "@types/pg": "^8.15.5",
     "@types/react": "^19.1.12",
     "@types/react-dom": "^19.1.8",
     "autoprefixer": "^10.4.20",
     "eslint": "^9.34.0",
     "eslint-config-next": "15.5.2",
-    "jest": "^30.1.1",
-    "pg": "^8.16.3",
     "postcss": "^8.5.6",
     "supabase": "^2.39.2",
     "tailwindcss": "^3.4.17",
-    "ts-jest": "^29.4.1",
     "typescript": "^5.9.2"
   }
 }
