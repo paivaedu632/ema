@@ -273,8 +273,7 @@ export const OrderBookFunctions = {
   // Order Management
   placeOrder: DatabaseFunctions.placeOrder,
   cancelOrder: DatabaseFunctions.cancelOrder,
-  getUserOrders: DatabaseFunctions.getUserOrders,
-  getOrderDetails: DatabaseFunctions.getOrderDetails,
+  // REMOVED: getUserOrders, getOrderDetails (broken functions)
 
   // Market Data
   getBestPrices: DatabaseFunctions.getBestPrices,
@@ -301,8 +300,7 @@ export const OrderBookFunctions = {
 export const {
   placeOrder,
   cancelOrder,
-  getUserOrders,
-  getOrderDetails,
+  // REMOVED: getUserOrders, getOrderDetails (broken functions)
   getBestPrices,
   getOrderBookDepth,
   getRecentTrades,

@@ -122,37 +122,9 @@ export async function cancelOrder(params: CancelOrderParams): Promise<CancelOrde
   )
 }
 
-/**
- * Get user's orders with optional filtering
- */
-export async function getUserOrders(params: GetUserOrdersParams): Promise<OrderDetails[]> {
-  const result = await callDatabaseFunction<OrderDetails[]>(
-    DatabaseFunction.GET_USER_ORDERS,
-    params
-  )
-  
-  return validateDatabaseResult(
-    result,
-    DatabaseFunction.GET_USER_ORDERS,
-    'Failed to retrieve user orders'
-  )
-}
-
-/**
- * Get specific order details
- */
-export async function getOrderDetails(orderId: string): Promise<OrderDetails> {
-  const result = await callDatabaseFunction<OrderDetails>(
-    DatabaseFunction.GET_ORDER_DETAILS,
-    { p_order_id: orderId }
-  )
-  
-  return validateDatabaseResult(
-    result,
-    DatabaseFunction.GET_ORDER_DETAILS,
-    'Failed to retrieve order details'
-  )
-}
+// REMOVED: getUserOrders and getOrderDetails functions
+// These functions call database functions that have column mismatches
+// APIs that used these functions have been deleted
 
 // ===== MARKET DATA FUNCTIONS =====
 

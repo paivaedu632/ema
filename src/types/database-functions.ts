@@ -325,8 +325,7 @@ export enum DatabaseFunction {
   PLACE_ORDER = 'place_order',
   CANCEL_ORDER = 'cancel_order',
   MATCH_ORDER = 'match_order',
-  GET_USER_ORDERS = 'get_user_orders',
-  GET_ORDER_DETAILS = 'get_order_details',
+  // REMOVED: GET_USER_ORDERS, GET_ORDER_DETAILS (broken functions)
   GET_BEST_PRICES = 'get_best_prices',
   GET_ORDER_BOOK_DEPTH = 'get_order_book_depth',
   GET_RECENT_TRADES = 'get_recent_trades',
