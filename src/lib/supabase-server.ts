@@ -270,44 +270,46 @@ export const updateUserLimitsUsage = async (
 // Re-export typed database functions for easy access
 
 export const OrderBookFunctions = {
-  // Order Management
+  // Essential Order Management
   placeOrder: DatabaseFunctions.placeOrder,
   cancelOrder: DatabaseFunctions.cancelOrder,
-  // REMOVED: getUserOrders, getOrderDetails (broken functions)
 
-  // Market Data
+  // Essential Market Data
   getBestPrices: DatabaseFunctions.getBestPrices,
   getOrderBookDepth: DatabaseFunctions.getOrderBookDepth,
   getRecentTrades: DatabaseFunctions.getRecentTrades,
 
-  // Fund Management
+  // Essential Fund Management
   createFundReservation: DatabaseFunctions.createFundReservation,
   releaseFundReservation: DatabaseFunctions.releaseFundReservation,
 
-  // Trade Execution
-  executeTradeEnhanced: DatabaseFunctions.executeTradeEnhanced,
+  // Essential Trade Execution
+  executeTrade: DatabaseFunctions.executeTrade,
 
-  // Wallet Functions
+  // Essential Wallet Functions
   getUserWalletBalances: DatabaseFunctions.getUserWalletBalances,
+  getWalletBalance: DatabaseFunctions.getWalletBalance,
+  upsertWallet: DatabaseFunctions.upsertWallet,
 
-  // Utility Functions
+  // Essential Utility Functions
   validateOrderOwnership: DatabaseFunctions.validateOrderOwnership,
   getOrderBookSummary: DatabaseFunctions.getOrderBookSummary,
   checkDatabaseHealth: DatabaseFunctions.checkDatabaseHealth
 }
 
-// Legacy compatibility - re-export individual functions
+// Legacy compatibility - re-export essential functions only
 export const {
   placeOrder,
   cancelOrder,
-  // REMOVED: getUserOrders, getOrderDetails (broken functions)
   getBestPrices,
   getOrderBookDepth,
   getRecentTrades,
   createFundReservation,
   releaseFundReservation,
-  executeTradeEnhanced,
+  executeTrade,
   getUserWalletBalances,
+  getWalletBalance,
+  upsertWallet,
   validateOrderOwnership,
   getOrderBookSummary,
   checkDatabaseHealth

@@ -322,24 +322,29 @@ export interface ProcessAllDynamicPricingResult {
  * Database function names enum
  */
 export enum DatabaseFunction {
+  // Essential Order Book Functions
   PLACE_ORDER = 'place_order',
   CANCEL_ORDER = 'cancel_order',
   MATCH_ORDER = 'match_order',
-  // REMOVED: GET_USER_ORDERS, GET_ORDER_DETAILS (broken functions)
   GET_BEST_PRICES = 'get_best_prices',
   GET_ORDER_BOOK_DEPTH = 'get_order_book_depth',
   GET_RECENT_TRADES = 'get_recent_trades',
+
+  // Essential Fund Management
   CREATE_FUND_RESERVATION = 'create_fund_reservation',
   RELEASE_FUND_RESERVATION = 'release_fund_reservation',
-  EXECUTE_TRADE_ENHANCED = 'execute_trade_enhanced',
-  GET_USER_WALLET_BALANCES_SECURE = 'get_user_wallet_balances_secure',
 
-  // Dynamic Pricing Functions
-  CALCULATE_VWAP = 'calculate_vwap',
-  CALCULATE_DYNAMIC_PRICE = 'calculate_dynamic_price',
-  UPDATE_DYNAMIC_ORDER_PRICE = 'update_dynamic_order_price',
-  TOGGLE_DYNAMIC_PRICING = 'toggle_dynamic_pricing',
-  PROCESS_ALL_DYNAMIC_PRICING_UPDATES = 'process_all_dynamic_pricing_updates'
+  // Essential Trade Execution
+  EXECUTE_TRADE = 'execute_trade',
+
+  // Essential Wallet Management
+  GET_WALLET_BALANCE = 'get_wallet_balance',
+  UPSERT_WALLET = 'upsert_wallet',
+  GET_USER_WALLET_BALANCES_SECURE = 'get_user_wallet_balances_secure'
+
+  // REMOVED: All dynamic pricing functions (non-essential)
+  // REMOVED: Enhanced trade functions (non-essential)
+  // REMOVED: Broken order functions (get_user_orders, get_order_details)
 }
 
 /**

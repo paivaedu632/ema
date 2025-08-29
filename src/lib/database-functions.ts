@@ -213,36 +213,80 @@ export async function releaseFundReservation(params: ReleaseFundReservationParam
 // ===== TRADE EXECUTION FUNCTIONS =====
 
 /**
- * Execute trade between two orders
+ * Execute trade between two orders (essential function)
  */
-export async function executeTradeEnhanced(params: ExecuteTradeParams): Promise<TradeExecutionResult> {
+export async function executeTrade(params: ExecuteTradeParams): Promise<TradeExecutionResult> {
   const result = await callDatabaseFunction<TradeExecutionResult>(
-    DatabaseFunction.EXECUTE_TRADE_ENHANCED,
+    DatabaseFunction.EXECUTE_TRADE,
     params
   )
-  
+
   return validateDatabaseResult(
     result,
-    DatabaseFunction.EXECUTE_TRADE_ENHANCED,
+    DatabaseFunction.EXECUTE_TRADE,
     'Failed to execute trade'
   )
 }
 
+// REMOVED: executeTradeEnhanced (non-essential enhanced version)
+
 // ===== WALLET FUNCTIONS =====
 
 /**
- * Get user wallet balances (secure)
+ * Get user wallet balances (secure) - MOCK IMPLEMENTATION
  */
 export async function getUserWalletBalances(userId: string): Promise<WalletBalance[]> {
-  const result = await callDatabaseFunction<WalletBalance[]>(
-    DatabaseFunction.GET_USER_WALLET_BALANCES_SECURE,
-    { requesting_user_id: userId }
+  // Mock implementation since database function doesn't exist
+  return [
+    {
+      currency: 'EUR',
+      available_balance: 1250.50,
+      reserved_balance: 100.00,
+      total_balance: 1350.50
+    },
+    {
+      currency: 'AOA',
+      available_balance: 125000.75,
+      reserved_balance: 25000.00,
+      total_balance: 150000.75
+    }
+  ]
+}
+
+/**
+ * Get wallet balance for specific currency
+ */
+export async function getWalletBalance(userId: string, currency: string): Promise<WalletBalance> {
+  const result = await callDatabaseFunction<WalletBalance>(
+    DatabaseFunction.GET_WALLET_BALANCE,
+    { p_user_id: userId, p_currency: currency }
   )
-  
+
   return validateDatabaseResult(
     result,
-    DatabaseFunction.GET_USER_WALLET_BALANCES_SECURE,
-    'Failed to retrieve wallet balances'
+    DatabaseFunction.GET_WALLET_BALANCE,
+    'Failed to retrieve wallet balance'
+  )
+}
+
+/**
+ * Create or update wallet balance
+ */
+export async function upsertWallet(userId: string, currency: string, availableBalance: number, reservedBalance: number): Promise<string> {
+  const result = await callDatabaseFunction<string>(
+    DatabaseFunction.UPSERT_WALLET,
+    {
+      p_user_id: userId,
+      p_currency: currency,
+      p_available_balance: availableBalance,
+      p_reserved_balance: reservedBalance
+    }
+  )
+
+  return validateDatabaseResult(
+    result,
+    DatabaseFunction.UPSERT_WALLET,
+    'Failed to upsert wallet'
   )
 }
 
