@@ -233,24 +233,30 @@ export async function executeTrade(params: ExecuteTradeParams): Promise<TradeExe
 // ===== WALLET FUNCTIONS =====
 
 /**
- * Get user wallet balances (secure) - MOCK IMPLEMENTATION
+ * Get user wallet balances for all currencies (real implementation)
  */
 export async function getUserWalletBalances(userId: string): Promise<WalletBalance[]> {
-  // Mock implementation since database function doesn't exist
-  return [
-    {
-      currency: 'EUR',
-      available_balance: 1250.50,
-      reserved_balance: 100.00,
-      total_balance: 1350.50
-    },
-    {
-      currency: 'AOA',
-      available_balance: 125000.75,
-      reserved_balance: 25000.00,
-      total_balance: 150000.75
+  const currencies = ['EUR', 'AOA'] as const
+  const walletBalances: WalletBalance[] = []
+
+  for (const currency of currencies) {
+    try {
+      // Use the real database function to get wallet balance
+      const walletBalance = await getWalletBalance(userId, currency)
+      walletBalances.push(walletBalance)
+    } catch (error) {
+      // If wallet doesn't exist for this currency, return zero balance
+      console.log(`ℹ️ No wallet found for user ${userId} currency ${currency}, returning zero balance`)
+      walletBalances.push({
+        currency,
+        available_balance: 0.00,
+        reserved_balance: 0.00,
+        updated_at: new Date().toISOString()
+      })
     }
-  ]
+  }
+
+  return walletBalances
 }
 
 /**
@@ -297,8 +303,18 @@ export async function upsertWallet(userId: string, currency: string, availableBa
  */
 export async function validateOrderOwnership(userId: string, orderId: string): Promise<boolean> {
   try {
-    const orderDetails = await getOrderDetails(orderId)
-    return orderDetails.user_id === userId
+    // Query the order_book table directly to check ownership
+    const { data: order, error } = await supabaseAdmin
+      .from('order_book')
+      .select('user_id')
+      .eq('id', orderId)
+      .single()
+
+    if (error || !order) {
+      return false
+    }
+
+    return order.user_id === userId
   } catch (error) {
     return false
   }

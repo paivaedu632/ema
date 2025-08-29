@@ -211,6 +211,7 @@ export interface WalletBalance {
   available_balance: number
   reserved_balance: number
   updated_at: string
+  total_balance?: number // Optional calculated field
 }
 
 /**
@@ -353,13 +354,12 @@ export enum DatabaseFunction {
 export type FunctionParams = {
   [DatabaseFunction.PLACE_ORDER]: PlaceOrderParams
   [DatabaseFunction.CANCEL_ORDER]: CancelOrderParams
-  [DatabaseFunction.GET_USER_ORDERS]: GetUserOrdersParams
   [DatabaseFunction.GET_BEST_PRICES]: GetBestPricesParams
   [DatabaseFunction.GET_ORDER_BOOK_DEPTH]: GetOrderBookDepthParams
   [DatabaseFunction.GET_RECENT_TRADES]: GetRecentTradesParams
   [DatabaseFunction.CREATE_FUND_RESERVATION]: CreateFundReservationParams
   [DatabaseFunction.RELEASE_FUND_RESERVATION]: ReleaseFundReservationParams
-  [DatabaseFunction.EXECUTE_TRADE_ENHANCED]: ExecuteTradeParams
+  [DatabaseFunction.EXECUTE_TRADE]: ExecuteTradeParams
 }
 
 /**
@@ -368,12 +368,12 @@ export type FunctionParams = {
 export type FunctionResults = {
   [DatabaseFunction.PLACE_ORDER]: PlaceOrderResult
   [DatabaseFunction.CANCEL_ORDER]: CancelOrderResult
-  [DatabaseFunction.GET_USER_ORDERS]: OrderDetails[]
   [DatabaseFunction.GET_BEST_PRICES]: BestPricesResult
   [DatabaseFunction.GET_ORDER_BOOK_DEPTH]: OrderBookDepthEntry[]
   [DatabaseFunction.GET_RECENT_TRADES]: TradeDetails[]
   [DatabaseFunction.CREATE_FUND_RESERVATION]: FundReservationResult
-  [DatabaseFunction.RELEASE_FUND_RESERVATION]: FundReservationResult
-  [DatabaseFunction.EXECUTE_TRADE_ENHANCED]: TradeExecutionResult
+  [DatabaseFunction.RELEASE_FUND_RESERVATION]: ReleaseFundReservationParams
+  [DatabaseFunction.EXECUTE_TRADE]: TradeExecutionResult
+  [DatabaseFunction.GET_WALLET_BALANCE]: WalletBalance
   [DatabaseFunction.GET_USER_WALLET_BALANCES_SECURE]: WalletBalance[]
 }

@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server'
 import { getAuthenticatedUserFromRequest, createSuccessResponse, handleApiError } from '@/lib/api-utils'
-import { OrderBookFunctions } from '@/lib/supabase-server'
+import { supabaseAdmin } from '@/lib/supabase-server'
 
 /**
  * GET /api/wallet/balances
@@ -12,26 +12,43 @@ export async function GET(request: NextRequest) {
     const authContext = await getAuthenticatedUserFromRequest(request)
     const user = authContext.user
 
-    // TEMPORARY FIX: Return mock data since database function doesn't exist
-    // TODO: Implement proper database function or use existing get_wallet_balance
-    console.log('🔧 Using mock wallet data for user:', user.id)
+    console.log('💰 Fetching real wallet balances for user:', user.id)
 
-    const mockWalletBalances = [
-      {
-        currency: 'EUR',
-        available_balance: 1250.50,
-        reserved_balance: 100.00,
-        last_updated: new Date().toISOString()
-      },
-      {
-        currency: 'AOA',
-        available_balance: 125000.75,
-        reserved_balance: 25000.00,
-        last_updated: new Date().toISOString()
+    // Fetch real wallet balances for both currencies from database
+    const { data: wallets, error: walletsError } = await supabaseAdmin
+      .from('wallets')
+      .select('currency, available_balance, reserved_balance, updated_at')
+      .eq('user_id', user.id)
+      .in('currency', ['EUR', 'AOA'])
+
+    if (walletsError) {
+      throw new Error(`Failed to fetch wallet balances: ${walletsError.message}`)
+    }
+
+    // Create response with both currencies, defaulting to zero if wallet doesn't exist
+    const currencies = ['EUR', 'AOA'] as const
+    const walletBalances = currencies.map(currency => {
+      const wallet = wallets?.find(w => w.currency === currency)
+
+      if (wallet) {
+        return {
+          currency,
+          available_balance: parseFloat(wallet.available_balance.toString()),
+          reserved_balance: parseFloat(wallet.reserved_balance.toString()),
+          last_updated: wallet.updated_at
+        }
+      } else {
+        // Return zero balance if wallet doesn't exist for this currency
+        return {
+          currency,
+          available_balance: 0.00,
+          reserved_balance: 0.00,
+          last_updated: new Date().toISOString()
+        }
       }
-    ]
+    })
 
-    return createSuccessResponse(mockWalletBalances, 'Wallet balances retrieved successfully (mock data)')
+    return createSuccessResponse(walletBalances, 'Wallet balances retrieved successfully')
 
   } catch (error) {
     console.error('❌ Error fetching wallet balances:', error)
