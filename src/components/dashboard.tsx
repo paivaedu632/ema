@@ -4,11 +4,10 @@ import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useUser, useClerk } from '@clerk/nextjs'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { PrimaryActionButtons } from '@/components/ui/primary-action-buttons'
-import { IconActionButtons } from '@/components/ui/icon-action-buttons'
-import { BalanceCard } from '@/components/ui/balance-card'
+import { UnifiedActionButtons } from '@/components/ui/unified-action-buttons'
+import { BalanceCard, ConsolidatedBalanceCard } from '@/components/ui/balance-card'
 import { AngolaFlag, EurFlag } from '@/components/ui/flag-icon'
-import { LogOut } from 'lucide-react'
+import { LogOut, Eye, EyeOff } from 'lucide-react'
 import { TransactionListItem, TransactionListItemSkeleton, TransactionListEmpty } from '@/components/ui/transaction-list-item'
 import LoadingAnimation from '@/components/ui/loading-animation'
 
@@ -34,6 +33,7 @@ export default function Dashboard() {
 
   // State management for wallet balances - start with default data for instant display
   const [balancesLoading, setBalancesLoading] = useState(true)
+  const [isBalanceVisible, setIsBalanceVisible] = useState(true)
   const [walletBalances, setWalletBalances] = useState([
     {
       currency: 'EUR',
@@ -104,32 +104,37 @@ export default function Dashboard() {
     }
   }
 
-
-
-  const handleCardClick = (account: typeof accounts[0]) => {
-    const params = new URLSearchParams({
-      currency: account.currency,
-      type: account.type,
-      amount: account.amount
-    })
-    router.push(`/wallet?${params.toString()}`)
+  const toggleBalanceVisibility = () => {
+    setIsBalanceVisible(!isBalanceVisible)
   }
 
+
+
+  // Legacy code - keeping for reference but no longer used with consolidated balance card
+  // const handleCardClick = (account: typeof accounts[0]) => {
+  //   const params = new URLSearchParams({
+  //     currency: account.currency,
+  //     type: account.type,
+  //     amount: account.amount
+  //   })
+  //   router.push(`/wallet?${params.toString()}`)
+  // }
+
   // Generate account cards from real wallet balances - 4 cards total (2 per currency)
-  const accounts = walletBalances.flatMap((wallet) => [
-    {
-      type: 'Conta',
-      currency: wallet.currency,
-      amount: (wallet.available_balance || 0).toFixed(2),
-      flag: wallet.currency === 'AOA' ? <AngolaFlag /> : <EurFlag />
-    },
-    {
-      type: 'Reservado',
-      currency: wallet.currency,
-      amount: (wallet.reserved_balance || 0).toFixed(2),
-      flag: wallet.currency === 'AOA' ? <AngolaFlag /> : <EurFlag />
-    }
-  ])
+  // const accounts = walletBalances.flatMap((wallet) => [
+  //   {
+  //     type: 'Conta',
+  //     currency: wallet.currency,
+  //     amount: (wallet.available_balance || 0).toFixed(2),
+  //     flag: wallet.currency === 'AOA' ? <AngolaFlag /> : <EurFlag />
+  //   },
+  //   {
+  //     type: 'Reservado',
+  //     currency: wallet.currency,
+  //     amount: (wallet.reserved_balance || 0).toFixed(2),
+  //     flag: wallet.currency === 'AOA' ? <AngolaFlag /> : <EurFlag />
+  //   }
+  // ])
 
   // Mock transactions for testing (replace with real hook later)
   const [mockTransactions, setMockTransactions] = useState<DisplayTransaction[]>([])
@@ -186,34 +191,36 @@ export default function Dashboard() {
 
         {/* Account Cards Section */}
         <div className="mb-8">
-          <h2 className="heading-section mb-6">Saldo</h2>
-          <div className="flex space-x-3 overflow-x-auto pb-3 px-1 scrollbar-hide">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="heading-section">Saldo</h2>
+            <button
+              onClick={toggleBalanceVisibility}
+              className="p-2 rounded-full hover:bg-gray-200 transition-colors"
+              type="button"
+              title="Toggle balance visibility"
+            >
+              {isBalanceVisible ? (
+                <Eye className="w-5 h-5 text-gray-600" />
+              ) : (
+                <EyeOff className="w-5 h-5 text-gray-600" />
+              )}
+            </button>
+          </div>
+          <div className="px-1">
             {balancesLoading ? (
-              // Loading skeleton for balance cards
-              <>
-                {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="flex-shrink-0 w-52 h-36 bg-gray-100 rounded-xl animate-pulse border border-gray-200" />
-                ))}
-              </>
+              // Loading skeleton for consolidated balance card
+              <div className="w-full h-48 bg-gray-100 rounded-2xl animate-pulse border-2 border-gray-300" />
             ) : (
-              accounts.map((account, index) => (
-                <BalanceCard
-                  key={index}
-                  type={account.type}
-                  currency={account.currency}
-                  amount={account.amount}
-                  flag={account.flag}
-                  onClick={() => handleCardClick(account)}
-                />
-              ))
+              <ConsolidatedBalanceCard
+                walletBalances={walletBalances}
+                onClick={() => router.push('/wallet')}
+                isBalanceVisible={isBalanceVisible}
+              />
             )}
           </div>
 
-          {/* Primary Action Buttons */}
-          <PrimaryActionButtons className="mt-6 mb-8" />
-
-          {/* Icon-Based Action Buttons */}
-          <IconActionButtons className="mb-8" />
+          {/* Unified Action Buttons */}
+          <UnifiedActionButtons className="mt-6 mb-8" />
         </div>
 
         {/* Transactions Section */}

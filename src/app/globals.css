@@ -367,6 +367,29 @@
     @apply bg-gray-100 rounded-2xl border border-gray-100 p-6;
   }
 
+  /* EmaPay Horizontal Scrolling Components */
+
+  /* Hide scrollbar for horizontal scrolling containers */
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Safari and Chrome */
+  }
+
+  /* Smooth horizontal scrolling */
+  .scroll-smooth-horizontal {
+    scroll-behavior: smooth;
+    scroll-snap-type: x proximity;
+  }
+
+  /* Scroll snap for action buttons */
+  .scroll-snap-item {
+    scroll-snap-align: start;
+  }
+
   /* Scrollbar Hide - Used for horizontal scrolling containers */
   .scrollbar-hide {
     -ms-overflow-style: none;  /* Internet Explorer 10+ */

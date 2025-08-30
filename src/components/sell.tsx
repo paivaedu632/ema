@@ -251,15 +251,22 @@ export function SellFlow() {
     }
   }, [watchedCurrency, walletBalances, form, watchedAmount])
 
-  // Fetch wallet balances (using temporary API while fixing Clerk v6 issues)
+  // Fetch wallet balances using the standard API
   useEffect(() => {
     const fetchWalletBalances = async () => {
       setBalancesLoading(true)
       try {
         console.log('🔍 Fetching wallet balances...')
 
-        // Try the temporary API first (works around Clerk v6 clock skew issues)
-        const response = await fetch('/api/wallet/balances-temp')
+        // Use the standard wallet balances API with timeout
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), 5000) // 5 second timeout
+
+        const response = await fetch('/api/wallet/balances', {
+          signal: controller.signal
+        })
+
+        clearTimeout(timeoutId)
         const data = await response.json()
 
         console.log('📊 API Response:', data)
@@ -276,7 +283,11 @@ export function SellFlow() {
           ])
         }
       } catch (error) {
-        console.error('❌ Error fetching balances:', error)
+        if (error.name === 'AbortError') {
+          console.error('❌ Wallet balances request timed out')
+        } else {
+          console.error('❌ Error fetching balances:', error)
+        }
         // Fallback to test balances for development/testing
         console.log('🔄 Using test balances due to API error')
         setWalletBalances([
