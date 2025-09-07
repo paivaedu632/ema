@@ -1,7 +1,11 @@
 'use client'
 
 import { useMemo } from 'react'
-import { isValidTransactionAmount } from '@/utils/fee-calculations'
+// Simple validation function
+function isValidTransactionAmount(amount: string | number): boolean {
+  const numAmount = Number(amount)
+  return !isNaN(numAmount) && numAmount > 0
+}
 
 interface UseAmountValidationOptions {
   amount: string | number

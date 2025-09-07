@@ -1,32 +1,57 @@
-# EmaPay Dashboard with Sidebar Navigation
+# EmaPay - Clean Financial Platform
 
-A clean and modern financial dashboard built with Next.js 15, TypeScript, Tailwind CSS v4, and ShadCN UI components, featuring a vertical sidebar navigation.
+A clean, simple financial platform built with Next.js 15, TypeScript, Clerk authentication, and Supabase database. **This project has been completely cleaned of over-engineering and is ready for a simple 15-endpoint API implementation.**
+
+## 🧹 **CLEANUP COMPLETED**
+
+This project was previously over-engineered with 200+ API endpoints, domain-driven design, complex middleware, and 150+ test files. **All bloat has been removed** and the project now has a clean foundation ready for simple, effective implementation.
+
+### ✅ **What Was Removed:**
+- ❌ 200+ over-engineered API endpoints
+- ❌ Domain-driven design structure (domain/, application/, presentation/)
+- ❌ Complex middleware and infrastructure abstractions
+- ❌ 150+ fraud detection test files
+- ❌ Over-engineered validation and security theater
+- ❌ Unnecessary architectural complexity
+
+### ✅ **What Was Preserved:**
+- ✅ Clean Next.js 15 app structure
+- ✅ Essential UI components (shadcn/ui + custom)
+- ✅ Core database schema (10+ tables and functions)
+- ✅ Clerk authentication integration
+- ✅ Supabase database connection
+- ✅ Essential utilities and validation
+- ✅ Clean TypeScript configuration
 
 ## Features
 
-✨ **Clean Dashboard Design**: Modern financial dashboard with streamlined interface
-🎨 **Modern Tech Stack**: Built with Next.js 15, TypeScript, and Tailwind CSS v4
-🧩 **ShadCN UI Components**: Utilizes professional UI components for consistency
-📱 **Responsive Design**: Works seamlessly across desktop and mobile devices
-🌙 **Dark Mode Ready**: Built-in dark mode support with next-themes
-⚡ **Performance Optimized**: Fast loading with Next.js optimizations
-🔧 **Sidebar Navigation**: Modern vertical sidebar with collapsible functionality
+✨ **Clean Architecture**: Simple, maintainable codebase without over-engineering
+🎨 **Modern Tech Stack**: Next.js 15, TypeScript, Clerk, Supabase, Tailwind CSS
+🧩 **Essential UI Components**: Professional components without unnecessary complexity
+📱 **Responsive Design**: Works seamlessly across all devices
+🔐 **Secure Authentication**: Clerk-based user management
+💾 **Clean Database**: Supabase with essential tables and functions
+⚡ **Performance Optimized**: Fast loading without architectural bloat
 
-## Components Included
+## Core Functionality
 
-- **Vertical Sidebar**: Clean navigation with logo, menu items, and user profile (no promotional buttons)
-- **Balance Overview**: Total balance display with currency breakdown
-- **Action Buttons**: Send, Add money, and Request functionality
-- **Currency Cards**: Essential currency account displays (BRL, EUR, USD)
-- **Transaction History**: Recent transaction list with status badges
-- **Transfer Calculator**: Real-time currency conversion tool
+- **Dashboard**: Clean financial overview with balance display
+- **Wallet Management**: Multi-currency wallet (EUR, AOA)
+- **Send Money**: P2P transfers with PIN security
+- **Receive Money**: QR codes and payment links
+- **Deposit/Withdraw**: Bank integration flows
+- **KYC Process**: Complete identity verification flow
+- **Transaction History**: Clean transaction tracking
+- **Authentication**: Clerk-based user management
 
 ## Tech Stack
 
 - **Framework**: Next.js 15 with App Router
 - **Language**: TypeScript
-- **Styling**: Tailwind CSS v4
-- **UI Components**: ShadCN UI
+- **Database**: Supabase (PostgreSQL)
+- **Authentication**: Clerk
+- **Styling**: Tailwind CSS
+- **UI Components**: shadcn/ui
 - **Icons**: Lucide React
 - **Fonts**: Inter & JetBrains Mono
 
@@ -37,65 +62,97 @@ A clean and modern financial dashboard built with Next.js 15, TypeScript, Tailwi
 npm install
 ```
 
-2. **Run the development server**:
+2. **Set up environment variables**:
+Create `.env.local` with your Clerk and Supabase credentials:
+```bash
+# Clerk Authentication
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_key
+CLERK_SECRET_KEY=your_clerk_secret
+
+# Supabase Database
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+3. **Run the development server**:
 ```bash
 npm run dev
 ```
 
-3. **Open your browser**:
+4. **Open your browser**:
 Navigate to [http://localhost:3000](http://localhost:3000) to see the EmaPay dashboard.
 
-## Project Structure
+## Clean Project Structure
 
 ```
 src/
-├── app/
-│   ├── globals.css          # Global styles and Tailwind configuration
-│   ├── layout.tsx           # Root layout with fonts and metadata
-│   └── page.tsx             # Main page component
+├── app/                     # Next.js 15 App Router
+│   ├── (auth)/             # Authentication pages
+│   ├── dashboard/          # Main dashboard
+│   ├── kyc/               # KYC verification flow
+│   ├── send/              # Send money flow
+│   ├── receive/           # Receive money flow
+│   ├── wallet/            # Wallet management
+│   ├── transactions/      # Transaction history
+│   ├── globals.css        # Global styles
+│   └── layout.tsx         # Root layout
 ├── components/
-│   ├── ui/                  # ShadCN UI components
-│   │   ├── button.tsx       # Button component with variants
-│   │   ├── card.tsx         # Card components (using custom CSS classes)
-│   │   ├── avatar.tsx       # Avatar component for user profiles
-│   │   ├── separator.tsx    # Separator component for dividing sections
-│   │   ├── input.tsx        # Input component with custom styling
-│   │   └── select.tsx       # Select dropdown component
-│   ├── dashboard.tsx        # Main EmaPay dashboard component
-
-│   ├── sell.tsx             # Sell flow component
-│   ├── deposit.tsx          # Deposit flow component
-│   ├── withdraw.tsx         # Withdraw flow component
-│   ├── send.tsx             # Send money flow component
-│   └── receive.tsx          # Receive payment component
-└── lib/
-    └── utils.ts             # Utility functions
+│   ├── ui/                # shadcn/ui components
+│   ├── auth/              # Authentication components
+│   ├── kyc/               # KYC flow components
+│   └── *.tsx              # Page-specific components
+├── hooks/                 # Custom React hooks
+├── lib/                   # Core utilities
+│   ├── format.ts          # Currency/date formatting
+│   ├── validation.ts      # Form validation
+│   └── utils.ts           # General utilities
+├── types/                 # TypeScript definitions
+├── utils/                 # Business logic utilities
+└── contexts/              # React contexts
 ```
 
-## ShadCN Components Used
+## Database Schema
 
-- **Form Components**: Button (with variants), Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue
-- **Display Components**: Avatar, AvatarFallback, AvatarImage, Separator
-- **Card Components**: Card, CardContent, CardHeader, CardTitle (Note: Custom CSS classes are primarily used instead)
+**Core Tables:**
+- `users` - User management with Clerk integration
+- `wallets` - Multi-currency balance tracking
+- `transactions` - Transaction history and status
+- `kyc_records` - Identity verification data
+- `order_book` - Trading orders (EUR/AOA)
+- `trades` - Completed trade records
+- `fees` - Fee configuration
+- `security_audit_log` - Security event tracking
 
-## Design Principles
+## Next Steps: Simple API Implementation
 
-- **Solid Minimalistic Design**: Clean interface without unnecessary borders and shadows
-- **Thicker Border Radius**: Enhanced visual appeal with rounded corners
-- **Black Color Scheme**: Consistent use of black for borders and text
-- **Responsive Layout**: Grid-based layout that adapts to different screen sizes
-- **Hover States**: Interactive elements with smooth transitions
+This clean foundation is ready for a **simple 15-endpoint API** that serves real user needs:
 
-## Development
+### Planned API Endpoints (15 total):
+1. **Authentication** (3): Login, logout, refresh token
+2. **User Management** (2): Get profile, update profile
+3. **Wallet Operations** (3): Get balances, deposit, withdraw
+4. **Transactions** (4): Send money, get history, get details, cancel
+5. **KYC Process** (2): Submit documents, get status
+6. **Trading** (1): Get exchange rates
 
-This project follows modern React patterns and best practices:
+### Design Principles
 
-- **Client Components**: Uses "use client" directive for interactive components
-- **TypeScript**: Full type safety throughout the application
-- **Component Composition**: Modular design with reusable components
-- **Responsive Design**: Mobile-first approach with Tailwind CSS
-- **Accessibility**: Proper ARIA labels and semantic HTML
+- **Simplicity First**: No over-engineering, just what users need
+- **Clean Architecture**: Maintainable code without unnecessary abstractions
+- **Security by Design**: Essential security without security theater
+- **Performance Focused**: Fast, efficient operations
+- **User-Centered**: Features that solve real problems
+
+## Development Philosophy
+
+This project demonstrates the power of **clean, simple architecture**:
+
+- ✅ **Essential Features Only**: No feature bloat
+- ✅ **Clean Code**: Readable, maintainable implementation
+- ✅ **Modern Stack**: Latest tools without complexity
+- ✅ **Real-World Ready**: Production-ready foundation
+- ✅ **Scalable Design**: Can grow without architectural debt
 
 ## License
 
-This project is for educational purposes only.
+This project is for educational and demonstration purposes.

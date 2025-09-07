@@ -4,24 +4,48 @@ import React from 'react'
 import { useRouter } from 'next/navigation'
 import { PageHeader } from '@/components/ui/page-header'
 import { TransactionListItem, TransactionListItemSkeleton, TransactionListEmpty } from '@/components/ui/transaction-list-item'
-import { useTransactions } from '@/hooks/use-transactions'
 
 export default function TransactionsPage() {
   const router = useRouter()
 
-  // Use optimized transaction hook with caching
-  const {
-    transactions,
-    loading,
-    error,
-    refreshTransactions,
-    hasMore,
-    loadMore
-  } = useTransactions({ limit: 20 })
+  // Static transaction data for visual representation
+  const transactions = [
+    {
+      id: 'tx_001',
+      type: 'receive',
+      amount: 500,
+      currency: 'EUR',
+      status: 'completed',
+      created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+      description: 'Received from John Doe'
+    },
+    {
+      id: 'tx_002',
+      type: 'send',
+      amount: 150,
+      currency: 'EUR',
+      status: 'completed',
+      created_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+      description: 'Sent to Maria Silva'
+    },
+    {
+      id: 'tx_003',
+      type: 'buy',
+      amount: 250,
+      currency: 'EUR',
+      status: 'pending',
+      created_at: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
+      description: 'Currency exchange'
+    }
+  ]
 
-  // Handle refresh action
+  const loading = false
+  const error = null
+  const hasMore = false
+
+  // TODO: Add real transaction fetching when clean architecture APIs are implemented
   const handleRefresh = () => {
-    refreshTransactions()
+    console.log('Refresh transactions - placeholder')
   }
 
   if (loading) {

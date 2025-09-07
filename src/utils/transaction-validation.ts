@@ -151,14 +151,7 @@ export function validateExchangeRateRange(
   return { isValid: true, range }
 }
 
-/**
- * DEPRECATED: Use formatAmountForInput() from @/lib/format instead
- * @deprecated This function is deprecated. Use formatAmountForInput() from @/lib/format
- */
-export function formatCurrencyAmount(amount: number, currency: Currency): string {
-  console.warn('formatCurrencyAmount is deprecated. Use formatAmountForInput from @/lib/format')
-  return formatAmountWithCurrency(amount, currency)
-}
+// Formatting functions are in @/lib/format - use those instead
 
 /**
  * Convert exchange rate between different formats

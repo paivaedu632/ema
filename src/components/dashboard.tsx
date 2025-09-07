@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useUser, useClerk } from '@clerk/nextjs'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
@@ -31,67 +31,25 @@ export default function Dashboard() {
   const { user, isLoaded } = useUser()
   const { signOut } = useClerk()
 
-  // State management for wallet balances - start with default data for instant display
-  const [balancesLoading, setBalancesLoading] = useState(true)
+  // Static wallet balances for visual representation
+  const [balancesLoading, setBalancesLoading] = useState(false)
   const [isBalanceVisible, setIsBalanceVisible] = useState(true)
-  const [walletBalances, setWalletBalances] = useState([
+  const [walletBalances] = useState([
     {
       currency: 'EUR',
-      available_balance: 0.00,
+      available_balance: 1250.75,
       reserved_balance: 0.00
     },
     {
       currency: 'AOA',
-      available_balance: 0.00,
-      reserved_balance: 0.00
+      available_balance: 485000.00,
+      reserved_balance: 15000.00
     }
   ])
 
 
 
-  // Fetch wallet balances in background - non-blocking
-  useEffect(() => {
-    const fetchWalletData = async () => {
-      // Only fetch data if user is loaded and authenticated
-      if (!isLoaded || !user) {
-        setBalancesLoading(false)
-        return
-      }
-
-      try {
-        // Add timeout to prevent hanging
-        const controller = new AbortController()
-        const timeoutId = setTimeout(() => controller.abort(), 5000) // 5 second timeout
-
-        const balancesResponse = await fetch('/api/wallet/balances', {
-          signal: controller.signal
-        })
-
-        clearTimeout(timeoutId)
-
-        if (balancesResponse.ok) {
-          const balancesResult = await balancesResponse.json()
-          setWalletBalances(balancesResult.data || [])
-        } else {
-          console.error('Failed to fetch wallet balances:', balancesResponse.status)
-          // Keep default values on error
-        }
-      } catch (error) {
-        if (error.name === 'AbortError') {
-          console.error('Wallet balances request timed out')
-        } else {
-          console.error('Error fetching wallet data:', error)
-        }
-        // Keep default values on error
-      } finally {
-        setBalancesLoading(false)
-      }
-    }
-
-    // Small delay to let dashboard render first
-    const timeoutId = setTimeout(fetchWalletData, 100)
-    return () => clearTimeout(timeoutId)
-  }, [isLoaded, user])
+  // TODO: Add useEffect here to fetch real wallet balances when clean architecture APIs are implemented
 
 
 
@@ -136,20 +94,9 @@ export default function Dashboard() {
   //   }
   // ])
 
-  // Mock transactions for testing (replace with real hook later)
-  const [mockTransactions, setMockTransactions] = useState<DisplayTransaction[]>([])
-  const [mockTransactionsLoading, setMockTransactionsLoading] = useState(true)
-
-  // Use mock transactions instead of API for now
-  const dashboardTransactions = mockTransactions
-
-  useEffect(() => {
-    // Mock transaction data
-    setTimeout(() => {
-      setMockTransactions([])
-      setMockTransactionsLoading(false)
-    }, 1000)
-  }, [])
+  // Static transactions for visual representation
+  const dashboardTransactions: DisplayTransaction[] = []
+  const mockTransactionsLoading = false
 
   return (
     <div className="min-h-screen bg-white">

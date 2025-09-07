@@ -109,16 +109,7 @@ export function validateAmount(
   return { isValid: true }
 }
 
-import { formatAmountForInput, type Currency as FormatCurrency } from '@/lib/format'
-
-/**
- * DEPRECATED: Use formatAmountForInput() from @/lib/format instead
- * @deprecated This function is deprecated. Use formatAmountForInput() from @/lib/format
- */
-export function formatAmountForDisplay(amount: number, currency: Currency): string {
-  console.warn('formatAmountForDisplay is deprecated. Use formatAmountForInput from @/lib/format')
-  return formatAmountForInput(amount, currency as FormatCurrency)
-}
+// Formatting functions are in @/lib/format - use those instead
 
 /**
  * Gets the minimum amount for a transaction type and currency

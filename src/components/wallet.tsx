@@ -38,38 +38,47 @@ interface Transaction {
 export default function Wallet({ currency = 'EUR', amount = '0.00' }: WalletProps) {
   const router = useRouter()
   const [selectedBalanceType, setSelectedBalanceType] = useState<BalanceType>('available')
-  const [walletData, setWalletData] = useState<WalletBalance | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [transactions, setTransactions] = useState<Transaction[]>([])
-  const [transactionsLoading, setTransactionsLoading] = useState(true)
 
-  // Fetch wallet data and transactions for the current currency
-  useEffect(() => {
-    const fetchWalletData = async () => {
-      try {
-        // Fetch wallet balance
-        const balanceResponse = await fetch(`/api/wallet/balance/${currency}`)
-        if (balanceResponse.ok) {
-          const balanceResult = await balanceResponse.json()
-          setWalletData(balanceResult.data)
-        }
+  // Static wallet data for visual representation
+  const walletData: WalletBalance = currency === 'EUR'
+    ? { currency: 'EUR', available_balance: 1250.75, reserved_balance: 0.00 }
+    : { currency: 'AOA', available_balance: 485000.00, reserved_balance: 15000.00 }
 
-        // Fetch transactions
-        const transactionsResponse = await fetch('/api/transactions?limit=10')
-        if (transactionsResponse.ok) {
-          const transactionsResult = await transactionsResponse.json()
-          setTransactions(transactionsResult.data || [])
-        }
-      } catch (error) {
-        console.error('Error fetching wallet data:', error)
-      } finally {
-        setLoading(false)
-        setTransactionsLoading(false)
-      }
+  const [loading] = useState(false)
+
+  // Static transaction data for visual representation
+  const transactions: Transaction[] = [
+    {
+      id: 'tx_001',
+      type: 'receive',
+      amount: currency === 'EUR' ? 500 : 200000,
+      currency: currency,
+      status: 'completed',
+      created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+      recipient_info: { name: 'John Doe', email: 'john@example.com' }
+    },
+    {
+      id: 'tx_002',
+      type: 'send',
+      amount: currency === 'EUR' ? 150 : 75000,
+      currency: currency,
+      status: 'completed',
+      created_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+      recipient_info: { name: 'Maria Silva', email: 'maria@example.com' }
+    },
+    {
+      id: 'tx_003',
+      type: 'buy',
+      amount: currency === 'EUR' ? 250 : 125000,
+      currency: currency,
+      status: 'pending',
+      created_at: new Date(Date.now() - 30 * 60 * 1000).toISOString()
     }
+  ]
 
-    fetchWalletData()
-  }, [currency])
+  const [transactionsLoading] = useState(false)
+
+  // TODO: Add useEffect here to fetch real wallet data when clean architecture APIs are implemented
 
   const handleBalanceTypeChange = (currency: Currency, balanceType: BalanceType) => {
     setSelectedBalanceType(balanceType)

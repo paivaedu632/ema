@@ -6,9 +6,18 @@ import { RefreshCw, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { PageHeader } from "@/components/ui/page-header"
 import { ConfirmationSection, ConfirmationRow } from "@/components/ui/confirmation-section"
-import { getTransactionById, formatTransactionForDisplay, getTransactionStatusInfo, type EnhancedTransactionData } from "@/lib/transaction-api"
-import { DateUtils } from "@/utils/formatting-utils"
 import { formatAmountWithCurrency, type Currency } from '@/lib/format'
+
+// Static transaction data type for visual representation
+type EnhancedTransactionData = {
+  id: string
+  type: string
+  amount: number
+  currency: Currency
+  status: string
+  created_at: string
+}
+import { DateUtils } from "@/utils/formatting-utils"
 
 interface TransactionDetailsProps {
   transactionId: string
@@ -16,38 +25,21 @@ interface TransactionDetailsProps {
 
 export function TransactionDetails({ transactionId }: TransactionDetailsProps) {
   const router = useRouter()
-  const [transaction, setTransaction] = useState<EnhancedTransactionData | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    async function fetchTransaction() {
-      try {
-        setLoading(true)
-        setError(null)
+  // Static transaction data for visual representation
+  const transaction: EnhancedTransactionData = {
+    id: transactionId,
+    type: 'send',
+    amount: 150.00,
+    currency: 'EUR',
+    status: 'completed',
+    created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
+  }
 
-        // Remove # prefix if present for backward compatibility
-        const cleanId = transactionId.startsWith('#') ? transactionId.slice(1) : transactionId
+  const [loading] = useState(false)
+  const [error] = useState<string | null>(null)
 
-        const data = await getTransactionById(cleanId)
-        if (!data) {
-          setError('Transação não encontrada')
-          return
-        }
-
-        setTransaction(data)
-      } catch (err) {
-        console.error('Error fetching transaction:', err)
-        setError('Erro ao carregar transação')
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    if (transactionId) {
-      fetchTransaction()
-    }
-  }, [transactionId])
+  // TODO: Add useEffect here to fetch real transaction data when clean architecture APIs are implemented
 
   const handleBack = () => {
     router.push('/dashboard')

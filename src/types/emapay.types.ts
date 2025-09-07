@@ -129,21 +129,12 @@ export interface ExchangeRateInfo {
   updated_at: string
 }
 
-// API Response types
+// Simple API Response types for clean implementation
 export interface ApiResponse<T = any> {
   success: boolean
   data?: T
   error?: string
-  message?: string
-}
-
-export interface PaginatedResponse<T = any> extends ApiResponse<T[]> {
-  pagination?: {
-    page: number
-    limit: number
-    total: number
-    total_pages: number
-  }
+  timestamp: string
 }
 
 // Form validation types

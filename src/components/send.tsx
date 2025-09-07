@@ -76,15 +76,19 @@ export function WiseStyleTransfer() {
   const [currentStep, setCurrentStep] = useState<Step>("amount")
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedRecipient, setSelectedRecipient] = useState<Recipient | null>(null)
-  const [walletBalances, setWalletBalances] = useState<WalletBalance[]>([])
-  const [balancesLoading, setBalancesLoading] = useState(true)
+  // Static wallet balances for visual representation
+  const walletBalances: WalletBalance[] = [
+    { currency: 'EUR', available: 1250.75, reserved: 0.00 },
+    { currency: 'AOA', available: 485000.00, reserved: 15000.00 }
+  ]
+  const [balancesLoading] = useState(false)
   const [recipients, setRecipients] = useState<Recipient[]>([])
   const [recipientsLoading, setRecipientsLoading] = useState(false)
 
   // Get current available balance for selected currency
   const getCurrentBalance = useCallback((currency: string): number => {
     const wallet = walletBalances.find(w => w.currency === currency)
-    return wallet?.available_balance || 0
+    return wallet?.available || 0
   }, [walletBalances])
 
   // React Hook Form setup with dynamic schema
@@ -114,26 +118,16 @@ export function WiseStyleTransfer() {
     }
   }, [watchedCurrency, walletBalances, form, watchedAmount, getCurrentBalance])
 
-  // Fetch wallet balances on component mount
-  useEffect(() => {
-    const fetchWalletBalances = async () => {
-      try {
-        const response = await fetch('/api/wallet/balances')
-        if (response.ok) {
-          const result = await response.json()
-          setWalletBalances(result.data || [])
-        }
-      } catch (error) {
-        console.error('Error fetching wallet balances:', error)
-      } finally {
-        setBalancesLoading(false)
-      }
-    }
+  // TODO: Add useEffect here to fetch real wallet balances when clean architecture APIs are implemented
 
-    fetchWalletBalances()
-  }, [])
+  // Static recipients data for visual representation
+  const staticRecipients: Recipient[] = [
+    { id: '1', name: 'Maria Silva', email: 'maria@example.com' },
+    { id: '2', name: 'João Santos', email: 'joao@example.com' },
+    { id: '3', name: 'Ana Costa', email: 'ana@example.com' }
+  ]
 
-  // Search recipients function
+  // Search recipients function with static data
   const searchRecipients = useCallback(async (query: string) => {
     if (!query || query.trim().length < 2) {
       setRecipients([])
@@ -141,21 +135,19 @@ export function WiseStyleTransfer() {
     }
 
     setRecipientsLoading(true)
-    try {
-      const response = await fetch(`/api/recipients/search?q=${encodeURIComponent(query.trim())}`)
-      if (response.ok) {
-        const result = await response.json()
-        setRecipients(result.data || [])
-      } else {
-        console.error('Failed to search recipients')
-        setRecipients([])
-      }
-    } catch (error) {
-      console.error('Error searching recipients:', error)
-      setRecipients([])
-    } finally {
-      setRecipientsLoading(false)
-    }
+
+    // TODO: Replace with real API call when clean architecture APIs are implemented
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 300))
+
+    // Filter static recipients
+    const filtered = staticRecipients.filter(recipient =>
+      recipient.name.toLowerCase().includes(query.toLowerCase()) ||
+      recipient.email.toLowerCase().includes(query.toLowerCase())
+    )
+
+    setRecipients(filtered)
+    setRecipientsLoading(false)
   }, [])
 
   // Search recipients with debouncing
@@ -170,8 +162,8 @@ export function WiseStyleTransfer() {
   // Format balance for display
   const getFormattedBalance = (): string => {
     const currentWallet = walletBalances.find(wallet => wallet.currency === watchedCurrency)
-    if (!currentWallet) return `0.00 ${watchedCurrency}`
-    return `${currentWallet.available_balance.toFixed(2)} ${watchedCurrency}`
+    if (!currentWallet || typeof currentWallet.available !== 'number') return `0.00 ${watchedCurrency}`
+    return `${currentWallet.available.toFixed(2)} ${watchedCurrency}`
   }
 
   const handleBackToDashboard = () => {
@@ -205,29 +197,17 @@ export function WiseStyleTransfer() {
     const formData = form.getValues()
 
     try {
-      const response = await fetch('/api/transactions/send', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          amount: formData.amount,
-          currency: formData.currency,
-          recipient: {
-            name: selectedRecipient.name,
-            email: selectedRecipient.email,
-            phone: selectedRecipient.phone
-          }
-        })
-      })
+      // TODO: Replace with real API call when clean architecture APIs are implemented
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 1500))
 
-      const result = await response.json()
+      // Simulate successful transaction (90% success rate)
+      const success = Math.random() > 0.1
 
-      if (result.success) {
+      if (success) {
         setCurrentStep("success")
       } else {
-        console.error('Send transaction failed:', result.error)
-        alert(`Erro na transação: ${result.error}`)
+        alert('Erro na transação: Saldo insuficiente. Tente novamente.')
       }
     } catch (error) {
       console.error('Error processing send transaction:', error)

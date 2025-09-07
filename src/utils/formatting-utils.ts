@@ -69,29 +69,7 @@ export function getCurrentDateEmapay(): string {
 
 // ===== CURRENCY & NUMBER FORMATTING UTILITIES =====
 
-/**
- * DEPRECATED: Use formatAmountWithCurrency() from @/lib/format instead
- * @deprecated This function is deprecated. Use formatAmountWithCurrency() from @/lib/format
- */
-export function formatCurrency(amount: number | string, currency: string): string {
-  console.warn('formatCurrency from formatting-utils is deprecated. Use formatAmountWithCurrency from @/lib/format')
-
-  // Import the centralized function dynamically to avoid circular imports
-  const { formatAmountWithCurrency } = require('@/lib/format')
-  return formatAmountWithCurrency(amount, currency)
-}
-
-/**
- * DEPRECATED: Use formatAmountForInput() from @/lib/format instead
- * @deprecated This function is deprecated. Use formatAmountForInput() from @/lib/format
- */
-export function formatAmount(amount: number | string): string {
-  console.warn('formatAmount from formatting-utils is deprecated. Use formatAmountForInput from @/lib/format')
-
-  // Import the centralized function dynamically to avoid circular imports
-  const { formatAmountForInput } = require('@/lib/format')
-  return formatAmountForInput(amount, 'EUR') // Default to EUR
-}
+// Currency formatting functions are in @/lib/format - use those instead
 
 /**
  * Parse amount string to number
@@ -238,8 +216,6 @@ export const DateUtils = {
 }
 
 export const CurrencyUtils = {
-  format: formatCurrency,
-  formatAmount,
   parse: parseAmount,
   isValid: isValidAmount
 }

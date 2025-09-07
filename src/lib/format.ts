@@ -306,20 +306,4 @@ export function formatTime(dateString: string): string {
   }
 }
 
-/**
- * DEPRECATED: Use formatAmountForInput() instead
- * @deprecated This function is deprecated. Use formatAmountForInput() from @/lib/format
- */
-export function formatAmountForDisplay(amount: number, currency: Currency): string {
-  console.warn('formatAmountForDisplay is deprecated. Use formatAmountForInput from @/lib/format')
-  return formatAmountForInput(amount, currency)
-}
 
-/**
- * DEPRECATED: Use formatAmountWithCurrency() instead
- * @deprecated This function is deprecated. Use formatAmountWithCurrency() from @/lib/format
- */
-export function formatCurrencyAmount(amount: number, currency: Currency): string {
-  console.warn('formatCurrencyAmount is deprecated. Use formatAmountWithCurrency from @/lib/format')
-  return formatAmountWithCurrency(amount, currency)
-}

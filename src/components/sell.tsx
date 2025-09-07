@@ -71,8 +71,12 @@ export function SellFlow() {
   const router = useRouter()
   const [currentStep, setCurrentStep] = useState<Step>("amount")
   const [desiredAmount, setDesiredAmount] = useState("")
-  const [walletBalances, setWalletBalances] = useState<WalletBalance[]>([])
-  const [balancesLoading, setBalancesLoading] = useState(true)
+  // Static wallet balances for visual representation
+  const walletBalances: WalletBalance[] = [
+    { currency: 'EUR', available_balance: 1250.75, reserved_balance: 0.00 },
+    { currency: 'AOA', available_balance: 485000.00, reserved_balance: 15000.00 }
+  ]
+  const [balancesLoading] = useState(false)
   const [desiredAmountError, setDesiredAmountError] = useState("")
   const [useAutomaticRate, setUseAutomaticRate] = useState(true)
   const [isProcessing, setIsProcessing] = useState(false)
@@ -217,20 +221,18 @@ export function SellFlow() {
 
       console.log('Placing sell order:', requestData)
 
-      const response = await fetch('/api/orders/place-fixed', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(requestData)
-      })
+      // TODO: Replace with real API call when clean architecture APIs are implemented
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 1200))
 
-      const result = await response.json()
+      // Simulate successful order placement (95% success rate)
+      const success = Math.random() > 0.05
 
-      if (response.ok && result.success) {
-        console.log('Sell order placed successfully:', result)
+      if (success) {
+        console.log('Sell order placed successfully (simulated)')
         setCurrentStep("success")
       } else {
-        console.error('Sell order failed:', result.error)
-        alert(`Erro na criação da ordem: ${result.error || 'Erro desconhecido'}`)
+        alert('Erro na criação da ordem: Taxa de câmbio inválida. Tente novamente.')
       }
     } catch (error) {
       console.error('Error processing sell order:', error)
@@ -251,56 +253,7 @@ export function SellFlow() {
     }
   }, [watchedCurrency, walletBalances, form, watchedAmount])
 
-  // Fetch wallet balances using the standard API
-  useEffect(() => {
-    const fetchWalletBalances = async () => {
-      setBalancesLoading(true)
-      try {
-        console.log('🔍 Fetching wallet balances...')
-
-        // Use the standard wallet balances API with timeout
-        const controller = new AbortController()
-        const timeoutId = setTimeout(() => controller.abort(), 5000) // 5 second timeout
-
-        const response = await fetch('/api/wallet/balances', {
-          signal: controller.signal
-        })
-
-        clearTimeout(timeoutId)
-        const data = await response.json()
-
-        console.log('📊 API Response:', data)
-
-        if (data.success) {
-          console.log('✅ Using real wallet balances:', data.data)
-          setWalletBalances(data.data)
-        } else {
-          console.log('⚠️ API failed, using fallback balances:', data.error)
-          // Fallback to test balances for development/testing
-          setWalletBalances([
-            { currency: 'EUR', available_balance: 1000.00, reserved_balance: 0, last_updated: new Date().toISOString() },
-            { currency: 'AOA', available_balance: 500000.00, reserved_balance: 0, last_updated: new Date().toISOString() }
-          ])
-        }
-      } catch (error) {
-        if (error.name === 'AbortError') {
-          console.error('❌ Wallet balances request timed out')
-        } else {
-          console.error('❌ Error fetching balances:', error)
-        }
-        // Fallback to test balances for development/testing
-        console.log('🔄 Using test balances due to API error')
-        setWalletBalances([
-          { currency: 'EUR', available_balance: 1000.00, reserved_balance: 0, last_updated: new Date().toISOString() },
-          { currency: 'AOA', available_balance: 500000.00, reserved_balance: 0, last_updated: new Date().toISOString() }
-        ])
-      } finally {
-        setBalancesLoading(false)
-      }
-    }
-
-    fetchWalletBalances()
-  }, [])
+  // TODO: Add useEffect here to fetch real wallet balances when clean architecture APIs are implemented
 
   // Validate desired amount when it changes
   useEffect(() => {
