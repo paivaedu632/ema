@@ -68,7 +68,7 @@ export function GooglePlacesInput({
         await loader.load()
         setIsGoogleLoaded(true)
         setError(null)
-      } catch (err) {
+      } catch {
         setError("Failed to load Google Maps")
       } finally {
         setIsLoading(false)

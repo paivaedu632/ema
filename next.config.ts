@@ -5,12 +5,12 @@ const nextConfig: NextConfig = {
   // Port configuration is handled via CLI flags or environment variables
   // Default port can be overridden with --port flag or PORT environment variable
   eslint: {
-    // Temporarily ignore ESLint errors during build to focus on functionality
-    ignoreDuringBuilds: true,
+    // Enable ESLint validation during builds for clean code
+    ignoreDuringBuilds: false,
   },
   typescript: {
-    // Temporarily ignore TypeScript errors during build
-    ignoreBuildErrors: true,
+    // Enable TypeScript validation during builds for type safety
+    ignoreBuildErrors: false,
   },
 };
 

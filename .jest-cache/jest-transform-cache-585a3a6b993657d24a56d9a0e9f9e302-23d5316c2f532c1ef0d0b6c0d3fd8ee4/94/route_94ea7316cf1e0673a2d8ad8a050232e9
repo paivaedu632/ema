@@ -1,0 +1,442 @@
+66599587afe80c02770b934e0d6d0a8c
+/* istanbul ignore next */
+function cov_1qzqzsog8f() {
+  var path = "C:\\Users\\User\\Documents\\GitHub\\ema\\src\\app\\api\\v1\\security\\pin\\route.ts";
+  var hash = "a1d96bc147e4e1c2c765afe6f72ba15add05d72f";
+  var global = new Function("return this")();
+  var gcv = "__coverage__";
+  var coverageData = {
+    path: "C:\\Users\\User\\Documents\\GitHub\\ema\\src\\app\\api\\v1\\security\\pin\\route.ts",
+    statementMap: {
+      "0": {
+        start: {
+          line: 10,
+          column: 23
+        },
+        end: {
+          line: 10,
+          column: 71
+        }
+      },
+      "1": {
+        start: {
+          line: 11,
+          column: 4
+        },
+        end: {
+          line: 13,
+          column: 5
+        }
+      },
+      "2": {
+        start: {
+          line: 12,
+          column: 8
+        },
+        end: {
+          line: 12,
+          column: 64
+        }
+      },
+      "3": {
+        start: {
+          line: 14,
+          column: 32
+        },
+        end: {
+          line: 14,
+          column: 47
+        }
+      },
+      "4": {
+        start: {
+          line: 16,
+          column: 4
+        },
+        end: {
+          line: 18,
+          column: 5
+        }
+      },
+      "5": {
+        start: {
+          line: 17,
+          column: 8
+        },
+        end: {
+          line: 17,
+          column: 66
+        }
+      },
+      "6": {
+        start: {
+          line: 19,
+          column: 4
+        },
+        end: {
+          line: 40,
+          column: 5
+        }
+      },
+      "7": {
+        start: {
+          line: 21,
+          column: 24
+        },
+        end: {
+          line: 21,
+          column: 84
+        }
+      },
+      "8": {
+        start: {
+          line: 23,
+          column: 23
+        },
+        end: {
+          line: 26,
+          column: 10
+        }
+      },
+      "9": {
+        start: {
+          line: 27,
+          column: 8
+        },
+        end: {
+          line: 29,
+          column: 9
+        }
+      },
+      "10": {
+        start: {
+          line: 28,
+          column: 12
+        },
+        end: {
+          line: 28,
+          column: 62
+        }
+      },
+      "11": {
+        start: {
+          line: 30,
+          column: 29
+        },
+        end: {
+          line: 34,
+          column: 9
+        }
+      },
+      "12": {
+        start: {
+          line: 35,
+          column: 8
+        },
+        end: {
+          line: 35,
+          column: 75
+        }
+      },
+      "13": {
+        start: {
+          line: 38,
+          column: 8
+        },
+        end: {
+          line: 38,
+          column: 47
+        }
+      },
+      "14": {
+        start: {
+          line: 39,
+          column: 8
+        },
+        end: {
+          line: 39,
+          column: 65
+        }
+      },
+      "15": {
+        start: {
+          line: 42,
+          column: 20
+        },
+        end: {
+          line: 42,
+          column: 72
+        }
+      }
+    },
+    fnMap: {
+      "0": {
+        name: "pinSetHandler",
+        decl: {
+          start: {
+            line: 8,
+            column: 15
+          },
+          end: {
+            line: 8,
+            column: 28
+          }
+        },
+        loc: {
+          start: {
+            line: 8,
+            column: 44
+          },
+          end: {
+            line: 41,
+            column: 1
+          }
+        },
+        line: 8
+      }
+    },
+    branchMap: {
+      "0": {
+        loc: {
+          start: {
+            line: 11,
+            column: 4
+          },
+          end: {
+            line: 13,
+            column: 5
+          }
+        },
+        type: "if",
+        locations: [{
+          start: {
+            line: 11,
+            column: 4
+          },
+          end: {
+            line: 13,
+            column: 5
+          }
+        }, {
+          start: {
+            line: undefined,
+            column: undefined
+          },
+          end: {
+            line: undefined,
+            column: undefined
+          }
+        }],
+        line: 11
+      },
+      "1": {
+        loc: {
+          start: {
+            line: 16,
+            column: 4
+          },
+          end: {
+            line: 18,
+            column: 5
+          }
+        },
+        type: "if",
+        locations: [{
+          start: {
+            line: 16,
+            column: 4
+          },
+          end: {
+            line: 18,
+            column: 5
+          }
+        }, {
+          start: {
+            line: undefined,
+            column: undefined
+          },
+          end: {
+            line: undefined,
+            column: undefined
+          }
+        }],
+        line: 16
+      },
+      "2": {
+        loc: {
+          start: {
+            line: 27,
+            column: 8
+          },
+          end: {
+            line: 29,
+            column: 9
+          }
+        },
+        type: "if",
+        locations: [{
+          start: {
+            line: 27,
+            column: 8
+          },
+          end: {
+            line: 29,
+            column: 9
+          }
+        }, {
+          start: {
+            line: undefined,
+            column: undefined
+          },
+          end: {
+            line: undefined,
+            column: undefined
+          }
+        }],
+        line: 27
+      }
+    },
+    s: {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0,
+      "7": 0,
+      "8": 0,
+      "9": 0,
+      "10": 0,
+      "11": 0,
+      "12": 0,
+      "13": 0,
+      "14": 0,
+      "15": 0
+    },
+    f: {
+      "0": 0
+    },
+    b: {
+      "0": [0, 0],
+      "1": [0, 0],
+      "2": [0, 0]
+    },
+    inputSourceMap: {
+      file: "C:\\Users\\User\\Documents\\GitHub\\ema\\src\\app\\api\\v1\\security\\pin\\route.ts",
+      mappings: "AACA,OAAO,EAAE,QAAQ,EAAqB,MAAM,uBAAuB,CAAC;AACpE,OAAO,EAAE,qBAAqB,EAAE,cAAc,EAAE,iBAAiB,EAAE,MAAM,qBAAqB,CAAC;AAC/F,OAAO,EAAE,QAAQ,EAAE,MAAM,gBAAgB,CAAC;AAC1C,OAAO,EAAE,mBAAmB,EAAE,MAAM,0BAA0B,CAAC;AAC/D,OAAO,EAAE,YAAY,EAAE,MAAM,0BAA0B,CAAC;AACxD,OAAO,EAAE,UAAU,EAAE,MAAM,0BAA0B,CAAC;AACtD,OAAO,EAAE,UAAU,EAAE,MAAM,QAAQ,CAAC;AAEpC,KAAK,UAAU,aAAa,CAAC,OAAoB,EAAE,IAAuB;IACxE,wBAAwB;IACxB,MAAM,UAAU,GAAG,MAAM,mBAAmB,CAAC,OAAO,EAAE,YAAY,CAAC,CAAC;IACpE,IAAI,CAAC,UAAU,CAAC,OAAO,EAAE,CAAC;QACxB,OAAO,cAAc,CAAC,eAAe,CAAC,UAAU,CAAC,KAAM,CAAC,CAAC;IAC3D,CAAC;IAED,MAAM,EAAE,GAAG,EAAE,UAAU,EAAE,GAAG,UAAU,CAAC,IAAK,CAAC;IAE7C,gEAAgE;IAChE,IAAI,GAAG,KAAK,UAAU,EAAE,CAAC;QACvB,OAAO,cAAc,CAAC,eAAe,CAAC,kBAAkB,CAAC,CAAC;IAC5D,CAAC;IAED,IAAI,CAAC;QACH,8BAA8B;QAC9B,MAAM,OAAO,GAAG,UAAU,CAAC,QAAQ,CAAC,CAAC,MAAM,CAAC,GAAG,GAAG,IAAI,CAAC,MAAM,CAAC,CAAC,MAAM,CAAC,KAAK,CAAC,CAAC;QAE7E,sBAAsB;QACtB,MAAM,MAAM,GAAG,MAAM,UAAU,CAAC;YAC9B,OAAO,EAAE,IAAI,CAAC,MAAM;YACpB,QAAQ,EAAE,OAAO;SAClB,CAAC,CAAC;QAEH,IAAI,CAAC,MAAM,CAAC,OAAO,EAAE,CAAC;YACpB,OAAO,cAAc,CAAC,aAAa,CAAC,MAAM,CAAC,KAAK,CAAC,CAAC;QACpD,CAAC;QAED,MAAM,YAAY,GAAG;YACnB,MAAM,EAAE,IAAI,CAAC,MAAM;YACnB,MAAM,EAAE,IAAI;YACZ,SAAS,EAAE,IAAI,IAAI,EAAE,CAAC,WAAW,EAAE;SACpC,CAAC;QAEF,OAAO,qBAAqB,CAAC,YAAY,EAAE,sBAAsB,CAAC,CAAC;IAErE,CAAC;IAAC,OAAO,KAAK,EAAE,CAAC;QACf,OAAO,CAAC,KAAK,CAAC,gBAAgB,EAAE,KAAK,CAAC,CAAC;QACvC,OAAO,cAAc,CAAC,aAAa,CAAC,mBAAmB,CAAC,CAAC;IAC3D,CAAC;AACH,CAAC;AAED,MAAM,CAAC,MAAM,IAAI,GAAG,QAAQ,CAAC,iBAAiB,CAAC,QAAQ,CAAC,aAAa,CAAC,CAAC,CAAC,CAAC",
+      names: [],
+      sources: ["C:\\Users\\User\\Documents\\GitHub\\ema\\src\\app\\api\\v1\\security\\pin\\route.ts"],
+      sourcesContent: ["import { NextRequest } from 'next/server';\nimport { withAuth, AuthenticatedUser } from '@/lib/auth/middleware';\nimport { createSuccessResponse, ErrorResponses, withErrorHandling } from '@/lib/api/responses';\nimport { withCors } from '@/lib/api/cors';\nimport { validateRequestBody } from '@/lib/validation/helpers';\nimport { pinSetSchema } from '@/lib/validation/schemas';\nimport { setUserPin } from '@/lib/database/functions';\nimport { createHash } from 'crypto';\n\nasync function pinSetHandler(request: NextRequest, user: AuthenticatedUser) {\n  // Validate request body\n  const validation = await validateRequestBody(request, pinSetSchema);\n  if (!validation.success) {\n    return ErrorResponses.validationError(validation.error!);\n  }\n\n  const { pin, confirmPin } = validation.data!;\n\n  // Double-check PIN confirmation (schema already validates this)\n  if (pin !== confirmPin) {\n    return ErrorResponses.validationError(\"PINs don't match\");\n  }\n\n  try {\n    // Hash the PIN before storing\n    const pinHash = createHash('sha256').update(pin + user.userId).digest('hex');\n\n    // Set/update user PIN\n    const result = await setUserPin({\n      user_id: user.userId,\n      pin_hash: pinHash\n    });\n\n    if (!result.success) {\n      return ErrorResponses.databaseError(result.error);\n    }\n\n    const responseData = {\n      userId: user.userId,\n      pinSet: true,\n      timestamp: new Date().toISOString()\n    };\n\n    return createSuccessResponse(responseData, 'PIN set successfully');\n\n  } catch (error) {\n    console.error('PIN set error:', error);\n    return ErrorResponses.internalError('Failed to set PIN');\n  }\n}\n\nexport const POST = withCors(withErrorHandling(withAuth(pinSetHandler)));\n"],
+      version: 3
+    },
+    _coverageSchema: "1a1c01bbd47fc00a2c39e90264f33305004495a9",
+    hash: "a1d96bc147e4e1c2c765afe6f72ba15add05d72f"
+  };
+  var coverage = global[gcv] || (global[gcv] = {});
+  if (!coverage[path] || coverage[path].hash !== hash) {
+    coverage[path] = coverageData;
+  }
+  var actualCoverage = coverage[path];
+  {
+    // @ts-ignore
+    cov_1qzqzsog8f = function () {
+      return actualCoverage;
+    };
+  }
+  return actualCoverage;
+}
+cov_1qzqzsog8f();
+import { withAuth } from '@/lib/auth/middleware';
+import { createSuccessResponse, ErrorResponses, withErrorHandling } from '@/lib/api/responses';
+import { withCors } from '@/lib/api/cors';
+import { validateRequestBody } from '@/lib/validation/helpers';
+import { pinSetSchema } from '@/lib/validation/schemas';
+import { setUserPin } from '@/lib/database/functions';
+import { createHash } from 'crypto';
+async function pinSetHandler(request, user) {
+  /* istanbul ignore next */
+  cov_1qzqzsog8f().f[0]++;
+  // Validate request body
+  const validation =
+  /* istanbul ignore next */
+  (cov_1qzqzsog8f().s[0]++, await validateRequestBody(request, pinSetSchema));
+  /* istanbul ignore next */
+  cov_1qzqzsog8f().s[1]++;
+  if (!validation.success) {
+    /* istanbul ignore next */
+    cov_1qzqzsog8f().b[0][0]++;
+    cov_1qzqzsog8f().s[2]++;
+    return ErrorResponses.validationError(validation.error);
+  } else
+  /* istanbul ignore next */
+  {
+    cov_1qzqzsog8f().b[0][1]++;
+  }
+  const {
+    pin,
+    confirmPin
+  } =
+  /* istanbul ignore next */
+  (cov_1qzqzsog8f().s[3]++, validation.data);
+  // Double-check PIN confirmation (schema already validates this)
+  /* istanbul ignore next */
+  cov_1qzqzsog8f().s[4]++;
+  if (pin !== confirmPin) {
+    /* istanbul ignore next */
+    cov_1qzqzsog8f().b[1][0]++;
+    cov_1qzqzsog8f().s[5]++;
+    return ErrorResponses.validationError("PINs don't match");
+  } else
+  /* istanbul ignore next */
+  {
+    cov_1qzqzsog8f().b[1][1]++;
+  }
+  cov_1qzqzsog8f().s[6]++;
+  try {
+    // Hash the PIN before storing
+    const pinHash =
+    /* istanbul ignore next */
+    (cov_1qzqzsog8f().s[7]++, createHash('sha256').update(pin + user.userId).digest('hex'));
+    // Set/update user PIN
+    const result =
+    /* istanbul ignore next */
+    (cov_1qzqzsog8f().s[8]++, await setUserPin({
+      user_id: user.userId,
+      pin_hash: pinHash
+    }));
+    /* istanbul ignore next */
+    cov_1qzqzsog8f().s[9]++;
+    if (!result.success) {
+      /* istanbul ignore next */
+      cov_1qzqzsog8f().b[2][0]++;
+      cov_1qzqzsog8f().s[10]++;
+      return ErrorResponses.databaseError(result.error);
+    } else
+    /* istanbul ignore next */
+    {
+      cov_1qzqzsog8f().b[2][1]++;
+    }
+    const responseData =
+    /* istanbul ignore next */
+    (cov_1qzqzsog8f().s[11]++, {
+      userId: user.userId,
+      pinSet: true,
+      timestamp: new Date().toISOString()
+    });
+    /* istanbul ignore next */
+    cov_1qzqzsog8f().s[12]++;
+    return createSuccessResponse(responseData, 'PIN set successfully');
+  } catch (error) {
+    /* istanbul ignore next */
+    cov_1qzqzsog8f().s[13]++;
+    console.error('PIN set error:', error);
+    /* istanbul ignore next */
+    cov_1qzqzsog8f().s[14]++;
+    return ErrorResponses.internalError('Failed to set PIN');
+  }
+}
+export const POST =
+/* istanbul ignore next */
+(cov_1qzqzsog8f().s[15]++, withCors(withErrorHandling(withAuth(pinSetHandler))));
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJuYW1lcyI6WyJjb3ZfMXF6cXpzb2c4ZiIsImFjdHVhbENvdmVyYWdlIiwid2l0aEF1dGgiLCJjcmVhdGVTdWNjZXNzUmVzcG9uc2UiLCJFcnJvclJlc3BvbnNlcyIsIndpdGhFcnJvckhhbmRsaW5nIiwid2l0aENvcnMiLCJ2YWxpZGF0ZVJlcXVlc3RCb2R5IiwicGluU2V0U2NoZW1hIiwic2V0VXNlclBpbiIsImNyZWF0ZUhhc2giLCJwaW5TZXRIYW5kbGVyIiwicmVxdWVzdCIsInVzZXIiLCJmIiwidmFsaWRhdGlvbiIsInMiLCJzdWNjZXNzIiwiYiIsInZhbGlkYXRpb25FcnJvciIsImVycm9yIiwicGluIiwiY29uZmlybVBpbiIsImRhdGEiLCJwaW5IYXNoIiwidXBkYXRlIiwidXNlcklkIiwiZGlnZXN0IiwicmVzdWx0IiwidXNlcl9pZCIsInBpbl9oYXNoIiwiZGF0YWJhc2VFcnJvciIsInJlc3BvbnNlRGF0YSIsInBpblNldCIsInRpbWVzdGFtcCIsIkRhdGUiLCJ0b0lTT1N0cmluZyIsImNvbnNvbGUiLCJpbnRlcm5hbEVycm9yIiwiUE9TVCJdLCJzb3VyY2VzIjpbIkM6XFxVc2Vyc1xcVXNlclxcRG9jdW1lbnRzXFxHaXRIdWJcXGVtYVxcc3JjXFxhcHBcXGFwaVxcdjFcXHNlY3VyaXR5XFxwaW5cXHJvdXRlLnRzIl0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IE5leHRSZXF1ZXN0IH0gZnJvbSAnbmV4dC9zZXJ2ZXInO1xuaW1wb3J0IHsgd2l0aEF1dGgsIEF1dGhlbnRpY2F0ZWRVc2VyIH0gZnJvbSAnQC9saWIvYXV0aC9taWRkbGV3YXJlJztcbmltcG9ydCB7IGNyZWF0ZVN1Y2Nlc3NSZXNwb25zZSwgRXJyb3JSZXNwb25zZXMsIHdpdGhFcnJvckhhbmRsaW5nIH0gZnJvbSAnQC9saWIvYXBpL3Jlc3BvbnNlcyc7XG5pbXBvcnQgeyB3aXRoQ29ycyB9IGZyb20gJ0AvbGliL2FwaS9jb3JzJztcbmltcG9ydCB7IHZhbGlkYXRlUmVxdWVzdEJvZHkgfSBmcm9tICdAL2xpYi92YWxpZGF0aW9uL2hlbHBlcnMnO1xuaW1wb3J0IHsgcGluU2V0U2NoZW1hIH0gZnJvbSAnQC9saWIvdmFsaWRhdGlvbi9zY2hlbWFzJztcbmltcG9ydCB7IHNldFVzZXJQaW4gfSBmcm9tICdAL2xpYi9kYXRhYmFzZS9mdW5jdGlvbnMnO1xuaW1wb3J0IHsgY3JlYXRlSGFzaCB9IGZyb20gJ2NyeXB0byc7XG5cbmFzeW5jIGZ1bmN0aW9uIHBpblNldEhhbmRsZXIocmVxdWVzdDogTmV4dFJlcXVlc3QsIHVzZXI6IEF1dGhlbnRpY2F0ZWRVc2VyKSB7XG4gIC8vIFZhbGlkYXRlIHJlcXVlc3QgYm9keVxuICBjb25zdCB2YWxpZGF0aW9uID0gYXdhaXQgdmFsaWRhdGVSZXF1ZXN0Qm9keShyZXF1ZXN0LCBwaW5TZXRTY2hlbWEpO1xuICBpZiAoIXZhbGlkYXRpb24uc3VjY2Vzcykge1xuICAgIHJldHVybiBFcnJvclJlc3BvbnNlcy52YWxpZGF0aW9uRXJyb3IodmFsaWRhdGlvbi5lcnJvciEpO1xuICB9XG5cbiAgY29uc3QgeyBwaW4sIGNvbmZpcm1QaW4gfSA9IHZhbGlkYXRpb24uZGF0YSE7XG5cbiAgLy8gRG91YmxlLWNoZWNrIFBJTiBjb25maXJtYXRpb24gKHNjaGVtYSBhbHJlYWR5IHZhbGlkYXRlcyB0aGlzKVxuICBpZiAocGluICE9PSBjb25maXJtUGluKSB7XG4gICAgcmV0dXJuIEVycm9yUmVzcG9uc2VzLnZhbGlkYXRpb25FcnJvcihcIlBJTnMgZG9uJ3QgbWF0Y2hcIik7XG4gIH1cblxuICB0cnkge1xuICAgIC8vIEhhc2ggdGhlIFBJTiBiZWZvcmUgc3RvcmluZ1xuICAgIGNvbnN0IHBpbkhhc2ggPSBjcmVhdGVIYXNoKCdzaGEyNTYnKS51cGRhdGUocGluICsgdXNlci51c2VySWQpLmRpZ2VzdCgnaGV4Jyk7XG5cbiAgICAvLyBTZXQvdXBkYXRlIHVzZXIgUElOXG4gICAgY29uc3QgcmVzdWx0ID0gYXdhaXQgc2V0VXNlclBpbih7XG4gICAgICB1c2VyX2lkOiB1c2VyLnVzZXJJZCxcbiAgICAgIHBpbl9oYXNoOiBwaW5IYXNoXG4gICAgfSk7XG5cbiAgICBpZiAoIXJlc3VsdC5zdWNjZXNzKSB7XG4gICAgICByZXR1cm4gRXJyb3JSZXNwb25zZXMuZGF0YWJhc2VFcnJvcihyZXN1bHQuZXJyb3IpO1xuICAgIH1cblxuICAgIGNvbnN0IHJlc3BvbnNlRGF0YSA9IHtcbiAgICAgIHVzZXJJZDogdXNlci51c2VySWQsXG4gICAgICBwaW5TZXQ6IHRydWUsXG4gICAgICB0aW1lc3RhbXA6IG5ldyBEYXRlKCkudG9JU09TdHJpbmcoKVxuICAgIH07XG5cbiAgICByZXR1cm4gY3JlYXRlU3VjY2Vzc1Jlc3BvbnNlKHJlc3BvbnNlRGF0YSwgJ1BJTiBzZXQgc3VjY2Vzc2Z1bGx5Jyk7XG5cbiAgfSBjYXRjaCAoZXJyb3IpIHtcbiAgICBjb25zb2xlLmVycm9yKCdQSU4gc2V0IGVycm9yOicsIGVycm9yKTtcbiAgICByZXR1cm4gRXJyb3JSZXNwb25zZXMuaW50ZXJuYWxFcnJvcignRmFpbGVkIHRvIHNldCBQSU4nKTtcbiAgfVxufVxuXG5leHBvcnQgY29uc3QgUE9TVCA9IHdpdGhDb3JzKHdpdGhFcnJvckhhbmRsaW5nKHdpdGhBdXRoKHBpblNldEhhbmRsZXIpKSk7XG4iXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7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

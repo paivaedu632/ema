@@ -1,0 +1,48 @@
+3e5620752d1eb2e089a76a902bf38f37
+/* istanbul ignore next */
+function cov_1ssrnk4rqx() {
+  var path = "C:\\Users\\User\\Documents\\GitHub\\ema\\src\\domain\\repositories\\WalletRepository.ts";
+  var hash = "b5959b4ce35612f3852abcc492bbf742e4fc54be";
+  var global = new Function("return this")();
+  var gcv = "__coverage__";
+  var coverageData = {
+    path: "C:\\Users\\User\\Documents\\GitHub\\ema\\src\\domain\\repositories\\WalletRepository.ts",
+    statementMap: {},
+    fnMap: {},
+    branchMap: {},
+    s: {},
+    f: {},
+    b: {},
+    inputSourceMap: {
+      file: "C:\\Users\\User\\Documents\\GitHub\\ema\\src\\domain\\repositories\\WalletRepository.ts",
+      mappings: "AAAA;;;;;GAKG",
+      names: [],
+      sources: ["C:\\Users\\User\\Documents\\GitHub\\ema\\src\\domain\\repositories\\WalletRepository.ts"],
+      sourcesContent: ["/**\n * Wallet Repository Interface\n * \n * Defines the contract for wallet data access operations.\n * This interface abstracts the data layer from the domain layer.\n */\n\nimport { Wallet, WalletSnapshot } from '../entities/Wallet'\nimport { WalletId, UserId } from '../value-objects/EntityId'\nimport { Currency } from '../value-objects/Currency'\nimport { Money } from '../value-objects/Money'\n\nexport interface WalletRepository {\n  /**\n   * Find wallet by ID\n   */\n  findById(id: WalletId): Promise<Wallet | null>\n\n  /**\n   * Find wallet by user ID and currency\n   */\n  findByUserIdAndCurrency(userId: UserId, currency: Currency): Promise<Wallet | null>\n\n  /**\n   * Find all wallets for a user\n   */\n  findByUserId(userId: UserId): Promise<Wallet[]>\n\n  /**\n   * Save wallet (create or update)\n   */\n  save(wallet: Wallet): Promise<void>\n\n  /**\n   * Save multiple wallets in a transaction\n   */\n  saveMany(wallets: Wallet[]): Promise<void>\n\n  /**\n   * Delete wallet\n   */\n  delete(id: WalletId): Promise<void>\n\n  /**\n   * Check if wallet exists for user and currency\n   */\n  existsByUserIdAndCurrency(userId: UserId, currency: Currency): Promise<boolean>\n\n  /**\n   * Get total balance across all wallets for a user\n   */\n  getTotalBalanceByUserId(userId: UserId): Promise<Map<Currency, Money>>\n\n  /**\n   * Find wallets with balance above threshold\n   */\n  findWithBalanceAbove(currency: Currency, threshold: Money): Promise<Wallet[]>\n\n  /**\n   * Find wallets with reserved balance\n   */\n  findWithReservedBalance(currency: Currency): Promise<Wallet[]>\n\n  /**\n   * Get wallet statistics\n   */\n  getWalletStatistics(): Promise<{\n    totalWallets: number\n    totalBalanceByCurrency: Map<Currency, Money>\n    totalReservedByurrency: Map<Currency, Money>\n    activeWallets: number\n  }>\n\n  /**\n   * Find wallets updated within date range\n   */\n  findUpdatedWithinRange(startDate: Date, endDate: Date): Promise<Wallet[]>\n\n  /**\n   * Atomic balance update operation\n   */\n  updateBalance(\n    walletId: WalletId,\n    availableBalanceChange: Money,\n    reservedBalanceChange: Money\n  ): Promise<void>\n\n  /**\n   * Transfer funds between wallets atomically\n   */\n  transferFunds(\n    fromWalletId: WalletId,\n    toWalletId: WalletId,\n    amount: Money\n  ): Promise<void>\n}\n"],
+      version: 3
+    },
+    _coverageSchema: "1a1c01bbd47fc00a2c39e90264f33305004495a9",
+    hash: "b5959b4ce35612f3852abcc492bbf742e4fc54be"
+  };
+  var coverage = global[gcv] || (global[gcv] = {});
+  if (!coverage[path] || coverage[path].hash !== hash) {
+    coverage[path] = coverageData;
+  }
+  var actualCoverage = coverage[path];
+  {
+    // @ts-ignore
+    cov_1ssrnk4rqx = function () {
+      return actualCoverage;
+    };
+  }
+  return actualCoverage;
+}
+cov_1ssrnk4rqx();
+/**
+ * Wallet Repository Interface
+ *
+ * Defines the contract for wallet data access operations.
+ * This interface abstracts the data layer from the domain layer.
+ */
+export {};
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJuYW1lcyI6W10sInNvdXJjZXMiOlsiQzpcXFVzZXJzXFxVc2VyXFxEb2N1bWVudHNcXEdpdEh1YlxcZW1hXFxzcmNcXGRvbWFpblxccmVwb3NpdG9yaWVzXFxXYWxsZXRSZXBvc2l0b3J5LnRzIl0sInNvdXJjZXNDb250ZW50IjpbIi8qKlxuICogV2FsbGV0IFJlcG9zaXRvcnkgSW50ZXJmYWNlXG4gKiBcbiAqIERlZmluZXMgdGhlIGNvbnRyYWN0IGZvciB3YWxsZXQgZGF0YSBhY2Nlc3Mgb3BlcmF0aW9ucy5cbiAqIFRoaXMgaW50ZXJmYWNlIGFic3RyYWN0cyB0aGUgZGF0YSBsYXllciBmcm9tIHRoZSBkb21haW4gbGF5ZXIuXG4gKi9cblxuaW1wb3J0IHsgV2FsbGV0LCBXYWxsZXRTbmFwc2hvdCB9IGZyb20gJy4uL2VudGl0aWVzL1dhbGxldCdcbmltcG9ydCB7IFdhbGxldElkLCBVc2VySWQgfSBmcm9tICcuLi92YWx1ZS1vYmplY3RzL0VudGl0eUlkJ1xuaW1wb3J0IHsgQ3VycmVuY3kgfSBmcm9tICcuLi92YWx1ZS1vYmplY3RzL0N1cnJlbmN5J1xuaW1wb3J0IHsgTW9uZXkgfSBmcm9tICcuLi92YWx1ZS1vYmplY3RzL01vbmV5J1xuXG5leHBvcnQgaW50ZXJmYWNlIFdhbGxldFJlcG9zaXRvcnkge1xuICAvKipcbiAgICogRmluZCB3YWxsZXQgYnkgSURcbiAgICovXG4gIGZpbmRCeUlkKGlkOiBXYWxsZXRJZCk6IFByb21pc2U8V2FsbGV0IHwgbnVsbD5cblxuICAvKipcbiAgICogRmluZCB3YWxsZXQgYnkgdXNlciBJRCBhbmQgY3VycmVuY3lcbiAgICovXG4gIGZpbmRCeVVzZXJJZEFuZEN1cnJlbmN5KHVzZXJJZDogVXNlcklkLCBjdXJyZW5jeTogQ3VycmVuY3kpOiBQcm9taXNlPFdhbGxldCB8IG51bGw+XG5cbiAgLyoqXG4gICAqIEZpbmQgYWxsIHdhbGxldHMgZm9yIGEgdXNlclxuICAgKi9cbiAgZmluZEJ5VXNlcklkKHVzZXJJZDogVXNlcklkKTogUHJvbWlzZTxXYWxsZXRbXT5cblxuICAvKipcbiAgICogU2F2ZSB3YWxsZXQgKGNyZWF0ZSBvciB1cGRhdGUpXG4gICAqL1xuICBzYXZlKHdhbGxldDogV2FsbGV0KTogUHJvbWlzZTx2b2lkPlxuXG4gIC8qKlxuICAgKiBTYXZlIG11bHRpcGxlIHdhbGxldHMgaW4gYSB0cmFuc2FjdGlvblxuICAgKi9cbiAgc2F2ZU1hbnkod2FsbGV0czogV2FsbGV0W10pOiBQcm9taXNlPHZvaWQ+XG5cbiAgLyoqXG4gICAqIERlbGV0ZSB3YWxsZXRcbiAgICovXG4gIGRlbGV0ZShpZDogV2FsbGV0SWQpOiBQcm9taXNlPHZvaWQ+XG5cbiAgLyoqXG4gICAqIENoZWNrIGlmIHdhbGxldCBleGlzdHMgZm9yIHVzZXIgYW5kIGN1cnJlbmN5XG4gICAqL1xuICBleGlzdHNCeVVzZXJJZEFuZEN1cnJlbmN5KHVzZXJJZDogVXNlcklkLCBjdXJyZW5jeTogQ3VycmVuY3kpOiBQcm9taXNlPGJvb2xlYW4+XG5cbiAgLyoqXG4gICAqIEdldCB0b3RhbCBiYWxhbmNlIGFjcm9zcyBhbGwgd2FsbGV0cyBmb3IgYSB1c2VyXG4gICAqL1xuICBnZXRUb3RhbEJhbGFuY2VCeVVzZXJJZCh1c2VySWQ6IFVzZXJJZCk6IFByb21pc2U8TWFwPEN1cnJlbmN5LCBNb25leT4+XG5cbiAgLyoqXG4gICAqIEZpbmQgd2FsbGV0cyB3aXRoIGJhbGFuY2UgYWJvdmUgdGhyZXNob2xkXG4gICAqL1xuICBmaW5kV2l0aEJhbGFuY2VBYm92ZShjdXJyZW5jeTogQ3VycmVuY3ksIHRocmVzaG9sZDogTW9uZXkpOiBQcm9taXNlPFdhbGxldFtdPlxuXG4gIC8qKlxuICAgKiBGaW5kIHdhbGxldHMgd2l0aCByZXNlcnZlZCBiYWxhbmNlXG4gICAqL1xuICBmaW5kV2l0aFJlc2VydmVkQmFsYW5jZShjdXJyZW5jeTogQ3VycmVuY3kpOiBQcm9taXNlPFdhbGxldFtdPlxuXG4gIC8qKlxuICAgKiBHZXQgd2FsbGV0IHN0YXRpc3RpY3NcbiAgICovXG4gIGdldFdhbGxldFN0YXRpc3RpY3MoKTogUHJvbWlzZTx7XG4gICAgdG90YWxXYWxsZXRzOiBudW1iZXJcbiAgICB0b3RhbEJhbGFuY2VCeUN1cnJlbmN5OiBNYXA8Q3VycmVuY3ksIE1vbmV5PlxuICAgIHRvdGFsUmVzZXJ2ZWRCeXVycmVuY3k6IE1hcDxDdXJyZW5jeSwgTW9uZXk+XG4gICAgYWN0aXZlV2FsbGV0czogbnVtYmVyXG4gIH0+XG5cbiAgLyoqXG4gICAqIEZpbmQgd2FsbGV0cyB1cGRhdGVkIHdpdGhpbiBkYXRlIHJhbmdlXG4gICAqL1xuICBmaW5kVXBkYXRlZFdpdGhpblJhbmdlKHN0YXJ0RGF0ZTogRGF0ZSwgZW5kRGF0ZTogRGF0ZSk6IFByb21pc2U8V2FsbGV0W10+XG5cbiAgLyoqXG4gICAqIEF0b21pYyBiYWxhbmNlIHVwZGF0ZSBvcGVyYXRpb25cbiAgICovXG4gIHVwZGF0ZUJhbGFuY2UoXG4gICAgd2FsbGV0SWQ6IFdhbGxldElkLFxuICAgIGF2YWlsYWJsZUJhbGFuY2VDaGFuZ2U6IE1vbmV5LFxuICAgIHJlc2VydmVkQmFsYW5jZUNoYW5nZTogTW9uZXlcbiAgKTogUHJvbWlzZTx2b2lkPlxuXG4gIC8qKlxuICAgKiBUcmFuc2ZlciBmdW5kcyBiZXR3ZWVuIHdhbGxldHMgYXRvbWljYWxseVxuICAgKi9cbiAgdHJhbnNmZXJGdW5kcyhcbiAgICBmcm9tV2FsbGV0SWQ6IFdhbGxldElkLFxuICAgIHRvV2FsbGV0SWQ6IFdhbGxldElkLFxuICAgIGFtb3VudDogTW9uZXlcbiAgKTogUHJvbWlzZTx2b2lkPlxufVxuIl0sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7QUFBQSIsImlnbm9yZUxpc3QiOltdfQ==

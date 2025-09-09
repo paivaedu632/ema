@@ -1,0 +1,1309 @@
+6ccf946a6eb4b32751e44bda53c41bcb
+/* istanbul ignore next */
+function cov_24zb5h9bpn() {
+  var path = "C:\\Users\\User\\Documents\\GitHub\\ema\\src\\utils\\transaction-validation.ts";
+  var hash = "dd37b4391d0f04e35bc1177f9c5bd5395fe72462";
+  var global = new Function("return this")();
+  var gcv = "__coverage__";
+  var coverageData = {
+    path: "C:\\Users\\User\\Documents\\GitHub\\ema\\src\\utils\\transaction-validation.ts",
+    statementMap: {
+      "0": {
+        start: {
+          line: 6,
+          column: 34
+        },
+        end: {
+          line: 15,
+          column: 1
+        }
+      },
+      "1": {
+        start: {
+          line: 17,
+          column: 40
+        },
+        end: {
+          line: 28,
+          column: 1
+        }
+      },
+      "2": {
+        start: {
+          line: 31,
+          column: 35
+        },
+        end: {
+          line: 54,
+          column: 1
+        }
+      },
+      "3": {
+        start: {
+          line: 35,
+          column: 32
+        },
+        end: {
+          line: 35,
+          column: 90
+        }
+      },
+      "4": {
+        start: {
+          line: 36,
+          column: 32
+        },
+        end: {
+          line: 36,
+          column: 90
+        }
+      },
+      "5": {
+        start: {
+          line: 44,
+          column: 22
+        },
+        end: {
+          line: 44,
+          column: 55
+        }
+      },
+      "6": {
+        start: {
+          line: 45,
+          column: 22
+        },
+        end: {
+          line: 45,
+          column: 59
+        }
+      },
+      "7": {
+        start: {
+          line: 59,
+          column: 4
+        },
+        end: {
+          line: 59,
+          column: 40
+        }
+      },
+      "8": {
+        start: {
+          line: 65,
+          column: 19
+        },
+        end: {
+          line: 65,
+          column: 49
+        }
+      },
+      "9": {
+        start: {
+          line: 66,
+          column: 4
+        },
+        end: {
+          line: 68,
+          column: 5
+        }
+      },
+      "10": {
+        start: {
+          line: 67,
+          column: 8
+        },
+        end: {
+          line: 67,
+          column: 77
+        }
+      },
+      "11": {
+        start: {
+          line: 69,
+          column: 4
+        },
+        end: {
+          line: 71,
+          column: 5
+        }
+      },
+      "12": {
+        start: {
+          line: 70,
+          column: 8
+        },
+        end: {
+          line: 70,
+          column: 95
+        }
+      },
+      "13": {
+        start: {
+          line: 72,
+          column: 4
+        },
+        end: {
+          line: 74,
+          column: 5
+        }
+      },
+      "14": {
+        start: {
+          line: 73,
+          column: 8
+        },
+        end: {
+          line: 73,
+          column: 95
+        }
+      },
+      "15": {
+        start: {
+          line: 75,
+          column: 4
+        },
+        end: {
+          line: 77,
+          column: 5
+        }
+      },
+      "16": {
+        start: {
+          line: 76,
+          column: 8
+        },
+        end: {
+          line: 76,
+          column: 90
+        }
+      },
+      "17": {
+        start: {
+          line: 78,
+          column: 4
+        },
+        end: {
+          line: 78,
+          column: 29
+        }
+      },
+      "18": {
+        start: {
+          line: 84,
+          column: 4
+        },
+        end: {
+          line: 86,
+          column: 5
+        }
+      },
+      "19": {
+        start: {
+          line: 85,
+          column: 8
+        },
+        end: {
+          line: 85,
+          column: 84
+        }
+      },
+      "20": {
+        start: {
+          line: 87,
+          column: 4
+        },
+        end: {
+          line: 87,
+          column: 29
+        }
+      },
+      "21": {
+        start: {
+          line: 93,
+          column: 4
+        },
+        end: {
+          line: 96,
+          column: 6
+        }
+      },
+      "22": {
+        start: {
+          line: 102,
+          column: 18
+        },
+        end: {
+          line: 102,
+          column: 66
+        }
+      },
+      "23": {
+        start: {
+          line: 103,
+          column: 4
+        },
+        end: {
+          line: 109,
+          column: 5
+        }
+      },
+      "24": {
+        start: {
+          line: 104,
+          column: 8
+        },
+        end: {
+          line: 108,
+          column: 10
+        }
+      },
+      "25": {
+        start: {
+          line: 110,
+          column: 4
+        },
+        end: {
+          line: 116,
+          column: 5
+        }
+      },
+      "26": {
+        start: {
+          line: 111,
+          column: 8
+        },
+        end: {
+          line: 115,
+          column: 10
+        }
+      },
+      "27": {
+        start: {
+          line: 117,
+          column: 4
+        },
+        end: {
+          line: 117,
+          column: 36
+        }
+      },
+      "28": {
+        start: {
+          line: 124,
+          column: 4
+        },
+        end: {
+          line: 125,
+          column: 20
+        }
+      },
+      "29": {
+        start: {
+          line: 125,
+          column: 8
+        },
+        end: {
+          line: 125,
+          column: 20
+        }
+      },
+      "30": {
+        start: {
+          line: 127,
+          column: 4
+        },
+        end: {
+          line: 127,
+          column: 20
+        }
+      }
+    },
+    fnMap: {
+      "0": {
+        name: "(anonymous_0)",
+        decl: {
+          start: {
+            line: 35,
+            column: 13
+          },
+          end: {
+            line: 35,
+            column: 14
+          }
+        },
+        loc: {
+          start: {
+            line: 35,
+            column: 32
+          },
+          end: {
+            line: 35,
+            column: 90
+          }
+        },
+        line: 35
+      },
+      "1": {
+        name: "(anonymous_1)",
+        decl: {
+          start: {
+            line: 36,
+            column: 13
+          },
+          end: {
+            line: 36,
+            column: 14
+          }
+        },
+        loc: {
+          start: {
+            line: 36,
+            column: 32
+          },
+          end: {
+            line: 36,
+            column: 90
+          }
+        },
+        line: 36
+      },
+      "2": {
+        name: "(anonymous_2)",
+        decl: {
+          start: {
+            line: 44,
+            column: 13
+          },
+          end: {
+            line: 44,
+            column: 14
+          }
+        },
+        loc: {
+          start: {
+            line: 44,
+            column: 22
+          },
+          end: {
+            line: 44,
+            column: 55
+          }
+        },
+        line: 44
+      },
+      "3": {
+        name: "(anonymous_3)",
+        decl: {
+          start: {
+            line: 45,
+            column: 13
+          },
+          end: {
+            line: 45,
+            column: 14
+          }
+        },
+        loc: {
+          start: {
+            line: 45,
+            column: 22
+          },
+          end: {
+            line: 45,
+            column: 59
+          }
+        },
+        line: 45
+      },
+      "4": {
+        name: "getTransactionLimits",
+        decl: {
+          start: {
+            line: 58,
+            column: 16
+          },
+          end: {
+            line: 58,
+            column: 36
+          }
+        },
+        loc: {
+          start: {
+            line: 58,
+            column: 47
+          },
+          end: {
+            line: 60,
+            column: 1
+          }
+        },
+        line: 58
+      },
+      "5": {
+        name: "validateTransactionAmount",
+        decl: {
+          start: {
+            line: 64,
+            column: 16
+          },
+          end: {
+            line: 64,
+            column: 41
+          }
+        },
+        loc: {
+          start: {
+            line: 64,
+            column: 78
+          },
+          end: {
+            line: 79,
+            column: 1
+          }
+        },
+        line: 64
+      },
+      "6": {
+        name: "validateExchangeRateFormat",
+        decl: {
+          start: {
+            line: 83,
+            column: 16
+          },
+          end: {
+            line: 83,
+            column: 42
+          }
+        },
+        loc: {
+          start: {
+            line: 83,
+            column: 57
+          },
+          end: {
+            line: 88,
+            column: 1
+          }
+        },
+        line: 83
+      },
+      "7": {
+        name: "calculateExchangeRateRange",
+        decl: {
+          start: {
+            line: 92,
+            column: 16
+          },
+          end: {
+            line: 92,
+            column: 42
+          }
+        },
+        loc: {
+          start: {
+            line: 92,
+            column: 108
+          },
+          end: {
+            line: 97,
+            column: 1
+          }
+        },
+        line: 92
+      },
+      "8": {
+        name: "validateExchangeRateRange",
+        decl: {
+          start: {
+            line: 101,
+            column: 16
+          },
+          end: {
+            line: 101,
+            column: 41
+          }
+        },
+        loc: {
+          start: {
+            line: 101,
+            column: 121
+          },
+          end: {
+            line: 118,
+            column: 1
+          }
+        },
+        line: 101
+      },
+      "9": {
+        name: "convertExchangeRate",
+        decl: {
+          start: {
+            line: 123,
+            column: 16
+          },
+          end: {
+            line: 123,
+            column: 35
+          }
+        },
+        loc: {
+          start: {
+            line: 123,
+            column: 68
+          },
+          end: {
+            line: 128,
+            column: 1
+          }
+        },
+        line: 123
+      }
+    },
+    branchMap: {
+      "0": {
+        loc: {
+          start: {
+            line: 66,
+            column: 4
+          },
+          end: {
+            line: 68,
+            column: 5
+          }
+        },
+        type: "if",
+        locations: [{
+          start: {
+            line: 66,
+            column: 4
+          },
+          end: {
+            line: 68,
+            column: 5
+          }
+        }, {
+          start: {
+            line: undefined,
+            column: undefined
+          },
+          end: {
+            line: undefined,
+            column: undefined
+          }
+        }],
+        line: 66
+      },
+      "1": {
+        loc: {
+          start: {
+            line: 69,
+            column: 4
+          },
+          end: {
+            line: 71,
+            column: 5
+          }
+        },
+        type: "if",
+        locations: [{
+          start: {
+            line: 69,
+            column: 4
+          },
+          end: {
+            line: 71,
+            column: 5
+          }
+        }, {
+          start: {
+            line: undefined,
+            column: undefined
+          },
+          end: {
+            line: undefined,
+            column: undefined
+          }
+        }],
+        line: 69
+      },
+      "2": {
+        loc: {
+          start: {
+            line: 72,
+            column: 4
+          },
+          end: {
+            line: 74,
+            column: 5
+          }
+        },
+        type: "if",
+        locations: [{
+          start: {
+            line: 72,
+            column: 4
+          },
+          end: {
+            line: 74,
+            column: 5
+          }
+        }, {
+          start: {
+            line: undefined,
+            column: undefined
+          },
+          end: {
+            line: undefined,
+            column: undefined
+          }
+        }],
+        line: 72
+      },
+      "3": {
+        loc: {
+          start: {
+            line: 75,
+            column: 4
+          },
+          end: {
+            line: 77,
+            column: 5
+          }
+        },
+        type: "if",
+        locations: [{
+          start: {
+            line: 75,
+            column: 4
+          },
+          end: {
+            line: 77,
+            column: 5
+          }
+        }, {
+          start: {
+            line: undefined,
+            column: undefined
+          },
+          end: {
+            line: undefined,
+            column: undefined
+          }
+        }],
+        line: 75
+      },
+      "4": {
+        loc: {
+          start: {
+            line: 75,
+            column: 8
+          },
+          end: {
+            line: 75,
+            column: 67
+          }
+        },
+        type: "binary-expr",
+        locations: [{
+          start: {
+            line: 75,
+            column: 8
+          },
+          end: {
+            line: 75,
+            column: 38
+          }
+        }, {
+          start: {
+            line: 75,
+            column: 42
+          },
+          end: {
+            line: 75,
+            column: 67
+          }
+        }],
+        line: 75
+      },
+      "5": {
+        loc: {
+          start: {
+            line: 84,
+            column: 4
+          },
+          end: {
+            line: 86,
+            column: 5
+          }
+        },
+        type: "if",
+        locations: [{
+          start: {
+            line: 84,
+            column: 4
+          },
+          end: {
+            line: 86,
+            column: 5
+          }
+        }, {
+          start: {
+            line: undefined,
+            column: undefined
+          },
+          end: {
+            line: undefined,
+            column: undefined
+          }
+        }],
+        line: 84
+      },
+      "6": {
+        loc: {
+          start: {
+            line: 84,
+            column: 8
+          },
+          end: {
+            line: 84,
+            column: 48
+          }
+        },
+        type: "binary-expr",
+        locations: [{
+          start: {
+            line: 84,
+            column: 8
+          },
+          end: {
+            line: 84,
+            column: 27
+          }
+        }, {
+          start: {
+            line: 84,
+            column: 31
+          },
+          end: {
+            line: 84,
+            column: 48
+          }
+        }],
+        line: 84
+      },
+      "7": {
+        loc: {
+          start: {
+            line: 92,
+            column: 57
+          },
+          end: {
+            line: 92,
+            column: 106
+          }
+        },
+        type: "default-arg",
+        locations: [{
+          start: {
+            line: 92,
+            column: 66
+          },
+          end: {
+            line: 92,
+            column: 106
+          }
+        }],
+        line: 92
+      },
+      "8": {
+        loc: {
+          start: {
+            line: 101,
+            column: 70
+          },
+          end: {
+            line: 101,
+            column: 119
+          }
+        },
+        type: "default-arg",
+        locations: [{
+          start: {
+            line: 101,
+            column: 79
+          },
+          end: {
+            line: 101,
+            column: 119
+          }
+        }],
+        line: 101
+      },
+      "9": {
+        loc: {
+          start: {
+            line: 103,
+            column: 4
+          },
+          end: {
+            line: 109,
+            column: 5
+          }
+        },
+        type: "if",
+        locations: [{
+          start: {
+            line: 103,
+            column: 4
+          },
+          end: {
+            line: 109,
+            column: 5
+          }
+        }, {
+          start: {
+            line: undefined,
+            column: undefined
+          },
+          end: {
+            line: undefined,
+            column: undefined
+          }
+        }],
+        line: 103
+      },
+      "10": {
+        loc: {
+          start: {
+            line: 110,
+            column: 4
+          },
+          end: {
+            line: 116,
+            column: 5
+          }
+        },
+        type: "if",
+        locations: [{
+          start: {
+            line: 110,
+            column: 4
+          },
+          end: {
+            line: 116,
+            column: 5
+          }
+        }, {
+          start: {
+            line: undefined,
+            column: undefined
+          },
+          end: {
+            line: undefined,
+            column: undefined
+          }
+        }],
+        line: 110
+      },
+      "11": {
+        loc: {
+          start: {
+            line: 124,
+            column: 4
+          },
+          end: {
+            line: 125,
+            column: 20
+          }
+        },
+        type: "if",
+        locations: [{
+          start: {
+            line: 124,
+            column: 4
+          },
+          end: {
+            line: 125,
+            column: 20
+          }
+        }, {
+          start: {
+            line: undefined,
+            column: undefined
+          },
+          end: {
+            line: undefined,
+            column: undefined
+          }
+        }],
+        line: 124
+      }
+    },
+    s: {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0,
+      "7": 0,
+      "8": 0,
+      "9": 0,
+      "10": 0,
+      "11": 0,
+      "12": 0,
+      "13": 0,
+      "14": 0,
+      "15": 0,
+      "16": 0,
+      "17": 0,
+      "18": 0,
+      "19": 0,
+      "20": 0,
+      "21": 0,
+      "22": 0,
+      "23": 0,
+      "24": 0,
+      "25": 0,
+      "26": 0,
+      "27": 0,
+      "28": 0,
+      "29": 0,
+      "30": 0
+    },
+    f: {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0,
+      "7": 0,
+      "8": 0,
+      "9": 0
+    },
+    b: {
+      "0": [0, 0],
+      "1": [0, 0],
+      "2": [0, 0],
+      "3": [0, 0],
+      "4": [0, 0],
+      "5": [0, 0],
+      "6": [0, 0],
+      "7": [0],
+      "8": [0],
+      "9": [0, 0],
+      "10": [0, 0],
+      "11": [0, 0]
+    },
+    inputSourceMap: {
+      file: "C:\\Users\\User\\Documents\\GitHub\\ema\\src\\utils\\transaction-validation.ts",
+      mappings: "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",
+      names: [],
+      sources: ["C:\\Users\\User\\Documents\\GitHub\\ema\\src\\utils\\transaction-validation.ts"],
+      sourcesContent: ["/**\n * Shared validation constants and utilities for EmaPay transactions\n * Ensures consistency between frontend and backend validation\n */\n\n// Transaction limits by currency\nexport const TRANSACTION_LIMITS = {\n  EUR: {\n    min: 1,\n    max: 10000\n  },\n  AOA: {\n    min: 1000,\n    max: 1000000000\n  }\n} as const\n\n// Exchange rate validation constants\nexport const EXCHANGE_RATE_VALIDATION = {\n  // Frontend validation margins (more lenient for UX)\n  FRONTEND_MARGIN: 0.20, // 20% margin for frontend validation\n  \n  // Backend validation margins (stricter for security)\n  MARKET_OFFERS_MARGIN: 0.20, // 20% margin for existing offers\n  API_BASELINE_MARGIN: 0.50, // 50% margin for API baseline\n  \n  // Fallback rates for frontend validation (1 EUR = X AOA format)\n  FALLBACK_RATES: {\n    EUR_TO_AOA: 1100.00, // Updated to match BAI API format\n    AOA_TO_EUR: 0.000909  // Inverse for compatibility (1/1100)\n  }\n} as const\n\nimport { formatAmountWithCurrency, type Currency } from '@/lib/format'\n\n// Portuguese error messages for consistency\nexport const VALIDATION_MESSAGES = {\n  AMOUNT: {\n    REQUIRED: \"Digite um valor\",\n    INVALID: \"Digite um valor v\xE1lido\",\n    MIN: (min: number, currency: string) => `Valor m\xEDnimo: ${formatAmountWithCurrency(min, currency as Currency)}`,\n    MAX: (max: number, currency: string) => `Valor m\xE1ximo: ${formatAmountWithCurrency(max, currency as Currency)}`,\n    INSUFFICIENT_BALANCE: \"Seu saldo n\xE3o \xE9 suficiente\"\n  },\n  EXCHANGE_RATE: {\n    REQUIRED: \"Taxa de c\xE2mbio \xE9 obrigat\xF3ria\",\n    INVALID: \"Digite uma taxa v\xE1lida\",\n    INVALID_POSITIVE: \"Taxa de c\xE2mbio inv\xE1lida. Deve ser um n\xFAmero positivo.\",\n    OUT_OF_RANGE: \"Taxa de c\xE2mbio fora do intervalo aceit\xE1vel\",\n    MIN: (min: number) => `Valor m\xEDnimo: ${min.toFixed(2)}`,\n    MAX: (max: number) => `Valor m\xE1ximo: ${max.toFixed(2)} AOA`\n  },\n  CURRENCY: {\n    INVALID: \"Moeda inv\xE1lida. Deve ser EUR ou AOA\"\n  },\n  GENERAL: {\n    NETWORK_ERROR: \"Erro ao processar. Tente novamente.\",\n    SERVER_ERROR: \"Erro interno do servidor\"\n  }\n} as const\n\n// Currency type definition\nexport type Currency = 'EUR' | 'AOA'\n\n/**\n * Get transaction limits for a specific currency\n */\nexport function getTransactionLimits(currency: Currency) {\n  return TRANSACTION_LIMITS[currency]\n}\n\n/**\n * Validate amount against currency limits\n */\nexport function validateTransactionAmount(\n  amount: number, \n  currency: Currency, \n  availableBalance?: number\n): { isValid: boolean; error?: string } {\n  const limits = getTransactionLimits(currency)\n  \n  if (amount <= 0) {\n    return { isValid: false, error: VALIDATION_MESSAGES.AMOUNT.INVALID }\n  }\n  \n  if (amount < limits.min) {\n    return { isValid: false, error: VALIDATION_MESSAGES.AMOUNT.MIN(limits.min, currency) }\n  }\n  \n  if (amount > limits.max) {\n    return { isValid: false, error: VALIDATION_MESSAGES.AMOUNT.MAX(limits.max, currency) }\n  }\n  \n  if (availableBalance !== undefined && amount > availableBalance) {\n    return { isValid: false, error: VALIDATION_MESSAGES.AMOUNT.INSUFFICIENT_BALANCE }\n  }\n  \n  return { isValid: true }\n}\n\n/**\n * Validate exchange rate format (basic validation)\n */\nexport function validateExchangeRateFormat(exchangeRate: number): { isValid: boolean; error?: string } {\n  if (isNaN(exchangeRate) || exchangeRate <= 0) {\n    return { isValid: false, error: VALIDATION_MESSAGES.EXCHANGE_RATE.INVALID }\n  }\n  \n  return { isValid: true }\n}\n\n/**\n * Calculate exchange rate range for frontend validation\n */\nexport function calculateExchangeRateRange(\n  baselineRate: number, \n  margin: number = EXCHANGE_RATE_VALIDATION.FRONTEND_MARGIN\n): { min: number; max: number } {\n  return {\n    min: baselineRate * (1 - margin),\n    max: baselineRate * (1 + margin)\n  }\n}\n\n/**\n * Validate exchange rate against a baseline with margin\n */\nexport function validateExchangeRateRange(\n  proposedRate: number,\n  baselineRate: number,\n  margin: number = EXCHANGE_RATE_VALIDATION.FRONTEND_MARGIN\n): { isValid: boolean; error?: string; range?: { min: number; max: number } } {\n  const range = calculateExchangeRateRange(baselineRate, margin)\n  \n  if (proposedRate < range.min) {\n    return { \n      isValid: false, \n      error: VALIDATION_MESSAGES.EXCHANGE_RATE.MIN(range.min),\n      range \n    }\n  }\n  \n  if (proposedRate > range.max) {\n    return { \n      isValid: false, \n      error: VALIDATION_MESSAGES.EXCHANGE_RATE.MAX(range.max),\n      range \n    }\n  }\n  \n  return { isValid: true, range }\n}\n\n// Formatting functions are in @/lib/format - use those instead\n\n/**\n * Convert exchange rate between different formats\n */\nexport function convertExchangeRate(\n  rate: number,\n  fromCurrency: Currency,\n  toCurrency: Currency\n): number {\n  if (fromCurrency === toCurrency) return rate\n  \n  // If converting from EUR->AOA to AOA->EUR or vice versa\n  return 1 / rate\n}\n"],
+      version: 3
+    },
+    _coverageSchema: "1a1c01bbd47fc00a2c39e90264f33305004495a9",
+    hash: "dd37b4391d0f04e35bc1177f9c5bd5395fe72462"
+  };
+  var coverage = global[gcv] || (global[gcv] = {});
+  if (!coverage[path] || coverage[path].hash !== hash) {
+    coverage[path] = coverageData;
+  }
+  var actualCoverage = coverage[path];
+  {
+    // @ts-ignore
+    cov_24zb5h9bpn = function () {
+      return actualCoverage;
+    };
+  }
+  return actualCoverage;
+}
+cov_24zb5h9bpn();
+/**
+ * Shared validation constants and utilities for EmaPay transactions
+ * Ensures consistency between frontend and backend validation
+ */
+// Transaction limits by currency
+export const TRANSACTION_LIMITS =
+/* istanbul ignore next */
+(cov_24zb5h9bpn().s[0]++, {
+  EUR: {
+    min: 1,
+    max: 10000
+  },
+  AOA: {
+    min: 1000,
+    max: 1000000000
+  }
+});
+// Exchange rate validation constants
+export const EXCHANGE_RATE_VALIDATION =
+/* istanbul ignore next */
+(cov_24zb5h9bpn().s[1]++, {
+  // Frontend validation margins (more lenient for UX)
+  FRONTEND_MARGIN: 0.20,
+  // 20% margin for frontend validation
+  // Backend validation margins (stricter for security)
+  MARKET_OFFERS_MARGIN: 0.20,
+  // 20% margin for existing offers
+  API_BASELINE_MARGIN: 0.50,
+  // 50% margin for API baseline
+  // Fallback rates for frontend validation (1 EUR = X AOA format)
+  FALLBACK_RATES: {
+    EUR_TO_AOA: 1100.00,
+    // Updated to match BAI API format
+    AOA_TO_EUR: 0.000909 // Inverse for compatibility (1/1100)
+  }
+});
+import { formatAmountWithCurrency } from '@/lib/format';
+// Portuguese error messages for consistency
+export const VALIDATION_MESSAGES =
+/* istanbul ignore next */
+(cov_24zb5h9bpn().s[2]++, {
+  AMOUNT: {
+    REQUIRED: "Digite um valor",
+    INVALID: "Digite um valor válido",
+    MIN: (min, currency) => {
+      /* istanbul ignore next */
+      cov_24zb5h9bpn().f[0]++;
+      cov_24zb5h9bpn().s[3]++;
+      return `Valor mínimo: ${formatAmountWithCurrency(min, currency)}`;
+    },
+    MAX: (max, currency) => {
+      /* istanbul ignore next */
+      cov_24zb5h9bpn().f[1]++;
+      cov_24zb5h9bpn().s[4]++;
+      return `Valor máximo: ${formatAmountWithCurrency(max, currency)}`;
+    },
+    INSUFFICIENT_BALANCE: "Seu saldo não é suficiente"
+  },
+  EXCHANGE_RATE: {
+    REQUIRED: "Taxa de câmbio é obrigatória",
+    INVALID: "Digite uma taxa válida",
+    INVALID_POSITIVE: "Taxa de câmbio inválida. Deve ser um número positivo.",
+    OUT_OF_RANGE: "Taxa de câmbio fora do intervalo aceitável",
+    MIN: min => {
+      /* istanbul ignore next */
+      cov_24zb5h9bpn().f[2]++;
+      cov_24zb5h9bpn().s[5]++;
+      return `Valor mínimo: ${min.toFixed(2)}`;
+    },
+    MAX: max => {
+      /* istanbul ignore next */
+      cov_24zb5h9bpn().f[3]++;
+      cov_24zb5h9bpn().s[6]++;
+      return `Valor máximo: ${max.toFixed(2)} AOA`;
+    }
+  },
+  CURRENCY: {
+    INVALID: "Moeda inválida. Deve ser EUR ou AOA"
+  },
+  GENERAL: {
+    NETWORK_ERROR: "Erro ao processar. Tente novamente.",
+    SERVER_ERROR: "Erro interno do servidor"
+  }
+});
+/**
+ * Get transaction limits for a specific currency
+ */
+export function getTransactionLimits(currency) {
+  /* istanbul ignore next */
+  cov_24zb5h9bpn().f[4]++;
+  cov_24zb5h9bpn().s[7]++;
+  return TRANSACTION_LIMITS[currency];
+}
+/**
+ * Validate amount against currency limits
+ */
+export function validateTransactionAmount(amount, currency, availableBalance) {
+  /* istanbul ignore next */
+  cov_24zb5h9bpn().f[5]++;
+  const limits =
+  /* istanbul ignore next */
+  (cov_24zb5h9bpn().s[8]++, getTransactionLimits(currency));
+  /* istanbul ignore next */
+  cov_24zb5h9bpn().s[9]++;
+  if (amount <= 0) {
+    /* istanbul ignore next */
+    cov_24zb5h9bpn().b[0][0]++;
+    cov_24zb5h9bpn().s[10]++;
+    return {
+      isValid: false,
+      error: VALIDATION_MESSAGES.AMOUNT.INVALID
+    };
+  } else
+  /* istanbul ignore next */
+  {
+    cov_24zb5h9bpn().b[0][1]++;
+  }
+  cov_24zb5h9bpn().s[11]++;
+  if (amount < limits.min) {
+    /* istanbul ignore next */
+    cov_24zb5h9bpn().b[1][0]++;
+    cov_24zb5h9bpn().s[12]++;
+    return {
+      isValid: false,
+      error: VALIDATION_MESSAGES.AMOUNT.MIN(limits.min, currency)
+    };
+  } else
+  /* istanbul ignore next */
+  {
+    cov_24zb5h9bpn().b[1][1]++;
+  }
+  cov_24zb5h9bpn().s[13]++;
+  if (amount > limits.max) {
+    /* istanbul ignore next */
+    cov_24zb5h9bpn().b[2][0]++;
+    cov_24zb5h9bpn().s[14]++;
+    return {
+      isValid: false,
+      error: VALIDATION_MESSAGES.AMOUNT.MAX(limits.max, currency)
+    };
+  } else
+  /* istanbul ignore next */
+  {
+    cov_24zb5h9bpn().b[2][1]++;
+  }
+  cov_24zb5h9bpn().s[15]++;
+  if (
+  /* istanbul ignore next */
+  (cov_24zb5h9bpn().b[4][0]++, availableBalance !== undefined) &&
+  /* istanbul ignore next */
+  (cov_24zb5h9bpn().b[4][1]++, amount > availableBalance)) {
+    /* istanbul ignore next */
+    cov_24zb5h9bpn().b[3][0]++;
+    cov_24zb5h9bpn().s[16]++;
+    return {
+      isValid: false,
+      error: VALIDATION_MESSAGES.AMOUNT.INSUFFICIENT_BALANCE
+    };
+  } else
+  /* istanbul ignore next */
+  {
+    cov_24zb5h9bpn().b[3][1]++;
+  }
+  cov_24zb5h9bpn().s[17]++;
+  return {
+    isValid: true
+  };
+}
+/**
+ * Validate exchange rate format (basic validation)
+ */
+export function validateExchangeRateFormat(exchangeRate) {
+  /* istanbul ignore next */
+  cov_24zb5h9bpn().f[6]++;
+  cov_24zb5h9bpn().s[18]++;
+  if (
+  /* istanbul ignore next */
+  (cov_24zb5h9bpn().b[6][0]++, isNaN(exchangeRate)) ||
+  /* istanbul ignore next */
+  (cov_24zb5h9bpn().b[6][1]++, exchangeRate <= 0)) {
+    /* istanbul ignore next */
+    cov_24zb5h9bpn().b[5][0]++;
+    cov_24zb5h9bpn().s[19]++;
+    return {
+      isValid: false,
+      error: VALIDATION_MESSAGES.EXCHANGE_RATE.INVALID
+    };
+  } else
+  /* istanbul ignore next */
+  {
+    cov_24zb5h9bpn().b[5][1]++;
+  }
+  cov_24zb5h9bpn().s[20]++;
+  return {
+    isValid: true
+  };
+}
+/**
+ * Calculate exchange rate range for frontend validation
+ */
+export function calculateExchangeRateRange(baselineRate, margin =
+/* istanbul ignore next */
+(cov_24zb5h9bpn().b[7][0]++, EXCHANGE_RATE_VALIDATION.FRONTEND_MARGIN)) {
+  /* istanbul ignore next */
+  cov_24zb5h9bpn().f[7]++;
+  cov_24zb5h9bpn().s[21]++;
+  return {
+    min: baselineRate * (1 - margin),
+    max: baselineRate * (1 + margin)
+  };
+}
+/**
+ * Validate exchange rate against a baseline with margin
+ */
+export function validateExchangeRateRange(proposedRate, baselineRate, margin =
+/* istanbul ignore next */
+(cov_24zb5h9bpn().b[8][0]++, EXCHANGE_RATE_VALIDATION.FRONTEND_MARGIN)) {
+  /* istanbul ignore next */
+  cov_24zb5h9bpn().f[8]++;
+  const range =
+  /* istanbul ignore next */
+  (cov_24zb5h9bpn().s[22]++, calculateExchangeRateRange(baselineRate, margin));
+  /* istanbul ignore next */
+  cov_24zb5h9bpn().s[23]++;
+  if (proposedRate < range.min) {
+    /* istanbul ignore next */
+    cov_24zb5h9bpn().b[9][0]++;
+    cov_24zb5h9bpn().s[24]++;
+    return {
+      isValid: false,
+      error: VALIDATION_MESSAGES.EXCHANGE_RATE.MIN(range.min),
+      range
+    };
+  } else
+  /* istanbul ignore next */
+  {
+    cov_24zb5h9bpn().b[9][1]++;
+  }
+  cov_24zb5h9bpn().s[25]++;
+  if (proposedRate > range.max) {
+    /* istanbul ignore next */
+    cov_24zb5h9bpn().b[10][0]++;
+    cov_24zb5h9bpn().s[26]++;
+    return {
+      isValid: false,
+      error: VALIDATION_MESSAGES.EXCHANGE_RATE.MAX(range.max),
+      range
+    };
+  } else
+  /* istanbul ignore next */
+  {
+    cov_24zb5h9bpn().b[10][1]++;
+  }
+  cov_24zb5h9bpn().s[27]++;
+  return {
+    isValid: true,
+    range
+  };
+}
+// Formatting functions are in @/lib/format - use those instead
+/**
+ * Convert exchange rate between different formats
+ */
+export function convertExchangeRate(rate, fromCurrency, toCurrency) {
+  /* istanbul ignore next */
+  cov_24zb5h9bpn().f[9]++;
+  cov_24zb5h9bpn().s[28]++;
+  if (fromCurrency === toCurrency) {
+    /* istanbul ignore next */
+    cov_24zb5h9bpn().b[11][0]++;
+    cov_24zb5h9bpn().s[29]++;
+    return rate;
+  } else
+  /* istanbul ignore next */
+  {
+    cov_24zb5h9bpn().b[11][1]++;
+  }
+  // If converting from EUR->AOA to AOA->EUR or vice versa
+  cov_24zb5h9bpn().s[30]++;
+  return 1 / rate;
+}
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJuYW1lcyI6WyJjb3ZfMjR6YjVoOWJwbiIsImFjdHVhbENvdmVyYWdlIiwiVFJBTlNBQ1RJT05fTElNSVRTIiwicyIsIkVVUiIsIm1pbiIsIm1heCIsIkFPQSIsIkVYQ0hBTkdFX1JBVEVfVkFMSURBVElPTiIsIkZST05URU5EX01BUkdJTiIsIk1BUktFVF9PRkZFUlNfTUFSR0lOIiwiQVBJX0JBU0VMSU5FX01BUkdJTiIsIkZBTExCQUNLX1JBVEVTIiwiRVVSX1RPX0FPQSIsIkFPQV9UT19FVVIiLCJmb3JtYXRBbW91bnRXaXRoQ3VycmVuY3kiLCJWQUxJREFUSU9OX01FU1NBR0VTIiwiQU1PVU5UIiwiUkVRVUlSRUQiLCJJTlZBTElEIiwiTUlOIiwiY3VycmVuY3kiLCJmIiwiTUFYIiwiSU5TVUZGSUNJRU5UX0JBTEFOQ0UiLCJFWENIQU5HRV9SQVRFIiwiSU5WQUxJRF9QT1NJVElWRSIsIk9VVF9PRl9SQU5HRSIsInRvRml4ZWQiLCJDVVJSRU5DWSIsIkdFTkVSQUwiLCJORVRXT1JLX0VSUk9SIiwiU0VSVkVSX0VSUk9SIiwiZ2V0VHJhbnNhY3Rpb25MaW1pdHMiLCJ2YWxpZGF0ZVRyYW5zYWN0aW9uQW1vdW50IiwiYW1vdW50IiwiYXZhaWxhYmxlQmFsYW5jZSIsImxpbWl0cyIsImIiLCJpc1ZhbGlkIiwiZXJyb3IiLCJ1bmRlZmluZWQiLCJ2YWxpZGF0ZUV4Y2hhbmdlUmF0ZUZvcm1hdCIsImV4Y2hhbmdlUmF0ZSIsImlzTmFOIiwiY2FsY3VsYXRlRXhjaGFuZ2VSYXRlUmFuZ2UiLCJiYXNlbGluZVJhdGUiLCJtYXJnaW4iLCJ2YWxpZGF0ZUV4Y2hhbmdlUmF0ZVJhbmdlIiwicHJvcG9zZWRSYXRlIiwicmFuZ2UiLCJjb252ZXJ0RXhjaGFuZ2VSYXRlIiwicmF0ZSIsImZyb21DdXJyZW5jeSIsInRvQ3VycmVuY3kiXSwic291cmNlcyI6WyJDOlxcVXNlcnNcXFVzZXJcXERvY3VtZW50c1xcR2l0SHViXFxlbWFcXHNyY1xcdXRpbHNcXHRyYW5zYWN0aW9uLXZhbGlkYXRpb24udHMiXSwic291cmNlc0NvbnRlbnQiOlsiLyoqXG4gKiBTaGFyZWQgdmFsaWRhdGlvbiBjb25zdGFudHMgYW5kIHV0aWxpdGllcyBmb3IgRW1hUGF5IHRyYW5zYWN0aW9uc1xuICogRW5zdXJlcyBjb25zaXN0ZW5jeSBiZXR3ZWVuIGZyb250ZW5kIGFuZCBiYWNrZW5kIHZhbGlkYXRpb25cbiAqL1xuXG4vLyBUcmFuc2FjdGlvbiBsaW1pdHMgYnkgY3VycmVuY3lcbmV4cG9ydCBjb25zdCBUUkFOU0FDVElPTl9MSU1JVFMgPSB7XG4gIEVVUjoge1xuICAgIG1pbjogMSxcbiAgICBtYXg6IDEwMDAwXG4gIH0sXG4gIEFPQToge1xuICAgIG1pbjogMTAwMCxcbiAgICBtYXg6IDEwMDAwMDAwMDBcbiAgfVxufSBhcyBjb25zdFxuXG4vLyBFeGNoYW5nZSByYXRlIHZhbGlkYXRpb24gY29uc3RhbnRzXG5leHBvcnQgY29uc3QgRVhDSEFOR0VfUkFURV9WQUxJREFUSU9OID0ge1xuICAvLyBGcm9udGVuZCB2YWxpZGF0aW9uIG1hcmdpbnMgKG1vcmUgbGVuaWVudCBmb3IgVVgpXG4gIEZST05URU5EX01BUkdJTjogMC4yMCwgLy8gMjAlIG1hcmdpbiBmb3IgZnJvbnRlbmQgdmFsaWRhdGlvblxuICBcbiAgLy8gQmFja2VuZCB2YWxpZGF0aW9uIG1hcmdpbnMgKHN0cmljdGVyIGZvciBzZWN1cml0eSlcbiAgTUFSS0VUX09GRkVSU19NQVJHSU46IDAuMjAsIC8vIDIwJSBtYXJnaW4gZm9yIGV4aXN0aW5nIG9mZmVyc1xuICBBUElfQkFTRUxJTkVfTUFSR0lOOiAwLjUwLCAvLyA1MCUgbWFyZ2luIGZvciBBUEkgYmFzZWxpbmVcbiAgXG4gIC8vIEZhbGxiYWNrIHJhdGVzIGZvciBmcm9udGVuZCB2YWxpZGF0aW9uICgxIEVVUiA9IFggQU9BIGZvcm1hdClcbiAgRkFMTEJBQ0tfUkFURVM6IHtcbiAgICBFVVJfVE9fQU9BOiAxMTAwLjAwLCAvLyBVcGRhdGVkIHRvIG1hdGNoIEJBSSBBUEkgZm9ybWF0XG4gICAgQU9BX1RPX0VVUjogMC4wMDA5MDkgIC8vIEludmVyc2UgZm9yIGNvbXBhdGliaWxpdHkgKDEvMTEwMClcbiAgfVxufSBhcyBjb25zdFxuXG5pbXBvcnQgeyBmb3JtYXRBbW91bnRXaXRoQ3VycmVuY3ksIHR5cGUgQ3VycmVuY3kgfSBmcm9tICdAL2xpYi9mb3JtYXQnXG5cbi8vIFBvcnR1Z3Vlc2UgZXJyb3IgbWVzc2FnZXMgZm9yIGNvbnNpc3RlbmN5XG5leHBvcnQgY29uc3QgVkFMSURBVElPTl9NRVNTQUdFUyA9IHtcbiAgQU1PVU5UOiB7XG4gICAgUkVRVUlSRUQ6IFwiRGlnaXRlIHVtIHZhbG9yXCIsXG4gICAgSU5WQUxJRDogXCJEaWdpdGUgdW0gdmFsb3IgdsOhbGlkb1wiLFxuICAgIE1JTjogKG1pbjogbnVtYmVyLCBjdXJyZW5jeTogc3RyaW5nKSA9PiBgVmFsb3IgbcOtbmltbzogJHtmb3JtYXRBbW91bnRXaXRoQ3VycmVuY3kobWluLCBjdXJyZW5jeSBhcyBDdXJyZW5jeSl9YCxcbiAgICBNQVg6IChtYXg6IG51bWJlciwgY3VycmVuY3k6IHN0cmluZykgPT4gYFZhbG9yIG3DoXhpbW86ICR7Zm9ybWF0QW1vdW50V2l0aEN1cnJlbmN5KG1heCwgY3VycmVuY3kgYXMgQ3VycmVuY3kpfWAsXG4gICAgSU5TVUZGSUNJRU5UX0JBTEFOQ0U6IFwiU2V1IHNhbGRvIG7Do28gw6kgc3VmaWNpZW50ZVwiXG4gIH0sXG4gIEVYQ0hBTkdFX1JBVEU6IHtcbiAgICBSRVFVSVJFRDogXCJUYXhhIGRlIGPDom1iaW8gw6kgb2JyaWdhdMOzcmlhXCIsXG4gICAgSU5WQUxJRDogXCJEaWdpdGUgdW1hIHRheGEgdsOhbGlkYVwiLFxuICAgIElOVkFMSURfUE9TSVRJVkU6IFwiVGF4YSBkZSBjw6JtYmlvIGludsOhbGlkYS4gRGV2ZSBzZXIgdW0gbsO6bWVybyBwb3NpdGl2by5cIixcbiAgICBPVVRfT0ZfUkFOR0U6IFwiVGF4YSBkZSBjw6JtYmlvIGZvcmEgZG8gaW50ZXJ2YWxvIGFjZWl0w6F2ZWxcIixcbiAgICBNSU46IChtaW46IG51bWJlcikgPT4gYFZhbG9yIG3DrW5pbW86ICR7bWluLnRvRml4ZWQoMil9YCxcbiAgICBNQVg6IChtYXg6IG51bWJlcikgPT4gYFZhbG9yIG3DoXhpbW86ICR7bWF4LnRvRml4ZWQoMil9IEFPQWBcbiAgfSxcbiAgQ1VSUkVOQ1k6IHtcbiAgICBJTlZBTElEOiBcIk1vZWRhIGludsOhbGlkYS4gRGV2ZSBzZXIgRVVSIG91IEFPQVwiXG4gIH0sXG4gIEdFTkVSQUw6IHtcbiAgICBORVRXT1JLX0VSUk9SOiBcIkVycm8gYW8gcHJvY2Vzc2FyLiBUZW50ZSBub3ZhbWVudGUuXCIsXG4gICAgU0VSVkVSX0VSUk9SOiBcIkVycm8gaW50ZXJubyBkbyBzZXJ2aWRvclwiXG4gIH1cbn0gYXMgY29uc3RcblxuLy8gQ3VycmVuY3kgdHlwZSBkZWZpbml0aW9uXG5leHBvcnQgdHlwZSBDdXJyZW5jeSA9ICdFVVInIHwgJ0FPQSdcblxuLyoqXG4gKiBHZXQgdHJhbnNhY3Rpb24gbGltaXRzIGZvciBhIHNwZWNpZmljIGN1cnJlbmN5XG4gKi9cbmV4cG9ydCBmdW5jdGlvbiBnZXRUcmFuc2FjdGlvbkxpbWl0cyhjdXJyZW5jeTogQ3VycmVuY3kpIHtcbiAgcmV0dXJuIFRSQU5TQUNUSU9OX0xJTUlUU1tjdXJyZW5jeV1cbn1cblxuLyoqXG4gKiBWYWxpZGF0ZSBhbW91bnQgYWdhaW5zdCBjdXJyZW5jeSBsaW1pdHNcbiAqL1xuZXhwb3J0IGZ1bmN0aW9uIHZhbGlkYXRlVHJhbnNhY3Rpb25BbW91bnQoXG4gIGFtb3VudDogbnVtYmVyLCBcbiAgY3VycmVuY3k6IEN1cnJlbmN5LCBcbiAgYXZhaWxhYmxlQmFsYW5jZT86IG51bWJlclxuKTogeyBpc1ZhbGlkOiBib29sZWFuOyBlcnJvcj86IHN0cmluZyB9IHtcbiAgY29uc3QgbGltaXRzID0gZ2V0VHJhbnNhY3Rpb25MaW1pdHMoY3VycmVuY3kpXG4gIFxuICBpZiAoYW1vdW50IDw9IDApIHtcbiAgICByZXR1cm4geyBpc1ZhbGlkOiBmYWxzZSwgZXJyb3I6IFZBTElEQVRJT05fTUVTU0FHRVMuQU1PVU5ULklOVkFMSUQgfVxuICB9XG4gIFxuICBpZiAoYW1vdW50IDwgbGltaXRzLm1pbikge1xuICAgIHJldHVybiB7IGlzVmFsaWQ6IGZhbHNlLCBlcnJvcjogVkFMSURBVElPTl9NRVNTQUdFUy5BTU9VTlQuTUlOKGxpbWl0cy5taW4sIGN1cnJlbmN5KSB9XG4gIH1cbiAgXG4gIGlmIChhbW91bnQgPiBsaW1pdHMubWF4KSB7XG4gICAgcmV0dXJuIHsgaXNWYWxpZDogZmFsc2UsIGVycm9yOiBWQUxJREFUSU9OX01FU1NBR0VTLkFNT1VOVC5NQVgobGltaXRzLm1heCwgY3VycmVuY3kpIH1cbiAgfVxuICBcbiAgaWYgKGF2YWlsYWJsZUJhbGFuY2UgIT09IHVuZGVmaW5lZCAmJiBhbW91bnQgPiBhdmFpbGFibGVCYWxhbmNlKSB7XG4gICAgcmV0dXJuIHsgaXNWYWxpZDogZmFsc2UsIGVycm9yOiBWQUxJREFUSU9OX01FU1NBR0VTLkFNT1VOVC5JTlNVRkZJQ0lFTlRfQkFMQU5DRSB9XG4gIH1cbiAgXG4gIHJldHVybiB7IGlzVmFsaWQ6IHRydWUgfVxufVxuXG4vKipcbiAqIFZhbGlkYXRlIGV4Y2hhbmdlIHJhdGUgZm9ybWF0IChiYXNpYyB2YWxpZGF0aW9uKVxuICovXG5leHBvcnQgZnVuY3Rpb24gdmFsaWRhdGVFeGNoYW5nZVJhdGVGb3JtYXQoZXhjaGFuZ2VSYXRlOiBudW1iZXIpOiB7IGlzVmFsaWQ6IGJvb2xlYW47IGVycm9yPzogc3RyaW5nIH0ge1xuICBpZiAoaXNOYU4oZXhjaGFuZ2VSYXRlKSB8fCBleGNoYW5nZVJhdGUgPD0gMCkge1xuICAgIHJldHVybiB7IGlzVmFsaWQ6IGZhbHNlLCBlcnJvcjogVkFMSURBVElPTl9NRVNTQUdFUy5FWENIQU5HRV9SQVRFLklOVkFMSUQgfVxuICB9XG4gIFxuICByZXR1cm4geyBpc1ZhbGlkOiB0cnVlIH1cbn1cblxuLyoqXG4gKiBDYWxjdWxhdGUgZXhjaGFuZ2UgcmF0ZSByYW5nZSBmb3IgZnJvbnRlbmQgdmFsaWRhdGlvblxuICovXG5leHBvcnQgZnVuY3Rpb24gY2FsY3VsYXRlRXhjaGFuZ2VSYXRlUmFuZ2UoXG4gIGJhc2VsaW5lUmF0ZTogbnVtYmVyLCBcbiAgbWFyZ2luOiBudW1iZXIgPSBFWENIQU5HRV9SQVRFX1ZBTElEQVRJT04uRlJPTlRFTkRfTUFSR0lOXG4pOiB7IG1pbjogbnVtYmVyOyBtYXg6IG51bWJlciB9IHtcbiAgcmV0dXJuIHtcbiAgICBtaW46IGJhc2VsaW5lUmF0ZSAqICgxIC0gbWFyZ2luKSxcbiAgICBtYXg6IGJhc2VsaW5lUmF0ZSAqICgxICsgbWFyZ2luKVxuICB9XG59XG5cbi8qKlxuICogVmFsaWRhdGUgZXhjaGFuZ2UgcmF0ZSBhZ2FpbnN0IGEgYmFzZWxpbmUgd2l0aCBtYXJnaW5cbiAqL1xuZXhwb3J0IGZ1bmN0aW9uIHZhbGlkYXRlRXhjaGFuZ2VSYXRlUmFuZ2UoXG4gIHByb3Bvc2VkUmF0ZTogbnVtYmVyLFxuICBiYXNlbGluZVJhdGU6IG51bWJlcixcbiAgbWFyZ2luOiBudW1iZXIgPSBFWENIQU5HRV9SQVRFX1ZBTElEQVRJT04uRlJPTlRFTkRfTUFSR0lOXG4pOiB7IGlzVmFsaWQ6IGJvb2xlYW47IGVycm9yPzogc3RyaW5nOyByYW5nZT86IHsgbWluOiBudW1iZXI7IG1heDogbnVtYmVyIH0gfSB7XG4gIGNvbnN0IHJhbmdlID0gY2FsY3VsYXRlRXhjaGFuZ2VSYXRlUmFuZ2UoYmFzZWxpbmVSYXRlLCBtYXJnaW4pXG4gIFxuICBpZiAocHJvcG9zZWRSYXRlIDwgcmFuZ2UubWluKSB7XG4gICAgcmV0dXJuIHsgXG4gICAgICBpc1ZhbGlkOiBmYWxzZSwgXG4gICAgICBlcnJvcjogVkFMSURBVElPTl9NRVNTQUdFUy5FWENIQU5HRV9SQVRFLk1JTihyYW5nZS5taW4pLFxuICAgICAgcmFuZ2UgXG4gICAgfVxuICB9XG4gIFxuICBpZiAocHJvcG9zZWRSYXRlID4gcmFuZ2UubWF4KSB7XG4gICAgcmV0dXJuIHsgXG4gICAgICBpc1ZhbGlkOiBmYWxzZSwgXG4gICAgICBlcnJvcjogVkFMSURBVElPTl9NRVNTQUdFUy5FWENIQU5HRV9SQVRFLk1BWChyYW5nZS5tYXgpLFxuICAgICAgcmFuZ2UgXG4gICAgfVxuICB9XG4gIFxuICByZXR1cm4geyBpc1ZhbGlkOiB0cnVlLCByYW5nZSB9XG59XG5cbi8vIEZvcm1hdHRpbmcgZnVuY3Rpb25zIGFyZSBpbiBAL2xpYi9mb3JtYXQgLSB1c2UgdGhvc2UgaW5zdGVhZFxuXG4vKipcbiAqIENvbnZlcnQgZXhjaGFuZ2UgcmF0ZSBiZXR3ZWVuIGRpZmZlcmVudCBmb3JtYXRzXG4gKi9cbmV4cG9ydCBmdW5jdGlvbiBjb252ZXJ0RXhjaGFuZ2VSYXRlKFxuICByYXRlOiBudW1iZXIsXG4gIGZyb21DdXJyZW5jeTogQ3VycmVuY3ksXG4gIHRvQ3VycmVuY3k6IEN1cnJlbmN5XG4pOiBudW1iZXIge1xuICBpZiAoZnJvbUN1cnJlbmN5ID09PSB0b0N1cnJlbmN5KSByZXR1cm4gcmF0ZVxuICBcbiAgLy8gSWYgY29udmVydGluZyBmcm9tIEVVUi0+QU9BIHRvIEFPQS0+RVVSIG9yIHZpY2UgdmVyc2FcbiAgcmV0dXJuIDEgLyByYXRlXG59XG4iXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7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

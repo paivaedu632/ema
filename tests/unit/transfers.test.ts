@@ -1,0 +1,616 @@
+/**
+ * Transfer Operations Endpoint Tests
+ * Tests for /api/v1/transfers/* endpoints
+ */
+
+import { describe, test, expect, beforeAll, afterAll, beforeEach } from '@jest/globals';
+import { testUtils, TestUser } from '../utils';
+
+describe('Transfer Operations Endpoints', () => {
+  let senderUser: TestUser;
+  let recipientUser: TestUser;
+  let userWithBalance: TestUser;
+
+  beforeAll(async () => {
+    // Create test users
+    senderUser = await testUtils.createUserWithBalance({
+      email: 'sender@emapay.test',
+      metadata: { purpose: 'Transfer Sender' },
+      balances: {
+        EUR: { available: 1000.00, reserved: 0 },
+        AOA: { available: 650000.00, reserved: 0 }
+      }
+    });
+
+    recipientUser = await testUtils.createUser({
+      email: 'recipient@emapay.test',
+      metadata: { purpose: 'Transfer Recipient' }
+    });
+
+    userWithBalance = await testUtils.createUserWithBalance({
+      email: 'transfer-test@emapay.test',
+      metadata: { purpose: 'Transfer Testing' },
+      balances: {
+        EUR: { available: 500.00, reserved: 0 }
+      }
+    });
+  });
+
+  afterAll(async () => {
+    // Clean up test users
+    await testUtils.cleanup();
+  });
+
+  describe('POST /api/v1/transfers/send - Valid Transfers', () => {
+    test('should send EUR transfer successfully', async () => {
+      const transferData = testUtils.generateTransferData(
+        recipientUser.id,
+        'EUR',
+        50.00
+      );
+
+      const response = await testUtils.post(
+        '/api/v1/transfers/send',
+        transferData,
+        senderUser
+      );
+      
+      const transfer = testUtils.assertSuccessResponse(response, 201);
+      
+      testUtils.assertValidTransfer(transfer);
+      expect(transfer.fromUserId).toBe(senderUser.id);
+      expect(transfer.toUserId).toBe(recipientUser.id);
+      expect(transfer.currency).toBe('EUR');
+      expect(transfer.amount).toBe(50.00);
+      expect(transfer.status).toBe('pending');
+      
+      // Assert response time
+      testUtils.assertResponseTime(response, 500);
+    });
+
+    test('should send AOA transfer successfully', async () => {
+      const transferData = testUtils.generateTransferData(
+        recipientUser.id,
+        'AOA',
+        25000.00
+      );
+
+      const response = await testUtils.post(
+        '/api/v1/transfers/send',
+        transferData,
+        senderUser
+      );
+      
+      const transfer = testUtils.assertSuccessResponse(response, 201);
+      
+      testUtils.assertValidTransfer(transfer);
+      expect(transfer.fromUserId).toBe(senderUser.id);
+      expect(transfer.toUserId).toBe(recipientUser.id);
+      expect(transfer.currency).toBe('AOA');
+      expect(transfer.amount).toBe(25000.00);
+      expect(transfer.status).toBe('pending');
+    });
+
+    test('should include transfer description', async () => {
+      const transferData = testUtils.generateTransferData(
+        recipientUser.id,
+        'EUR',
+        25.00
+      );
+      transferData.description = 'Test payment for services';
+
+      const response = await testUtils.post(
+        '/api/v1/transfers/send',
+        transferData,
+        senderUser
+      );
+      
+      const transfer = testUtils.assertSuccessResponse(response, 201);
+      
+      expect(transfer.description).toBe('Test payment for services');
+    });
+
+    test('should handle minimum transfer amount', async () => {
+      const transferData = testUtils.generateTransferData(
+        recipientUser.id,
+        'EUR',
+        0.01
+      );
+
+      const response = await testUtils.post(
+        '/api/v1/transfers/send',
+        transferData,
+        senderUser
+      );
+      
+      const transfer = testUtils.assertSuccessResponse(response, 201);
+      
+      expect(transfer.amount).toBe(0.01);
+      testUtils.assertDecimalPrecision(transfer.amount, 2);
+    });
+
+    test('should handle large transfer amounts', async () => {
+      const transferData = testUtils.generateTransferData(
+        recipientUser.id,
+        'EUR',
+        999.99
+      );
+
+      const response = await testUtils.post(
+        '/api/v1/transfers/send',
+        transferData,
+        senderUser
+      );
+      
+      const transfer = testUtils.assertSuccessResponse(response, 201);
+      
+      expect(transfer.amount).toBe(999.99);
+      testUtils.assertDecimalPrecision(transfer.amount, 2);
+    });
+
+    test('should require valid PIN for transfer', async () => {
+      const transferData = testUtils.generateTransferData(
+        recipientUser.id,
+        'EUR',
+        10.00
+      );
+
+      const response = await testUtils.post(
+        '/api/v1/transfers/send',
+        transferData,
+        senderUser
+      );
+      
+      // Should succeed with valid PIN
+      testUtils.assertSuccessResponse(response, 201);
+    });
+
+    test('should generate unique transfer IDs', async () => {
+      const transferData1 = testUtils.generateTransferData(
+        recipientUser.id,
+        'EUR',
+        10.00
+      );
+      
+      const transferData2 = testUtils.generateTransferData(
+        recipientUser.id,
+        'EUR',
+        20.00
+      );
+
+      const [response1, response2] = await Promise.all([
+        testUtils.post('/api/v1/transfers/send', transferData1, senderUser),
+        testUtils.post('/api/v1/transfers/send', transferData2, senderUser)
+      ]);
+      
+      const transfer1 = testUtils.assertSuccessResponse(response1, 201);
+      const transfer2 = testUtils.assertSuccessResponse(response2, 201);
+      
+      expect(transfer1.id).not.toBe(transfer2.id);
+      expect(transfer1.id).toBeValidUUID();
+      expect(transfer2.id).toBeValidUUID();
+    });
+  });
+
+  describe('POST /api/v1/transfers/send - Invalid Transfers', () => {
+    test('should reject transfer with insufficient balance', async () => {
+      const transferData = testUtils.generateTransferData(
+        recipientUser.id,
+        'EUR',
+        2000.00 // More than available balance
+      );
+
+      const response = await testUtils.post(
+        '/api/v1/transfers/send',
+        transferData,
+        senderUser
+      );
+      
+      testUtils.assertErrorResponse(response, 400);
+      expect(response.body.error).toContain('insufficient');
+    });
+
+    test('should reject transfer to non-existent user', async () => {
+      const transferData = testUtils.generateTransferData(
+        'non-existent-user-id',
+        'EUR',
+        10.00
+      );
+
+      const response = await testUtils.post(
+        '/api/v1/transfers/send',
+        transferData,
+        senderUser
+      );
+      
+      testUtils.assertErrorResponse(response, 404);
+      expect(response.body.error).toContain('recipient');
+    });
+
+    test('should reject transfer to self', async () => {
+      const transferData = testUtils.generateTransferData(
+        senderUser.id, // Same as sender
+        'EUR',
+        10.00
+      );
+
+      const response = await testUtils.post(
+        '/api/v1/transfers/send',
+        transferData,
+        senderUser
+      );
+      
+      testUtils.assertErrorResponse(response, 400);
+      expect(response.body.error).toContain('self');
+    });
+
+    test('should reject transfer with invalid currency', async () => {
+      const transferData = testUtils.generateTransferData(
+        recipientUser.id,
+        'USD', // Invalid currency
+        10.00
+      );
+
+      const response = await testUtils.post(
+        '/api/v1/transfers/send',
+        transferData,
+        senderUser
+      );
+      
+      testUtils.assertErrorResponse(response, 400);
+      expect(response.body.error).toContain('currency');
+    });
+
+    test('should reject transfer with zero amount', async () => {
+      const transferData = testUtils.generateTransferData(
+        recipientUser.id,
+        'EUR',
+        0.00
+      );
+
+      const response = await testUtils.post(
+        '/api/v1/transfers/send',
+        transferData,
+        senderUser
+      );
+      
+      testUtils.assertErrorResponse(response, 400);
+      expect(response.body.error).toContain('amount');
+    });
+
+    test('should reject transfer with negative amount', async () => {
+      const transferData = testUtils.generateTransferData(
+        recipientUser.id,
+        'EUR',
+        -10.00
+      );
+
+      const response = await testUtils.post(
+        '/api/v1/transfers/send',
+        transferData,
+        senderUser
+      );
+      
+      testUtils.assertErrorResponse(response, 400);
+      expect(response.body.error).toContain('amount');
+    });
+
+    test('should reject transfer with invalid PIN', async () => {
+      const transferData = testUtils.generateTransferData(
+        recipientUser.id,
+        'EUR',
+        10.00
+      );
+      transferData.pin = 'wrong-pin';
+
+      const response = await testUtils.post(
+        '/api/v1/transfers/send',
+        transferData,
+        senderUser
+      );
+      
+      testUtils.assertErrorResponse(response, 401);
+      expect(response.body.error).toContain('PIN');
+    });
+
+    test('should reject transfer with missing required fields', async () => {
+      const incompleteData = [
+        { currency: 'EUR', amount: 10.00, pin: '123456' }, // Missing recipientId
+        { recipientId: recipientUser.id, amount: 10.00, pin: '123456' }, // Missing currency
+        { recipientId: recipientUser.id, currency: 'EUR', pin: '123456' }, // Missing amount
+        { recipientId: recipientUser.id, currency: 'EUR', amount: 10.00 } // Missing pin
+      ];
+
+      for (const data of incompleteData) {
+        const response = await testUtils.post(
+          '/api/v1/transfers/send',
+          data,
+          senderUser
+        );
+        
+        testUtils.assertErrorResponse(response, 400);
+      }
+    });
+
+    test('should reject transfer with invalid amount precision', async () => {
+      const transferData = testUtils.generateTransferData(
+        recipientUser.id,
+        'EUR',
+        10.123 // Too many decimal places
+      );
+
+      const response = await testUtils.post(
+        '/api/v1/transfers/send',
+        transferData,
+        senderUser
+      );
+      
+      testUtils.assertErrorResponse(response, 400);
+      expect(response.body.error).toContain('precision');
+    });
+
+    test('should reject transfer with description too long', async () => {
+      const transferData = testUtils.generateTransferData(
+        recipientUser.id,
+        'EUR',
+        10.00
+      );
+      transferData.description = 'a'.repeat(501); // Assuming 500 char limit
+
+      const response = await testUtils.post(
+        '/api/v1/transfers/send',
+        transferData,
+        senderUser
+      );
+      
+      testUtils.assertErrorResponse(response, 400);
+      expect(response.body.error).toContain('description');
+    });
+  });
+
+  describe('GET /api/v1/transfers/history - Transaction History', () => {
+    test('should return transfer history', async () => {
+      const response = await testUtils.get('/api/v1/transfers/history', senderUser);
+
+      const history = testUtils.assertSuccessResponse(response, 200);
+
+      expect(history).toHaveProperty('transfers');
+      expect(history).toHaveProperty('pagination');
+      expect(Array.isArray(history.transfers)).toBe(true);
+
+      // Check transfer structure
+      if (history.transfers.length > 0) {
+        history.transfers.forEach((transfer: any) => {
+          testUtils.assertValidTransfer(transfer);
+        });
+      }
+
+      testUtils.assertResponseTime(response, 200);
+    });
+
+    test('should support pagination', async () => {
+      const response = await testUtils.get(
+        '/api/v1/transfers/history?limit=5&offset=0',
+        senderUser
+      );
+
+      const history = testUtils.assertSuccessResponse(response, 200);
+
+      expect(history.transfers.length).toBeLessThanOrEqual(5);
+      expect(history.pagination).toHaveProperty('limit');
+      expect(history.pagination).toHaveProperty('offset');
+      expect(history.pagination).toHaveProperty('total');
+    });
+
+    test('should filter by currency', async () => {
+      const response = await testUtils.get(
+        '/api/v1/transfers/history?currency=EUR',
+        senderUser
+      );
+
+      const history = testUtils.assertSuccessResponse(response, 200);
+
+      history.transfers.forEach((transfer: any) => {
+        expect(transfer.currency).toBe('EUR');
+      });
+    });
+
+    test('should filter by status', async () => {
+      const response = await testUtils.get(
+        '/api/v1/transfers/history?status=completed',
+        senderUser
+      );
+
+      const history = testUtils.assertSuccessResponse(response, 200);
+
+      history.transfers.forEach((transfer: any) => {
+        expect(transfer.status).toBe('completed');
+      });
+    });
+
+    test('should sort by date descending by default', async () => {
+      const response = await testUtils.get('/api/v1/transfers/history', senderUser);
+
+      const history = testUtils.assertSuccessResponse(response, 200);
+
+      if (history.transfers.length > 1) {
+        testUtils.assertSortedByDate(history.transfers, 'createdAt', true);
+      }
+    });
+
+    test('should include both sent and received transfers', async () => {
+      const response = await testUtils.get('/api/v1/transfers/history', recipientUser);
+
+      const history = testUtils.assertSuccessResponse(response, 200);
+
+      // Should include transfers where user is either sender or recipient
+      history.transfers.forEach((transfer: any) => {
+        const isInvolved = transfer.fromUserId === recipientUser.id ||
+                          transfer.toUserId === recipientUser.id;
+        expect(isInvolved).toBe(true);
+      });
+    });
+  });
+
+  describe('Transfer Balance Updates', () => {
+    test('should update sender balance after transfer', async () => {
+      // Get initial balance
+      const initialResponse = await testUtils.get('/api/v1/wallets/EUR', userWithBalance);
+      const initialBalance = testUtils.assertSuccessResponse(initialResponse, 200);
+
+      // Send transfer
+      const transferData = testUtils.generateTransferData(
+        recipientUser.id,
+        'EUR',
+        100.00
+      );
+
+      const transferResponse = await testUtils.post(
+        '/api/v1/transfers/send',
+        transferData,
+        userWithBalance
+      );
+
+      testUtils.assertSuccessResponse(transferResponse, 201);
+
+      // Wait for transfer processing
+      await testUtils.waitFor(async () => {
+        const balanceResponse = await testUtils.get('/api/v1/wallets/EUR', userWithBalance);
+        const currentBalance = testUtils.assertSuccessResponse(balanceResponse, 200);
+        return currentBalance.availableBalance < initialBalance.availableBalance;
+      }, 5000);
+
+      // Check updated balance
+      const finalResponse = await testUtils.get('/api/v1/wallets/EUR', userWithBalance);
+      const finalBalance = testUtils.assertSuccessResponse(finalResponse, 200);
+
+      expect(finalBalance.availableBalance).toBe(initialBalance.availableBalance - 100.00);
+    });
+
+    test('should update recipient balance after transfer', async () => {
+      // Get initial balance
+      const initialResponse = await testUtils.get('/api/v1/wallets/EUR', recipientUser);
+      const initialBalance = testUtils.assertSuccessResponse(initialResponse, 200);
+
+      // Send transfer to recipient
+      const transferData = testUtils.generateTransferData(
+        recipientUser.id,
+        'EUR',
+        50.00
+      );
+
+      const transferResponse = await testUtils.post(
+        '/api/v1/transfers/send',
+        transferData,
+        userWithBalance
+      );
+
+      testUtils.assertSuccessResponse(transferResponse, 201);
+
+      // Wait for transfer processing
+      await testUtils.waitFor(async () => {
+        const balanceResponse = await testUtils.get('/api/v1/wallets/EUR', recipientUser);
+        const currentBalance = testUtils.assertSuccessResponse(balanceResponse, 200);
+        return currentBalance.availableBalance > initialBalance.availableBalance;
+      }, 5000);
+
+      // Check updated balance
+      const finalResponse = await testUtils.get('/api/v1/wallets/EUR', recipientUser);
+      const finalBalance = testUtils.assertSuccessResponse(finalResponse, 200);
+
+      expect(finalBalance.availableBalance).toBe(initialBalance.availableBalance + 50.00);
+    });
+
+    test('should maintain total system balance', async () => {
+      // Get all user balances before transfer
+      const senderBefore = await testUtils.get('/api/v1/wallets/EUR', senderUser);
+      const recipientBefore = await testUtils.get('/api/v1/wallets/EUR', recipientUser);
+
+      const senderBalanceBefore = testUtils.assertSuccessResponse(senderBefore, 200);
+      const recipientBalanceBefore = testUtils.assertSuccessResponse(recipientBefore, 200);
+
+      const totalBefore = senderBalanceBefore.totalBalance + recipientBalanceBefore.totalBalance;
+
+      // Send transfer
+      const transferData = testUtils.generateTransferData(
+        recipientUser.id,
+        'EUR',
+        25.00
+      );
+
+      await testUtils.post('/api/v1/transfers/send', transferData, senderUser);
+
+      // Wait for processing
+      await testUtils.waitFor(async () => true, 2000);
+
+      // Get balances after transfer
+      const senderAfter = await testUtils.get('/api/v1/wallets/EUR', senderUser);
+      const recipientAfter = await testUtils.get('/api/v1/wallets/EUR', recipientUser);
+
+      const senderBalanceAfter = testUtils.assertSuccessResponse(senderAfter, 200);
+      const recipientBalanceAfter = testUtils.assertSuccessResponse(recipientAfter, 200);
+
+      const totalAfter = senderBalanceAfter.totalBalance + recipientBalanceAfter.totalBalance;
+
+      // Total system balance should remain the same
+      expect(totalAfter).toBe(totalBefore);
+    });
+  });
+
+  describe('Transfer Performance', () => {
+    test('should process transfers within 500ms', async () => {
+      const transferData = testUtils.generateTransferData(
+        recipientUser.id,
+        'EUR',
+        10.00
+      );
+
+      const { response, passed } = await testUtils.testPerformance(
+        'POST',
+        '/api/v1/transfers/send',
+        500,
+        senderUser,
+        transferData
+      );
+
+      expect(passed).toBe(true);
+      testUtils.assertSuccessResponse(response, 201);
+    });
+
+    test('should handle concurrent transfers', async () => {
+      const transferData = testUtils.generateTransferData(
+        recipientUser.id,
+        'EUR',
+        1.00
+      );
+
+      const responses = await testUtils.testConcurrency(
+        'POST',
+        '/api/v1/transfers/send',
+        5, // Limit concurrent transfers to avoid balance issues
+        senderUser,
+        transferData
+      );
+
+      expect(responses).toHaveLength(5);
+
+      responses.forEach(response => {
+        // Some may succeed, some may fail due to insufficient balance
+        expect([201, 400]).toContain(response.status);
+        testUtils.assertResponseTime(response, 1000);
+      });
+    });
+
+    test('should respond quickly for transfer history', async () => {
+      const { response, passed } = await testUtils.testPerformance(
+        'GET',
+        '/api/v1/transfers/history',
+        200,
+        senderUser
+      );
+
+      expect(passed).toBe(true);
+      testUtils.assertSuccessResponse(response, 200);
+    });
+  });
+});

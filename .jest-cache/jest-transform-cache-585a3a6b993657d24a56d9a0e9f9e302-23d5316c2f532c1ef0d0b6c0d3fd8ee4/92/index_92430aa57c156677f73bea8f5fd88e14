@@ -1,0 +1,60 @@
+7f2435d486494c85586f050fde716b3d
+/* istanbul ignore next */
+function cov_bdaxzj1rd() {
+  var path = "C:\\Users\\User\\Documents\\GitHub\\ema\\src\\domain\\index.ts";
+  var hash = "4745a539ba5041f5d5618a92ab3f9802f9468caf";
+  var global = new Function("return this")();
+  var gcv = "__coverage__";
+  var coverageData = {
+    path: "C:\\Users\\User\\Documents\\GitHub\\ema\\src\\domain\\index.ts",
+    statementMap: {},
+    fnMap: {},
+    branchMap: {},
+    s: {},
+    f: {},
+    b: {},
+    inputSourceMap: {
+      file: "C:\\Users\\User\\Documents\\GitHub\\ema\\src\\domain\\index.ts",
+      mappings: "AAAA;;;;;GAKG;AAEH,gBAAgB;AAChB,OAAO,EAAE,KAAK,EAAE,MAAM,uBAAuB,CAAA;AAC7C,OAAO,EAAE,QAAQ,EAAE,GAAG,EAAE,GAAG,EAAqB,MAAM,0BAA0B,CAAA;AAChF,OAAO,EACL,MAAM,EACN,QAAQ,EACR,aAAa,EACb,OAAO,EACP,WAAW,EACX,UAAU,EAEX,MAAM,0BAA0B,CAAA;AAEjC,WAAW;AACX,OAAO,EACL,MAAM,EACN,wBAAwB,EACxB,gCAAgC,EAEjC,MAAM,mBAAmB,CAAA;AAE1B,OAAO,EACL,WAAW,EACX,4BAA4B,EAI7B,MAAM,wBAAwB,CAAA;AAE/B,OAAO,EACL,IAAI,EAIL,MAAM,iBAAiB,CAAA;AAExB,kBAAkB;AAClB,OAAO,EACL,mBAAmB,EACnB,wBAAwB,EAGzB,MAAM,gCAAgC,CAAA;AAEvC,OAAO,EACL,qBAAqB,EAGtB,MAAM,kCAAkC,CAAA;AAEzC,oBAAoB;AACpB,cAAc,+BAA+B,CAAA",
+      names: [],
+      sources: ["C:\\Users\\User\\Documents\\GitHub\\ema\\src\\domain\\index.ts"],
+      sourcesContent: ["/**\n * Domain Layer Exports\n * \n * Central export point for all domain layer components.\n * This provides a clean interface for other layers to import domain objects.\n */\n\n// Value Objects\nexport { Money } from './value-objects/Money'\nexport { Currency, EUR, AOA, type CurrencyCode } from './value-objects/Currency'\nexport {\n  UserId,\n  WalletId,\n  TransactionId,\n  OrderId,\n  KycRecordId,\n  DocumentId,\n  type AnyEntityId\n} from './value-objects/EntityId'\n\n// Entities\nexport {\n  Wallet,\n  InsufficientBalanceError,\n  InsufficientReservedBalanceError,\n  type WalletSnapshot\n} from './entities/Wallet'\n\nexport {\n  Transaction,\n  InvalidTransactionStateError,\n  type TransactionType,\n  type TransactionStatus,\n  type TransactionSnapshot\n} from './entities/Transaction'\n\nexport {\n  User,\n  type KycStatus,\n  type UserLimits,\n  type UserSnapshot\n} from './entities/User'\n\n// Domain Services\nexport {\n  ExchangeRateService,\n  MockExchangeRateProvider,\n  type ExchangeRate,\n  type ExchangeRateProvider\n} from './services/ExchangeRateService'\n\nexport {\n  FeeCalculationService,\n  type FeeStructure,\n  type FeeCalculationResult\n} from './services/FeeCalculationService'\n\n// Domain Exceptions\nexport * from './exceptions/DomainExceptions'\n\n// Re-export commonly used types\nexport type {\n  TransactionType,\n  TransactionStatus,\n  KycStatus,\n  CurrencyCode\n}\n"],
+      version: 3
+    },
+    _coverageSchema: "1a1c01bbd47fc00a2c39e90264f33305004495a9",
+    hash: "4745a539ba5041f5d5618a92ab3f9802f9468caf"
+  };
+  var coverage = global[gcv] || (global[gcv] = {});
+  if (!coverage[path] || coverage[path].hash !== hash) {
+    coverage[path] = coverageData;
+  }
+  var actualCoverage = coverage[path];
+  {
+    // @ts-ignore
+    cov_bdaxzj1rd = function () {
+      return actualCoverage;
+    };
+  }
+  return actualCoverage;
+}
+cov_bdaxzj1rd();
+/**
+ * Domain Layer Exports
+ *
+ * Central export point for all domain layer components.
+ * This provides a clean interface for other layers to import domain objects.
+ */
+// Value Objects
+export { Money } from './value-objects/Money';
+export { Currency, EUR, AOA } from './value-objects/Currency';
+export { UserId, WalletId, TransactionId, OrderId, KycRecordId, DocumentId } from './value-objects/EntityId';
+// Entities
+export { Wallet, InsufficientBalanceError, InsufficientReservedBalanceError } from './entities/Wallet';
+export { Transaction, InvalidTransactionStateError } from './entities/Transaction';
+export { User } from './entities/User';
+// Domain Services
+export { ExchangeRateService, MockExchangeRateProvider } from './services/ExchangeRateService';
+export { FeeCalculationService } from './services/FeeCalculationService';
+// Domain Exceptions
+export * from './exceptions/DomainExceptions';
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJuYW1lcyI6WyJjb3ZfYmRheHpqMXJkIiwiYWN0dWFsQ292ZXJhZ2UiLCJNb25leSIsIkN1cnJlbmN5IiwiRVVSIiwiQU9BIiwiVXNlcklkIiwiV2FsbGV0SWQiLCJUcmFuc2FjdGlvbklkIiwiT3JkZXJJZCIsIkt5Y1JlY29yZElkIiwiRG9jdW1lbnRJZCIsIldhbGxldCIsIkluc3VmZmljaWVudEJhbGFuY2VFcnJvciIsIkluc3VmZmljaWVudFJlc2VydmVkQmFsYW5jZUVycm9yIiwiVHJhbnNhY3Rpb24iLCJJbnZhbGlkVHJhbnNhY3Rpb25TdGF0ZUVycm9yIiwiVXNlciIsIkV4Y2hhbmdlUmF0ZVNlcnZpY2UiLCJNb2NrRXhjaGFuZ2VSYXRlUHJvdmlkZXIiLCJGZWVDYWxjdWxhdGlvblNlcnZpY2UiXSwic291cmNlcyI6WyJDOlxcVXNlcnNcXFVzZXJcXERvY3VtZW50c1xcR2l0SHViXFxlbWFcXHNyY1xcZG9tYWluXFxpbmRleC50cyJdLCJzb3VyY2VzQ29udGVudCI6WyIvKipcbiAqIERvbWFpbiBMYXllciBFeHBvcnRzXG4gKiBcbiAqIENlbnRyYWwgZXhwb3J0IHBvaW50IGZvciBhbGwgZG9tYWluIGxheWVyIGNvbXBvbmVudHMuXG4gKiBUaGlzIHByb3ZpZGVzIGEgY2xlYW4gaW50ZXJmYWNlIGZvciBvdGhlciBsYXllcnMgdG8gaW1wb3J0IGRvbWFpbiBvYmplY3RzLlxuICovXG5cbi8vIFZhbHVlIE9iamVjdHNcbmV4cG9ydCB7IE1vbmV5IH0gZnJvbSAnLi92YWx1ZS1vYmplY3RzL01vbmV5J1xuZXhwb3J0IHsgQ3VycmVuY3ksIEVVUiwgQU9BLCB0eXBlIEN1cnJlbmN5Q29kZSB9IGZyb20gJy4vdmFsdWUtb2JqZWN0cy9DdXJyZW5jeSdcbmV4cG9ydCB7XG4gIFVzZXJJZCxcbiAgV2FsbGV0SWQsXG4gIFRyYW5zYWN0aW9uSWQsXG4gIE9yZGVySWQsXG4gIEt5Y1JlY29yZElkLFxuICBEb2N1bWVudElkLFxuICB0eXBlIEFueUVudGl0eUlkXG59IGZyb20gJy4vdmFsdWUtb2JqZWN0cy9FbnRpdHlJZCdcblxuLy8gRW50aXRpZXNcbmV4cG9ydCB7XG4gIFdhbGxldCxcbiAgSW5zdWZmaWNpZW50QmFsYW5jZUVycm9yLFxuICBJbnN1ZmZpY2llbnRSZXNlcnZlZEJhbGFuY2VFcnJvcixcbiAgdHlwZSBXYWxsZXRTbmFwc2hvdFxufSBmcm9tICcuL2VudGl0aWVzL1dhbGxldCdcblxuZXhwb3J0IHtcbiAgVHJhbnNhY3Rpb24sXG4gIEludmFsaWRUcmFuc2FjdGlvblN0YXRlRXJyb3IsXG4gIHR5cGUgVHJhbnNhY3Rpb25UeXBlLFxuICB0eXBlIFRyYW5zYWN0aW9uU3RhdHVzLFxuICB0eXBlIFRyYW5zYWN0aW9uU25hcHNob3Rcbn0gZnJvbSAnLi9lbnRpdGllcy9UcmFuc2FjdGlvbidcblxuZXhwb3J0IHtcbiAgVXNlcixcbiAgdHlwZSBLeWNTdGF0dXMsXG4gIHR5cGUgVXNlckxpbWl0cyxcbiAgdHlwZSBVc2VyU25hcHNob3Rcbn0gZnJvbSAnLi9lbnRpdGllcy9Vc2VyJ1xuXG4vLyBEb21haW4gU2VydmljZXNcbmV4cG9ydCB7XG4gIEV4Y2hhbmdlUmF0ZVNlcnZpY2UsXG4gIE1vY2tFeGNoYW5nZVJhdGVQcm92aWRlcixcbiAgdHlwZSBFeGNoYW5nZVJhdGUsXG4gIHR5cGUgRXhjaGFuZ2VSYXRlUHJvdmlkZXJcbn0gZnJvbSAnLi9zZXJ2aWNlcy9FeGNoYW5nZVJhdGVTZXJ2aWNlJ1xuXG5leHBvcnQge1xuICBGZWVDYWxjdWxhdGlvblNlcnZpY2UsXG4gIHR5cGUgRmVlU3RydWN0dXJlLFxuICB0eXBlIEZlZUNhbGN1bGF0aW9uUmVzdWx0XG59IGZyb20gJy4vc2VydmljZXMvRmVlQ2FsY3VsYXRpb25TZXJ2aWNlJ1xuXG4vLyBEb21haW4gRXhjZXB0aW9uc1xuZXhwb3J0ICogZnJvbSAnLi9leGNlcHRpb25zL0RvbWFpbkV4Y2VwdGlvbnMnXG5cbi8vIFJlLWV4cG9ydCBjb21tb25seSB1c2VkIHR5cGVzXG5leHBvcnQgdHlwZSB7XG4gIFRyYW5zYWN0aW9uVHlwZSxcbiAgVHJhbnNhY3Rpb25TdGF0dXMsXG4gIEt5Y1N0YXR1cyxcbiAgQ3VycmVuY3lDb2RlXG59XG4iXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7SUE2Q0U7SUFBQUEsYUFBQSxZQUFBQSxDQUFBO01BQUEsT0FBQUMsY0FBQTtJQUFBO0VBQUE7RUFBQSxPQUFBQSxjQUFBO0FBQUE7QUFBQUQsYUFBQTtBQTdDRjs7Ozs7O0FBT0E7QUFDQSxTQUFTRSxLQUFLLFFBQVEsdUJBQXVCO0FBQzdDLFNBQVNDLFFBQVEsRUFBRUMsR0FBRyxFQUFFQyxHQUFHLFFBQTJCLDBCQUEwQjtBQUNoRixTQUNFQyxNQUFNLEVBQ05DLFFBQVEsRUFDUkMsYUFBYSxFQUNiQyxPQUFPLEVBQ1BDLFdBQVcsRUFDWEMsVUFBVSxRQUVMLDBCQUEwQjtBQUVqQztBQUNBLFNBQ0VDLE1BQU0sRUFDTkMsd0JBQXdCLEVBQ3hCQyxnQ0FBZ0MsUUFFM0IsbUJBQW1CO0FBRTFCLFNBQ0VDLFdBQVcsRUFDWEMsNEJBQTRCLFFBSXZCLHdCQUF3QjtBQUUvQixTQUNFQyxJQUFJLFFBSUMsaUJBQWlCO0FBRXhCO0FBQ0EsU0FDRUMsbUJBQW1CLEVBQ25CQyx3QkFBd0IsUUFHbkIsZ0NBQWdDO0FBRXZDLFNBQ0VDLHFCQUFxQixRQUdoQixrQ0FBa0M7QUFFekM7QUFDQSxjQUFjLCtCQUErQiIsImlnbm9yZUxpc3QiOltdfQ==

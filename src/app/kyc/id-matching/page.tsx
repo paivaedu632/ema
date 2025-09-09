@@ -52,7 +52,7 @@ export default function KYCIdMatchingPage() {
         } else {
           throw new Error('Erro ao processar comparação')
         }
-      } catch (error) {
+      } catch {
         setError('Erro ao comparar faces. Tente novamente.')
         setMatchResult({ success: false })
       } finally {

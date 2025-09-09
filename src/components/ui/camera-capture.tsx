@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useRef, useCallback, useEffect } from "react"
+import Image from "next/image"
 import { Camera, X } from "lucide-react"
 
 interface CameraCaptureProps {
@@ -54,7 +55,7 @@ export function CameraCapture({
         videoRef.current.play()
         setIsStreaming(true)
       }
-    } catch (_err) {
+    } catch {
       setError('Não foi possível acessar a câmera. Verifique as permissões.')
     } finally {
       setIsLoading(false)
@@ -177,10 +178,11 @@ export function CameraCapture({
         {/* Captured Image Preview */}
         {capturedImage && (
           <div className="relative aspect-[4/3] bg-gray-900 rounded-2xl overflow-hidden">
-            <img
+            <Image
               src={capturedImage}
               alt="Captured"
-              className="w-full h-full object-cover"
+              fill
+              className="object-cover"
             />
           </div>
         )}

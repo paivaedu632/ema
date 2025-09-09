@@ -1,10 +1,10 @@
 "use client"
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { AlertCircle, Shield, ArrowRight } from 'lucide-react'
-import { useUser } from '@clerk/nextjs'
-import { formatAmountWithCurrency, type Currency } from '@/lib/format'
+import { Shield, ArrowRight } from 'lucide-react'
+// Clerk removed - using Supabase Auth
+import { formatAmountWithCurrency } from '@/lib/format'
 
 interface KYCGateProps {
   children: React.ReactNode
@@ -46,10 +46,10 @@ export function KYCGate({
   className = "" 
 }: KYCGateProps) {
   const router = useRouter()
-  const { user } = useUser()
+  useUser()
   const [showKYCModal, setShowKYCModal] = useState(false)
   // Static user limits for visual representation
-  const userLimits: UserLimits = {
+  const userLimits: UserLimits = useMemo(() => ({
     current: {
       dailyLimit: 500,
       monthlyLimit: 2000,
@@ -62,11 +62,12 @@ export function KYCGate({
       currency: 'EUR'
     },
     kycStatus: 'not_started'
+  }), [])
 
   // TODO: Add useEffect here to fetch real user limits when clean architecture APIs are implemented
 
   // Check if transaction requires KYC
-  const requiresKYC = () => {
+  const requiresKYC = useCallback(() => {
     if (!userLimits) return false
     
     // Always require KYC for certain actions
@@ -81,7 +82,7 @@ export function KYCGate({
     }
 
     return false
-  }
+  }, [userLimits, requiredForAction, transactionAmount])
 
   const handleStartKYC = () => {
     router.push('/kyc/notifications')
@@ -96,7 +97,7 @@ export function KYCGate({
     if (requiresKYC()) {
       setShowKYCModal(true)
     }
-  }, [userLimits, transactionAmount])
+  }, [userLimits, transactionAmount, requiresKYC])
 
   if (!userLimits) {
     return <div className="animate-pulse bg-gray-100 rounded-lg h-32"></div>

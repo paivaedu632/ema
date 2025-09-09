@@ -7,7 +7,7 @@ import { NextRequest } from 'next/server'
  * Currency validation schema
  */
 export const CurrencySchema = z.enum(['EUR', 'AOA'], {
-  errorMap: () => ({ message: 'Moeda deve ser "EUR" ou "AOA"' })
+  message: 'Moeda deve ser "EUR" ou "AOA"'
 })
 
 /**
@@ -64,14 +64,14 @@ export const EmailSchema = z.string()
  * Order side validation schema
  */
 export const OrderSideSchema = z.enum(['buy', 'sell'], {
-  errorMap: () => ({ message: 'Lado da ordem deve ser "buy" ou "sell"' })
+  message: 'Lado da ordem deve ser "buy" ou "sell"'
 })
 
 /**
  * Order type validation schema
  */
 export const OrderTypeSchema = z.enum(['limit', 'market'], {
-  errorMap: () => ({ message: 'Tipo de ordem deve ser "limit" ou "market"' })
+  message: 'Tipo de ordem deve ser "limit" ou "market"'
 })
 
 /**
@@ -129,8 +129,8 @@ export async function validateRequestBody<T>(
     return schema.parse(body)
   } catch (error) {
     if (error instanceof z.ZodError) {
-      const errorMessage = error.errors
-        .map(err => `${err.path.join('.')}: ${err.message}`)
+      const errorMessage = error.issues
+        .map((err: any) => `${err.path.join('.')}: ${err.message}`)
         .join(', ')
       throw new Error(`Validation error: ${errorMessage}`)
     }
@@ -150,8 +150,8 @@ export function validateQueryParams<T>(
     return schema.parse(params)
   } catch (error) {
     if (error instanceof z.ZodError) {
-      const errorMessage = error.errors
-        .map(err => `${err.path.join('.')}: ${err.message}`)
+      const errorMessage = error.issues
+        .map((err: any) => `${err.path.join('.')}: ${err.message}`)
         .join(', ')
       throw new Error(`Query validation error: ${errorMessage}`)
     }
@@ -171,8 +171,8 @@ export function safeValidate<T>(
     return { success: true, data: result }
   } catch (error) {
     if (error instanceof z.ZodError) {
-      const errorMessage = error.errors
-        .map(err => `${err.path.join('.')}: ${err.message}`)
+      const errorMessage = error.issues
+        .map((err: any) => `${err.path.join('.')}: ${err.message}`)
         .join(', ')
       return { success: false, error: errorMessage }
     }

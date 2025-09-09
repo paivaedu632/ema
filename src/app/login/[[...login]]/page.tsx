@@ -1,4 +1,4 @@
-import { SignIn } from "@clerk/nextjs"
+// Clerk removed - using Supabase Auth
 
 export default function Page() {
   return (

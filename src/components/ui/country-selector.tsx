@@ -1,6 +1,7 @@
 "use client"
 
 import React from "react"
+import Image from "next/image"
 import Select, { components, type OptionProps, type SingleValueProps } from "react-select"
 import { Country } from "country-state-city"
 
@@ -23,11 +24,12 @@ const CountryFlag = ({ countryCode, className = "w-5 h-5" }: { countryCode: stri
   const flagUrl = `https://flagicons.lipis.dev/flags/4x3/${countryCode.toLowerCase()}.svg`
 
   return (
-    <div className={`rounded-full ${className} flex-shrink-0`}>
-      <img
+    <div className={`rounded-full ${className} flex-shrink-0 relative overflow-hidden`}>
+      <Image
         src={flagUrl}
         alt={`${countryCode.toUpperCase()} flag`}
-        className="w-full h-full object-cover rounded-full"
+        fill
+        className="object-cover"
       />
     </div>
   )

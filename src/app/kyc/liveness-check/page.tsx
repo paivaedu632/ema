@@ -9,7 +9,7 @@ import { useKYC } from "@/contexts/kyc-context"
 
 export default function KYCLivenessCheckPage() {
   const router = useRouter()
-  const { data, updateData, uploadDocument, performLivenessCheck } = useKYC()
+  const { updateData, uploadDocument, performLivenessCheck } = useKYC()
   const [mode, setMode] = useState<'instructions' | 'verification'>('instructions')
   const [error, setError] = useState<string | null>(null)
 
@@ -44,7 +44,7 @@ export default function KYCLivenessCheckPage() {
       // Update KYC data and navigate to next step
       updateData({ livenessCheckPassed: result.passed })
       router.push("/kyc/id-matching")
-    } catch (error) {
+    } catch {
       setError('Erro ao processar verificação. Tente novamente.')
       setMode('instructions')
     }

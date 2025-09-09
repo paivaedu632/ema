@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react'
+import Image from 'next/image'
 
 interface FlagIconProps {
   countryCode: string
@@ -30,11 +31,12 @@ export function FlagIcon({
   const sizeClass = className || sizeClasses[size]
 
   return (
-    <div className={`rounded-full overflow-hidden flex-shrink-0 ${sizeClass}`}>
-      <img
+    <div className={`rounded-full overflow-hidden flex-shrink-0 relative ${sizeClass}`}>
+      <Image
         src={flagUrl}
         alt={altText}
-        className="w-full h-full object-cover"
+        fill
+        className="object-cover"
       />
     </div>
   )

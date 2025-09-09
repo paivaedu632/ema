@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import { Input } from "@/components/ui/input"
 import { Eye, EyeOff } from "lucide-react"
-import { getValidationBorderClass, getValidationTextClass, getFormInputClasses } from '@/utils/styling-utils'
+import { getValidationTextClass, getFormInputClasses } from '@/utils/styling-utils'
 import type { ValidationState } from '@/types/component-props'
 
 interface ValidatedFormFieldProps {

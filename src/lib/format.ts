@@ -265,7 +265,7 @@ export function formatDateTime(dateString: string): string {
       minute: '2-digit',
       second: '2-digit'
     }).format(date)
-  } catch (error) {
+  } catch {
     return dateString
   }
 }
@@ -283,7 +283,7 @@ export function formatDate(dateString: string): string {
       month: '2-digit',
       day: '2-digit'
     }).format(date)
-  } catch (error) {
+  } catch {
     return dateString
   }
 }
@@ -301,7 +301,7 @@ export function formatTime(dateString: string): string {
       minute: '2-digit',
       second: '2-digit'
     }).format(date)
-  } catch (error) {
+  } catch {
     return dateString
   }
 }

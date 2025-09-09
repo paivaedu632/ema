@@ -93,7 +93,7 @@ export function LivenessCheck({ onComplete, onCancel, className = '' }: Liveness
         return prev - 1
       })
     }, 1000)
-  }, [isStreaming])
+  }, [isStreaming, processLivenessSteps])
 
   // Process liveness check steps
   const processLivenessSteps = useCallback(() => {
@@ -115,7 +115,7 @@ export function LivenessCheck({ onComplete, onCancel, className = '' }: Liveness
     }
     
     processStep()
-  }, [])
+  }, [completeLivenessCheck])
 
   // Complete liveness check and capture final image
   const completeLivenessCheck = useCallback(async () => {

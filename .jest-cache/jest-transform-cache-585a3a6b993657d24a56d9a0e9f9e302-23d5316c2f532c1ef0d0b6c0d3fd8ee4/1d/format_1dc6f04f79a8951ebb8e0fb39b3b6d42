@@ -1,0 +1,2268 @@
+e433fa58a361e2e903e931250a2556e6
+/* istanbul ignore next */
+function cov_2g3q1wm4e9() {
+  var path = "C:\\Users\\User\\Documents\\GitHub\\ema\\src\\lib\\format.ts";
+  var hash = "0f0bb610563ad34ea0ea5b615a88b6e002ff7ac7";
+  var global = new Function("return this")();
+  var gcv = "__coverage__";
+  var coverageData = {
+    path: "C:\\Users\\User\\Documents\\GitHub\\ema\\src\\lib\\format.ts",
+    statementMap: {
+      "0": {
+        start: {
+          line: 28,
+          column: 26
+        },
+        end: {
+          line: 28,
+          column: 82
+        }
+      },
+      "1": {
+        start: {
+          line: 29,
+          column: 4
+        },
+        end: {
+          line: 31,
+          column: 5
+        }
+      },
+      "2": {
+        start: {
+          line: 30,
+          column: 8
+        },
+        end: {
+          line: 30,
+          column: 22
+        }
+      },
+      "3": {
+        start: {
+          line: 32,
+          column: 91
+        },
+        end: {
+          line: 32,
+          column: 98
+        }
+      },
+      "4": {
+        start: {
+          line: 35,
+          column: 28
+        },
+        end: {
+          line: 35,
+          column: 113
+        }
+      },
+      "5": {
+        start: {
+          line: 36,
+          column: 4
+        },
+        end: {
+          line: 36,
+          column: 77
+        }
+      },
+      "6": {
+        start: {
+          line: 47,
+          column: 30
+        },
+        end: {
+          line: 47,
+          column: 57
+        }
+      },
+      "7": {
+        start: {
+          line: 49,
+          column: 39
+        },
+        end: {
+          line: 49,
+          column: 67
+        }
+      },
+      "8": {
+        start: {
+          line: 51,
+          column: 29
+        },
+        end: {
+          line: 51,
+          column: 78
+        }
+      },
+      "9": {
+        start: {
+          line: 53,
+          column: 26
+        },
+        end: {
+          line: 53,
+          column: 62
+        }
+      },
+      "10": {
+        start: {
+          line: 55,
+          column: 4
+        },
+        end: {
+          line: 55,
+          column: 50
+        }
+      },
+      "11": {
+        start: {
+          line: 64,
+          column: 4
+        },
+        end: {
+          line: 64,
+          column: 68
+        }
+      },
+      "12": {
+        start: {
+          line: 73,
+          column: 4
+        },
+        end: {
+          line: 73,
+          column: 69
+        }
+      },
+      "13": {
+        start: {
+          line: 82,
+          column: 4
+        },
+        end: {
+          line: 84,
+          column: 5
+        }
+      },
+      "14": {
+        start: {
+          line: 83,
+          column: 8
+        },
+        end: {
+          line: 83,
+          column: 17
+        }
+      },
+      "15": {
+        start: {
+          line: 86,
+          column: 22
+        },
+        end: {
+          line: 88,
+          column: 15
+        }
+      },
+      "16": {
+        start: {
+          line: 93,
+          column: 27
+        },
+        end: {
+          line: 93,
+          column: 55
+        }
+      },
+      "17": {
+        start: {
+          line: 94,
+          column: 4
+        },
+        end: {
+          line: 106,
+          column: 5
+        }
+      },
+      "18": {
+        start: {
+          line: 96,
+          column: 28
+        },
+        end: {
+          line: 96,
+          column: 68
+        }
+      },
+      "19": {
+        start: {
+          line: 97,
+          column: 28
+        },
+        end: {
+          line: 97,
+          column: 69
+        }
+      },
+      "20": {
+        start: {
+          line: 99,
+          column: 29
+        },
+        end: {
+          line: 99,
+          column: 59
+        }
+      },
+      "21": {
+        start: {
+          line: 101,
+          column: 8
+        },
+        end: {
+          line: 101,
+          column: 55
+        }
+      },
+      "22": {
+        start: {
+          line: 105,
+          column: 8
+        },
+        end: {
+          line: 105,
+          column: 53
+        }
+      },
+      "23": {
+        start: {
+          line: 107,
+          column: 19
+        },
+        end: {
+          line: 107,
+          column: 42
+        }
+      },
+      "24": {
+        start: {
+          line: 108,
+          column: 4
+        },
+        end: {
+          line: 108,
+          column: 38
+        }
+      },
+      "25": {
+        start: {
+          line: 118,
+          column: 24
+        },
+        end: {
+          line: 118,
+          column: 74
+        }
+      },
+      "26": {
+        start: {
+          line: 119,
+          column: 4
+        },
+        end: {
+          line: 121,
+          column: 5
+        }
+      },
+      "27": {
+        start: {
+          line: 120,
+          column: 8
+        },
+        end: {
+          line: 120,
+          column: 56
+        }
+      },
+      "28": {
+        start: {
+          line: 122,
+          column: 26
+        },
+        end: {
+          line: 125,
+          column: 6
+        }
+      },
+      "29": {
+        start: {
+          line: 126,
+          column: 4
+        },
+        end: {
+          line: 126,
+          column: 64
+        }
+      },
+      "30": {
+        start: {
+          line: 134,
+          column: 30
+        },
+        end: {
+          line: 134,
+          column: 98
+        }
+      },
+      "31": {
+        start: {
+          line: 135,
+          column: 4
+        },
+        end: {
+          line: 137,
+          column: 5
+        }
+      },
+      "32": {
+        start: {
+          line: 136,
+          column: 8
+        },
+        end: {
+          line: 136,
+          column: 23
+        }
+      },
+      "33": {
+        start: {
+          line: 139,
+          column: 25
+        },
+        end: {
+          line: 139,
+          column: 48
+        }
+      },
+      "34": {
+        start: {
+          line: 140,
+          column: 29
+        },
+        end: {
+          line: 140,
+          column: 73
+        }
+      },
+      "35": {
+        start: {
+          line: 141,
+          column: 4
+        },
+        end: {
+          line: 141,
+          column: 34
+        }
+      },
+      "36": {
+        start: {
+          line: 150,
+          column: 4
+        },
+        end: {
+          line: 152,
+          column: 5
+        }
+      },
+      "37": {
+        start: {
+          line: 151,
+          column: 8
+        },
+        end: {
+          line: 151,
+          column: 21
+        }
+      },
+      "38": {
+        start: {
+          line: 154,
+          column: 23
+        },
+        end: {
+          line: 156,
+          column: 15
+        }
+      },
+      "39": {
+        start: {
+          line: 160,
+          column: 34
+        },
+        end: {
+          line: 160,
+          column: 70
+        }
+      },
+      "40": {
+        start: {
+          line: 161,
+          column: 4
+        },
+        end: {
+          line: 161,
+          column: 90
+        }
+      },
+      "41": {
+        start: {
+          line: 177,
+          column: 26
+        },
+        end: {
+          line: 177,
+          column: 93
+        }
+      },
+      "42": {
+        start: {
+          line: 178,
+          column: 4
+        },
+        end: {
+          line: 178,
+          column: 36
+        }
+      },
+      "43": {
+        start: {
+          line: 186,
+          column: 4
+        },
+        end: {
+          line: 199,
+          column: 5
+        }
+      },
+      "44": {
+        start: {
+          line: 187,
+          column: 25
+        },
+        end: {
+          line: 190,
+          column: 10
+        }
+      },
+      "45": {
+        start: {
+          line: 191,
+          column: 8
+        },
+        end: {
+          line: 191,
+          column: 30
+        }
+      },
+      "46": {
+        start: {
+          line: 193,
+          column: 9
+        },
+        end: {
+          line: 199,
+          column: 5
+        }
+      },
+      "47": {
+        start: {
+          line: 194,
+          column: 26
+        },
+        end: {
+          line: 197,
+          column: 10
+        }
+      },
+      "48": {
+        start: {
+          line: 198,
+          column: 8
+        },
+        end: {
+          line: 198,
+          column: 31
+        }
+      },
+      "49": {
+        start: {
+          line: 200,
+          column: 4
+        },
+        end: {
+          line: 200,
+          column: 63
+        }
+      },
+      "50": {
+        start: {
+          line: 208,
+          column: 4
+        },
+        end: {
+          line: 221,
+          column: 5
+        }
+      },
+      "51": {
+        start: {
+          line: 209,
+          column: 21
+        },
+        end: {
+          line: 209,
+          column: 41
+        }
+      },
+      "52": {
+        start: {
+          line: 210,
+          column: 8
+        },
+        end: {
+          line: 217,
+          column: 24
+        }
+      },
+      "53": {
+        start: {
+          line: 220,
+          column: 8
+        },
+        end: {
+          line: 220,
+          column: 26
+        }
+      },
+      "54": {
+        start: {
+          line: 229,
+          column: 4
+        },
+        end: {
+          line: 239,
+          column: 5
+        }
+      },
+      "55": {
+        start: {
+          line: 230,
+          column: 21
+        },
+        end: {
+          line: 230,
+          column: 41
+        }
+      },
+      "56": {
+        start: {
+          line: 231,
+          column: 8
+        },
+        end: {
+          line: 235,
+          column: 24
+        }
+      },
+      "57": {
+        start: {
+          line: 238,
+          column: 8
+        },
+        end: {
+          line: 238,
+          column: 26
+        }
+      },
+      "58": {
+        start: {
+          line: 247,
+          column: 4
+        },
+        end: {
+          line: 257,
+          column: 5
+        }
+      },
+      "59": {
+        start: {
+          line: 248,
+          column: 21
+        },
+        end: {
+          line: 248,
+          column: 41
+        }
+      },
+      "60": {
+        start: {
+          line: 249,
+          column: 8
+        },
+        end: {
+          line: 253,
+          column: 24
+        }
+      },
+      "61": {
+        start: {
+          line: 256,
+          column: 8
+        },
+        end: {
+          line: 256,
+          column: 26
+        }
+      }
+    },
+    fnMap: {
+      "0": {
+        name: "formatCurrency",
+        decl: {
+          start: {
+            line: 27,
+            column: 16
+          },
+          end: {
+            line: 27,
+            column: 30
+          }
+        },
+        loc: {
+          start: {
+            line: 27,
+            column: 63
+          },
+          end: {
+            line: 37,
+            column: 1
+          }
+        },
+        line: 27
+      },
+      "1": {
+        name: "formatPortugueseCurrency",
+        decl: {
+          start: {
+            line: 45,
+            column: 9
+          },
+          end: {
+            line: 45,
+            column: 33
+          }
+        },
+        loc: {
+          start: {
+            line: 45,
+            column: 76
+          },
+          end: {
+            line: 56,
+            column: 1
+          }
+        },
+        line: 45
+      },
+      "2": {
+        name: "formatAmountWithCurrency",
+        decl: {
+          start: {
+            line: 63,
+            column: 16
+          },
+          end: {
+            line: 63,
+            column: 40
+          }
+        },
+        loc: {
+          start: {
+            line: 63,
+            column: 59
+          },
+          end: {
+            line: 65,
+            column: 1
+          }
+        },
+        line: 63
+      },
+      "3": {
+        name: "formatAmountForInput",
+        decl: {
+          start: {
+            line: 72,
+            column: 16
+          },
+          end: {
+            line: 72,
+            column: 36
+          }
+        },
+        loc: {
+          start: {
+            line: 72,
+            column: 55
+          },
+          end: {
+            line: 74,
+            column: 1
+          }
+        },
+        line: 72
+      },
+      "4": {
+        name: "parsePortugueseNumber",
+        decl: {
+          start: {
+            line: 81,
+            column: 16
+          },
+          end: {
+            line: 81,
+            column: 37
+          }
+        },
+        loc: {
+          start: {
+            line: 81,
+            column: 55
+          },
+          end: {
+            line: 109,
+            column: 1
+          }
+        },
+        line: 81
+      },
+      "5": {
+        name: "formatExchangeRate",
+        decl: {
+          start: {
+            line: 117,
+            column: 16
+          },
+          end: {
+            line: 117,
+            column: 34
+          }
+        },
+        loc: {
+          start: {
+            line: 117,
+            column: 67
+          },
+          end: {
+            line: 127,
+            column: 1
+          }
+        },
+        line: 117
+      },
+      "6": {
+        name: "formatPercentage",
+        decl: {
+          start: {
+            line: 133,
+            column: 16
+          },
+          end: {
+            line: 133,
+            column: 32
+          }
+        },
+        loc: {
+          start: {
+            line: 133,
+            column: 45
+          },
+          end: {
+            line: 142,
+            column: 1
+          }
+        },
+        line: 133
+      },
+      "7": {
+        name: "isValidPortugueseNumber",
+        decl: {
+          start: {
+            line: 149,
+            column: 16
+          },
+          end: {
+            line: 149,
+            column: 39
+          }
+        },
+        loc: {
+          start: {
+            line: 149,
+            column: 47
+          },
+          end: {
+            line: 162,
+            column: 1
+          }
+        },
+        line: 149
+      },
+      "8": {
+        name: "formatForAPI",
+        decl: {
+          start: {
+            line: 176,
+            column: 16
+          },
+          end: {
+            line: 176,
+            column: 28
+          }
+        },
+        loc: {
+          start: {
+            line: 176,
+            column: 37
+          },
+          end: {
+            line: 179,
+            column: 1
+          }
+        },
+        line: 176
+      },
+      "9": {
+        name: "formatCompactNumber",
+        decl: {
+          start: {
+            line: 185,
+            column: 16
+          },
+          end: {
+            line: 185,
+            column: 35
+          }
+        },
+        loc: {
+          start: {
+            line: 185,
+            column: 41
+          },
+          end: {
+            line: 201,
+            column: 1
+          }
+        },
+        line: 185
+      },
+      "10": {
+        name: "formatDateTime",
+        decl: {
+          start: {
+            line: 207,
+            column: 16
+          },
+          end: {
+            line: 207,
+            column: 30
+          }
+        },
+        loc: {
+          start: {
+            line: 207,
+            column: 43
+          },
+          end: {
+            line: 222,
+            column: 1
+          }
+        },
+        line: 207
+      },
+      "11": {
+        name: "formatDate",
+        decl: {
+          start: {
+            line: 228,
+            column: 16
+          },
+          end: {
+            line: 228,
+            column: 26
+          }
+        },
+        loc: {
+          start: {
+            line: 228,
+            column: 39
+          },
+          end: {
+            line: 240,
+            column: 1
+          }
+        },
+        line: 228
+      },
+      "12": {
+        name: "formatTime",
+        decl: {
+          start: {
+            line: 246,
+            column: 16
+          },
+          end: {
+            line: 246,
+            column: 26
+          }
+        },
+        loc: {
+          start: {
+            line: 246,
+            column: 39
+          },
+          end: {
+            line: 258,
+            column: 1
+          }
+        },
+        line: 246
+      }
+    },
+    branchMap: {
+      "0": {
+        loc: {
+          start: {
+            line: 27,
+            column: 49
+          },
+          end: {
+            line: 27,
+            column: 61
+          }
+        },
+        type: "default-arg",
+        locations: [{
+          start: {
+            line: 27,
+            column: 59
+          },
+          end: {
+            line: 27,
+            column: 61
+          }
+        }],
+        line: 27
+      },
+      "1": {
+        loc: {
+          start: {
+            line: 28,
+            column: 26
+          },
+          end: {
+            line: 28,
+            column: 82
+          }
+        },
+        type: "cond-expr",
+        locations: [{
+          start: {
+            line: 28,
+            column: 55
+          },
+          end: {
+            line: 28,
+            column: 73
+          }
+        }, {
+          start: {
+            line: 28,
+            column: 76
+          },
+          end: {
+            line: 28,
+            column: 82
+          }
+        }],
+        line: 28
+      },
+      "2": {
+        loc: {
+          start: {
+            line: 29,
+            column: 4
+          },
+          end: {
+            line: 31,
+            column: 5
+          }
+        },
+        type: "if",
+        locations: [{
+          start: {
+            line: 29,
+            column: 4
+          },
+          end: {
+            line: 31,
+            column: 5
+          }
+        }, {
+          start: {
+            line: undefined,
+            column: undefined
+          },
+          end: {
+            line: undefined,
+            column: undefined
+          }
+        }],
+        line: 29
+      },
+      "3": {
+        loc: {
+          start: {
+            line: 32,
+            column: 12
+          },
+          end: {
+            line: 32,
+            column: 37
+          }
+        },
+        type: "default-arg",
+        locations: [{
+          start: {
+            line: 32,
+            column: 36
+          },
+          end: {
+            line: 32,
+            column: 37
+          }
+        }],
+        line: 32
+      },
+      "4": {
+        loc: {
+          start: {
+            line: 32,
+            column: 39
+          },
+          end: {
+            line: 32,
+            column: 64
+          }
+        },
+        type: "default-arg",
+        locations: [{
+          start: {
+            line: 32,
+            column: 63
+          },
+          end: {
+            line: 32,
+            column: 64
+          }
+        }],
+        line: 32
+      },
+      "5": {
+        loc: {
+          start: {
+            line: 32,
+            column: 66
+          },
+          end: {
+            line: 32,
+            column: 86
+          }
+        },
+        type: "default-arg",
+        locations: [{
+          start: {
+            line: 32,
+            column: 81
+          },
+          end: {
+            line: 32,
+            column: 86
+          }
+        }],
+        line: 32
+      },
+      "6": {
+        loc: {
+          start: {
+            line: 36,
+            column: 11
+          },
+          end: {
+            line: 36,
+            column: 76
+          }
+        },
+        type: "cond-expr",
+        locations: [{
+          start: {
+            line: 36,
+            column: 26
+          },
+          end: {
+            line: 36,
+            column: 58
+          }
+        }, {
+          start: {
+            line: 36,
+            column: 61
+          },
+          end: {
+            line: 36,
+            column: 76
+          }
+        }],
+        line: 36
+      },
+      "7": {
+        loc: {
+          start: {
+            line: 45,
+            column: 42
+          },
+          end: {
+            line: 45,
+            column: 57
+          }
+        },
+        type: "default-arg",
+        locations: [{
+          start: {
+            line: 45,
+            column: 56
+          },
+          end: {
+            line: 45,
+            column: 57
+          }
+        }],
+        line: 45
+      },
+      "8": {
+        loc: {
+          start: {
+            line: 45,
+            column: 59
+          },
+          end: {
+            line: 45,
+            column: 74
+          }
+        },
+        type: "default-arg",
+        locations: [{
+          start: {
+            line: 45,
+            column: 73
+          },
+          end: {
+            line: 45,
+            column: 74
+          }
+        }],
+        line: 45
+      },
+      "9": {
+        loc: {
+          start: {
+            line: 82,
+            column: 4
+          },
+          end: {
+            line: 84,
+            column: 5
+          }
+        },
+        type: "if",
+        locations: [{
+          start: {
+            line: 82,
+            column: 4
+          },
+          end: {
+            line: 84,
+            column: 5
+          }
+        }, {
+          start: {
+            line: undefined,
+            column: undefined
+          },
+          end: {
+            line: undefined,
+            column: undefined
+          }
+        }],
+        line: 82
+      },
+      "10": {
+        loc: {
+          start: {
+            line: 82,
+            column: 8
+          },
+          end: {
+            line: 82,
+            column: 63
+          }
+        },
+        type: "binary-expr",
+        locations: [{
+          start: {
+            line: 82,
+            column: 8
+          },
+          end: {
+            line: 82,
+            column: 24
+          }
+        }, {
+          start: {
+            line: 82,
+            column: 28
+          },
+          end: {
+            line: 82,
+            column: 63
+          }
+        }],
+        line: 82
+      },
+      "11": {
+        loc: {
+          start: {
+            line: 94,
+            column: 4
+          },
+          end: {
+            line: 106,
+            column: 5
+          }
+        },
+        type: "if",
+        locations: [{
+          start: {
+            line: 94,
+            column: 4
+          },
+          end: {
+            line: 106,
+            column: 5
+          }
+        }, {
+          start: {
+            line: 103,
+            column: 9
+          },
+          end: {
+            line: 106,
+            column: 5
+          }
+        }],
+        line: 94
+      },
+      "12": {
+        loc: {
+          start: {
+            line: 108,
+            column: 11
+          },
+          end: {
+            line: 108,
+            column: 37
+          }
+        },
+        type: "cond-expr",
+        locations: [{
+          start: {
+            line: 108,
+            column: 27
+          },
+          end: {
+            line: 108,
+            column: 28
+          }
+        }, {
+          start: {
+            line: 108,
+            column: 31
+          },
+          end: {
+            line: 108,
+            column: 37
+          }
+        }],
+        line: 108
+      },
+      "13": {
+        loc: {
+          start: {
+            line: 118,
+            column: 24
+          },
+          end: {
+            line: 118,
+            column: 74
+          }
+        },
+        type: "cond-expr",
+        locations: [{
+          start: {
+            line: 118,
+            column: 51
+          },
+          end: {
+            line: 118,
+            column: 67
+          }
+        }, {
+          start: {
+            line: 118,
+            column: 70
+          },
+          end: {
+            line: 118,
+            column: 74
+          }
+        }],
+        line: 118
+      },
+      "14": {
+        loc: {
+          start: {
+            line: 119,
+            column: 4
+          },
+          end: {
+            line: 121,
+            column: 5
+          }
+        },
+        type: "if",
+        locations: [{
+          start: {
+            line: 119,
+            column: 4
+          },
+          end: {
+            line: 121,
+            column: 5
+          }
+        }, {
+          start: {
+            line: undefined,
+            column: undefined
+          },
+          end: {
+            line: undefined,
+            column: undefined
+          }
+        }],
+        line: 119
+      },
+      "15": {
+        loc: {
+          start: {
+            line: 134,
+            column: 30
+          },
+          end: {
+            line: 134,
+            column: 98
+          }
+        },
+        type: "cond-expr",
+        locations: [{
+          start: {
+            line: 134,
+            column: 63
+          },
+          end: {
+            line: 134,
+            column: 85
+          }
+        }, {
+          start: {
+            line: 134,
+            column: 88
+          },
+          end: {
+            line: 134,
+            column: 98
+          }
+        }],
+        line: 134
+      },
+      "16": {
+        loc: {
+          start: {
+            line: 135,
+            column: 4
+          },
+          end: {
+            line: 137,
+            column: 5
+          }
+        },
+        type: "if",
+        locations: [{
+          start: {
+            line: 135,
+            column: 4
+          },
+          end: {
+            line: 137,
+            column: 5
+          }
+        }, {
+          start: {
+            line: undefined,
+            column: undefined
+          },
+          end: {
+            line: undefined,
+            column: undefined
+          }
+        }],
+        line: 135
+      },
+      "17": {
+        loc: {
+          start: {
+            line: 150,
+            column: 4
+          },
+          end: {
+            line: 152,
+            column: 5
+          }
+        },
+        type: "if",
+        locations: [{
+          start: {
+            line: 150,
+            column: 4
+          },
+          end: {
+            line: 152,
+            column: 5
+          }
+        }, {
+          start: {
+            line: undefined,
+            column: undefined
+          },
+          end: {
+            line: undefined,
+            column: undefined
+          }
+        }],
+        line: 150
+      },
+      "18": {
+        loc: {
+          start: {
+            line: 150,
+            column: 8
+          },
+          end: {
+            line: 150,
+            column: 43
+          }
+        },
+        type: "binary-expr",
+        locations: [{
+          start: {
+            line: 150,
+            column: 8
+          },
+          end: {
+            line: 150,
+            column: 14
+          }
+        }, {
+          start: {
+            line: 150,
+            column: 18
+          },
+          end: {
+            line: 150,
+            column: 43
+          }
+        }],
+        line: 150
+      },
+      "19": {
+        loc: {
+          start: {
+            line: 161,
+            column: 11
+          },
+          end: {
+            line: 161,
+            column: 89
+          }
+        },
+        type: "binary-expr",
+        locations: [{
+          start: {
+            line: 161,
+            column: 11
+          },
+          end: {
+            line: 161,
+            column: 49
+          }
+        }, {
+          start: {
+            line: 161,
+            column: 53
+          },
+          end: {
+            line: 161,
+            column: 89
+          }
+        }],
+        line: 161
+      },
+      "20": {
+        loc: {
+          start: {
+            line: 177,
+            column: 26
+          },
+          end: {
+            line: 177,
+            column: 93
+          }
+        },
+        type: "cond-expr",
+        locations: [{
+          start: {
+            line: 177,
+            column: 55
+          },
+          end: {
+            line: 177,
+            column: 84
+          }
+        }, {
+          start: {
+            line: 177,
+            column: 87
+          },
+          end: {
+            line: 177,
+            column: 93
+          }
+        }],
+        line: 177
+      },
+      "21": {
+        loc: {
+          start: {
+            line: 186,
+            column: 4
+          },
+          end: {
+            line: 199,
+            column: 5
+          }
+        },
+        type: "if",
+        locations: [{
+          start: {
+            line: 186,
+            column: 4
+          },
+          end: {
+            line: 199,
+            column: 5
+          }
+        }, {
+          start: {
+            line: 193,
+            column: 9
+          },
+          end: {
+            line: 199,
+            column: 5
+          }
+        }],
+        line: 186
+      },
+      "22": {
+        loc: {
+          start: {
+            line: 193,
+            column: 9
+          },
+          end: {
+            line: 199,
+            column: 5
+          }
+        },
+        type: "if",
+        locations: [{
+          start: {
+            line: 193,
+            column: 9
+          },
+          end: {
+            line: 199,
+            column: 5
+          }
+        }, {
+          start: {
+            line: undefined,
+            column: undefined
+          },
+          end: {
+            line: undefined,
+            column: undefined
+          }
+        }],
+        line: 193
+      }
+    },
+    s: {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0,
+      "7": 0,
+      "8": 0,
+      "9": 0,
+      "10": 0,
+      "11": 0,
+      "12": 0,
+      "13": 0,
+      "14": 0,
+      "15": 0,
+      "16": 0,
+      "17": 0,
+      "18": 0,
+      "19": 0,
+      "20": 0,
+      "21": 0,
+      "22": 0,
+      "23": 0,
+      "24": 0,
+      "25": 0,
+      "26": 0,
+      "27": 0,
+      "28": 0,
+      "29": 0,
+      "30": 0,
+      "31": 0,
+      "32": 0,
+      "33": 0,
+      "34": 0,
+      "35": 0,
+      "36": 0,
+      "37": 0,
+      "38": 0,
+      "39": 0,
+      "40": 0,
+      "41": 0,
+      "42": 0,
+      "43": 0,
+      "44": 0,
+      "45": 0,
+      "46": 0,
+      "47": 0,
+      "48": 0,
+      "49": 0,
+      "50": 0,
+      "51": 0,
+      "52": 0,
+      "53": 0,
+      "54": 0,
+      "55": 0,
+      "56": 0,
+      "57": 0,
+      "58": 0,
+      "59": 0,
+      "60": 0,
+      "61": 0
+    },
+    f: {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0,
+      "7": 0,
+      "8": 0,
+      "9": 0,
+      "10": 0,
+      "11": 0,
+      "12": 0
+    },
+    b: {
+      "0": [0],
+      "1": [0, 0],
+      "2": [0, 0],
+      "3": [0],
+      "4": [0],
+      "5": [0],
+      "6": [0, 0],
+      "7": [0],
+      "8": [0],
+      "9": [0, 0],
+      "10": [0, 0],
+      "11": [0, 0],
+      "12": [0, 0],
+      "13": [0, 0],
+      "14": [0, 0],
+      "15": [0, 0],
+      "16": [0, 0],
+      "17": [0, 0],
+      "18": [0, 0],
+      "19": [0, 0],
+      "20": [0, 0],
+      "21": [0, 0],
+      "22": [0, 0]
+    },
+    inputSourceMap: {
+      file: "C:\\Users\\User\\Documents\\GitHub\\ema\\src\\lib\\format.ts",
+      mappings: "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",
+      names: [],
+      sources: ["C:\\Users\\User\\Documents\\GitHub\\ema\\src\\lib\\format.ts"],
+      sourcesContent: ["/**\n * Portuguese Locale Number Formatting Utilities for EmaPay\n *\n * \u26A0\uFE0F  FRONTEND DISPLAY ONLY \u26A0\uFE0F\n * This module provides Portuguese locale formatting for USER-FACING DISPLAYS ONLY.\n *\n * SCOPE:\n * \u2705 Frontend Components: Balance cards, transaction lists, forms, confirmation screens\n * \u2705 User Interface: All currency amounts displayed to users (1.234,56 format)\n * \u274C Backend/API: Use standard JSON decimal format (1234.56) for all API operations\n * \u274C Database: Store raw numeric values without any locale-specific formatting\n *\n * USAGE GUIDELINES:\n * - Frontend Display: Use formatAmountWithCurrency() and formatAmountForInput()\n * - API Calls: Use formatForAPI() to convert Portuguese input to standard decimal\n * - Database Operations: Work with raw numbers only, never formatted strings\n * - JSON Responses: Return standard decimal format, format on frontend\n */\n\nexport type Currency = 'AOA' | 'EUR'\n\n/**\n * Format a number with Portuguese locale based on currency\n * Uses dot (.) as thousands separator and comma (,) as decimal separator\n * @param amount - The numeric amount to format\n * @param currency - The currency type (AOA or EUR)\n * @param options - Additional formatting options\n * @returns Formatted string with Portuguese locale (dot thousands, comma decimal)\n */\nexport function formatCurrency(\n  amount: number | string,\n  currency: Currency,\n  options: {\n    minimumFractionDigits?: number\n    maximumFractionDigits?: number\n    showCurrency?: boolean\n  } = {}\n): string {\n  const numericAmount = typeof amount === 'string' ? parseFloat(amount) : amount\n\n  if (isNaN(numericAmount)) {\n    return '0,00'\n  }\n\n  const {\n    minimumFractionDigits = 2,\n    maximumFractionDigits = 2,\n    showCurrency = false\n  } = options\n\n  // Custom formatting for Portuguese locale with dot thousands separator\n  // Format: 1.234.567,89 (dot as thousands, comma as decimal)\n  const formattedAmount = formatPortugueseCurrency(numericAmount, minimumFractionDigits, maximumFractionDigits)\n\n  return showCurrency ? `${formattedAmount} ${currency}` : formattedAmount\n}\n\n/**\n * Internal helper function to format currency with Portuguese conventions\n * @param amount - Numeric amount to format\n * @param minDecimals - Minimum decimal places\n * @param maxDecimals - Maximum decimal places\n * @returns Formatted string with dot thousands separator and comma decimal separator\n */\nfunction formatPortugueseCurrency(amount: number, minDecimals: number = 2, maxDecimals: number = 2): string {\n  // First format with standard locale to get proper decimal handling\n  const standardFormatted = amount.toFixed(maxDecimals)\n\n  // Split into integer and decimal parts\n  const [integerPart, decimalPart] = standardFormatted.split('.')\n\n  // Add dot thousands separators to integer part\n  const formattedInteger = integerPart.replace(/\\B(?=(\\d{3})+(?!\\d))/g, '.')\n\n  // Ensure proper decimal places\n  const paddedDecimal = decimalPart.padEnd(minDecimals, '0')\n\n  // Combine with comma as decimal separator\n  return `${formattedInteger},${paddedDecimal}`\n}\n\n/**\n * Format amount for display with currency symbol\n * @param amount - The numeric amount\n * @param currency - The currency type\n * @returns Formatted string with currency\n */\nexport function formatAmountWithCurrency(amount: number | string, currency: Currency): string {\n  return formatCurrency(amount, currency, { showCurrency: true })\n}\n\n/**\n * Format amount for input fields (without currency symbol)\n * @param amount - The numeric amount\n * @param currency - The currency type\n * @returns Formatted string without currency\n */\nexport function formatAmountForInput(amount: number | string, currency: Currency): string {\n  return formatCurrency(amount, currency, { showCurrency: false })\n}\n\n/**\n * Parse Portuguese formatted string back to number\n * Handles dot thousands separator and comma decimal separator\n * @param formattedAmount - Portuguese formatted string (e.g., \"1.250,50\" or \"125.000,75\")\n * @returns Numeric value\n */\nexport function parsePortugueseNumber(formattedAmount: string): number {\n  if (!formattedAmount || typeof formattedAmount !== 'string') {\n    return 0\n  }\n\n  // Remove currency symbols and extra spaces\n  let cleanAmount = formattedAmount\n    .replace(/AOA|EUR/g, '')\n    .trim()\n\n  // Handle Portuguese number format with dot thousands separator:\n  // - Dot as thousands separator: \"125.000,75\" -> \"125000,75\"\n  // - Comma as decimal separator: \"125000,75\" -> \"125000.75\"\n\n  // Find the last comma (decimal separator)\n  const lastCommaIndex = cleanAmount.lastIndexOf(',')\n\n  if (lastCommaIndex !== -1) {\n    // Split at the last comma\n    const integerPart = cleanAmount.substring(0, lastCommaIndex)\n    const decimalPart = cleanAmount.substring(lastCommaIndex + 1)\n\n    // Remove dots from integer part (thousands separators)\n    const cleanInteger = integerPart.replace(/\\./g, '')\n\n    // Reconstruct with dot as decimal separator\n    cleanAmount = `${cleanInteger}.${decimalPart}`\n  } else {\n    // No decimal part, just remove dots (thousands separators)\n    cleanAmount = cleanAmount.replace(/\\./g, '')\n  }\n\n  const parsed = parseFloat(cleanAmount)\n  return isNaN(parsed) ? 0 : parsed\n}\n\n/**\n * Format exchange rate for display\n * @param rate - Exchange rate value\n * @param fromCurrency - Source currency\n * @param toCurrency - Target currency\n * @returns Formatted exchange rate string\n */\nexport function formatExchangeRate(\n  rate: number | string, \n  fromCurrency: Currency, \n  toCurrency: Currency\n): string {\n  const numericRate = typeof rate === 'string' ? parseFloat(rate) : rate\n  \n  if (isNaN(numericRate)) {\n    return `1 ${fromCurrency} = 0,00 ${toCurrency}`\n  }\n\n  const formattedRate = formatCurrency(numericRate, toCurrency, {\n    minimumFractionDigits: 2,\n    maximumFractionDigits: 6 // Allow more precision for exchange rates\n  })\n\n  return `1 ${fromCurrency} = ${formattedRate} ${toCurrency}`\n}\n\n/**\n * Format percentage with Portuguese locale (dot thousands, comma decimal)\n * @param percentage - Percentage value (e.g., 0.025 for 2.5%)\n * @returns Formatted percentage string\n */\nexport function formatPercentage(percentage: number | string): string {\n  const numericPercentage = typeof percentage === 'string' ? parseFloat(percentage) : percentage\n\n  if (isNaN(numericPercentage)) {\n    return '0,00%'\n  }\n\n  // Convert to percentage and format with Portuguese conventions\n  const percentValue = numericPercentage * 100\n  const formattedPercent = formatPortugueseCurrency(percentValue, 2, 2)\n  return `${formattedPercent}%`\n}\n\n/**\n * Validate if a string is a valid Portuguese formatted number\n * Handles dot thousands separator and comma decimal separator\n * @param value - String to validate\n * @returns Boolean indicating if valid\n */\nexport function isValidPortugueseNumber(value: string): boolean {\n  if (!value || typeof value !== 'string') {\n    return false\n  }\n\n  // Remove currency symbols and spaces\n  const cleanValue = value\n    .replace(/AOA|EUR/g, '')\n    .trim()\n\n  // Check if it matches Portuguese number format with dot thousands separator\n  // Allows: \"1250,50\", \"1.250,50\", \"125.000,75\", etc.\n  // Pattern: optional digits, optional groups of (dot + 3 digits), optional comma + up to 2 digits\n  const portugueseNumberRegex = /^\\d{1,3}(?:\\.\\d{3})*(?:,\\d{0,2})?$/\n\n  return portugueseNumberRegex.test(cleanValue) && !isNaN(parsePortugueseNumber(value))\n}\n\n/**\n * Format number for API calls (always use standard decimal format)\n *\n * \u26A0\uFE0F  CRITICAL: Use this function to convert Portuguese formatted user input\n * to standard JSON decimal format before sending to backend/API.\n *\n * EXAMPLES:\n * - formatForAPI(\"1.250,50\") \u2192 \"1250.50\" (for API calls)\n * - formatForAPI(1250.50) \u2192 \"1250.50\" (for API calls)\n *\n * @param amount - Amount to format for API (Portuguese formatted string or number)\n * @returns String in standard decimal format (1234.56) for API consumption\n */\nexport function formatForAPI(amount: number | string): string {\n  const numericAmount = typeof amount === 'string' ? parsePortugueseNumber(amount) : amount\n  return numericAmount.toFixed(2)\n}\n\n/**\n * Format compact numbers with K/M suffixes (Portuguese locale)\n * @param num - Number to format compactly\n * @returns Formatted compact number string\n */\nexport function formatCompactNumber(num: number): string {\n  if (num >= 1000000) {\n    const millions = (num / 1000000).toLocaleString('pt-PT', {\n      minimumFractionDigits: 1,\n      maximumFractionDigits: 1\n    })\n    return `${millions}M`\n  } else if (num >= 1000) {\n    const thousands = (num / 1000).toLocaleString('pt-PT', {\n      minimumFractionDigits: 1,\n      maximumFractionDigits: 1\n    })\n    return `${thousands}K`\n  }\n  return formatCurrency(num, 'EUR', { showCurrency: false })\n}\n\n/**\n * Format date and time for Portuguese locale\n * @param dateString - Date string to format\n * @returns Formatted date and time string\n */\nexport function formatDateTime(dateString: string): string {\n  try {\n    const date = new Date(dateString)\n    return new Intl.DateTimeFormat('pt-PT', {\n      year: 'numeric',\n      month: '2-digit',\n      day: '2-digit',\n      hour: '2-digit',\n      minute: '2-digit',\n      second: '2-digit'\n    }).format(date)\n  } catch {\n    return dateString\n  }\n}\n\n/**\n * Format date only for Portuguese locale\n * @param dateString - Date string to format\n * @returns Formatted date string\n */\nexport function formatDate(dateString: string): string {\n  try {\n    const date = new Date(dateString)\n    return new Intl.DateTimeFormat('pt-PT', {\n      year: 'numeric',\n      month: '2-digit',\n      day: '2-digit'\n    }).format(date)\n  } catch {\n    return dateString\n  }\n}\n\n/**\n * Format time only for Portuguese locale\n * @param dateString - Date string to format\n * @returns Formatted time string\n */\nexport function formatTime(dateString: string): string {\n  try {\n    const date = new Date(dateString)\n    return new Intl.DateTimeFormat('pt-PT', {\n      hour: '2-digit',\n      minute: '2-digit',\n      second: '2-digit'\n    }).format(date)\n  } catch {\n    return dateString\n  }\n}\n\n\n"],
+      version: 3
+    },
+    _coverageSchema: "1a1c01bbd47fc00a2c39e90264f33305004495a9",
+    hash: "0f0bb610563ad34ea0ea5b615a88b6e002ff7ac7"
+  };
+  var coverage = global[gcv] || (global[gcv] = {});
+  if (!coverage[path] || coverage[path].hash !== hash) {
+    coverage[path] = coverageData;
+  }
+  var actualCoverage = coverage[path];
+  {
+    // @ts-ignore
+    cov_2g3q1wm4e9 = function () {
+      return actualCoverage;
+    };
+  }
+  return actualCoverage;
+}
+cov_2g3q1wm4e9();
+/**
+ * Portuguese Locale Number Formatting Utilities for EmaPay
+ *
+ * ⚠️  FRONTEND DISPLAY ONLY ⚠️
+ * This module provides Portuguese locale formatting for USER-FACING DISPLAYS ONLY.
+ *
+ * SCOPE:
+ * ✅ Frontend Components: Balance cards, transaction lists, forms, confirmation screens
+ * ✅ User Interface: All currency amounts displayed to users (1.234,56 format)
+ * ❌ Backend/API: Use standard JSON decimal format (1234.56) for all API operations
+ * ❌ Database: Store raw numeric values without any locale-specific formatting
+ *
+ * USAGE GUIDELINES:
+ * - Frontend Display: Use formatAmountWithCurrency() and formatAmountForInput()
+ * - API Calls: Use formatForAPI() to convert Portuguese input to standard decimal
+ * - Database Operations: Work with raw numbers only, never formatted strings
+ * - JSON Responses: Return standard decimal format, format on frontend
+ */
+/**
+ * Format a number with Portuguese locale based on currency
+ * Uses dot (.) as thousands separator and comma (,) as decimal separator
+ * @param amount - The numeric amount to format
+ * @param currency - The currency type (AOA or EUR)
+ * @param options - Additional formatting options
+ * @returns Formatted string with Portuguese locale (dot thousands, comma decimal)
+ */
+export function formatCurrency(amount, currency, options =
+/* istanbul ignore next */
+(cov_2g3q1wm4e9().b[0][0]++, {})) {
+  /* istanbul ignore next */
+  cov_2g3q1wm4e9().f[0]++;
+  const numericAmount =
+  /* istanbul ignore next */
+  (cov_2g3q1wm4e9().s[0]++, typeof amount === 'string' ?
+  /* istanbul ignore next */
+  (cov_2g3q1wm4e9().b[1][0]++, parseFloat(amount)) :
+  /* istanbul ignore next */
+  (cov_2g3q1wm4e9().b[1][1]++, amount));
+  /* istanbul ignore next */
+  cov_2g3q1wm4e9().s[1]++;
+  if (isNaN(numericAmount)) {
+    /* istanbul ignore next */
+    cov_2g3q1wm4e9().b[2][0]++;
+    cov_2g3q1wm4e9().s[2]++;
+    return '0,00';
+  } else
+  /* istanbul ignore next */
+  {
+    cov_2g3q1wm4e9().b[2][1]++;
+  }
+  const {
+    minimumFractionDigits =
+    /* istanbul ignore next */
+    (cov_2g3q1wm4e9().b[3][0]++, 2),
+    maximumFractionDigits =
+    /* istanbul ignore next */
+    (cov_2g3q1wm4e9().b[4][0]++, 2),
+    showCurrency =
+    /* istanbul ignore next */
+    (cov_2g3q1wm4e9().b[5][0]++, false)
+  } =
+  /* istanbul ignore next */
+  (cov_2g3q1wm4e9().s[3]++, options);
+  // Custom formatting for Portuguese locale with dot thousands separator
+  // Format: 1.234.567,89 (dot as thousands, comma as decimal)
+  const formattedAmount =
+  /* istanbul ignore next */
+  (cov_2g3q1wm4e9().s[4]++, formatPortugueseCurrency(numericAmount, minimumFractionDigits, maximumFractionDigits));
+  /* istanbul ignore next */
+  cov_2g3q1wm4e9().s[5]++;
+  return showCurrency ?
+  /* istanbul ignore next */
+  (cov_2g3q1wm4e9().b[6][0]++, `${formattedAmount} ${currency}`) :
+  /* istanbul ignore next */
+  (cov_2g3q1wm4e9().b[6][1]++, formattedAmount);
+}
+/**
+ * Internal helper function to format currency with Portuguese conventions
+ * @param amount - Numeric amount to format
+ * @param minDecimals - Minimum decimal places
+ * @param maxDecimals - Maximum decimal places
+ * @returns Formatted string with dot thousands separator and comma decimal separator
+ */
+function formatPortugueseCurrency(amount, minDecimals =
+/* istanbul ignore next */
+(cov_2g3q1wm4e9().b[7][0]++, 2), maxDecimals =
+/* istanbul ignore next */
+(cov_2g3q1wm4e9().b[8][0]++, 2)) {
+  /* istanbul ignore next */
+  cov_2g3q1wm4e9().f[1]++;
+  // First format with standard locale to get proper decimal handling
+  const standardFormatted =
+  /* istanbul ignore next */
+  (cov_2g3q1wm4e9().s[6]++, amount.toFixed(maxDecimals));
+  // Split into integer and decimal parts
+  const [integerPart, decimalPart] =
+  /* istanbul ignore next */
+  (cov_2g3q1wm4e9().s[7]++, standardFormatted.split('.'));
+  // Add dot thousands separators to integer part
+  const formattedInteger =
+  /* istanbul ignore next */
+  (cov_2g3q1wm4e9().s[8]++, integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+  // Ensure proper decimal places
+  const paddedDecimal =
+  /* istanbul ignore next */
+  (cov_2g3q1wm4e9().s[9]++, decimalPart.padEnd(minDecimals, '0'));
+  // Combine with comma as decimal separator
+  /* istanbul ignore next */
+  cov_2g3q1wm4e9().s[10]++;
+  return `${formattedInteger},${paddedDecimal}`;
+}
+/**
+ * Format amount for display with currency symbol
+ * @param amount - The numeric amount
+ * @param currency - The currency type
+ * @returns Formatted string with currency
+ */
+export function formatAmountWithCurrency(amount, currency) {
+  /* istanbul ignore next */
+  cov_2g3q1wm4e9().f[2]++;
+  cov_2g3q1wm4e9().s[11]++;
+  return formatCurrency(amount, currency, {
+    showCurrency: true
+  });
+}
+/**
+ * Format amount for input fields (without currency symbol)
+ * @param amount - The numeric amount
+ * @param currency - The currency type
+ * @returns Formatted string without currency
+ */
+export function formatAmountForInput(amount, currency) {
+  /* istanbul ignore next */
+  cov_2g3q1wm4e9().f[3]++;
+  cov_2g3q1wm4e9().s[12]++;
+  return formatCurrency(amount, currency, {
+    showCurrency: false
+  });
+}
+/**
+ * Parse Portuguese formatted string back to number
+ * Handles dot thousands separator and comma decimal separator
+ * @param formattedAmount - Portuguese formatted string (e.g., "1.250,50" or "125.000,75")
+ * @returns Numeric value
+ */
+export function parsePortugueseNumber(formattedAmount) {
+  /* istanbul ignore next */
+  cov_2g3q1wm4e9().f[4]++;
+  cov_2g3q1wm4e9().s[13]++;
+  if (
+  /* istanbul ignore next */
+  (cov_2g3q1wm4e9().b[10][0]++, !formattedAmount) ||
+  /* istanbul ignore next */
+  (cov_2g3q1wm4e9().b[10][1]++, typeof formattedAmount !== 'string')) {
+    /* istanbul ignore next */
+    cov_2g3q1wm4e9().b[9][0]++;
+    cov_2g3q1wm4e9().s[14]++;
+    return 0;
+  } else
+  /* istanbul ignore next */
+  {
+    cov_2g3q1wm4e9().b[9][1]++;
+  }
+  // Remove currency symbols and extra spaces
+  let cleanAmount =
+  /* istanbul ignore next */
+  (cov_2g3q1wm4e9().s[15]++, formattedAmount.replace(/AOA|EUR/g, '').trim());
+  // Handle Portuguese number format with dot thousands separator:
+  // - Dot as thousands separator: "125.000,75" -> "125000,75"
+  // - Comma as decimal separator: "125000,75" -> "125000.75"
+  // Find the last comma (decimal separator)
+  const lastCommaIndex =
+  /* istanbul ignore next */
+  (cov_2g3q1wm4e9().s[16]++, cleanAmount.lastIndexOf(','));
+  /* istanbul ignore next */
+  cov_2g3q1wm4e9().s[17]++;
+  if (lastCommaIndex !== -1) {
+    /* istanbul ignore next */
+    cov_2g3q1wm4e9().b[11][0]++;
+    // Split at the last comma
+    const integerPart =
+    /* istanbul ignore next */
+    (cov_2g3q1wm4e9().s[18]++, cleanAmount.substring(0, lastCommaIndex));
+    const decimalPart =
+    /* istanbul ignore next */
+    (cov_2g3q1wm4e9().s[19]++, cleanAmount.substring(lastCommaIndex + 1));
+    // Remove dots from integer part (thousands separators)
+    const cleanInteger =
+    /* istanbul ignore next */
+    (cov_2g3q1wm4e9().s[20]++, integerPart.replace(/\./g, ''));
+    // Reconstruct with dot as decimal separator
+    /* istanbul ignore next */
+    cov_2g3q1wm4e9().s[21]++;
+    cleanAmount = `${cleanInteger}.${decimalPart}`;
+  } else {
+    /* istanbul ignore next */
+    cov_2g3q1wm4e9().b[11][1]++;
+    cov_2g3q1wm4e9().s[22]++;
+    // No decimal part, just remove dots (thousands separators)
+    cleanAmount = cleanAmount.replace(/\./g, '');
+  }
+  const parsed =
+  /* istanbul ignore next */
+  (cov_2g3q1wm4e9().s[23]++, parseFloat(cleanAmount));
+  /* istanbul ignore next */
+  cov_2g3q1wm4e9().s[24]++;
+  return isNaN(parsed) ?
+  /* istanbul ignore next */
+  (cov_2g3q1wm4e9().b[12][0]++, 0) :
+  /* istanbul ignore next */
+  (cov_2g3q1wm4e9().b[12][1]++, parsed);
+}
+/**
+ * Format exchange rate for display
+ * @param rate - Exchange rate value
+ * @param fromCurrency - Source currency
+ * @param toCurrency - Target currency
+ * @returns Formatted exchange rate string
+ */
+export function formatExchangeRate(rate, fromCurrency, toCurrency) {
+  /* istanbul ignore next */
+  cov_2g3q1wm4e9().f[5]++;
+  const numericRate =
+  /* istanbul ignore next */
+  (cov_2g3q1wm4e9().s[25]++, typeof rate === 'string' ?
+  /* istanbul ignore next */
+  (cov_2g3q1wm4e9().b[13][0]++, parseFloat(rate)) :
+  /* istanbul ignore next */
+  (cov_2g3q1wm4e9().b[13][1]++, rate));
+  /* istanbul ignore next */
+  cov_2g3q1wm4e9().s[26]++;
+  if (isNaN(numericRate)) {
+    /* istanbul ignore next */
+    cov_2g3q1wm4e9().b[14][0]++;
+    cov_2g3q1wm4e9().s[27]++;
+    return `1 ${fromCurrency} = 0,00 ${toCurrency}`;
+  } else
+  /* istanbul ignore next */
+  {
+    cov_2g3q1wm4e9().b[14][1]++;
+  }
+  const formattedRate =
+  /* istanbul ignore next */
+  (cov_2g3q1wm4e9().s[28]++, formatCurrency(numericRate, toCurrency, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 6 // Allow more precision for exchange rates
+  }));
+  /* istanbul ignore next */
+  cov_2g3q1wm4e9().s[29]++;
+  return `1 ${fromCurrency} = ${formattedRate} ${toCurrency}`;
+}
+/**
+ * Format percentage with Portuguese locale (dot thousands, comma decimal)
+ * @param percentage - Percentage value (e.g., 0.025 for 2.5%)
+ * @returns Formatted percentage string
+ */
+export function formatPercentage(percentage) {
+  /* istanbul ignore next */
+  cov_2g3q1wm4e9().f[6]++;
+  const numericPercentage =
+  /* istanbul ignore next */
+  (cov_2g3q1wm4e9().s[30]++, typeof percentage === 'string' ?
+  /* istanbul ignore next */
+  (cov_2g3q1wm4e9().b[15][0]++, parseFloat(percentage)) :
+  /* istanbul ignore next */
+  (cov_2g3q1wm4e9().b[15][1]++, percentage));
+  /* istanbul ignore next */
+  cov_2g3q1wm4e9().s[31]++;
+  if (isNaN(numericPercentage)) {
+    /* istanbul ignore next */
+    cov_2g3q1wm4e9().b[16][0]++;
+    cov_2g3q1wm4e9().s[32]++;
+    return '0,00%';
+  } else
+  /* istanbul ignore next */
+  {
+    cov_2g3q1wm4e9().b[16][1]++;
+  }
+  // Convert to percentage and format with Portuguese conventions
+  const percentValue =
+  /* istanbul ignore next */
+  (cov_2g3q1wm4e9().s[33]++, numericPercentage * 100);
+  const formattedPercent =
+  /* istanbul ignore next */
+  (cov_2g3q1wm4e9().s[34]++, formatPortugueseCurrency(percentValue, 2, 2));
+  /* istanbul ignore next */
+  cov_2g3q1wm4e9().s[35]++;
+  return `${formattedPercent}%`;
+}
+/**
+ * Validate if a string is a valid Portuguese formatted number
+ * Handles dot thousands separator and comma decimal separator
+ * @param value - String to validate
+ * @returns Boolean indicating if valid
+ */
+export function isValidPortugueseNumber(value) {
+  /* istanbul ignore next */
+  cov_2g3q1wm4e9().f[7]++;
+  cov_2g3q1wm4e9().s[36]++;
+  if (
+  /* istanbul ignore next */
+  (cov_2g3q1wm4e9().b[18][0]++, !value) ||
+  /* istanbul ignore next */
+  (cov_2g3q1wm4e9().b[18][1]++, typeof value !== 'string')) {
+    /* istanbul ignore next */
+    cov_2g3q1wm4e9().b[17][0]++;
+    cov_2g3q1wm4e9().s[37]++;
+    return false;
+  } else
+  /* istanbul ignore next */
+  {
+    cov_2g3q1wm4e9().b[17][1]++;
+  }
+  // Remove currency symbols and spaces
+  const cleanValue =
+  /* istanbul ignore next */
+  (cov_2g3q1wm4e9().s[38]++, value.replace(/AOA|EUR/g, '').trim());
+  // Check if it matches Portuguese number format with dot thousands separator
+  // Allows: "1250,50", "1.250,50", "125.000,75", etc.
+  // Pattern: optional digits, optional groups of (dot + 3 digits), optional comma + up to 2 digits
+  const portugueseNumberRegex =
+  /* istanbul ignore next */
+  (cov_2g3q1wm4e9().s[39]++, /^\d{1,3}(?:\.\d{3})*(?:,\d{0,2})?$/);
+  /* istanbul ignore next */
+  cov_2g3q1wm4e9().s[40]++;
+  return /* istanbul ignore next */(cov_2g3q1wm4e9().b[19][0]++, portugueseNumberRegex.test(cleanValue)) &&
+  /* istanbul ignore next */
+  (cov_2g3q1wm4e9().b[19][1]++, !isNaN(parsePortugueseNumber(value)));
+}
+/**
+ * Format number for API calls (always use standard decimal format)
+ *
+ * ⚠️  CRITICAL: Use this function to convert Portuguese formatted user input
+ * to standard JSON decimal format before sending to backend/API.
+ *
+ * EXAMPLES:
+ * - formatForAPI("1.250,50") → "1250.50" (for API calls)
+ * - formatForAPI(1250.50) → "1250.50" (for API calls)
+ *
+ * @param amount - Amount to format for API (Portuguese formatted string or number)
+ * @returns String in standard decimal format (1234.56) for API consumption
+ */
+export function formatForAPI(amount) {
+  /* istanbul ignore next */
+  cov_2g3q1wm4e9().f[8]++;
+  const numericAmount =
+  /* istanbul ignore next */
+  (cov_2g3q1wm4e9().s[41]++, typeof amount === 'string' ?
+  /* istanbul ignore next */
+  (cov_2g3q1wm4e9().b[20][0]++, parsePortugueseNumber(amount)) :
+  /* istanbul ignore next */
+  (cov_2g3q1wm4e9().b[20][1]++, amount));
+  /* istanbul ignore next */
+  cov_2g3q1wm4e9().s[42]++;
+  return numericAmount.toFixed(2);
+}
+/**
+ * Format compact numbers with K/M suffixes (Portuguese locale)
+ * @param num - Number to format compactly
+ * @returns Formatted compact number string
+ */
+export function formatCompactNumber(num) {
+  /* istanbul ignore next */
+  cov_2g3q1wm4e9().f[9]++;
+  cov_2g3q1wm4e9().s[43]++;
+  if (num >= 1000000) {
+    /* istanbul ignore next */
+    cov_2g3q1wm4e9().b[21][0]++;
+    const millions =
+    /* istanbul ignore next */
+    (cov_2g3q1wm4e9().s[44]++, (num / 1000000).toLocaleString('pt-PT', {
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 1
+    }));
+    /* istanbul ignore next */
+    cov_2g3q1wm4e9().s[45]++;
+    return `${millions}M`;
+  } else {
+    /* istanbul ignore next */
+    cov_2g3q1wm4e9().b[21][1]++;
+    cov_2g3q1wm4e9().s[46]++;
+    if (num >= 1000) {
+      /* istanbul ignore next */
+      cov_2g3q1wm4e9().b[22][0]++;
+      const thousands =
+      /* istanbul ignore next */
+      (cov_2g3q1wm4e9().s[47]++, (num / 1000).toLocaleString('pt-PT', {
+        minimumFractionDigits: 1,
+        maximumFractionDigits: 1
+      }));
+      /* istanbul ignore next */
+      cov_2g3q1wm4e9().s[48]++;
+      return `${thousands}K`;
+    } else
+    /* istanbul ignore next */
+    {
+      cov_2g3q1wm4e9().b[22][1]++;
+    }
+  }
+  /* istanbul ignore next */
+  cov_2g3q1wm4e9().s[49]++;
+  return formatCurrency(num, 'EUR', {
+    showCurrency: false
+  });
+}
+/**
+ * Format date and time for Portuguese locale
+ * @param dateString - Date string to format
+ * @returns Formatted date and time string
+ */
+export function formatDateTime(dateString) {
+  /* istanbul ignore next */
+  cov_2g3q1wm4e9().f[10]++;
+  cov_2g3q1wm4e9().s[50]++;
+  try {
+    const date =
+    /* istanbul ignore next */
+    (cov_2g3q1wm4e9().s[51]++, new Date(dateString));
+    /* istanbul ignore next */
+    cov_2g3q1wm4e9().s[52]++;
+    return new Intl.DateTimeFormat('pt-PT', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    }).format(date);
+  } catch (_a) {
+    /* istanbul ignore next */
+    cov_2g3q1wm4e9().s[53]++;
+    return dateString;
+  }
+}
+/**
+ * Format date only for Portuguese locale
+ * @param dateString - Date string to format
+ * @returns Formatted date string
+ */
+export function formatDate(dateString) {
+  /* istanbul ignore next */
+  cov_2g3q1wm4e9().f[11]++;
+  cov_2g3q1wm4e9().s[54]++;
+  try {
+    const date =
+    /* istanbul ignore next */
+    (cov_2g3q1wm4e9().s[55]++, new Date(dateString));
+    /* istanbul ignore next */
+    cov_2g3q1wm4e9().s[56]++;
+    return new Intl.DateTimeFormat('pt-PT', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    }).format(date);
+  } catch (_a) {
+    /* istanbul ignore next */
+    cov_2g3q1wm4e9().s[57]++;
+    return dateString;
+  }
+}
+/**
+ * Format time only for Portuguese locale
+ * @param dateString - Date string to format
+ * @returns Formatted time string
+ */
+export function formatTime(dateString) {
+  /* istanbul ignore next */
+  cov_2g3q1wm4e9().f[12]++;
+  cov_2g3q1wm4e9().s[58]++;
+  try {
+    const date =
+    /* istanbul ignore next */
+    (cov_2g3q1wm4e9().s[59]++, new Date(dateString));
+    /* istanbul ignore next */
+    cov_2g3q1wm4e9().s[60]++;
+    return new Intl.DateTimeFormat('pt-PT', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    }).format(date);
+  } catch (_a) {
+    /* istanbul ignore next */
+    cov_2g3q1wm4e9().s[61]++;
+    return dateString;
+  }
+}
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJuYW1lcyI6WyJmb3JtYXRDdXJyZW5jeSIsImFtb3VudCIsImN1cnJlbmN5Iiwib3B0aW9ucyIsImNvdl8yZzNxMXdtNGU5IiwiYiIsImYiLCJudW1lcmljQW1vdW50IiwicyIsInBhcnNlRmxvYXQiLCJpc05hTiIsIm1pbmltdW1GcmFjdGlvbkRpZ2l0cyIsIm1heGltdW1GcmFjdGlvbkRpZ2l0cyIsInNob3dDdXJyZW5jeSIsImZvcm1hdHRlZEFtb3VudCIsImZvcm1hdFBvcnR1Z3Vlc2VDdXJyZW5jeSIsIm1pbkRlY2ltYWxzIiwibWF4RGVjaW1hbHMiLCJzdGFuZGFyZEZvcm1hdHRlZCIsInRvRml4ZWQiLCJpbnRlZ2VyUGFydCIsImRlY2ltYWxQYXJ0Iiwic3BsaXQiLCJmb3JtYXR0ZWRJbnRlZ2VyIiwicmVwbGFjZSIsInBhZGRlZERlY2ltYWwiLCJwYWRFbmQiLCJmb3JtYXRBbW91bnRXaXRoQ3VycmVuY3kiLCJmb3JtYXRBbW91bnRGb3JJbnB1dCIsInBhcnNlUG9ydHVndWVzZU51bWJlciIsImNsZWFuQW1vdW50IiwidHJpbSIsImxhc3RDb21tYUluZGV4IiwibGFzdEluZGV4T2YiLCJzdWJzdHJpbmciLCJjbGVhbkludGVnZXIiLCJwYXJzZWQiLCJmb3JtYXRFeGNoYW5nZVJhdGUiLCJyYXRlIiwiZnJvbUN1cnJlbmN5IiwidG9DdXJyZW5jeSIsIm51bWVyaWNSYXRlIiwiZm9ybWF0dGVkUmF0ZSIsImZvcm1hdFBlcmNlbnRhZ2UiLCJwZXJjZW50YWdlIiwibnVtZXJpY1BlcmNlbnRhZ2UiLCJwZXJjZW50VmFsdWUiLCJmb3JtYXR0ZWRQZXJjZW50IiwiaXNWYWxpZFBvcnR1Z3Vlc2VOdW1iZXIiLCJ2YWx1ZSIsImNsZWFuVmFsdWUiLCJwb3J0dWd1ZXNlTnVtYmVyUmVnZXgiLCJ0ZXN0IiwiZm9ybWF0Rm9yQVBJIiwiZm9ybWF0Q29tcGFjdE51bWJlciIsIm51bSIsIm1pbGxpb25zIiwidG9Mb2NhbGVTdHJpbmciLCJ0aG91c2FuZHMiLCJmb3JtYXREYXRlVGltZSIsImRhdGVTdHJpbmciLCJkYXRlIiwiRGF0ZSIsIkludGwiLCJEYXRlVGltZUZvcm1hdCIsInllYXIiLCJtb250aCIsImRheSIsImhvdXIiLCJtaW51dGUiLCJzZWNvbmQiLCJmb3JtYXQiLCJfYSIsImZvcm1hdERhdGUiLCJmb3JtYXRUaW1lIl0sInNvdXJjZXMiOlsiQzpcXFVzZXJzXFxVc2VyXFxEb2N1bWVudHNcXEdpdEh1YlxcZW1hXFxzcmNcXGxpYlxcZm9ybWF0LnRzIl0sInNvdXJjZXNDb250ZW50IjpbIi8qKlxuICogUG9ydHVndWVzZSBMb2NhbGUgTnVtYmVyIEZvcm1hdHRpbmcgVXRpbGl0aWVzIGZvciBFbWFQYXlcbiAqXG4gKiDimqDvuI8gIEZST05URU5EIERJU1BMQVkgT05MWSDimqDvuI9cbiAqIFRoaXMgbW9kdWxlIHByb3ZpZGVzIFBvcnR1Z3Vlc2UgbG9jYWxlIGZvcm1hdHRpbmcgZm9yIFVTRVItRkFDSU5HIERJU1BMQVlTIE9OTFkuXG4gKlxuICogU0NPUEU6XG4gKiDinIUgRnJvbnRlbmQgQ29tcG9uZW50czogQmFsYW5jZSBjYXJkcywgdHJhbnNhY3Rpb24gbGlzdHMsIGZvcm1zLCBjb25maXJtYXRpb24gc2NyZWVuc1xuICog4pyFIFVzZXIgSW50ZXJmYWNlOiBBbGwgY3VycmVuY3kgYW1vdW50cyBkaXNwbGF5ZWQgdG8gdXNlcnMgKDEuMjM0LDU2IGZvcm1hdClcbiAqIOKdjCBCYWNrZW5kL0FQSTogVXNlIHN0YW5kYXJkIEpTT04gZGVjaW1hbCBmb3JtYXQgKDEyMzQuNTYpIGZvciBhbGwgQVBJIG9wZXJhdGlvbnNcbiAqIOKdjCBEYXRhYmFzZTogU3RvcmUgcmF3IG51bWVyaWMgdmFsdWVzIHdpdGhvdXQgYW55IGxvY2FsZS1zcGVjaWZpYyBmb3JtYXR0aW5nXG4gKlxuICogVVNBR0UgR1VJREVMSU5FUzpcbiAqIC0gRnJvbnRlbmQgRGlzcGxheTogVXNlIGZvcm1hdEFtb3VudFdpdGhDdXJyZW5jeSgpIGFuZCBmb3JtYXRBbW91bnRGb3JJbnB1dCgpXG4gKiAtIEFQSSBDYWxsczogVXNlIGZvcm1hdEZvckFQSSgpIHRvIGNvbnZlcnQgUG9ydHVndWVzZSBpbnB1dCB0byBzdGFuZGFyZCBkZWNpbWFsXG4gKiAtIERhdGFiYXNlIE9wZXJhdGlvbnM6IFdvcmsgd2l0aCByYXcgbnVtYmVycyBvbmx5LCBuZXZlciBmb3JtYXR0ZWQgc3RyaW5nc1xuICogLSBKU09OIFJlc3BvbnNlczogUmV0dXJuIHN0YW5kYXJkIGRlY2ltYWwgZm9ybWF0LCBmb3JtYXQgb24gZnJvbnRlbmRcbiAqL1xuXG5leHBvcnQgdHlwZSBDdXJyZW5jeSA9ICdBT0EnIHwgJ0VVUidcblxuLyoqXG4gKiBGb3JtYXQgYSBudW1iZXIgd2l0aCBQb3J0dWd1ZXNlIGxvY2FsZSBiYXNlZCBvbiBjdXJyZW5jeVxuICogVXNlcyBkb3QgKC4pIGFzIHRob3VzYW5kcyBzZXBhcmF0b3IgYW5kIGNvbW1hICgsKSBhcyBkZWNpbWFsIHNlcGFyYXRvclxuICogQHBhcmFtIGFtb3VudCAtIFRoZSBudW1lcmljIGFtb3VudCB0byBmb3JtYXRcbiAqIEBwYXJhbSBjdXJyZW5jeSAtIFRoZSBjdXJyZW5jeSB0eXBlIChBT0Egb3IgRVVSKVxuICogQHBhcmFtIG9wdGlvbnMgLSBBZGRpdGlvbmFsIGZvcm1hdHRpbmcgb3B0aW9uc1xuICogQHJldHVybnMgRm9ybWF0dGVkIHN0cmluZyB3aXRoIFBvcnR1Z3Vlc2UgbG9jYWxlIChkb3QgdGhvdXNhbmRzLCBjb21tYSBkZWNpbWFsKVxuICovXG5leHBvcnQgZnVuY3Rpb24gZm9ybWF0Q3VycmVuY3koXG4gIGFtb3VudDogbnVtYmVyIHwgc3RyaW5nLFxuICBjdXJyZW5jeTogQ3VycmVuY3ksXG4gIG9wdGlvbnM6IHtcbiAgICBtaW5pbXVtRnJhY3Rpb25EaWdpdHM/OiBudW1iZXJcbiAgICBtYXhpbXVtRnJhY3Rpb25EaWdpdHM/OiBudW1iZXJcbiAgICBzaG93Q3VycmVuY3k/OiBib29sZWFuXG4gIH0gPSB7fVxuKTogc3RyaW5nIHtcbiAgY29uc3QgbnVtZXJpY0Ftb3VudCA9IHR5cGVvZiBhbW91bnQgPT09ICdzdHJpbmcnID8gcGFyc2VGbG9hdChhbW91bnQpIDogYW1vdW50XG5cbiAgaWYgKGlzTmFOKG51bWVyaWNBbW91bnQpKSB7XG4gICAgcmV0dXJuICcwLDAwJ1xuICB9XG5cbiAgY29uc3Qge1xuICAgIG1pbmltdW1GcmFjdGlvbkRpZ2l0cyA9IDIsXG4gICAgbWF4aW11bUZyYWN0aW9uRGlnaXRzID0gMixcbiAgICBzaG93Q3VycmVuY3kgPSBmYWxzZVxuICB9ID0gb3B0aW9uc1xuXG4gIC8vIEN1c3RvbSBmb3JtYXR0aW5nIGZvciBQb3J0dWd1ZXNlIGxvY2FsZSB3aXRoIGRvdCB0aG91c2FuZHMgc2VwYXJhdG9yXG4gIC8vIEZvcm1hdDogMS4yMzQuNTY3LDg5IChkb3QgYXMgdGhvdXNhbmRzLCBjb21tYSBhcyBkZWNpbWFsKVxuICBjb25zdCBmb3JtYXR0ZWRBbW91bnQgPSBmb3JtYXRQb3J0dWd1ZXNlQ3VycmVuY3kobnVtZXJpY0Ftb3VudCwgbWluaW11bUZyYWN0aW9uRGlnaXRzLCBtYXhpbXVtRnJhY3Rpb25EaWdpdHMpXG5cbiAgcmV0dXJuIHNob3dDdXJyZW5jeSA/IGAke2Zvcm1hdHRlZEFtb3VudH0gJHtjdXJyZW5jeX1gIDogZm9ybWF0dGVkQW1vdW50XG59XG5cbi8qKlxuICogSW50ZXJuYWwgaGVscGVyIGZ1bmN0aW9uIHRvIGZvcm1hdCBjdXJyZW5jeSB3aXRoIFBvcnR1Z3Vlc2UgY29udmVudGlvbnNcbiAqIEBwYXJhbSBhbW91bnQgLSBOdW1lcmljIGFtb3VudCB0byBmb3JtYXRcbiAqIEBwYXJhbSBtaW5EZWNpbWFscyAtIE1pbmltdW0gZGVjaW1hbCBwbGFjZXNcbiAqIEBwYXJhbSBtYXhEZWNpbWFscyAtIE1heGltdW0gZGVjaW1hbCBwbGFjZXNcbiAqIEByZXR1cm5zIEZvcm1hdHRlZCBzdHJpbmcgd2l0aCBkb3QgdGhvdXNhbmRzIHNlcGFyYXRvciBhbmQgY29tbWEgZGVjaW1hbCBzZXBhcmF0b3JcbiAqL1xuZnVuY3Rpb24gZm9ybWF0UG9ydHVndWVzZUN1cnJlbmN5KGFtb3VudDogbnVtYmVyLCBtaW5EZWNpbWFsczogbnVtYmVyID0gMiwgbWF4RGVjaW1hbHM6IG51bWJlciA9IDIpOiBzdHJpbmcge1xuICAvLyBGaXJzdCBmb3JtYXQgd2l0aCBzdGFuZGFyZCBsb2NhbGUgdG8gZ2V0IHByb3BlciBkZWNpbWFsIGhhbmRsaW5nXG4gIGNvbnN0IHN0YW5kYXJkRm9ybWF0dGVkID0gYW1vdW50LnRvRml4ZWQobWF4RGVjaW1hbHMpXG5cbiAgLy8gU3BsaXQgaW50byBpbnRlZ2VyIGFuZCBkZWNpbWFsIHBhcnRzXG4gIGNvbnN0IFtpbnRlZ2VyUGFydCwgZGVjaW1hbFBhcnRdID0gc3RhbmRhcmRGb3JtYXR0ZWQuc3BsaXQoJy4nKVxuXG4gIC8vIEFkZCBkb3QgdGhvdXNhbmRzIHNlcGFyYXRvcnMgdG8gaW50ZWdlciBwYXJ0XG4gIGNvbnN0IGZvcm1hdHRlZEludGVnZXIgPSBpbnRlZ2VyUGFydC5yZXBsYWNlKC9cXEIoPz0oXFxkezN9KSsoPyFcXGQpKS9nLCAnLicpXG5cbiAgLy8gRW5zdXJlIHByb3BlciBkZWNpbWFsIHBsYWNlc1xuICBjb25zdCBwYWRkZWREZWNpbWFsID0gZGVjaW1hbFBhcnQucGFkRW5kKG1pbkRlY2ltYWxzLCAnMCcpXG5cbiAgLy8gQ29tYmluZSB3aXRoIGNvbW1hIGFzIGRlY2ltYWwgc2VwYXJhdG9yXG4gIHJldHVybiBgJHtmb3JtYXR0ZWRJbnRlZ2VyfSwke3BhZGRlZERlY2ltYWx9YFxufVxuXG4vKipcbiAqIEZvcm1hdCBhbW91bnQgZm9yIGRpc3BsYXkgd2l0aCBjdXJyZW5jeSBzeW1ib2xcbiAqIEBwYXJhbSBhbW91bnQgLSBUaGUgbnVtZXJpYyBhbW91bnRcbiAqIEBwYXJhbSBjdXJyZW5jeSAtIFRoZSBjdXJyZW5jeSB0eXBlXG4gKiBAcmV0dXJucyBGb3JtYXR0ZWQgc3RyaW5nIHdpdGggY3VycmVuY3lcbiAqL1xuZXhwb3J0IGZ1bmN0aW9uIGZvcm1hdEFtb3VudFdpdGhDdXJyZW5jeShhbW91bnQ6IG51bWJlciB8IHN0cmluZywgY3VycmVuY3k6IEN1cnJlbmN5KTogc3RyaW5nIHtcbiAgcmV0dXJuIGZvcm1hdEN1cnJlbmN5KGFtb3VudCwgY3VycmVuY3ksIHsgc2hvd0N1cnJlbmN5OiB0cnVlIH0pXG59XG5cbi8qKlxuICogRm9ybWF0IGFtb3VudCBmb3IgaW5wdXQgZmllbGRzICh3aXRob3V0IGN1cnJlbmN5IHN5bWJvbClcbiAqIEBwYXJhbSBhbW91bnQgLSBUaGUgbnVtZXJpYyBhbW91bnRcbiAqIEBwYXJhbSBjdXJyZW5jeSAtIFRoZSBjdXJyZW5jeSB0eXBlXG4gKiBAcmV0dXJucyBGb3JtYXR0ZWQgc3RyaW5nIHdpdGhvdXQgY3VycmVuY3lcbiAqL1xuZXhwb3J0IGZ1bmN0aW9uIGZvcm1hdEFtb3VudEZvcklucHV0KGFtb3VudDogbnVtYmVyIHwgc3RyaW5nLCBjdXJyZW5jeTogQ3VycmVuY3kpOiBzdHJpbmcge1xuICByZXR1cm4gZm9ybWF0Q3VycmVuY3koYW1vdW50LCBjdXJyZW5jeSwgeyBzaG93Q3VycmVuY3k6IGZhbHNlIH0pXG59XG5cbi8qKlxuICogUGFyc2UgUG9ydHVndWVzZSBmb3JtYXR0ZWQgc3RyaW5nIGJhY2sgdG8gbnVtYmVyXG4gKiBIYW5kbGVzIGRvdCB0aG91c2FuZHMgc2VwYXJhdG9yIGFuZCBjb21tYSBkZWNpbWFsIHNlcGFyYXRvclxuICogQHBhcmFtIGZvcm1hdHRlZEFtb3VudCAtIFBvcnR1Z3Vlc2UgZm9ybWF0dGVkIHN0cmluZyAoZS5nLiwgXCIxLjI1MCw1MFwiIG9yIFwiMTI1LjAwMCw3NVwiKVxuICogQHJldHVybnMgTnVtZXJpYyB2YWx1ZVxuICovXG5leHBvcnQgZnVuY3Rpb24gcGFyc2VQb3J0dWd1ZXNlTnVtYmVyKGZvcm1hdHRlZEFtb3VudDogc3RyaW5nKTogbnVtYmVyIHtcbiAgaWYgKCFmb3JtYXR0ZWRBbW91bnQgfHwgdHlwZW9mIGZvcm1hdHRlZEFtb3VudCAhPT0gJ3N0cmluZycpIHtcbiAgICByZXR1cm4gMFxuICB9XG5cbiAgLy8gUmVtb3ZlIGN1cnJlbmN5IHN5bWJvbHMgYW5kIGV4dHJhIHNwYWNlc1xuICBsZXQgY2xlYW5BbW91bnQgPSBmb3JtYXR0ZWRBbW91bnRcbiAgICAucmVwbGFjZSgvQU9BfEVVUi9nLCAnJylcbiAgICAudHJpbSgpXG5cbiAgLy8gSGFuZGxlIFBvcnR1Z3Vlc2UgbnVtYmVyIGZvcm1hdCB3aXRoIGRvdCB0aG91c2FuZHMgc2VwYXJhdG9yOlxuICAvLyAtIERvdCBhcyB0aG91c2FuZHMgc2VwYXJhdG9yOiBcIjEyNS4wMDAsNzVcIiAtPiBcIjEyNTAwMCw3NVwiXG4gIC8vIC0gQ29tbWEgYXMgZGVjaW1hbCBzZXBhcmF0b3I6IFwiMTI1MDAwLDc1XCIgLT4gXCIxMjUwMDAuNzVcIlxuXG4gIC8vIEZpbmQgdGhlIGxhc3QgY29tbWEgKGRlY2ltYWwgc2VwYXJhdG9yKVxuICBjb25zdCBsYXN0Q29tbWFJbmRleCA9IGNsZWFuQW1vdW50Lmxhc3RJbmRleE9mKCcsJylcblxuICBpZiAobGFzdENvbW1hSW5kZXggIT09IC0xKSB7XG4gICAgLy8gU3BsaXQgYXQgdGhlIGxhc3QgY29tbWFcbiAgICBjb25zdCBpbnRlZ2VyUGFydCA9IGNsZWFuQW1vdW50LnN1YnN0cmluZygwLCBsYXN0Q29tbWFJbmRleClcbiAgICBjb25zdCBkZWNpbWFsUGFydCA9IGNsZWFuQW1vdW50LnN1YnN0cmluZyhsYXN0Q29tbWFJbmRleCArIDEpXG5cbiAgICAvLyBSZW1vdmUgZG90cyBmcm9tIGludGVnZXIgcGFydCAodGhvdXNhbmRzIHNlcGFyYXRvcnMpXG4gICAgY29uc3QgY2xlYW5JbnRlZ2VyID0gaW50ZWdlclBhcnQucmVwbGFjZSgvXFwuL2csICcnKVxuXG4gICAgLy8gUmVjb25zdHJ1Y3Qgd2l0aCBkb3QgYXMgZGVjaW1hbCBzZXBhcmF0b3JcbiAgICBjbGVhbkFtb3VudCA9IGAke2NsZWFuSW50ZWdlcn0uJHtkZWNpbWFsUGFydH1gXG4gIH0gZWxzZSB7XG4gICAgLy8gTm8gZGVjaW1hbCBwYXJ0LCBqdXN0IHJlbW92ZSBkb3RzICh0aG91c2FuZHMgc2VwYXJhdG9ycylcbiAgICBjbGVhbkFtb3VudCA9IGNsZWFuQW1vdW50LnJlcGxhY2UoL1xcLi9nLCAnJylcbiAgfVxuXG4gIGNvbnN0IHBhcnNlZCA9IHBhcnNlRmxvYXQoY2xlYW5BbW91bnQpXG4gIHJldHVybiBpc05hTihwYXJzZWQpID8gMCA6IHBhcnNlZFxufVxuXG4vKipcbiAqIEZvcm1hdCBleGNoYW5nZSByYXRlIGZvciBkaXNwbGF5XG4gKiBAcGFyYW0gcmF0ZSAtIEV4Y2hhbmdlIHJhdGUgdmFsdWVcbiAqIEBwYXJhbSBmcm9tQ3VycmVuY3kgLSBTb3VyY2UgY3VycmVuY3lcbiAqIEBwYXJhbSB0b0N1cnJlbmN5IC0gVGFyZ2V0IGN1cnJlbmN5XG4gKiBAcmV0dXJucyBGb3JtYXR0ZWQgZXhjaGFuZ2UgcmF0ZSBzdHJpbmdcbiAqL1xuZXhwb3J0IGZ1bmN0aW9uIGZvcm1hdEV4Y2hhbmdlUmF0ZShcbiAgcmF0ZTogbnVtYmVyIHwgc3RyaW5nLCBcbiAgZnJvbUN1cnJlbmN5OiBDdXJyZW5jeSwgXG4gIHRvQ3VycmVuY3k6IEN1cnJlbmN5XG4pOiBzdHJpbmcge1xuICBjb25zdCBudW1lcmljUmF0ZSA9IHR5cGVvZiByYXRlID09PSAnc3RyaW5nJyA/IHBhcnNlRmxvYXQocmF0ZSkgOiByYXRlXG4gIFxuICBpZiAoaXNOYU4obnVtZXJpY1JhdGUpKSB7XG4gICAgcmV0dXJuIGAxICR7ZnJvbUN1cnJlbmN5fSA9IDAsMDAgJHt0b0N1cnJlbmN5fWBcbiAgfVxuXG4gIGNvbnN0IGZvcm1hdHRlZFJhdGUgPSBmb3JtYXRDdXJyZW5jeShudW1lcmljUmF0ZSwgdG9DdXJyZW5jeSwge1xuICAgIG1pbmltdW1GcmFjdGlvbkRpZ2l0czogMixcbiAgICBtYXhpbXVtRnJhY3Rpb25EaWdpdHM6IDYgLy8gQWxsb3cgbW9yZSBwcmVjaXNpb24gZm9yIGV4Y2hhbmdlIHJhdGVzXG4gIH0pXG5cbiAgcmV0dXJuIGAxICR7ZnJvbUN1cnJlbmN5fSA9ICR7Zm9ybWF0dGVkUmF0ZX0gJHt0b0N1cnJlbmN5fWBcbn1cblxuLyoqXG4gKiBGb3JtYXQgcGVyY2VudGFnZSB3aXRoIFBvcnR1Z3Vlc2UgbG9jYWxlIChkb3QgdGhvdXNhbmRzLCBjb21tYSBkZWNpbWFsKVxuICogQHBhcmFtIHBlcmNlbnRhZ2UgLSBQZXJjZW50YWdlIHZhbHVlIChlLmcuLCAwLjAyNSBmb3IgMi41JSlcbiAqIEByZXR1cm5zIEZvcm1hdHRlZCBwZXJjZW50YWdlIHN0cmluZ1xuICovXG5leHBvcnQgZnVuY3Rpb24gZm9ybWF0UGVyY2VudGFnZShwZXJjZW50YWdlOiBudW1iZXIgfCBzdHJpbmcpOiBzdHJpbmcge1xuICBjb25zdCBudW1lcmljUGVyY2VudGFnZSA9IHR5cGVvZiBwZXJjZW50YWdlID09PSAnc3RyaW5nJyA/IHBhcnNlRmxvYXQocGVyY2VudGFnZSkgOiBwZXJjZW50YWdlXG5cbiAgaWYgKGlzTmFOKG51bWVyaWNQZXJjZW50YWdlKSkge1xuICAgIHJldHVybiAnMCwwMCUnXG4gIH1cblxuICAvLyBDb252ZXJ0IHRvIHBlcmNlbnRhZ2UgYW5kIGZvcm1hdCB3aXRoIFBvcnR1Z3Vlc2UgY29udmVudGlvbnNcbiAgY29uc3QgcGVyY2VudFZhbHVlID0gbnVtZXJpY1BlcmNlbnRhZ2UgKiAxMDBcbiAgY29uc3QgZm9ybWF0dGVkUGVyY2VudCA9IGZvcm1hdFBvcnR1Z3Vlc2VDdXJyZW5jeShwZXJjZW50VmFsdWUsIDIsIDIpXG4gIHJldHVybiBgJHtmb3JtYXR0ZWRQZXJjZW50fSVgXG59XG5cbi8qKlxuICogVmFsaWRhdGUgaWYgYSBzdHJpbmcgaXMgYSB2YWxpZCBQb3J0dWd1ZXNlIGZvcm1hdHRlZCBudW1iZXJcbiAqIEhhbmRsZXMgZG90IHRob3VzYW5kcyBzZXBhcmF0b3IgYW5kIGNvbW1hIGRlY2ltYWwgc2VwYXJhdG9yXG4gKiBAcGFyYW0gdmFsdWUgLSBTdHJpbmcgdG8gdmFsaWRhdGVcbiAqIEByZXR1cm5zIEJvb2xlYW4gaW5kaWNhdGluZyBpZiB2YWxpZFxuICovXG5leHBvcnQgZnVuY3Rpb24gaXNWYWxpZFBvcnR1Z3Vlc2VOdW1iZXIodmFsdWU6IHN0cmluZyk6IGJvb2xlYW4ge1xuICBpZiAoIXZhbHVlIHx8IHR5cGVvZiB2YWx1ZSAhPT0gJ3N0cmluZycpIHtcbiAgICByZXR1cm4gZmFsc2VcbiAgfVxuXG4gIC8vIFJlbW92ZSBjdXJyZW5jeSBzeW1ib2xzIGFuZCBzcGFjZXNcbiAgY29uc3QgY2xlYW5WYWx1ZSA9IHZhbHVlXG4gICAgLnJlcGxhY2UoL0FPQXxFVVIvZywgJycpXG4gICAgLnRyaW0oKVxuXG4gIC8vIENoZWNrIGlmIGl0IG1hdGNoZXMgUG9ydHVndWVzZSBudW1iZXIgZm9ybWF0IHdpdGggZG90IHRob3VzYW5kcyBzZXBhcmF0b3JcbiAgLy8gQWxsb3dzOiBcIjEyNTAsNTBcIiwgXCIxLjI1MCw1MFwiLCBcIjEyNS4wMDAsNzVcIiwgZXRjLlxuICAvLyBQYXR0ZXJuOiBvcHRpb25hbCBkaWdpdHMsIG9wdGlvbmFsIGdyb3VwcyBvZiAoZG90ICsgMyBkaWdpdHMpLCBvcHRpb25hbCBjb21tYSArIHVwIHRvIDIgZGlnaXRzXG4gIGNvbnN0IHBvcnR1Z3Vlc2VOdW1iZXJSZWdleCA9IC9eXFxkezEsM30oPzpcXC5cXGR7M30pKig/OixcXGR7MCwyfSk/JC9cblxuICByZXR1cm4gcG9ydHVndWVzZU51bWJlclJlZ2V4LnRlc3QoY2xlYW5WYWx1ZSkgJiYgIWlzTmFOKHBhcnNlUG9ydHVndWVzZU51bWJlcih2YWx1ZSkpXG59XG5cbi8qKlxuICogRm9ybWF0IG51bWJlciBmb3IgQVBJIGNhbGxzIChhbHdheXMgdXNlIHN0YW5kYXJkIGRlY2ltYWwgZm9ybWF0KVxuICpcbiAqIOKaoO+4jyAgQ1JJVElDQUw6IFVzZSB0aGlzIGZ1bmN0aW9uIHRvIGNvbnZlcnQgUG9ydHVndWVzZSBmb3JtYXR0ZWQgdXNlciBpbnB1dFxuICogdG8gc3RhbmRhcmQgSlNPTiBkZWNpbWFsIGZvcm1hdCBiZWZvcmUgc2VuZGluZyB0byBiYWNrZW5kL0FQSS5cbiAqXG4gKiBFWEFNUExFUzpcbiAqIC0gZm9ybWF0Rm9yQVBJKFwiMS4yNTAsNTBcIikg4oaSIFwiMTI1MC41MFwiIChmb3IgQVBJIGNhbGxzKVxuICogLSBmb3JtYXRGb3JBUEkoMTI1MC41MCkg4oaSIFwiMTI1MC41MFwiIChmb3IgQVBJIGNhbGxzKVxuICpcbiAqIEBwYXJhbSBhbW91bnQgLSBBbW91bnQgdG8gZm9ybWF0IGZvciBBUEkgKFBvcnR1Z3Vlc2UgZm9ybWF0dGVkIHN0cmluZyBvciBudW1iZXIpXG4gKiBAcmV0dXJucyBTdHJpbmcgaW4gc3RhbmRhcmQgZGVjaW1hbCBmb3JtYXQgKDEyMzQuNTYpIGZvciBBUEkgY29uc3VtcHRpb25cbiAqL1xuZXhwb3J0IGZ1bmN0aW9uIGZvcm1hdEZvckFQSShhbW91bnQ6IG51bWJlciB8IHN0cmluZyk6IHN0cmluZyB7XG4gIGNvbnN0IG51bWVyaWNBbW91bnQgPSB0eXBlb2YgYW1vdW50ID09PSAnc3RyaW5nJyA/IHBhcnNlUG9ydHVndWVzZU51bWJlcihhbW91bnQpIDogYW1vdW50XG4gIHJldHVybiBudW1lcmljQW1vdW50LnRvRml4ZWQoMilcbn1cblxuLyoqXG4gKiBGb3JtYXQgY29tcGFjdCBudW1iZXJzIHdpdGggSy9NIHN1ZmZpeGVzIChQb3J0dWd1ZXNlIGxvY2FsZSlcbiAqIEBwYXJhbSBudW0gLSBOdW1iZXIgdG8gZm9ybWF0IGNvbXBhY3RseVxuICogQHJldHVybnMgRm9ybWF0dGVkIGNvbXBhY3QgbnVtYmVyIHN0cmluZ1xuICovXG5leHBvcnQgZnVuY3Rpb24gZm9ybWF0Q29tcGFjdE51bWJlcihudW06IG51bWJlcik6IHN0cmluZyB7XG4gIGlmIChudW0gPj0gMTAwMDAwMCkge1xuICAgIGNvbnN0IG1pbGxpb25zID0gKG51bSAvIDEwMDAwMDApLnRvTG9jYWxlU3RyaW5nKCdwdC1QVCcsIHtcbiAgICAgIG1pbmltdW1GcmFjdGlvbkRpZ2l0czogMSxcbiAgICAgIG1heGltdW1GcmFjdGlvbkRpZ2l0czogMVxuICAgIH0pXG4gICAgcmV0dXJuIGAke21pbGxpb25zfU1gXG4gIH0gZWxzZSBpZiAobnVtID49IDEwMDApIHtcbiAgICBjb25zdCB0aG91c2FuZHMgPSAobnVtIC8gMTAwMCkudG9Mb2NhbGVTdHJpbmcoJ3B0LVBUJywge1xuICAgICAgbWluaW11bUZyYWN0aW9uRGlnaXRzOiAxLFxuICAgICAgbWF4aW11bUZyYWN0aW9uRGlnaXRzOiAxXG4gICAgfSlcbiAgICByZXR1cm4gYCR7dGhvdXNhbmRzfUtgXG4gIH1cbiAgcmV0dXJuIGZvcm1hdEN1cnJlbmN5KG51bSwgJ0VVUicsIHsgc2hvd0N1cnJlbmN5OiBmYWxzZSB9KVxufVxuXG4vKipcbiAqIEZvcm1hdCBkYXRlIGFuZCB0aW1lIGZvciBQb3J0dWd1ZXNlIGxvY2FsZVxuICogQHBhcmFtIGRhdGVTdHJpbmcgLSBEYXRlIHN0cmluZyB0byBmb3JtYXRcbiAqIEByZXR1cm5zIEZvcm1hdHRlZCBkYXRlIGFuZCB0aW1lIHN0cmluZ1xuICovXG5leHBvcnQgZnVuY3Rpb24gZm9ybWF0RGF0ZVRpbWUoZGF0ZVN0cmluZzogc3RyaW5nKTogc3RyaW5nIHtcbiAgdHJ5IHtcbiAgICBjb25zdCBkYXRlID0gbmV3IERhdGUoZGF0ZVN0cmluZylcbiAgICByZXR1cm4gbmV3IEludGwuRGF0ZVRpbWVGb3JtYXQoJ3B0LVBUJywge1xuICAgICAgeWVhcjogJ251bWVyaWMnLFxuICAgICAgbW9udGg6ICcyLWRpZ2l0JyxcbiAgICAgIGRheTogJzItZGlnaXQnLFxuICAgICAgaG91cjogJzItZGlnaXQnLFxuICAgICAgbWludXRlOiAnMi1kaWdpdCcsXG4gICAgICBzZWNvbmQ6ICcyLWRpZ2l0J1xuICAgIH0pLmZvcm1hdChkYXRlKVxuICB9IGNhdGNoIHtcbiAgICByZXR1cm4gZGF0ZVN0cmluZ1xuICB9XG59XG5cbi8qKlxuICogRm9ybWF0IGRhdGUgb25seSBmb3IgUG9ydHVndWVzZSBsb2NhbGVcbiAqIEBwYXJhbSBkYXRlU3RyaW5nIC0gRGF0ZSBzdHJpbmcgdG8gZm9ybWF0XG4gKiBAcmV0dXJucyBGb3JtYXR0ZWQgZGF0ZSBzdHJpbmdcbiAqL1xuZXhwb3J0IGZ1bmN0aW9uIGZvcm1hdERhdGUoZGF0ZVN0cmluZzogc3RyaW5nKTogc3RyaW5nIHtcbiAgdHJ5IHtcbiAgICBjb25zdCBkYXRlID0gbmV3IERhdGUoZGF0ZVN0cmluZylcbiAgICByZXR1cm4gbmV3IEludGwuRGF0ZVRpbWVGb3JtYXQoJ3B0LVBUJywge1xuICAgICAgeWVhcjogJ251bWVyaWMnLFxuICAgICAgbW9udGg6ICcyLWRpZ2l0JyxcbiAgICAgIGRheTogJzItZGlnaXQnXG4gICAgfSkuZm9ybWF0KGRhdGUpXG4gIH0gY2F0Y2gge1xuICAgIHJldHVybiBkYXRlU3RyaW5nXG4gIH1cbn1cblxuLyoqXG4gKiBGb3JtYXQgdGltZSBvbmx5IGZvciBQb3J0dWd1ZXNlIGxvY2FsZVxuICogQHBhcmFtIGRhdGVTdHJpbmcgLSBEYXRlIHN0cmluZyB0byBmb3JtYXRcbiAqIEByZXR1cm5zIEZvcm1hdHRlZCB0aW1lIHN0cmluZ1xuICovXG5leHBvcnQgZnVuY3Rpb24gZm9ybWF0VGltZShkYXRlU3RyaW5nOiBzdHJpbmcpOiBzdHJpbmcge1xuICB0cnkge1xuICAgIGNvbnN0IGRhdGUgPSBuZXcgRGF0ZShkYXRlU3RyaW5nKVxuICAgIHJldHVybiBuZXcgSW50bC5EYXRlVGltZUZvcm1hdCgncHQtUFQnLCB7XG4gICAgICBob3VyOiAnMi1kaWdpdCcsXG4gICAgICBtaW51dGU6ICcyLWRpZ2l0JyxcbiAgICAgIHNlY29uZDogJzItZGlnaXQnXG4gICAgfSkuZm9ybWF0KGRhdGUpXG4gIH0gY2F0Y2gge1xuICAgIHJldHVybiBkYXRlU3RyaW5nXG4gIH1cbn1cblxuXG4iXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7QUFBQTs7Ozs7Ozs7Ozs7Ozs7Ozs7O0FBcUJBOzs7Ozs7OztBQVFBLE9BQU0sU0FBVUEsY0FBY0EsQ0FDNUJDLE1BQXVCLEVBQ3ZCQyxRQUFrQixFQUNsQkMsT0FBQTtBQUFBO0FBQUEsQ0FBQUMsY0FBQSxHQUFBQyxDQUFBLFVBSUksRUFBRTtFQUFBO0VB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

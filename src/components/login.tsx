@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { useSignIn } from "@clerk/nextjs"
+// Clerk removed - using Supabase Auth
 import { PageHeader } from "@/components/ui/page-header"
 import { AuthFormField } from "@/components/ui/form-field"
 import { FixedBottomAction } from "@/components/ui/fixed-bottom-action"

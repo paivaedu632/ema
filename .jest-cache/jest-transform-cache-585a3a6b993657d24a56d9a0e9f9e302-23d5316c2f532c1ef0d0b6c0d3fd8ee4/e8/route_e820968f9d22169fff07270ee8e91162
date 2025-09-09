@@ -1,0 +1,586 @@
+4d1fcc47ce51b23922a459be27b21b8d
+/* istanbul ignore next */
+function cov_ubcomigwl() {
+  var path = "C:\\Users\\User\\Documents\\GitHub\\ema\\src\\app\\api\\v1\\market\\depth\\route.ts";
+  var hash = "0dcfac8ce035c4307d4d8ef401a62e4f5ac168d9";
+  var global = new Function("return this")();
+  var gcv = "__coverage__";
+  var coverageData = {
+    path: "C:\\Users\\User\\Documents\\GitHub\\ema\\src\\app\\api\\v1\\market\\depth\\route.ts",
+    statementMap: {
+      "0": {
+        start: {
+          line: 6,
+          column: 26
+        },
+        end: {
+          line: 10,
+          column: 2
+        }
+      },
+      "1": {
+        start: {
+          line: 13,
+          column: 23
+        },
+        end: {
+          line: 13,
+          column: 71
+        }
+      },
+      "2": {
+        start: {
+          line: 14,
+          column: 4
+        },
+        end: {
+          line: 16,
+          column: 5
+        }
+      },
+      "3": {
+        start: {
+          line: 15,
+          column: 8
+        },
+        end: {
+          line: 15,
+          column: 64
+        }
+      },
+      "4": {
+        start: {
+          line: 17,
+          column: 52
+        },
+        end: {
+          line: 17,
+          column: 67
+        }
+      },
+      "5": {
+        start: {
+          line: 18,
+          column: 4
+        },
+        end: {
+          line: 54,
+          column: 5
+        }
+      },
+      "6": {
+        start: {
+          line: 21,
+          column: 35
+        },
+        end: {
+          line: 34,
+          column: 9
+        }
+      },
+      "7": {
+        start: {
+          line: 22,
+          column: 27
+        },
+        end: {
+          line: 22,
+          column: 29
+        }
+      },
+      "8": {
+        start: {
+          line: 23,
+          column: 12
+        },
+        end: {
+          line: 32,
+          column: 13
+        }
+      },
+      "9": {
+        start: {
+          line: 23,
+          column: 25
+        },
+        end: {
+          line: 23,
+          column: 26
+        }
+      },
+      "10": {
+        start: {
+          line: 24,
+          column: 36
+        },
+        end: {
+          line: 24,
+          column: 71
+        }
+      },
+      "11": {
+        start: {
+          line: 25,
+          column: 30
+        },
+        end: {
+          line: 25,
+          column: 53
+        }
+      },
+      "12": {
+        start: {
+          line: 26,
+          column: 31
+        },
+        end: {
+          line: 26,
+          column: 57
+        }
+      },
+      "13": {
+        start: {
+          line: 27,
+          column: 16
+        },
+        end: {
+          line: 31,
+          column: 19
+        }
+      },
+      "14": {
+        start: {
+          line: 33,
+          column: 12
+        },
+        end: {
+          line: 33,
+          column: 26
+        }
+      },
+      "15": {
+        start: {
+          line: 35,
+          column: 26
+        },
+        end: {
+          line: 35,
+          column: 94
+        }
+      },
+      "16": {
+        start: {
+          line: 36,
+          column: 30
+        },
+        end: {
+          line: 48,
+          column: 9
+        }
+      },
+      "17": {
+        start: {
+          line: 49,
+          column: 8
+        },
+        end: {
+          line: 49,
+          column: 91
+        }
+      },
+      "18": {
+        start: {
+          line: 52,
+          column: 8
+        },
+        end: {
+          line: 52,
+          column: 52
+        }
+      },
+      "19": {
+        start: {
+          line: 53,
+          column: 8
+        },
+        end: {
+          line: 53,
+          column: 79
+        }
+      },
+      "20": {
+        start: {
+          line: 56,
+          column: 19
+        },
+        end: {
+          line: 56,
+          column: 66
+        }
+      }
+    },
+    fnMap: {
+      "0": {
+        name: "marketDepthHandler",
+        decl: {
+          start: {
+            line: 11,
+            column: 15
+          },
+          end: {
+            line: 11,
+            column: 33
+          }
+        },
+        loc: {
+          start: {
+            line: 11,
+            column: 43
+          },
+          end: {
+            line: 55,
+            column: 1
+          }
+        },
+        line: 11
+      },
+      "1": {
+        name: "(anonymous_1)",
+        decl: {
+          start: {
+            line: 21,
+            column: 35
+          },
+          end: {
+            line: 21,
+            column: 36
+          }
+        },
+        loc: {
+          start: {
+            line: 21,
+            column: 63
+          },
+          end: {
+            line: 34,
+            column: 9
+          }
+        },
+        line: 21
+      }
+    },
+    branchMap: {
+      "0": {
+        loc: {
+          start: {
+            line: 14,
+            column: 4
+          },
+          end: {
+            line: 16,
+            column: 5
+          }
+        },
+        type: "if",
+        locations: [{
+          start: {
+            line: 14,
+            column: 4
+          },
+          end: {
+            line: 16,
+            column: 5
+          }
+        }, {
+          start: {
+            line: undefined,
+            column: undefined
+          },
+          end: {
+            line: undefined,
+            column: undefined
+          }
+        }],
+        line: 14
+      },
+      "1": {
+        loc: {
+          start: {
+            line: 24,
+            column: 36
+          },
+          end: {
+            line: 24,
+            column: 71
+          }
+        },
+        type: "cond-expr",
+        locations: [{
+          start: {
+            line: 24,
+            column: 53
+          },
+          end: {
+            line: 24,
+            column: 61
+          }
+        }, {
+          start: {
+            line: 24,
+            column: 64
+          },
+          end: {
+            line: 24,
+            column: 71
+          }
+        }],
+        line: 24
+      },
+      "2": {
+        loc: {
+          start: {
+            line: 35,
+            column: 26
+          },
+          end: {
+            line: 35,
+            column: 94
+          }
+        },
+        type: "cond-expr",
+        locations: [{
+          start: {
+            line: 35,
+            column: 78
+          },
+          end: {
+            line: 35,
+            column: 84
+          }
+        }, {
+          start: {
+            line: 35,
+            column: 87
+          },
+          end: {
+            line: 35,
+            column: 94
+          }
+        }],
+        line: 35
+      },
+      "3": {
+        loc: {
+          start: {
+            line: 35,
+            column: 26
+          },
+          end: {
+            line: 35,
+            column: 75
+          }
+        },
+        type: "binary-expr",
+        locations: [{
+          start: {
+            line: 35,
+            column: 26
+          },
+          end: {
+            line: 35,
+            column: 48
+          }
+        }, {
+          start: {
+            line: 35,
+            column: 52
+          },
+          end: {
+            line: 35,
+            column: 75
+          }
+        }],
+        line: 35
+      }
+    },
+    s: {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0,
+      "7": 0,
+      "8": 0,
+      "9": 0,
+      "10": 0,
+      "11": 0,
+      "12": 0,
+      "13": 0,
+      "14": 0,
+      "15": 0,
+      "16": 0,
+      "17": 0,
+      "18": 0,
+      "19": 0,
+      "20": 0
+    },
+    f: {
+      "0": 0,
+      "1": 0
+    },
+    b: {
+      "0": [0, 0],
+      "1": [0, 0],
+      "2": [0, 0],
+      "3": [0, 0]
+    },
+    inputSourceMap: {
+      file: "C:\\Users\\User\\Documents\\GitHub\\ema\\src\\app\\api\\v1\\market\\depth\\route.ts",
+      mappings: "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",
+      names: [],
+      sources: ["C:\\Users\\User\\Documents\\GitHub\\ema\\src\\app\\api\\v1\\market\\depth\\route.ts"],
+      sourcesContent: ["import { NextRequest } from 'next/server';\nimport { createSuccessResponse, ErrorResponses, withErrorHandling } from '@/lib/api/responses';\nimport { withCors } from '@/lib/api/cors';\nimport { validateSearchParams } from '@/lib/validation/helpers';\nimport { z } from 'zod';\n\n// Schema for market depth parameters\nconst marketDepthSchema = z.object({\n  baseCurrency: z.string().default('EUR'),\n  quoteCurrency: z.string().default('AOA'),\n  levels: z.number().int().min(1).max(50).default(10)\n});\n\nasync function marketDepthHandler(request: NextRequest) {\n  // Validate search parameters\n  const validation = validateSearchParams(request, marketDepthSchema);\n  if (!validation.success) {\n    return ErrorResponses.validationError(validation.error!);\n  }\n\n  const { baseCurrency, quoteCurrency, levels } = validation.data!;\n\n  try {\n    // For now, return mock order book data\n    // In a real implementation, this would query the order_book table\n\n    const generateMockOrders = (side: 'buy' | 'sell', basePrice: number, count: number) => {\n      const orders = [];\n      for (let i = 0; i < count; i++) {\n        const priceOffset = side === 'buy' ? -i * 0.5 : i * 0.5;\n        const price = basePrice + priceOffset;\n        const amount = Math.random() * 1000 + 100;\n        orders.push({\n          price: parseFloat(price.toFixed(2)),\n          amount: parseFloat(amount.toFixed(2)),\n          total: parseFloat((price * amount).toFixed(2))\n        });\n      }\n      return orders;\n    };\n\n    const basePrice = baseCurrency === 'EUR' && quoteCurrency === 'AOA' ? 655.50 : 0.00152;\n\n    const mockDepthData = {\n      pair: `${baseCurrency}/${quoteCurrency}`,\n      baseCurrency,\n      quoteCurrency,\n      bids: generateMockOrders('buy', basePrice, levels),\n      asks: generateMockOrders('sell', basePrice, levels),\n      spread: {\n        absolute: 1.00,\n        percentage: 0.15\n      },\n      lastUpdated: new Date().toISOString(),\n      levels\n    };\n\n    return createSuccessResponse(mockDepthData, 'Market depth retrieved successfully');\n\n  } catch (error) {\n    console.error('Market depth error:', error);\n    return ErrorResponses.databaseError('Failed to retrieve market depth');\n  }\n}\n\nexport const GET = withCors(withErrorHandling(marketDepthHandler));\n"],
+      version: 3
+    },
+    _coverageSchema: "1a1c01bbd47fc00a2c39e90264f33305004495a9",
+    hash: "0dcfac8ce035c4307d4d8ef401a62e4f5ac168d9"
+  };
+  var coverage = global[gcv] || (global[gcv] = {});
+  if (!coverage[path] || coverage[path].hash !== hash) {
+    coverage[path] = coverageData;
+  }
+  var actualCoverage = coverage[path];
+  {
+    // @ts-ignore
+    cov_ubcomigwl = function () {
+      return actualCoverage;
+    };
+  }
+  return actualCoverage;
+}
+cov_ubcomigwl();
+import { createSuccessResponse, ErrorResponses, withErrorHandling } from '@/lib/api/responses';
+import { withCors } from '@/lib/api/cors';
+import { validateSearchParams } from '@/lib/validation/helpers';
+import { z } from 'zod';
+// Schema for market depth parameters
+const marketDepthSchema =
+/* istanbul ignore next */
+(cov_ubcomigwl().s[0]++, z.object({
+  baseCurrency: z.string().default('EUR'),
+  quoteCurrency: z.string().default('AOA'),
+  levels: z.number().int().min(1).max(50).default(10)
+}));
+async function marketDepthHandler(request) {
+  /* istanbul ignore next */
+  cov_ubcomigwl().f[0]++;
+  // Validate search parameters
+  const validation =
+  /* istanbul ignore next */
+  (cov_ubcomigwl().s[1]++, validateSearchParams(request, marketDepthSchema));
+  /* istanbul ignore next */
+  cov_ubcomigwl().s[2]++;
+  if (!validation.success) {
+    /* istanbul ignore next */
+    cov_ubcomigwl().b[0][0]++;
+    cov_ubcomigwl().s[3]++;
+    return ErrorResponses.validationError(validation.error);
+  } else
+  /* istanbul ignore next */
+  {
+    cov_ubcomigwl().b[0][1]++;
+  }
+  const {
+    baseCurrency,
+    quoteCurrency,
+    levels
+  } =
+  /* istanbul ignore next */
+  (cov_ubcomigwl().s[4]++, validation.data);
+  /* istanbul ignore next */
+  cov_ubcomigwl().s[5]++;
+  try {
+    /* istanbul ignore next */
+    cov_ubcomigwl().s[6]++;
+    // For now, return mock order book data
+    // In a real implementation, this would query the order_book table
+    const generateMockOrders = (side, basePrice, count) => {
+      /* istanbul ignore next */
+      cov_ubcomigwl().f[1]++;
+      const orders =
+      /* istanbul ignore next */
+      (cov_ubcomigwl().s[7]++, []);
+      /* istanbul ignore next */
+      cov_ubcomigwl().s[8]++;
+      for (let i =
+      /* istanbul ignore next */
+      (cov_ubcomigwl().s[9]++, 0); i < count; i++) {
+        const priceOffset =
+        /* istanbul ignore next */
+        (cov_ubcomigwl().s[10]++, side === 'buy' ?
+        /* istanbul ignore next */
+        (cov_ubcomigwl().b[1][0]++, -i * 0.5) :
+        /* istanbul ignore next */
+        (cov_ubcomigwl().b[1][1]++, i * 0.5));
+        const price =
+        /* istanbul ignore next */
+        (cov_ubcomigwl().s[11]++, basePrice + priceOffset);
+        const amount =
+        /* istanbul ignore next */
+        (cov_ubcomigwl().s[12]++, Math.random() * 1000 + 100);
+        /* istanbul ignore next */
+        cov_ubcomigwl().s[13]++;
+        orders.push({
+          price: parseFloat(price.toFixed(2)),
+          amount: parseFloat(amount.toFixed(2)),
+          total: parseFloat((price * amount).toFixed(2))
+        });
+      }
+      /* istanbul ignore next */
+      cov_ubcomigwl().s[14]++;
+      return orders;
+    };
+    const basePrice =
+    /* istanbul ignore next */
+    (cov_ubcomigwl().s[15]++,
+    /* istanbul ignore next */
+    (cov_ubcomigwl().b[3][0]++, baseCurrency === 'EUR') &&
+    /* istanbul ignore next */
+    (cov_ubcomigwl().b[3][1]++, quoteCurrency === 'AOA') ?
+    /* istanbul ignore next */
+    (cov_ubcomigwl().b[2][0]++, 655.50) :
+    /* istanbul ignore next */
+    (cov_ubcomigwl().b[2][1]++, 0.00152));
+    const mockDepthData =
+    /* istanbul ignore next */
+    (cov_ubcomigwl().s[16]++, {
+      pair: `${baseCurrency}/${quoteCurrency}`,
+      baseCurrency,
+      quoteCurrency,
+      bids: generateMockOrders('buy', basePrice, levels),
+      asks: generateMockOrders('sell', basePrice, levels),
+      spread: {
+        absolute: 1.00,
+        percentage: 0.15
+      },
+      lastUpdated: new Date().toISOString(),
+      levels
+    });
+    /* istanbul ignore next */
+    cov_ubcomigwl().s[17]++;
+    return createSuccessResponse(mockDepthData, 'Market depth retrieved successfully');
+  } catch (error) {
+    /* istanbul ignore next */
+    cov_ubcomigwl().s[18]++;
+    console.error('Market depth error:', error);
+    /* istanbul ignore next */
+    cov_ubcomigwl().s[19]++;
+    return ErrorResponses.databaseError('Failed to retrieve market depth');
+  }
+}
+export const GET =
+/* istanbul ignore next */
+(cov_ubcomigwl().s[20]++, withCors(withErrorHandling(marketDepthHandler)));
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJuYW1lcyI6WyJjb3ZfdWJjb21pZ3dsIiwiYWN0dWFsQ292ZXJhZ2UiLCJjcmVhdGVTdWNjZXNzUmVzcG9uc2UiLCJFcnJvclJlc3BvbnNlcyIsIndpdGhFcnJvckhhbmRsaW5nIiwid2l0aENvcnMiLCJ2YWxpZGF0ZVNlYXJjaFBhcmFtcyIsInoiLCJtYXJrZXREZXB0aFNjaGVtYSIsInMiLCJvYmplY3QiLCJiYXNlQ3VycmVuY3kiLCJzdHJpbmciLCJkZWZhdWx0IiwicXVvdGVDdXJyZW5jeSIsImxldmVscyIsIm51bWJlciIsImludCIsIm1pbiIsIm1heCIsIm1hcmtldERlcHRoSGFuZGxlciIsInJlcXVlc3QiLCJmIiwidmFsaWRhdGlvbiIsInN1Y2Nlc3MiLCJiIiwidmFsaWRhdGlvbkVycm9yIiwiZXJyb3IiLCJkYXRhIiwiZ2VuZXJhdGVNb2NrT3JkZXJzIiwic2lkZSIsImJhc2VQcmljZSIsImNvdW50Iiwib3JkZXJzIiwiaSIsInByaWNlT2Zmc2V0IiwicHJpY2UiLCJhbW91bnQiLCJNYXRoIiwicmFuZG9tIiwicHVzaCIsInBhcnNlRmxvYXQiLCJ0b0ZpeGVkIiwidG90YWwiLCJtb2NrRGVwdGhEYXRhIiwicGFpciIsImJpZHMiLCJhc2tzIiwic3ByZWFkIiwiYWJzb2x1dGUiLCJwZXJjZW50YWdlIiwibGFzdFVwZGF0ZWQiLCJEYXRlIiwidG9JU09TdHJpbmciLCJjb25zb2xlIiwiZGF0YWJhc2VFcnJvciIsIkdFVCJdLCJzb3VyY2VzIjpbIkM6XFxVc2Vyc1xcVXNlclxcRG9jdW1lbnRzXFxHaXRIdWJcXGVtYVxcc3JjXFxhcHBcXGFwaVxcdjFcXG1hcmtldFxcZGVwdGhcXHJvdXRlLnRzIl0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IE5leHRSZXF1ZXN0IH0gZnJvbSAnbmV4dC9zZXJ2ZXInO1xuaW1wb3J0IHsgY3JlYXRlU3VjY2Vzc1Jlc3BvbnNlLCBFcnJvclJlc3BvbnNlcywgd2l0aEVycm9ySGFuZGxpbmcgfSBmcm9tICdAL2xpYi9hcGkvcmVzcG9uc2VzJztcbmltcG9ydCB7IHdpdGhDb3JzIH0gZnJvbSAnQC9saWIvYXBpL2NvcnMnO1xuaW1wb3J0IHsgdmFsaWRhdGVTZWFyY2hQYXJhbXMgfSBmcm9tICdAL2xpYi92YWxpZGF0aW9uL2hlbHBlcnMnO1xuaW1wb3J0IHsgeiB9IGZyb20gJ3pvZCc7XG5cbi8vIFNjaGVtYSBmb3IgbWFya2V0IGRlcHRoIHBhcmFtZXRlcnNcbmNvbnN0IG1hcmtldERlcHRoU2NoZW1hID0gei5vYmplY3Qoe1xuICBiYXNlQ3VycmVuY3k6IHouc3RyaW5nKCkuZGVmYXVsdCgnRVVSJyksXG4gIHF1b3RlQ3VycmVuY3k6IHouc3RyaW5nKCkuZGVmYXVsdCgnQU9BJyksXG4gIGxldmVsczogei5udW1iZXIoKS5pbnQoKS5taW4oMSkubWF4KDUwKS5kZWZhdWx0KDEwKVxufSk7XG5cbmFzeW5jIGZ1bmN0aW9uIG1hcmtldERlcHRoSGFuZGxlcihyZXF1ZXN0OiBOZXh0UmVxdWVzdCkge1xuICAvLyBWYWxpZGF0ZSBzZWFyY2ggcGFyYW1ldGVyc1xuICBjb25zdCB2YWxpZGF0aW9uID0gdmFsaWRhdGVTZWFyY2hQYXJhbXMocmVxdWVzdCwgbWFya2V0RGVwdGhTY2hlbWEpO1xuICBpZiAoIXZhbGlkYXRpb24uc3VjY2Vzcykge1xuICAgIHJldHVybiBFcnJvclJlc3BvbnNlcy52YWxpZGF0aW9uRXJyb3IodmFsaWRhdGlvbi5lcnJvciEpO1xuICB9XG5cbiAgY29uc3QgeyBiYXNlQ3VycmVuY3ksIHF1b3RlQ3VycmVuY3ksIGxldmVscyB9ID0gdmFsaWRhdGlvbi5kYXRhITtcblxuICB0cnkge1xuICAgIC8vIEZvciBub3csIHJldHVybiBtb2NrIG9yZGVyIGJvb2sgZGF0YVxuICAgIC8vIEluIGEgcmVhbCBpbXBsZW1lbnRhdGlvbiwgdGhpcyB3b3VsZCBxdWVyeSB0aGUgb3JkZXJfYm9vayB0YWJsZVxuXG4gICAgY29uc3QgZ2VuZXJhdGVNb2NrT3JkZXJzID0gKHNpZGU6ICdidXknIHwgJ3NlbGwnLCBiYXNlUHJpY2U6IG51bWJlciwgY291bnQ6IG51bWJlcikgPT4ge1xuICAgICAgY29uc3Qgb3JkZXJzID0gW107XG4gICAgICBmb3IgKGxldCBpID0gMDsgaSA8IGNvdW50OyBpKyspIHtcbiAgICAgICAgY29uc3QgcHJpY2VPZmZzZXQgPSBzaWRlID09PSAnYnV5JyA/IC1pICogMC41IDogaSAqIDAuNTtcbiAgICAgICAgY29uc3QgcHJpY2UgPSBiYXNlUHJpY2UgKyBwcmljZU9mZnNldDtcbiAgICAgICAgY29uc3QgYW1vdW50ID0gTWF0aC5yYW5kb20oKSAqIDEwMDAgKyAxMDA7XG4gICAgICAgIG9yZGVycy5wdXNoKHtcbiAgICAgICAgICBwcmljZTogcGFyc2VGbG9hdChwcmljZS50b0ZpeGVkKDIpKSxcbiAgICAgICAgICBhbW91bnQ6IHBhcnNlRmxvYXQoYW1vdW50LnRvRml4ZWQoMikpLFxuICAgICAgICAgIHRvdGFsOiBwYXJzZUZsb2F0KChwcmljZSAqIGFtb3VudCkudG9GaXhlZCgyKSlcbiAgICAgICAgfSk7XG4gICAgICB9XG4gICAgICByZXR1cm4gb3JkZXJzO1xuICAgIH07XG5cbiAgICBjb25zdCBiYXNlUHJpY2UgPSBiYXNlQ3VycmVuY3kgPT09ICdFVVInICYmIHF1b3RlQ3VycmVuY3kgPT09ICdBT0EnID8gNjU1LjUwIDogMC4wMDE1MjtcblxuICAgIGNvbnN0IG1vY2tEZXB0aERhdGEgPSB7XG4gICAgICBwYWlyOiBgJHtiYXNlQ3VycmVuY3l9LyR7cXVvdGVDdXJyZW5jeX1gLFxuICAgICAgYmFzZUN1cnJlbmN5LFxuICAgICAgcXVvdGVDdXJyZW5jeSxcbiAgICAgIGJpZHM6IGdlbmVyYXRlTW9ja09yZGVycygnYnV5JywgYmFzZVByaWNlLCBsZXZlbHMpLFxuICAgICAgYXNrczogZ2VuZXJhdGVNb2NrT3JkZXJzKCdzZWxsJywgYmFzZVByaWNlLCBsZXZlbHMpLFxuICAgICAgc3ByZWFkOiB7XG4gICAgICAgIGFic29sdXRlOiAxLjAwLFxuICAgICAgICBwZXJjZW50YWdlOiAwLjE1XG4gICAgICB9LFxuICAgICAgbGFzdFVwZGF0ZWQ6IG5ldyBEYXRlKCkudG9JU09TdHJpbmcoKSxcbiAgICAgIGxldmVsc1xuICAgIH07XG5cbiAgICByZXR1cm4gY3JlYXRlU3VjY2Vzc1Jlc3BvbnNlKG1vY2tEZXB0aERhdGEsICdNYXJrZXQgZGVwdGggcmV0cmlldmVkIHN1Y2Nlc3NmdWxseScpO1xuXG4gIH0gY2F0Y2ggKGVycm9yKSB7XG4gICAgY29uc29sZS5lcnJvcignTWFya2V0IGRlcHRoIGVycm9yOicsIGVycm9yKTtcbiAgICByZXR1cm4gRXJyb3JSZXNwb25zZXMuZGF0YWJhc2VFcnJvcignRmFpbGVkIHRvIHJldHJpZXZlIG1hcmtldCBkZXB0aCcpO1xuICB9XG59XG5cbmV4cG9ydCBjb25zdCBHRVQgPSB3aXRoQ29ycyh3aXRoRXJyb3JIYW5kbGluZyhtYXJrZXREZXB0aEhhbmRsZXIpKTtcbiJdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7OztJQWtCRztJQUFBQSxhQUFBLFlBQUFBLENBQUE7TUFB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

@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState, useRef, useCallback } from "react"
+import Image from "next/image"
 import { Upload, Camera, FileImage, X, Check } from "lucide-react"
 import { useFileUpload } from "@/hooks/use-async-operation"
 
@@ -65,7 +66,7 @@ export function DocumentUpload({
     // Create preview URL
     const url = URL.createObjectURL(file)
     setPreviewUrl(url)
-  }, [validateFile])
+  }, [validateFile, setError])
 
   // Handle file input change
   const handleFileInputChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -119,7 +120,7 @@ export function DocumentUpload({
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
     }
-  }, [])
+  }, [setError])
 
   // Cleanup preview URL on unmount
   React.useEffect(() => {
@@ -142,10 +143,11 @@ export function DocumentUpload({
         {selectedFile && previewUrl && (
           <div className="mb-6">
             <div className="relative aspect-[4/3] bg-gray-100 rounded-2xl overflow-hidden">
-              <img
+              <Image
                 src={previewUrl}
                 alt="Preview"
-                className="w-full h-full object-cover"
+                fill
+                className="object-cover"
               />
               <button
                 onClick={clearSelection}

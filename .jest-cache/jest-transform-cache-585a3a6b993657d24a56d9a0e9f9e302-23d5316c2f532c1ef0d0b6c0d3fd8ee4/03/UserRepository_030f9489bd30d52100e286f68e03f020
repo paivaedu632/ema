@@ -1,0 +1,48 @@
+ea51d7194fbfbb1b4de25b5f982d86c5
+/* istanbul ignore next */
+function cov_147i2gsoum() {
+  var path = "C:\\Users\\User\\Documents\\GitHub\\ema\\src\\domain\\repositories\\UserRepository.ts";
+  var hash = "475c3b7a88f668007f88d98b373eed1a52a9389b";
+  var global = new Function("return this")();
+  var gcv = "__coverage__";
+  var coverageData = {
+    path: "C:\\Users\\User\\Documents\\GitHub\\ema\\src\\domain\\repositories\\UserRepository.ts",
+    statementMap: {},
+    fnMap: {},
+    branchMap: {},
+    s: {},
+    f: {},
+    b: {},
+    inputSourceMap: {
+      file: "C:\\Users\\User\\Documents\\GitHub\\ema\\src\\domain\\repositories\\UserRepository.ts",
+      mappings: "AAAA;;;;;GAKG",
+      names: [],
+      sources: ["C:\\Users\\User\\Documents\\GitHub\\ema\\src\\domain\\repositories\\UserRepository.ts"],
+      sourcesContent: ["/**\n * User Repository Interface\n * \n * Defines the contract for user data access operations.\n * This interface abstracts the data layer from the domain layer.\n */\n\nimport { User, UserSnapshot } from '../entities/User'\nimport { UserId } from '../value-objects/EntityId'\n\nexport interface UserRepository {\n  /**\n   * Find user by ID\n   */\n  findById(id: UserId): Promise<User | null>\n\n  /**\n   * Find user by Clerk user ID\n   */\n  findByClerkId(clerkUserId: string): Promise<User | null>\n\n  /**\n   * Find user by email\n   */\n  findByEmail(email: string): Promise<User | null>\n\n  /**\n   * Save user (create or update)\n   */\n  save(user: User): Promise<void>\n\n  /**\n   * Delete user\n   */\n  delete(id: UserId): Promise<void>\n\n  /**\n   * Check if user exists by email\n   */\n  existsByEmail(email: string): Promise<boolean>\n\n  /**\n   * Check if user exists by Clerk ID\n   */\n  existsByClerkId(clerkUserId: string): Promise<boolean>\n\n  /**\n   * Find users by KYC status\n   */\n  findByKycStatus(status: string): Promise<User[]>\n\n  /**\n   * Find users created within date range\n   */\n  findByCreatedDateRange(startDate: Date, endDate: Date): Promise<User[]>\n\n  /**\n   * Count total users\n   */\n  count(): Promise<number>\n\n  /**\n   * Find users with pagination\n   */\n  findWithPagination(\n    offset: number,\n    limit: number,\n    orderBy?: 'created_at' | 'updated_at' | 'email',\n    orderDirection?: 'asc' | 'desc'\n  ): Promise<{\n    users: User[]\n    total: number\n    hasMore: boolean\n  }>\n}\n"],
+      version: 3
+    },
+    _coverageSchema: "1a1c01bbd47fc00a2c39e90264f33305004495a9",
+    hash: "475c3b7a88f668007f88d98b373eed1a52a9389b"
+  };
+  var coverage = global[gcv] || (global[gcv] = {});
+  if (!coverage[path] || coverage[path].hash !== hash) {
+    coverage[path] = coverageData;
+  }
+  var actualCoverage = coverage[path];
+  {
+    // @ts-ignore
+    cov_147i2gsoum = function () {
+      return actualCoverage;
+    };
+  }
+  return actualCoverage;
+}
+cov_147i2gsoum();
+/**
+ * User Repository Interface
+ *
+ * Defines the contract for user data access operations.
+ * This interface abstracts the data layer from the domain layer.
+ */
+export {};
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJuYW1lcyI6W10sInNvdXJjZXMiOlsiQzpcXFVzZXJzXFxVc2VyXFxEb2N1bWVudHNcXEdpdEh1YlxcZW1hXFxzcmNcXGRvbWFpblxccmVwb3NpdG9yaWVzXFxVc2VyUmVwb3NpdG9yeS50cyJdLCJzb3VyY2VzQ29udGVudCI6WyIvKipcbiAqIFVzZXIgUmVwb3NpdG9yeSBJbnRlcmZhY2VcbiAqIFxuICogRGVmaW5lcyB0aGUgY29udHJhY3QgZm9yIHVzZXIgZGF0YSBhY2Nlc3Mgb3BlcmF0aW9ucy5cbiAqIFRoaXMgaW50ZXJmYWNlIGFic3RyYWN0cyB0aGUgZGF0YSBsYXllciBmcm9tIHRoZSBkb21haW4gbGF5ZXIuXG4gKi9cblxuaW1wb3J0IHsgVXNlciwgVXNlclNuYXBzaG90IH0gZnJvbSAnLi4vZW50aXRpZXMvVXNlcidcbmltcG9ydCB7IFVzZXJJZCB9IGZyb20gJy4uL3ZhbHVlLW9iamVjdHMvRW50aXR5SWQnXG5cbmV4cG9ydCBpbnRlcmZhY2UgVXNlclJlcG9zaXRvcnkge1xuICAvKipcbiAgICogRmluZCB1c2VyIGJ5IElEXG4gICAqL1xuICBmaW5kQnlJZChpZDogVXNlcklkKTogUHJvbWlzZTxVc2VyIHwgbnVsbD5cblxuICAvKipcbiAgICogRmluZCB1c2VyIGJ5IENsZXJrIHVzZXIgSURcbiAgICovXG4gIGZpbmRCeUNsZXJrSWQoY2xlcmtVc2VySWQ6IHN0cmluZyk6IFByb21pc2U8VXNlciB8IG51bGw+XG5cbiAgLyoqXG4gICAqIEZpbmQgdXNlciBieSBlbWFpbFxuICAgKi9cbiAgZmluZEJ5RW1haWwoZW1haWw6IHN0cmluZyk6IFByb21pc2U8VXNlciB8IG51bGw+XG5cbiAgLyoqXG4gICAqIFNhdmUgdXNlciAoY3JlYXRlIG9yIHVwZGF0ZSlcbiAgICovXG4gIHNhdmUodXNlcjogVXNlcik6IFByb21pc2U8dm9pZD5cblxuICAvKipcbiAgICogRGVsZXRlIHVzZXJcbiAgICovXG4gIGRlbGV0ZShpZDogVXNlcklkKTogUHJvbWlzZTx2b2lkPlxuXG4gIC8qKlxuICAgKiBDaGVjayBpZiB1c2VyIGV4aXN0cyBieSBlbWFpbFxuICAgKi9cbiAgZXhpc3RzQnlFbWFpbChlbWFpbDogc3RyaW5nKTogUHJvbWlzZTxib29sZWFuPlxuXG4gIC8qKlxuICAgKiBDaGVjayBpZiB1c2VyIGV4aXN0cyBieSBDbGVyayBJRFxuICAgKi9cbiAgZXhpc3RzQnlDbGVya0lkKGNsZXJrVXNlcklkOiBzdHJpbmcpOiBQcm9taXNlPGJvb2xlYW4+XG5cbiAgLyoqXG4gICAqIEZpbmQgdXNlcnMgYnkgS1lDIHN0YXR1c1xuICAgKi9cbiAgZmluZEJ5S3ljU3RhdHVzKHN0YXR1czogc3RyaW5nKTogUHJvbWlzZTxVc2VyW10+XG5cbiAgLyoqXG4gICAqIEZpbmQgdXNlcnMgY3JlYXRlZCB3aXRoaW4gZGF0ZSByYW5nZVxuICAgKi9cbiAgZmluZEJ5Q3JlYXRlZERhdGVSYW5nZShzdGFydERhdGU6IERhdGUsIGVuZERhdGU6IERhdGUpOiBQcm9taXNlPFVzZXJbXT5cblxuICAvKipcbiAgICogQ291bnQgdG90YWwgdXNlcnNcbiAgICovXG4gIGNvdW50KCk6IFByb21pc2U8bnVtYmVyPlxuXG4gIC8qKlxuICAgKiBGaW5kIHVzZXJzIHdpdGggcGFnaW5hdGlvblxuICAgKi9cbiAgZmluZFdpdGhQYWdpbmF0aW9uKFxuICAgIG9mZnNldDogbnVtYmVyLFxuICAgIGxpbWl0OiBudW1iZXIsXG4gICAgb3JkZXJCeT86ICdjcmVhdGVkX2F0JyB8ICd1cGRhdGVkX2F0JyB8ICdlbWFpbCcsXG4gICAgb3JkZXJEaXJlY3Rpb24/OiAnYXNjJyB8ICdkZXNjJ1xuICApOiBQcm9taXNlPHtcbiAgICB1c2VyczogVXNlcltdXG4gICAgdG90YWw6IG51bWJlclxuICAgIGhhc01vcmU6IGJvb2xlYW5cbiAgfT5cbn1cbiJdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7O0FBQUEiLCJpZ25vcmVMaXN0IjpbXX0=

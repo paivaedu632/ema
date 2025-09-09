@@ -1,0 +1,267 @@
+036335d61fd57f77ce208d9a800a7477
+/* istanbul ignore next */
+function cov_17k2e4xdyz() {
+  var path = "C:\\Users\\User\\Documents\\GitHub\\ema\\src\\infrastructure\\repositories\\SupabaseRepositoryFactory.ts";
+  var hash = "db18ab510871586fd3d82e06bc5c5ec409075390";
+  var global = new Function("return this")();
+  var gcv = "__coverage__";
+  var coverageData = {
+    path: "C:\\Users\\User\\Documents\\GitHub\\ema\\src\\infrastructure\\repositories\\SupabaseRepositoryFactory.ts",
+    statementMap: {
+      "0": {
+        start: {
+          line: 13,
+          column: 8
+        },
+        end: {
+          line: 13,
+          column: 33
+        }
+      },
+      "1": {
+        start: {
+          line: 16,
+          column: 8
+        },
+        end: {
+          line: 16,
+          column: 57
+        }
+      },
+      "2": {
+        start: {
+          line: 19,
+          column: 8
+        },
+        end: {
+          line: 19,
+          column: 59
+        }
+      },
+      "3": {
+        start: {
+          line: 22,
+          column: 8
+        },
+        end: {
+          line: 22,
+          column: 64
+        }
+      },
+      "4": {
+        start: {
+          line: 25,
+          column: 8
+        },
+        end: {
+          line: 25,
+          column: 53
+        }
+      }
+    },
+    fnMap: {
+      "0": {
+        name: "(anonymous_0)",
+        decl: {
+          start: {
+            line: 12,
+            column: 4
+          },
+          end: {
+            line: 12,
+            column: 5
+          }
+        },
+        loc: {
+          start: {
+            line: 12,
+            column: 26
+          },
+          end: {
+            line: 14,
+            column: 5
+          }
+        },
+        line: 12
+      },
+      "1": {
+        name: "(anonymous_1)",
+        decl: {
+          start: {
+            line: 15,
+            column: 4
+          },
+          end: {
+            line: 15,
+            column: 5
+          }
+        },
+        loc: {
+          start: {
+            line: 15,
+            column: 27
+          },
+          end: {
+            line: 17,
+            column: 5
+          }
+        },
+        line: 15
+      },
+      "2": {
+        name: "(anonymous_2)",
+        decl: {
+          start: {
+            line: 18,
+            column: 4
+          },
+          end: {
+            line: 18,
+            column: 5
+          }
+        },
+        loc: {
+          start: {
+            line: 18,
+            column: 29
+          },
+          end: {
+            line: 20,
+            column: 5
+          }
+        },
+        line: 18
+      },
+      "3": {
+        name: "(anonymous_3)",
+        decl: {
+          start: {
+            line: 21,
+            column: 4
+          },
+          end: {
+            line: 21,
+            column: 5
+          }
+        },
+        loc: {
+          start: {
+            line: 21,
+            column: 34
+          },
+          end: {
+            line: 23,
+            column: 5
+          }
+        },
+        line: 21
+      },
+      "4": {
+        name: "(anonymous_4)",
+        decl: {
+          start: {
+            line: 24,
+            column: 4
+          },
+          end: {
+            line: 24,
+            column: 5
+          }
+        },
+        loc: {
+          start: {
+            line: 24,
+            column: 23
+          },
+          end: {
+            line: 26,
+            column: 5
+          }
+        },
+        line: 24
+      }
+    },
+    branchMap: {},
+    s: {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0
+    },
+    f: {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0
+    },
+    b: {},
+    inputSourceMap: {
+      file: "C:\\Users\\User\\Documents\\GitHub\\ema\\src\\infrastructure\\repositories\\SupabaseRepositoryFactory.ts",
+      mappings: "AAAA;;;;;GAKG;AAUH,OAAO,EAAE,sBAAsB,EAAE,MAAM,0BAA0B,CAAA;AACjE,OAAO,EAAE,wBAAwB,EAAE,MAAM,4BAA4B,CAAA;AACrE,OAAO,EAAE,6BAA6B,EAAE,MAAM,iCAAiC,CAAA;AAC/E,OAAO,EAAE,kBAAkB,EAAE,MAAM,sBAAsB,CAAA;AAEzD,MAAM,OAAO,yBAAyB;IACpC,YAA6B,QAAwB;QAAxB,aAAQ,GAAR,QAAQ,CAAgB;IAAG,CAAC;IAEzD,oBAAoB;QAClB,OAAO,IAAI,sBAAsB,CAAC,IAAI,CAAC,QAAQ,CAAC,CAAA;IAClD,CAAC;IAED,sBAAsB;QACpB,OAAO,IAAI,wBAAwB,CAAC,IAAI,CAAC,QAAQ,CAAC,CAAA;IACpD,CAAC;IAED,2BAA2B;QACzB,OAAO,IAAI,6BAA6B,CAAC,IAAI,CAAC,QAAQ,CAAC,CAAA;IACzD,CAAC;IAED,gBAAgB;QACd,OAAO,IAAI,kBAAkB,CAAC,IAAI,CAAC,QAAQ,CAAC,CAAA;IAC9C,CAAC;CACF",
+      names: [],
+      sources: ["C:\\Users\\User\\Documents\\GitHub\\ema\\src\\infrastructure\\repositories\\SupabaseRepositoryFactory.ts"],
+      sourcesContent: ["/**\n * Supabase Repository Factory\n * \n * Factory implementation for creating Supabase-based repositories.\n * Provides dependency injection and configuration management.\n */\n\nimport { SupabaseClient } from '@supabase/supabase-js'\nimport {\n  RepositoryFactory,\n  UserRepository,\n  WalletRepository,\n  TransactionRepository,\n  UnitOfWork\n} from '../../domain/repositories'\nimport { SupabaseUserRepository } from './SupabaseUserRepository'\nimport { SupabaseWalletRepository } from './SupabaseWalletRepository'\nimport { SupabaseTransactionRepository } from './SupabaseTransactionRepository'\nimport { SupabaseUnitOfWork } from './SupabaseUnitOfWork'\n\nexport class SupabaseRepositoryFactory implements RepositoryFactory {\n  constructor(private readonly supabase: SupabaseClient) {}\n\n  createUserRepository(): UserRepository {\n    return new SupabaseUserRepository(this.supabase)\n  }\n\n  createWalletRepository(): WalletRepository {\n    return new SupabaseWalletRepository(this.supabase)\n  }\n\n  createTransactionRepository(): TransactionRepository {\n    return new SupabaseTransactionRepository(this.supabase)\n  }\n\n  createUnitOfWork(): UnitOfWork {\n    return new SupabaseUnitOfWork(this.supabase)\n  }\n}\n"],
+      version: 3
+    },
+    _coverageSchema: "1a1c01bbd47fc00a2c39e90264f33305004495a9",
+    hash: "db18ab510871586fd3d82e06bc5c5ec409075390"
+  };
+  var coverage = global[gcv] || (global[gcv] = {});
+  if (!coverage[path] || coverage[path].hash !== hash) {
+    coverage[path] = coverageData;
+  }
+  var actualCoverage = coverage[path];
+  {
+    // @ts-ignore
+    cov_17k2e4xdyz = function () {
+      return actualCoverage;
+    };
+  }
+  return actualCoverage;
+}
+cov_17k2e4xdyz();
+/**
+ * Supabase Repository Factory
+ *
+ * Factory implementation for creating Supabase-based repositories.
+ * Provides dependency injection and configuration management.
+ */
+import { SupabaseUserRepository } from './SupabaseUserRepository';
+import { SupabaseWalletRepository } from './SupabaseWalletRepository';
+import { SupabaseTransactionRepository } from './SupabaseTransactionRepository';
+import { SupabaseUnitOfWork } from './SupabaseUnitOfWork';
+export class SupabaseRepositoryFactory {
+  constructor(supabase) {
+    /* istanbul ignore next */
+    cov_17k2e4xdyz().f[0]++;
+    cov_17k2e4xdyz().s[0]++;
+    this.supabase = supabase;
+  }
+  createUserRepository() {
+    /* istanbul ignore next */
+    cov_17k2e4xdyz().f[1]++;
+    cov_17k2e4xdyz().s[1]++;
+    return new SupabaseUserRepository(this.supabase);
+  }
+  createWalletRepository() {
+    /* istanbul ignore next */
+    cov_17k2e4xdyz().f[2]++;
+    cov_17k2e4xdyz().s[2]++;
+    return new SupabaseWalletRepository(this.supabase);
+  }
+  createTransactionRepository() {
+    /* istanbul ignore next */
+    cov_17k2e4xdyz().f[3]++;
+    cov_17k2e4xdyz().s[3]++;
+    return new SupabaseTransactionRepository(this.supabase);
+  }
+  createUnitOfWork() {
+    /* istanbul ignore next */
+    cov_17k2e4xdyz().f[4]++;
+    cov_17k2e4xdyz().s[4]++;
+    return new SupabaseUnitOfWork(this.supabase);
+  }
+}
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJuYW1lcyI6WyJjb3ZfMTdrMmU0eGR5eiIsImFjdHVhbENvdmVyYWdlIiwiU3VwYWJhc2VVc2VyUmVwb3NpdG9yeSIsIlN1cGFiYXNlV2FsbGV0UmVwb3NpdG9yeSIsIlN1cGFiYXNlVHJhbnNhY3Rpb25SZXBvc2l0b3J5IiwiU3VwYWJhc2VVbml0T2ZXb3JrIiwiU3VwYWJhc2VSZXBvc2l0b3J5RmFjdG9yeSIsImNvbnN0cnVjdG9yIiwic3VwYWJhc2UiLCJmIiwicyIsImNyZWF0ZVVzZXJSZXBvc2l0b3J5IiwiY3JlYXRlV2FsbGV0UmVwb3NpdG9yeSIsImNyZWF0ZVRyYW5zYWN0aW9uUmVwb3NpdG9yeSIsImNyZWF0ZVVuaXRPZldvcmsiXSwic291cmNlcyI6WyJDOlxcVXNlcnNcXFVzZXJcXERvY3VtZW50c1xcR2l0SHViXFxlbWFcXHNyY1xcaW5mcmFzdHJ1Y3R1cmVcXHJlcG9zaXRvcmllc1xcU3VwYWJhc2VSZXBvc2l0b3J5RmFjdG9yeS50cyJdLCJzb3VyY2VzQ29udGVudCI6WyIvKipcbiAqIFN1cGFiYXNlIFJlcG9zaXRvcnkgRmFjdG9yeVxuICogXG4gKiBGYWN0b3J5IGltcGxlbWVudGF0aW9uIGZvciBjcmVhdGluZyBTdXBhYmFzZS1iYXNlZCByZXBvc2l0b3JpZXMuXG4gKiBQcm92aWRlcyBkZXBlbmRlbmN5IGluamVjdGlvbiBhbmQgY29uZmlndXJhdGlvbiBtYW5hZ2VtZW50LlxuICovXG5cbmltcG9ydCB7IFN1cGFiYXNlQ2xpZW50IH0gZnJvbSAnQHN1cGFiYXNlL3N1cGFiYXNlLWpzJ1xuaW1wb3J0IHtcbiAgUmVwb3NpdG9yeUZhY3RvcnksXG4gIFVzZXJSZXBvc2l0b3J5LFxuICBXYWxsZXRSZXBvc2l0b3J5LFxuICBUcmFuc2FjdGlvblJlcG9zaXRvcnksXG4gIFVuaXRPZldvcmtcbn0gZnJvbSAnLi4vLi4vZG9tYWluL3JlcG9zaXRvcmllcydcbmltcG9ydCB7IFN1cGFiYXNlVXNlclJlcG9zaXRvcnkgfSBmcm9tICcuL1N1cGFiYXNlVXNlclJlcG9zaXRvcnknXG5pbXBvcnQgeyBTdXBhYmFzZVdhbGxldFJlcG9zaXRvcnkgfSBmcm9tICcuL1N1cGFiYXNlV2FsbGV0UmVwb3NpdG9yeSdcbmltcG9ydCB7IFN1cGFiYXNlVHJhbnNhY3Rpb25SZXBvc2l0b3J5IH0gZnJvbSAnLi9TdXBhYmFzZVRyYW5zYWN0aW9uUmVwb3NpdG9yeSdcbmltcG9ydCB7IFN1cGFiYXNlVW5pdE9mV29yayB9IGZyb20gJy4vU3VwYWJhc2VVbml0T2ZXb3JrJ1xuXG5leHBvcnQgY2xhc3MgU3VwYWJhc2VSZXBvc2l0b3J5RmFjdG9yeSBpbXBsZW1lbnRzIFJlcG9zaXRvcnlGYWN0b3J5IHtcbiAgY29uc3RydWN0b3IocHJpdmF0ZSByZWFkb25seSBzdXBhYmFzZTogU3VwYWJhc2VDbGllbnQpIHt9XG5cbiAgY3JlYXRlVXNlclJlcG9zaXRvcnkoKTogVXNlclJlcG9zaXRvcnkge1xuICAgIHJldHVybiBuZXcgU3VwYWJhc2VVc2VyUmVwb3NpdG9yeSh0aGlzLnN1cGFiYXNlKVxuICB9XG5cbiAgY3JlYXRlV2FsbGV0UmVwb3NpdG9yeSgpOiBXYWxsZXRSZXBvc2l0b3J5IHtcbiAgICByZXR1cm4gbmV3IFN1cGFiYXNlV2FsbGV0UmVwb3NpdG9yeSh0aGlzLnN1cGFiYXNlKVxuICB9XG5cbiAgY3JlYXRlVHJhbnNhY3Rpb25SZXBvc2l0b3J5KCk6IFRyYW5zYWN0aW9uUmVwb3NpdG9yeSB7XG4gICAgcmV0dXJuIG5ldyBTdXBhYmFzZVRyYW5zYWN0aW9uUmVwb3NpdG9yeSh0aGlzLnN1cGFiYXNlKVxuICB9XG5cbiAgY3JlYXRlVW5pdE9mV29yaygpOiBVbml0T2ZXb3JrIHtcbiAgICByZXR1cm4gbmV3IFN1cGFiYXNlVW5pdE9mV29yayh0aGlzLnN1cGFiYXNlKVxuICB9XG59XG4iXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7O0lBd0JJO0lBQUFBLGNBQUEsWUFBQUEsQ0FBQTtNQUFBLE9BQUFDLGNBQUE7SUFBQTtFQUFBO0VBQUEsT0FBQUEsY0FBQTtBQUFBO0FBQUFELGNBQUE7QUF4Qko7Ozs7OztBQWVBLFNBQVNFLHNCQUFzQixRQUFRLDBCQUEwQjtBQUNqRSxTQUFTQyx3QkFBd0IsUUFBUSw0QkFBNEI7QUFDckUsU0FBU0MsNkJBQTZCLFFBQVEsaUNBQWlDO0FBQy9FLFNBQVNDLGtCQUFrQixRQUFRLHNCQUFzQjtBQUV6RCxPQUFNLE1BQU9DLHlCQUF5QjtFQUNwQ0MsWUFBNkJDLFFBQXdCO0lBQUE7SUFBQVIsY0FBQSxHQUFBUyxDQUFBO0lBQUFULGNBQUEsR0FBQVUsQ0FBQTtJQUF4QixLQUFBRixRQUFRLEdBQVJBLFFBQVE7RUFBbUI7RUFFeERHLG9CQUFvQkEsQ0FBQTtJQUFBO0lBQUFYLGNBQUEsR0FBQVMsQ0FBQTtJQUFBVCxjQUFBLEdBQUFVLENBQUE7SUFDbEIsT0FBTyxJQUFJUixzQkFBc0IsQ0FBQyxJQUFJLENBQUNNLFFBQVEsQ0FBQztFQUNsRDtFQUVBSSxzQkFBc0JBLENBQUE7SUFBQTtJQUFBWixjQUFBLEdBQUFTLENBQUE7SUFBQVQsY0FBQSxHQUFBVSxDQUFBO0lBQ3BCLE9BQU8sSUFBSVAsd0JBQXdCLENBQUMsSUFBSSxDQUFDSyxRQUFRLENBQUM7RUFDcEQ7RUFFQUssMkJBQTJCQSxDQUFBO0lBQUE7SUFBQWIsY0FBQSxHQUFBUyxDQUFBO0lBQUFULGNBQUEsR0FBQVUsQ0FBQTtJQUN6QixPQUFPLElBQUlOLDZCQUE2QixDQUFDLElBQUksQ0FBQ0ksUUFBUSxDQUFDO0VBQ3pEO0VBRUFNLGdCQUFnQkEsQ0FBQTtJQUFBO0lBQUFkLGNBQUEsR0FBQVMsQ0FBQTtJQUFBVCxjQUFBLEdBQUFVLENBQUE7SUFDZCxPQUFPLElBQUlMLGtCQUFrQixDQUFDLElBQUksQ0FBQ0csUUFBUSxDQUFDO0VBQzlDIiwiaWdub3JlTGlzdCI6W119

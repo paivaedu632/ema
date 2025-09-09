@@ -1,52 +1,4 @@
 # EmaPay API - Clean & Simple Architecture
-
-## 📋 **Executive Summary**
-
-This document outlines a **clean, simple API architecture** for EmaPay that focuses on core functionality without over-engineering. The API provides essential endpoints for P2P transfers, wallet management, and currency exchange using proven patterns and minimal complexity.
-
-## 🎯 **Design Principles**
-
-1. **Simplicity First** - Minimal functions, maximum value
-2. **Security at Boundaries** - Auth middleware + input validation, not security theater
-3. **Standard Patterns** - RESTful design following industry best practices
-4. **Performance Focus** - Fast, efficient operations with minimal overhead
-5. **Maintainable Code** - Easy to understand, debug, and extend
-
----
-
-## 🏗️ **Clean Architecture**
-
-### **Technology Stack**
-- **Framework**: Next.js 14 with App Router
-- **Authentication**: Clerk JWT with middleware
-- **Database**: Supabase PostgreSQL with existing functions
-- **Validation**: Zod schemas at API boundaries
-- **Rate Limiting**: Simple Redis-based limiting
-
-### **Core Database Functions (8 total)**
-```sql
--- User Management
-find_user_for_transfer(identifier)     -- Find users for transfers
-
--- Wallet Operations
-get_wallet_balance(user_id, currency)  -- Get wallet balance
-
--- Security
-set_transfer_pin(user_id, pin)         -- Set transfer PIN
-verify_transfer_pin(user_id, pin)      -- Verify PIN
-
--- Transfers
-send_p2p_transfer(...)                 -- Send P2P transfer with anti-fraud
-
--- Trading
-place_limit_order(...)                 -- Place limit order
-get_market_summary(...)                -- Get market data
-
--- History
-get_transaction_history(user_id)       -- Get transaction history
-```
-
-### **Simple API Structure (15 endpoints)**
 ```
 /api/v1/
 ├── auth/
@@ -73,388 +25,399 @@ get_transaction_history(user_id)       -- Get transaction history
     └── status               # GET - System health
 ```
 
----
+## Implementation Approach
 
-## 🎯 **Core Function Mapping**
-
-| Database Function | API Endpoint | Purpose |
-|------------------|--------------|---------|
-| `find_user_for_transfer` | `GET /api/v1/users/search` | Find users for transfers |
-| `get_wallet_balance` | `GET /api/v1/wallets/balance` | Get all wallet balances |
-| `get_wallet_balance` | `GET /api/v1/wallets/{currency}` | Get specific currency balance |
-| `set_transfer_pin` | `POST /api/v1/security/pin` | Set/update transfer PIN |
-| `verify_transfer_pin` | `POST /api/v1/security/pin/verify` | Verify transfer PIN |
-| `send_p2p_transfer` | `POST /api/v1/transfers/send` | Send P2P transfer with anti-fraud |
-| `get_transaction_history` | `GET /api/v1/transfers/history` | Get transfer history |
-| `place_limit_order` | `POST /api/v1/orders/limit` | Place limit order |
-| `execute_market_order` | `POST /api/v1/orders/market` | Execute market order |
-| `get_user_order_history` | `GET /api/v1/orders/history` | Get order history |
-| `get_market_summary` | `GET /api/v1/market/summary` | Get market data |
-| `get_market_spread` | `GET /api/v1/market/depth` | Get order book depth |
-
-**Total: 8 core functions → 15 clean endpoints**
-
----
-
-## 🔐 **Security Strategy**
-
-### **Security at Boundaries**
-1. **Auth Middleware** - Clerk JWT validation for all protected routes
-2. **Input Validation** - Zod schemas at API entry points
-3. **Rate Limiting** - Simple Redis-based per-user limits
-4. **Database Security** - Parameterized queries (built-in SQL injection prevention)
-
-### **Anti-Fraud System**
-- **PIN Verification** - Required for all transfers (handled by `send_p2p_transfer`)
-- **Daily Limits** - Built into transfer function
-- **Account Lockout** - Built into PIN verification function
-
-### **Simple Error Handling**
-```typescript
-interface APIResponse<T> {
-  success: boolean
-  data?: T
-  error?: string
-  timestamp: string
-}
+### 1. Standard Next.js App Router Structure
+```
+app/api/v1/
+├── auth/me/route.ts
+├── users/search/route.ts
+├── wallets/balance/route.ts
+├── wallets/[currency]/route.ts
+├── transfers/send/route.ts
+├── transfers/history/route.ts
+├── orders/limit/route.ts
+├── orders/market/route.ts
+├── orders/history/route.ts
+├── market/summary/route.ts
+├── market/depth/route.ts
+├── security/pin/route.ts
+├── security/pin/verify/route.ts
+└── health/status/route.ts
 ```
 
----
+### 2. Authentication Middleware
+Create one auth middleware that:
+- Validates Clerk JWT tokens
+- Extracts user ID
+- Passes user context to endpoints
+- Handles auth failures consistently
 
-## 🚀 **Simple Implementation Plan**
+### 3. Database Integration Pattern
+Each endpoint follows the same pattern:
+1. **Validate input** (Zod schema)
+2. **Check authentication** (middleware)
+3. **Call database function** (your existing functions)
+4. **Return standardized response** (success/error format)
 
-### **Week 1: Core Setup**
-- [ ] Next.js API routes setup
-- [ ] Clerk authentication middleware
-- [ ] Database connection
-- [ ] Basic error handling
-- [ ] Health check endpoint
+### 4. Error Handling Strategy
+- One global error handler
+- Consistent error response format
+- No custom sanitization (use standard practices)
+- Log errors without exposing internals
 
-### **Week 2: Core Features**
-- [ ] User search endpoint
-- [ ] Wallet balance endpoints
-- [ ] PIN management (set/verify)
-- [ ] Basic rate limiting
+### 5. Input Validation Approach
+- Zod schemas for each endpoint
+- Standard validation (no custom "secure" validators)
+- Sanitize at the boundary, trust internally
 
-### **Week 3: Transfers & Trading**
-- [ ] P2P transfer endpoint (using existing `send_p2p_transfer`)
-- [ ] Transfer history
-- [ ] Order placement (limit/market)
-- [ ] Order history
-
-### **Week 4: Market Data & Polish**
-- [ ] Market summary endpoint
-- [ ] Order book depth
-- [ ] API documentation
-- [ ] Testing and bug fixes
-
-**Total: 4 weeks, 15 endpoints, 8 database functions**
-
----
-
-## 📝 **Clean API Specifications**
-
-### **1. Authentication**
-
-#### **GET /api/v1/auth/me**
+### 6. Response Format Standard
 ```typescript
-Response: {
-  success: true
-  data: {
-    id: string
-    email: string
-    name: string
-  }
-}
+// Success
+{ success: true, data: {...}, message: "..." }
+
+// Error  
+{ success: false, error: "...", code: "..." }
 ```
 
-### **2. User Search**
+### 7. Security Implementation
+- **Authentication**: Clerk middleware on protected routes
+- **Authorization**: User ID validation in business logic
+- **Input validation**: Zod schemas
+- **Rate limiting**: Simple Redis-based limiting
+- **PIN verification**: Only for sensitive operations (transfers)
 
-#### **GET /api/v1/users/search**
-```typescript
-Query: ?q=email@example.com
+### 8. Database Function Usage
+Each endpoint calls one of your 8 core functions:
+- `create_user()`
+- `find_user_for_transfer()` 
+- `get_wallet_balance()`
+- `place_limit_order()`
+- `execute_market_order()`
+- `send_p2p_transfer()`
+- `get_transfer_history()`
+- `get_user_order_history()`
 
-Response: {
-  success: true
-  data: {
-    found: boolean
-    user?: {
-      name: string
-      email: string
-    }
-  }
-}
-```
+### 9. Implementation Priority Order
+1. **Auth endpoints** (me)
+2. **Wallet endpoints** (balance, currency)
+3. **Transfer endpoints** (send, history)
+4. **Order endpoints** (limit, market, history)
+5. **Market endpoints** (summary, depth)
+6. **Security endpoints** (pin operations)
+7. **Health endpoint** (status)
 
-### **3. Wallet Balance**
+### 10. Testing Strategy
+- Unit tests for each endpoint
+- Integration tests for complete user flows
+- Load testing for critical paths
+- Manual testing with real scenarios
 
-#### **GET /api/v1/wallets/balance**
-```typescript
-Response: {
-  success: true
-  data: {
-    AOA: number
-    EUR: number
-  }
-}
-```
+## Key Implementation Principles
 
-#### **GET /api/v1/wallets/{currency}**
-```typescript
-Response: {
-  success: true
-  data: {
-    currency: 'AOA' | 'EUR'
-    balance: number
-  }
-}
-```
+**Keep it simple**: Each endpoint does one thing well
+**Fail fast**: Validate early, return errors quickly  
+**Trust your database**: Your functions handle business logic
+**Standard patterns**: Use proven Next.js/TypeScript patterns
+**Minimal middleware**: Only authentication and basic validation
 
-### **4. Security**
+## What NOT to implement
+- Custom security validation layers
+- Multiple ways to do the same thing
+- Complex error sanitization
+- Redundant database functions
+- Over-abstracted helper utilities
 
-#### **POST /api/v1/security/pin**
-```typescript
-Request: {
-  pin: string  // 6 digits
-}
+# Create API Implementation Task List
 
-Response: {
-  success: true
-  data: { pinSet: true }
-}
-```
+## Phase 1: Foundation Setup (Day 1-2)
 
-#### **POST /api/v1/security/pin/verify**
-```typescript
-Request: {
-  pin: string
-}
+### 1.1 Project Structure
+- [ ] Set up Next.js 15 project with App Router
+- [ ] Configure TypeScript with strict settings
+- [ ] Set up Supabase client configuration
+- [ ] Configure environment variables (.env.local)
+- [ ] Set up basic folder structure for API routes
 
-Response: {
-  success: true
-  data: { valid: boolean }
-}
-```
+### 1.2 Core Dependencies
+- [ ] Install and configure Clerk for authentication
+- [ ] Install Zod for input validation
+- [ ] Install Supabase client library
+- [ ] Set up error handling utilities
+- [ ] Configure CORS settings
 
-### **5. Transfers**
+### 1.3 Database Connection
+- [ ] Test Supabase connection
+- [ ] Verify all database functions are deployed
+- [ ] Test core functions with sample data
+- [ ] Set up connection pooling if needed
 
-#### **POST /api/v1/transfers/send**
-```typescript
-Request: {
-  recipientEmail: string
-  currency: 'AOA' | 'EUR'
-  amount: number
-  pin: string
-  description?: string
-}
+## Phase 2: Authentication & Security (Day 2-3)
 
-Response: {
-  success: true
-  data: {
-    transferId: string
-    status: 'completed'
-    recipient: { name: string, email: string }
-  }
-}
-```
+### 2.1 Authentication Middleware
+- [ ] Create Clerk JWT validation middleware
+- [ ] Implement user context extraction
+- [ ] Handle authentication errors
+- [ ] Test authentication flow
 
-#### **GET /api/v1/transfers/history**
-```typescript
-Query: ?limit=50&currency=EUR
+### 2.2 Input Validation Schemas
+- [ ] Create Zod schemas for each endpoint
+- [ ] Implement validation helper functions
+- [ ] Test validation with edge cases
+- [ ] Document validation rules
 
-Response: {
-  success: true
-  data: {
-    transfers: Array<{
-      id: string
-      type: 'sent' | 'received'
-      amount: number
-      currency: string
-      counterparty: { name: string, email: string }
-      timestamp: string
-    }>
-  }
-}
-```
+### 2.3 Error Handling System
+- [ ] Create standardized error response format
+- [ ] Implement global error handler
+- [ ] Create error logging system
+- [ ] Test error scenarios
 
-### **6. Trading**
+## Phase 3: Core API Endpoints (Day 3-7)
 
-#### **POST /api/v1/orders/limit**
-```typescript
-Request: {
-  side: 'buy' | 'sell'
-  baseCurrency: 'EUR'
-  quoteCurrency: 'AOA'
-  quantity: number
-  price: number
-}
+### 3.1 Authentication Endpoints
+- [ ] `GET /api/v1/auth/me` - Current user info
+  - [ ] Implement endpoint logic
+  - [ ] Add input validation
+  - [ ] Test with valid/invalid tokens
+  - [ ] Document response format
 
-Response: {
-  success: true
-  data: {
-    orderId: string
-    status: 'pending'
-  }
-}
-```
+### 3.2 User Management Endpoints
+- [ ] `GET /api/v1/users/search` - Find users for transfers
+  - [ ] Implement user search logic
+  - [ ] Add search parameter validation
+  - [ ] Test with email/phone/name searches
+  - [ ] Handle privacy concerns (limit returned data)
 
-#### **POST /api/v1/orders/market**
-```typescript
-Request: {
-  side: 'buy' | 'sell'
-  baseCurrency: 'EUR'
-  quoteCurrency: 'AOA'
-  quantity: number
-}
+### 3.3 Wallet Endpoints
+- [ ] `GET /api/v1/wallets/balance` - Get all wallet balances
+  - [ ] Call get_wallet_balance() for each currency
+  - [ ] Format response with both currencies
+  - [ ] Test with users having different wallet states
+  
+- [ ] `GET /api/v1/wallets/{currency}` - Get specific currency balance
+  - [ ] Validate currency parameter (EUR/AOA only)
+  - [ ] Call database function
+  - [ ] Handle non-existent wallets
+  - [ ] Test with both currencies
 
-Response: {
-  success: true
-  data: {
-    orderId: string
-    status: 'completed'
-    filledPrice: number
-  }
-}
-```
+### 3.4 Transfer Endpoints
+- [ ] `POST /api/v1/transfers/send` - Send P2P transfer
+  - [ ] Implement input validation (recipient, amount, currency)
+  - [ ] Call send_p2p_transfer() function
+  - [ ] Handle all error cases (insufficient funds, invalid recipient)
+  - [ ] Test with various scenarios
+  
+- [ ] `GET /api/v1/transfers/history` - Transfer history
+  - [ ] Implement pagination
+  - [ ] Call get_transfer_history() function
+  - [ ] Format response for frontend consumption
+  - [ ] Test with different history lengths
 
-#### **GET /api/v1/orders/history**
-```typescript
-Response: {
-  success: true
-  data: {
-    orders: Array<{
-      id: string
-      side: string
-      quantity: number
-      price: number
-      status: string
-      timestamp: string
-    }>
-  }
-}
-```
+### 3.5 Order Endpoints
+- [ ] `POST /api/v1/orders/limit` - Place limit order
+  - [ ] Validate order parameters
+  - [ ] Call place_limit_order() function
+  - [ ] Handle insufficient balance errors
+  - [ ] Test with various order scenarios
+  
+- [ ] `POST /api/v1/orders/market` - Execute market order
+  - [ ] Validate market order parameters
+  - [ ] Call execute_market_order() function
+  - [ ] Handle slippage protection
+  - [ ] Test with different liquidity conditions
+  
+- [ ] `GET /api/v1/orders/history` - Order history
+  - [ ] Implement pagination
+  - [ ] Call get_user_order_history() function
+  - [ ] Include order status and fill information
+  - [ ] Test with various order states
 
-### **7. Market Data**
+### 3.6 Market Data Endpoints
+- [ ] `GET /api/v1/market/summary` - Market summary
+  - [ ] Get current best bid/ask
+  - [ ] Calculate 24h volume and price change
+  - [ ] Return market statistics
+  - [ ] Test with different market conditions
+  
+- [ ] `GET /api/v1/market/depth` - Order book depth
+  - [ ] Get active orders grouped by price level
+  - [ ] Format for order book visualization
+  - [ ] Include volume at each level
+  - [ ] Test with thin and deep order books
 
-#### **GET /api/v1/market/summary**
-```typescript
-Response: {
-  success: true
-  data: {
-    currentPrice: number
-    change24h: number
-    volume24h: number
-  }
-}
-```
+### 3.7 Security Endpoints
+- [ ] `POST /api/v1/security/pin` - Set/update PIN
+  - [ ] Validate PIN format (6 digits)
+  - [ ] Hash PIN before storage
+  - [ ] Update user PIN in database
+  - [ ] Test PIN update scenarios
+  
+- [ ] `POST /api/v1/security/pin/verify` - Verify PIN
+  - [ ] Validate PIN input
+  - [ ] Verify against stored hash
+  - [ ] Return verification result
+  - [ ] Handle rate limiting for PIN attempts
 
-#### **GET /api/v1/market/depth**
-```typescript
-Response: {
-  success: true
-  data: {
-    bids: Array<[price: number, quantity: number]>
-    asks: Array<[price: number, quantity: number]>
-  }
-}
-```
+### 3.8 Health Endpoint
+- [ ] `GET /api/v1/health/status` - System health
+  - [ ] Check database connectivity
+  - [ ] Return system status
+  - [ ] Include version information
+  - [ ] Test monitoring integration
 
-### **8. Health**
+## Phase 4: Integration & Testing (Day 8-10)
 
-#### **GET /api/v1/health/status**
-```typescript
-Response: {
-  status: 'healthy'
-  timestamp: string
-}
-```
+### 4.1 Integration Testing
+- [ ] Test complete user registration flow
+- [ ] Test wallet creation and funding
+- [ ] Test P2P transfer flow end-to-end
+- [ ] Test order placement and execution
+- [ ] Test error handling across all endpoints
 
----
+### 4.2 Performance Testing
+- [ ] Load test critical endpoints
+- [ ] Measure response times
+- [ ] Test concurrent user scenarios
+- [ ] Identify bottlenecks
+- [ ] Optimize slow queries
 
-## 🔧 **Implementation Details**
+### 4.3 Security Testing
+- [ ] Test authentication bypass attempts
+- [ ] Verify input validation effectiveness
+- [ ] Test rate limiting
+- [ ] Check for information leakage
+- [ ] Validate authorization controls
 
-### **Middleware Stack**
-1. **CORS** - Basic CORS handling
-2. **Auth** - Clerk JWT validation
-3. **Rate Limiting** - Simple Redis-based limiting
-4. **Validation** - Zod schema validation
-5. **Error Handling** - Clean error responses
+### 4.4 Documentation
+- [ ] Document all API endpoints
+- [ ] Create request/response examples
+- [ ] Document error codes and meanings
+- [ ] Create API usage guide
+- [ ] Set up API documentation site
 
-### **Database Integration**
-- **Direct Function Calls** - Call existing secure functions directly
-- **Connection Pooling** - Standard Supabase connection pooling
-- **Error Handling** - Convert database errors to clean API responses
+## Phase 5: Production Preparation (Day 11-12)
 
-### **Security Approach**
-- **Authentication** - Clerk JWT at API boundaries
-- **Input Validation** - Zod schemas for all inputs
-- **Rate Limiting** - Prevent abuse
-- **Database Security** - Leverage existing secure functions (PIN verification, daily limits, etc.)
+### 5.1 Environment Configuration
+- [ ] Set up production environment variables
+- [ ] Configure production database connections
+- [ ] Set up monitoring and logging
+- [ ] Configure rate limiting in production
+- [ ] Test production deployment
 
----
+### 5.2 Monitoring & Alerting
+- [ ] Set up API performance monitoring
+- [ ] Configure error alerting
+- [ ] Set up database monitoring
+- [ ] Create health check dashboards
+- [ ] Test alert systems
 
-## 🎯 **Success Criteria**
+### 5.3 Deployment
+- [ ] Deploy to staging environment
+- [ ] Run full test suite on staging
+- [ ] Deploy to production
+- [ ] Verify all endpoints work in production
+- [ ] Monitor initial production usage
 
-### **Functional Requirements**
-- ✅ 15 clean, focused endpoints
-- ✅ 8 core database functions properly integrated
-- ✅ PIN verification for transfers (built into `send_p2p_transfer`)
-- ✅ Daily limits enforced (built into transfer function)
-- ✅ Clean error handling
+## Daily Checkpoints
 
-### **Performance Requirements**
-- ✅ < 200ms average response time
-- ✅ Support for 100+ concurrent users
-- ✅ < 1% error rate
+### Day 1 Milestone
+- [ ] Project setup complete
+- [ ] Database connection working
+- [ ] Basic middleware implemented
 
-### **Security Requirements**
-- ✅ Proper authentication on all protected endpoints
-- ✅ Input validation on all endpoints
-- ✅ Rate limiting to prevent abuse
-- ✅ Leverage existing anti-fraud system
+### Day 3 Milestone
+- [ ] Authentication working
+- [ ] Wallet endpoints functional
+- [ ] Transfer endpoints working
 
-### **Quality Requirements**
-- ✅ Clean, maintainable code
-- ✅ Simple API documentation
-- ✅ Basic monitoring and health checks
+### Day 5 Milestone
+- [ ] Order endpoints complete
+- [ ] Market data endpoints working
+- [ ] Basic error handling implemented
 
----
+### Day 7 Milestone
+- [ ] All endpoints implemented
+- [ ] Basic testing complete
+- [ ] Security features working
 
-## 📋 **Next Steps**
+### Day 10 Milestone
+- [ ] Integration testing complete
+- [ ] Performance testing done
+- [ ] Documentation finished
 
-### **Week 1: Setup**
-1. **Review and approve** this simplified plan
-2. **Set up development environment** with Next.js and Supabase
-3. **Configure Clerk authentication**
-4. **Create basic project structure**
+### Day 12 Milestone
+- [ ] Production deployment complete
+- [ ] Monitoring set up
+- [ ] API ready for use
 
-### **Week 2-4: Implementation**
-5. **Implement 15 core endpoints** using existing database functions
-6. **Add proper error handling and validation**
-7. **Set up basic rate limiting**
-8. **Write API documentation**
-9. **Test all endpoints**
+## Success Criteria
 
-### **Production Ready**
-- **15 clean endpoints** serving real user needs
-- **8 proven database functions** handling all core operations
-- **Simple, maintainable codebase** that can be easily extended
-- **Fast development cycle** - 4 weeks vs 16 weeks
+### Functionality
+- [ ] All 15 endpoints work correctly
+- [ ] Complete user flows function end-to-end
+- [ ] Error handling works properly
+- [ ] Database functions integrate correctly
 
----
+### Performance
+- [ ] Response times under 500ms for all endpoints
+- [ ] System handles 100 concurrent users
+- [ ] Database queries optimized
+- [ ] No memory leaks or connection issues
 
-## 💡 **Key Lessons**
+### Security
+- [ ] Authentication required for protected endpoints
+- [ ] Input validation prevents malicious inputs
+- [ ] User data is properly isolated
+- [ ] Sensitive operations require PIN verification
 
-### **What We Learned**
-- **More functions ≠ better security** - Parameterized queries already prevent SQL injection
-- **Simplicity wins** - 15 endpoints can handle all user needs
-- **Focus on users** - Build what people actually need, not what sounds impressive
-- **Maintenance matters** - Simple code is easier to debug, extend, and maintain
+### Maintainability
+- [ ] Code is well-structured and documented
+- [ ] Tests cover critical functionality
+- [ ] Error messages are helpful for debugging
+- [ ] API documentation is complete and accurate
 
-### **The Right Approach**
-1. **Start with user needs** - What do people actually want to do?
-2. **Use proven patterns** - Standard REST APIs, not custom abstractions
-3. **Leverage existing security** - Don't reinvent the wheel
-4. **Keep it simple** - Complexity is the enemy of reliability
+## Risk Mitigation
 
-This clean architecture serves real users efficiently while remaining maintainable and secure.
+### Technical Risks
+- [ ] Database performance under load
+- [ ] Authentication token expiry handling
+- [ ] Concurrent user scenarios
+- [ ] Edge cases in business logic
+
+### Security Risks
+- [ ] Unauthorized access to user data
+- [ ] Input validation bypass
+- [ ] PIN brute force attacks
+- [ ] Information leakage in errors
+
+### Business Risks
+- [ ] Incorrect financial calculations
+- [ ] Balance inconsistencies
+- [ ] Failed transactions
+- [ ] User data privacy concerns
+
+## Testing Strategy
+
+### Unit Tests
+- [ ] Test each endpoint individually
+- [ ] Mock database responses
+- [ ] Test error conditions
+- [ ] Validate input/output formats
+
+### Integration Tests
+- [ ] Test complete user workflows
+- [ ] Test database integration
+- [ ] Test authentication flow
+- [ ] Test error propagation
+
+### Load Tests
+- [ ] Test with 100+ concurrent users
+- [ ] Test database connection limits
+- [ ] Test memory usage under load
+- [ ] Test response time consistency
+
+### Security Tests
+- [ ] Test authentication bypass
+- [ ] Test input validation
+- [ ] Test authorization controls
+- [ ] Test information disclosure

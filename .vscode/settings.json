@@ -29,6 +29,10 @@
   "typescript.preferences.includePackageJsonAutoImports": "off",
   "typescript.suggest.autoImports": false,
   "typescript.disableAutomaticTypeAcquisition": true,
+  "typescript.tsserver.maxTsServerMemory": 2048,
+  "typescript.tsserver.experimental.enableProjectDiagnostics": false,
+  "typescript.preferences.includeCompletionsForModuleExports": false,
+  "typescript.suggest.includeCompletionsForImportStatements": false,
   "search.followSymlinks": false,
   "files.watcherExclude": {
     "**/.git/objects/**": true,
@@ -50,5 +54,19 @@
     "**/.next": true,
     "**/dist": true,
     "**/build": true
-  }
+  },
+
+  // Additional memory optimizations
+  "typescript.tsserver.useSeparateSyntaxServer": false,
+  "typescript.tsserver.enableTracing": false,
+  "typescript.tsserver.log": "off",
+  "typescript.workspaceSymbols.scope": "currentProject",
+  "typescript.preferences.includePackageJsonAutoImports": "off",
+  "editor.semanticHighlighting.enabled": false,
+  "editor.suggest.showStatusBar": false,
+  "editor.suggest.maxVisibleSuggestions": 5,
+  "extensions.autoUpdate": false,
+  "extensions.autoCheckUpdates": false,
+  "telemetry.telemetryLevel": "off",
+  "workbench.enableExperiments": false
 }

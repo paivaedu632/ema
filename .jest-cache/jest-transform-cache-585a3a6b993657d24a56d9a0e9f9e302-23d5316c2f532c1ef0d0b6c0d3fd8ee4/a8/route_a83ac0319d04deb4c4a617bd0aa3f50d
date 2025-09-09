@@ -1,0 +1,749 @@
+c0e7266f59431e34a5d99ea2851bf432
+/* istanbul ignore next */
+function cov_l4irtuctr() {
+  var path = "C:\\Users\\User\\Documents\\GitHub\\ema\\src\\app\\api\\v1\\wallets\\balance\\route.ts";
+  var hash = "50ef0d2c9e64b21b79884683def5186695696688";
+  var global = new Function("return this")();
+  var gcv = "__coverage__";
+  var coverageData = {
+    path: "C:\\Users\\User\\Documents\\GitHub\\ema\\src\\app\\api\\v1\\wallets\\balance\\route.ts",
+    statementMap: {
+      "0": {
+        start: {
+          line: 7,
+          column: 23
+        },
+        end: {
+          line: 7,
+          column: 37
+        }
+      },
+      "1": {
+        start: {
+          line: 8,
+          column: 21
+        },
+        end: {
+          line: 8,
+          column: 23
+        }
+      },
+      "2": {
+        start: {
+          line: 9,
+          column: 4
+        },
+        end: {
+          line: 32,
+          column: 5
+        }
+      },
+      "3": {
+        start: {
+          line: 10,
+          column: 23
+        },
+        end: {
+          line: 13,
+          column: 10
+        }
+      },
+      "4": {
+        start: {
+          line: 14,
+          column: 8
+        },
+        end: {
+          line: 31,
+          column: 9
+        }
+      },
+      "5": {
+        start: {
+          line: 15,
+          column: 31
+        },
+        end: {
+          line: 15,
+          column: 42
+        }
+      },
+      "6": {
+        start: {
+          line: 16,
+          column: 12
+        },
+        end: {
+          line: 21,
+          column: 14
+        }
+      },
+      "7": {
+        start: {
+          line: 25,
+          column: 12
+        },
+        end: {
+          line: 30,
+          column: 14
+        }
+      },
+      "8": {
+        start: {
+          line: 33,
+          column: 25
+        },
+        end: {
+          line: 37,
+          column: 5
+        }
+      },
+      "9": {
+        start: {
+          line: 38,
+          column: 4
+        },
+        end: {
+          line: 38,
+          column: 89
+        }
+      },
+      "10": {
+        start: {
+          line: 40,
+          column: 19
+        },
+        end: {
+          line: 40,
+          column: 78
+        }
+      }
+    },
+    fnMap: {
+      "0": {
+        name: "walletBalanceHandler",
+        decl: {
+          start: {
+            line: 5,
+            column: 15
+          },
+          end: {
+            line: 5,
+            column: 35
+          }
+        },
+        loc: {
+          start: {
+            line: 5,
+            column: 51
+          },
+          end: {
+            line: 39,
+            column: 1
+          }
+        },
+        line: 5
+      }
+    },
+    branchMap: {
+      "0": {
+        loc: {
+          start: {
+            line: 14,
+            column: 8
+          },
+          end: {
+            line: 31,
+            column: 9
+          }
+        },
+        type: "if",
+        locations: [{
+          start: {
+            line: 14,
+            column: 8
+          },
+          end: {
+            line: 31,
+            column: 9
+          }
+        }, {
+          start: {
+            line: 23,
+            column: 13
+          },
+          end: {
+            line: 31,
+            column: 9
+          }
+        }],
+        line: 14
+      },
+      "1": {
+        loc: {
+          start: {
+            line: 18,
+            column: 34
+          },
+          end: {
+            line: 18,
+            column: 125
+          }
+        },
+        type: "binary-expr",
+        locations: [{
+          start: {
+            line: 18,
+            column: 35
+          },
+          end: {
+            line: 18,
+            column: 119
+          }
+        }, {
+          start: {
+            line: 18,
+            column: 124
+          },
+          end: {
+            line: 18,
+            column: 125
+          }
+        }],
+        line: 18
+      },
+      "2": {
+        loc: {
+          start: {
+            line: 18,
+            column: 35
+          },
+          end: {
+            line: 18,
+            column: 119
+          }
+        },
+        type: "cond-expr",
+        locations: [{
+          start: {
+            line: 18,
+            column: 82
+          },
+          end: {
+            line: 18,
+            column: 88
+          }
+        }, {
+          start: {
+            line: 18,
+            column: 91
+          },
+          end: {
+            line: 18,
+            column: 119
+          }
+        }],
+        line: 18
+      },
+      "3": {
+        loc: {
+          start: {
+            line: 18,
+            column: 35
+          },
+          end: {
+            line: 18,
+            column: 79
+          }
+        },
+        type: "binary-expr",
+        locations: [{
+          start: {
+            line: 18,
+            column: 35
+          },
+          end: {
+            line: 18,
+            column: 54
+          }
+        }, {
+          start: {
+            line: 18,
+            column: 58
+          },
+          end: {
+            line: 18,
+            column: 79
+          }
+        }],
+        line: 18
+      },
+      "4": {
+        loc: {
+          start: {
+            line: 19,
+            column: 33
+          },
+          end: {
+            line: 19,
+            column: 123
+          }
+        },
+        type: "binary-expr",
+        locations: [{
+          start: {
+            line: 19,
+            column: 34
+          },
+          end: {
+            line: 19,
+            column: 117
+          }
+        }, {
+          start: {
+            line: 19,
+            column: 122
+          },
+          end: {
+            line: 19,
+            column: 123
+          }
+        }],
+        line: 19
+      },
+      "5": {
+        loc: {
+          start: {
+            line: 19,
+            column: 34
+          },
+          end: {
+            line: 19,
+            column: 117
+          }
+        },
+        type: "cond-expr",
+        locations: [{
+          start: {
+            line: 19,
+            column: 81
+          },
+          end: {
+            line: 19,
+            column: 87
+          }
+        }, {
+          start: {
+            line: 19,
+            column: 90
+          },
+          end: {
+            line: 19,
+            column: 117
+          }
+        }],
+        line: 19
+      },
+      "6": {
+        loc: {
+          start: {
+            line: 19,
+            column: 34
+          },
+          end: {
+            line: 19,
+            column: 78
+          }
+        },
+        type: "binary-expr",
+        locations: [{
+          start: {
+            line: 19,
+            column: 34
+          },
+          end: {
+            line: 19,
+            column: 53
+          }
+        }, {
+          start: {
+            line: 19,
+            column: 57
+          },
+          end: {
+            line: 19,
+            column: 78
+          }
+        }],
+        line: 19
+      },
+      "7": {
+        loc: {
+          start: {
+            line: 20,
+            column: 31
+          },
+          end: {
+            line: 20,
+            column: 122
+          }
+        },
+        type: "binary-expr",
+        locations: [{
+          start: {
+            line: 20,
+            column: 32
+          },
+          end: {
+            line: 20,
+            column: 116
+          }
+        }, {
+          start: {
+            line: 20,
+            column: 121
+          },
+          end: {
+            line: 20,
+            column: 122
+          }
+        }],
+        line: 20
+      },
+      "8": {
+        loc: {
+          start: {
+            line: 20,
+            column: 32
+          },
+          end: {
+            line: 20,
+            column: 116
+          }
+        },
+        type: "cond-expr",
+        locations: [{
+          start: {
+            line: 20,
+            column: 79
+          },
+          end: {
+            line: 20,
+            column: 85
+          }
+        }, {
+          start: {
+            line: 20,
+            column: 88
+          },
+          end: {
+            line: 20,
+            column: 116
+          }
+        }],
+        line: 20
+      },
+      "9": {
+        loc: {
+          start: {
+            line: 20,
+            column: 32
+          },
+          end: {
+            line: 20,
+            column: 76
+          }
+        },
+        type: "binary-expr",
+        locations: [{
+          start: {
+            line: 20,
+            column: 32
+          },
+          end: {
+            line: 20,
+            column: 51
+          }
+        }, {
+          start: {
+            line: 20,
+            column: 55
+          },
+          end: {
+            line: 20,
+            column: 76
+          }
+        }],
+        line: 20
+      },
+      "10": {
+        loc: {
+          start: {
+            line: 20,
+            column: 127
+          },
+          end: {
+            line: 20,
+            column: 217
+          }
+        },
+        type: "binary-expr",
+        locations: [{
+          start: {
+            line: 20,
+            column: 128
+          },
+          end: {
+            line: 20,
+            column: 211
+          }
+        }, {
+          start: {
+            line: 20,
+            column: 216
+          },
+          end: {
+            line: 20,
+            column: 217
+          }
+        }],
+        line: 20
+      },
+      "11": {
+        loc: {
+          start: {
+            line: 20,
+            column: 128
+          },
+          end: {
+            line: 20,
+            column: 211
+          }
+        },
+        type: "cond-expr",
+        locations: [{
+          start: {
+            line: 20,
+            column: 175
+          },
+          end: {
+            line: 20,
+            column: 181
+          }
+        }, {
+          start: {
+            line: 20,
+            column: 184
+          },
+          end: {
+            line: 20,
+            column: 211
+          }
+        }],
+        line: 20
+      },
+      "12": {
+        loc: {
+          start: {
+            line: 20,
+            column: 128
+          },
+          end: {
+            line: 20,
+            column: 172
+          }
+        },
+        type: "binary-expr",
+        locations: [{
+          start: {
+            line: 20,
+            column: 128
+          },
+          end: {
+            line: 20,
+            column: 147
+          }
+        }, {
+          start: {
+            line: 20,
+            column: 151
+          },
+          end: {
+            line: 20,
+            column: 172
+          }
+        }],
+        line: 20
+      }
+    },
+    s: {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0,
+      "7": 0,
+      "8": 0,
+      "9": 0,
+      "10": 0
+    },
+    f: {
+      "0": 0
+    },
+    b: {
+      "0": [0, 0],
+      "1": [0, 0],
+      "2": [0, 0],
+      "3": [0, 0],
+      "4": [0, 0],
+      "5": [0, 0],
+      "6": [0, 0],
+      "7": [0, 0],
+      "8": [0, 0],
+      "9": [0, 0],
+      "10": [0, 0],
+      "11": [0, 0],
+      "12": [0, 0]
+    },
+    inputSourceMap: {
+      file: "C:\\Users\\User\\Documents\\GitHub\\ema\\src\\app\\api\\v1\\wallets\\balance\\route.ts",
+      mappings: "AACA,OAAO,EAAE,QAAQ,EAAqB,MAAM,uBAAuB,CAAC;AACpE,OAAO,EAAE,qBAAqB,EAAE,iBAAiB,EAAE,MAAM,qBAAqB,CAAC;AAC/E,OAAO,EAAE,QAAQ,EAAE,MAAM,gBAAgB,CAAC;AAC1C,OAAO,EAAE,gBAAgB,EAAE,MAAM,0BAA0B,CAAC;AAE5D,KAAK,UAAU,oBAAoB,CAAC,OAAoB,EAAE,IAAuB;IAC/E,4CAA4C;IAC5C,MAAM,UAAU,GAAG,CAAC,KAAK,EAAE,KAAK,CAAC,CAAC;IAClC,MAAM,QAAQ,GAAkH,EAAE,CAAC;IAEnI,KAAK,MAAM,QAAQ,IAAI,UAAU,EAAE,CAAC;QAClC,MAAM,MAAM,GAAG,MAAM,gBAAgB,CAAC;YACpC,OAAO,EAAE,IAAI,CAAC,MAAM;YACpB,QAAQ;SACT,CAAC,CAAC;QAEH,IAAI,MAAM,CAAC,OAAO,EAAE,CAAC;YACnB,MAAM,UAAU,GAAG,MAAM,CAAC,IAA6E,CAAC;YACxG,QAAQ,CAAC,QAAQ,CAAC,GAAG;gBACnB,QAAQ;gBACR,gBAAgB,EAAE,CAAA,UAAU,aAAV,UAAU,uBAAV,UAAU,CAAE,iBAAiB,KAAI,CAAC;gBACpD,eAAe,EAAE,CAAA,UAAU,aAAV,UAAU,uBAAV,UAAU,CAAE,gBAAgB,KAAI,CAAC;gBAClD,YAAY,EAAE,CAAC,CAAA,UAAU,aAAV,UAAU,uBAAV,UAAU,CAAE,iBAAiB,KAAI,CAAC,CAAC,GAAG,CAAC,CAAA,UAAU,aAAV,UAAU,uBAAV,UAAU,CAAE,gBAAgB,KAAI,CAAC,CAAC;aACzF,CAAC;QACJ,CAAC;aAAM,CAAC;YACN,gDAAgD;YAChD,QAAQ,CAAC,QAAQ,CAAC,GAAG;gBACnB,QAAQ;gBACR,gBAAgB,EAAE,CAAC;gBACnB,eAAe,EAAE,CAAC;gBAClB,YAAY,EAAE,CAAC;aAChB,CAAC;QACJ,CAAC;IACH,CAAC;IAED,MAAM,YAAY,GAAG;QACnB,MAAM,EAAE,IAAI,CAAC,MAAM;QACnB,QAAQ;QACR,SAAS,EAAE,IAAI,IAAI,EAAE,CAAC,WAAW,EAAE;KACpC,CAAC;IAEF,OAAO,qBAAqB,CAAC,YAAY,EAAE,wCAAwC,CAAC,CAAC;AACvF,CAAC;AAED,MAAM,CAAC,MAAM,GAAG,GAAG,QAAQ,CAAC,iBAAiB,CAAC,QAAQ,CAAC,oBAAoB,CAAC,CAAC,CAAC,CAAC",
+      names: [],
+      sources: ["C:\\Users\\User\\Documents\\GitHub\\ema\\src\\app\\api\\v1\\wallets\\balance\\route.ts"],
+      sourcesContent: ["import { NextRequest } from 'next/server';\nimport { withAuth, AuthenticatedUser } from '@/lib/auth/middleware';\nimport { createSuccessResponse, withErrorHandling } from '@/lib/api/responses';\nimport { withCors } from '@/lib/api/cors';\nimport { getWalletBalance } from '@/lib/database/functions';\n\nasync function walletBalanceHandler(request: NextRequest, user: AuthenticatedUser) {\n  // Get balances for all supported currencies\n  const currencies = ['EUR', 'AOA'];\n  const balances: Record<string, { currency: string; availableBalance: number; reservedBalance: number; totalBalance: number }> = {};\n\n  for (const currency of currencies) {\n    const result = await getWalletBalance({\n      user_id: user.userId,\n      currency\n    });\n\n    if (result.success) {\n      const walletData = result.data as { available_balance?: number; reserved_balance?: number } | undefined;\n      balances[currency] = {\n        currency,\n        availableBalance: walletData?.available_balance || 0,\n        reservedBalance: walletData?.reserved_balance || 0,\n        totalBalance: (walletData?.available_balance || 0) + (walletData?.reserved_balance || 0)\n      };\n    } else {\n      // If wallet doesn't exist, return zero balances\n      balances[currency] = {\n        currency,\n        availableBalance: 0,\n        reservedBalance: 0,\n        totalBalance: 0\n      };\n    }\n  }\n\n  const responseData = {\n    userId: user.userId,\n    balances,\n    timestamp: new Date().toISOString()\n  };\n\n  return createSuccessResponse(responseData, 'Wallet balances retrieved successfully');\n}\n\nexport const GET = withCors(withErrorHandling(withAuth(walletBalanceHandler)));\n"],
+      version: 3
+    },
+    _coverageSchema: "1a1c01bbd47fc00a2c39e90264f33305004495a9",
+    hash: "50ef0d2c9e64b21b79884683def5186695696688"
+  };
+  var coverage = global[gcv] || (global[gcv] = {});
+  if (!coverage[path] || coverage[path].hash !== hash) {
+    coverage[path] = coverageData;
+  }
+  var actualCoverage = coverage[path];
+  {
+    // @ts-ignore
+    cov_l4irtuctr = function () {
+      return actualCoverage;
+    };
+  }
+  return actualCoverage;
+}
+cov_l4irtuctr();
+import { withAuth } from '@/lib/auth/middleware';
+import { createSuccessResponse, withErrorHandling } from '@/lib/api/responses';
+import { withCors } from '@/lib/api/cors';
+import { getWalletBalance } from '@/lib/database/functions';
+async function walletBalanceHandler(request, user) {
+  /* istanbul ignore next */
+  cov_l4irtuctr().f[0]++;
+  // Get balances for all supported currencies
+  const currencies =
+  /* istanbul ignore next */
+  (cov_l4irtuctr().s[0]++, ['EUR', 'AOA']);
+  const balances =
+  /* istanbul ignore next */
+  (cov_l4irtuctr().s[1]++, {});
+  /* istanbul ignore next */
+  cov_l4irtuctr().s[2]++;
+  for (const currency of currencies) {
+    const result =
+    /* istanbul ignore next */
+    (cov_l4irtuctr().s[3]++, await getWalletBalance({
+      user_id: user.userId,
+      currency
+    }));
+    /* istanbul ignore next */
+    cov_l4irtuctr().s[4]++;
+    if (result.success) {
+      /* istanbul ignore next */
+      cov_l4irtuctr().b[0][0]++;
+      const walletData =
+      /* istanbul ignore next */
+      (cov_l4irtuctr().s[5]++, result.data);
+      /* istanbul ignore next */
+      cov_l4irtuctr().s[6]++;
+      balances[currency] = {
+        currency,
+        availableBalance:
+        /* istanbul ignore next */
+        (cov_l4irtuctr().b[1][0]++,
+        /* istanbul ignore next */
+        (cov_l4irtuctr().b[3][0]++, walletData === null) ||
+        /* istanbul ignore next */
+        (cov_l4irtuctr().b[3][1]++, walletData === void 0) ?
+        /* istanbul ignore next */
+        (cov_l4irtuctr().b[2][0]++, void 0) :
+        /* istanbul ignore next */
+        (cov_l4irtuctr().b[2][1]++, walletData.available_balance)) ||
+        /* istanbul ignore next */
+        (cov_l4irtuctr().b[1][1]++, 0),
+        reservedBalance:
+        /* istanbul ignore next */
+        (cov_l4irtuctr().b[4][0]++,
+        /* istanbul ignore next */
+        (cov_l4irtuctr().b[6][0]++, walletData === null) ||
+        /* istanbul ignore next */
+        (cov_l4irtuctr().b[6][1]++, walletData === void 0) ?
+        /* istanbul ignore next */
+        (cov_l4irtuctr().b[5][0]++, void 0) :
+        /* istanbul ignore next */
+        (cov_l4irtuctr().b[5][1]++, walletData.reserved_balance)) ||
+        /* istanbul ignore next */
+        (cov_l4irtuctr().b[4][1]++, 0),
+        totalBalance: (
+        /* istanbul ignore next */
+        (cov_l4irtuctr().b[7][0]++,
+        /* istanbul ignore next */
+        (cov_l4irtuctr().b[9][0]++, walletData === null) ||
+        /* istanbul ignore next */
+        (cov_l4irtuctr().b[9][1]++, walletData === void 0) ?
+        /* istanbul ignore next */
+        (cov_l4irtuctr().b[8][0]++, void 0) :
+        /* istanbul ignore next */
+        (cov_l4irtuctr().b[8][1]++, walletData.available_balance)) ||
+        /* istanbul ignore next */
+        (cov_l4irtuctr().b[7][1]++, 0)) + (
+        /* istanbul ignore next */
+        (cov_l4irtuctr().b[10][0]++,
+        /* istanbul ignore next */
+        (cov_l4irtuctr().b[12][0]++, walletData === null) ||
+        /* istanbul ignore next */
+        (cov_l4irtuctr().b[12][1]++, walletData === void 0) ?
+        /* istanbul ignore next */
+        (cov_l4irtuctr().b[11][0]++, void 0) :
+        /* istanbul ignore next */
+        (cov_l4irtuctr().b[11][1]++, walletData.reserved_balance)) ||
+        /* istanbul ignore next */
+        (cov_l4irtuctr().b[10][1]++, 0))
+      };
+    } else {
+      /* istanbul ignore next */
+      cov_l4irtuctr().b[0][1]++;
+      cov_l4irtuctr().s[7]++;
+      // If wallet doesn't exist, return zero balances
+      balances[currency] = {
+        currency,
+        availableBalance: 0,
+        reservedBalance: 0,
+        totalBalance: 0
+      };
+    }
+  }
+  const responseData =
+  /* istanbul ignore next */
+  (cov_l4irtuctr().s[8]++, {
+    userId: user.userId,
+    balances,
+    timestamp: new Date().toISOString()
+  });
+  /* istanbul ignore next */
+  cov_l4irtuctr().s[9]++;
+  return createSuccessResponse(responseData, 'Wallet balances retrieved successfully');
+}
+export const GET =
+/* istanbul ignore next */
+(cov_l4irtuctr().s[10]++, withCors(withErrorHandling(withAuth(walletBalanceHandler))));
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJuYW1lcyI6WyJjb3ZfbDRpcnR1Y3RyIiwiYWN0dWFsQ292ZXJhZ2UiLCJ3aXRoQXV0aCIsImNyZWF0ZVN1Y2Nlc3NSZXNwb25zZSIsIndpdGhFcnJvckhhbmRsaW5nIiwid2l0aENvcnMiLCJnZXRXYWxsZXRCYWxhbmNlIiwid2FsbGV0QmFsYW5jZUhhbmRsZXIiLCJyZXF1ZXN0IiwidXNlciIsImYiLCJjdXJyZW5jaWVzIiwicyIsImJhbGFuY2VzIiwiY3VycmVuY3kiLCJyZXN1bHQiLCJ1c2VyX2lkIiwidXNlcklkIiwic3VjY2VzcyIsImIiLCJ3YWxsZXREYXRhIiwiZGF0YSIsImF2YWlsYWJsZUJhbGFuY2UiLCJhdmFpbGFibGVfYmFsYW5jZSIsInJlc2VydmVkQmFsYW5jZSIsInJlc2VydmVkX2JhbGFuY2UiLCJ0b3RhbEJhbGFuY2UiLCJyZXNwb25zZURhdGEiLCJ0aW1lc3RhbXAiLCJEYXRlIiwidG9JU09TdHJpbmciLCJHRVQiXSwic291cmNlcyI6WyJDOlxcVXNlcnNcXFVzZXJcXERvY3VtZW50c1xcR2l0SHViXFxlbWFcXHNyY1xcYXBwXFxhcGlcXHYxXFx3YWxsZXRzXFxiYWxhbmNlXFxyb3V0ZS50cyJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgeyBOZXh0UmVxdWVzdCB9IGZyb20gJ25leHQvc2VydmVyJztcbmltcG9ydCB7IHdpdGhBdXRoLCBBdXRoZW50aWNhdGVkVXNlciB9IGZyb20gJ0AvbGliL2F1dGgvbWlkZGxld2FyZSc7XG5pbXBvcnQgeyBjcmVhdGVTdWNjZXNzUmVzcG9uc2UsIHdpdGhFcnJvckhhbmRsaW5nIH0gZnJvbSAnQC9saWIvYXBpL3Jlc3BvbnNlcyc7XG5pbXBvcnQgeyB3aXRoQ29ycyB9IGZyb20gJ0AvbGliL2FwaS9jb3JzJztcbmltcG9ydCB7IGdldFdhbGxldEJhbGFuY2UgfSBmcm9tICdAL2xpYi9kYXRhYmFzZS9mdW5jdGlvbnMnO1xuXG5hc3luYyBmdW5jdGlvbiB3YWxsZXRCYWxhbmNlSGFuZGxlcihyZXF1ZXN0OiBOZXh0UmVxdWVzdCwgdXNlcjogQXV0aGVudGljYXRlZFVzZXIpIHtcbiAgLy8gR2V0IGJhbGFuY2VzIGZvciBhbGwgc3VwcG9ydGVkIGN1cnJlbmNpZXNcbiAgY29uc3QgY3VycmVuY2llcyA9IFsnRVVSJywgJ0FPQSddO1xuICBjb25zdCBiYWxhbmNlczogUmVjb3JkPHN0cmluZywgeyBjdXJyZW5jeTogc3RyaW5nOyBhdmFpbGFibGVCYWxhbmNlOiBudW1iZXI7IHJlc2VydmVkQmFsYW5jZTogbnVtYmVyOyB0b3RhbEJhbGFuY2U6IG51bWJlciB9PiA9IHt9O1xuXG4gIGZvciAoY29uc3QgY3VycmVuY3kgb2YgY3VycmVuY2llcykge1xuICAgIGNvbnN0IHJlc3VsdCA9IGF3YWl0IGdldFdhbGxldEJhbGFuY2Uoe1xuICAgICAgdXNlcl9pZDogdXNlci51c2VySWQsXG4gICAgICBjdXJyZW5jeVxuICAgIH0pO1xuXG4gICAgaWYgKHJlc3VsdC5zdWNjZXNzKSB7XG4gICAgICBjb25zdCB3YWxsZXREYXRhID0gcmVzdWx0LmRhdGEgYXMgeyBhdmFpbGFibGVfYmFsYW5jZT86IG51bWJlcjsgcmVzZXJ2ZWRfYmFsYW5jZT86IG51bWJlciB9IHwgdW5kZWZpbmVkO1xuICAgICAgYmFsYW5jZXNbY3VycmVuY3ldID0ge1xuICAgICAgICBjdXJyZW5jeSxcbiAgICAgICAgYXZhaWxhYmxlQmFsYW5jZTogd2FsbGV0RGF0YT8uYXZhaWxhYmxlX2JhbGFuY2UgfHwgMCxcbiAgICAgICAgcmVzZXJ2ZWRCYWxhbmNlOiB3YWxsZXREYXRhPy5yZXNlcnZlZF9iYWxhbmNlIHx8IDAsXG4gICAgICAgIHRvdGFsQmFsYW5jZTogKHdhbGxldERhdGE/LmF2YWlsYWJsZV9iYWxhbmNlIHx8IDApICsgKHdhbGxldERhdGE/LnJlc2VydmVkX2JhbGFuY2UgfHwgMClcbiAgICAgIH07XG4gICAgfSBlbHNlIHtcbiAgICAgIC8vIElmIHdhbGxldCBkb2Vzbid0IGV4aXN0LCByZXR1cm4gemVybyBiYWxhbmNlc1xuICAgICAgYmFsYW5jZXNbY3VycmVuY3ldID0ge1xuICAgICAgICBjdXJyZW5jeSxcbiAgICAgICAgYXZhaWxhYmxlQmFsYW5jZTogMCxcbiAgICAgICAgcmVzZXJ2ZWRCYWxhbmNlOiAwLFxuICAgICAgICB0b3RhbEJhbGFuY2U6IDBcbiAgICAgIH07XG4gICAgfVxuICB9XG5cbiAgY29uc3QgcmVzcG9uc2VEYXRhID0ge1xuICAgIHVzZXJJZDogdXNlci51c2VySWQsXG4gICAgYmFsYW5jZXMsXG4gICAgdGltZXN0YW1wOiBuZXcgRGF0ZSgpLnRvSVNPU3RyaW5nKClcbiAgfTtcblxuICByZXR1cm4gY3JlYXRlU3VjY2Vzc1Jlc3BvbnNlKHJlc3BvbnNlRGF0YSwgJ1dhbGxldCBiYWxhbmNlcyByZXRyaWV2ZWQgc3VjY2Vzc2Z1bGx5Jyk7XG59XG5cbmV4cG9ydCBjb25zdCBHRVQgPSB3aXRoQ29ycyh3aXRoRXJyb3JIYW5kbGluZyh3aXRoQXV0aCh3YWxsZXRCYWxhbmNlSGFuZGxlcikpKTtcbiJdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7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

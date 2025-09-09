@@ -1,0 +1,844 @@
+a8637ad81f94a7a93c5bc7d7d2690df4
+/* istanbul ignore next */
+function cov_1zciup9ern() {
+  var path = "C:\\Users\\User\\Documents\\GitHub\\ema\\src\\infrastructure\\repositories\\SupabaseUnitOfWork.ts";
+  var hash = "cafb8da1f968032b63464beb4aafc7c8c33d3277";
+  var global = new Function("return this")();
+  var gcv = "__coverage__";
+  var coverageData = {
+    path: "C:\\Users\\User\\Documents\\GitHub\\ema\\src\\infrastructure\\repositories\\SupabaseUnitOfWork.ts",
+    statementMap: {
+      "0": {
+        start: {
+          line: 10,
+          column: 8
+        },
+        end: {
+          line: 10,
+          column: 33
+        }
+      },
+      "1": {
+        start: {
+          line: 11,
+          column: 8
+        },
+        end: {
+          line: 11,
+          column: 41
+        }
+      },
+      "2": {
+        start: {
+          line: 12,
+          column: 8
+        },
+        end: {
+          line: 12,
+          column: 38
+        }
+      },
+      "3": {
+        start: {
+          line: 15,
+          column: 8
+        },
+        end: {
+          line: 17,
+          column: 9
+        }
+      },
+      "4": {
+        start: {
+          line: 16,
+          column: 12
+        },
+        end: {
+          line: 16,
+          column: 94
+        }
+      },
+      "5": {
+        start: {
+          line: 18,
+          column: 8
+        },
+        end: {
+          line: 29,
+          column: 9
+        }
+      },
+      "6": {
+        start: {
+          line: 24,
+          column: 12
+        },
+        end: {
+          line: 24,
+          column: 44
+        }
+      },
+      "7": {
+        start: {
+          line: 25,
+          column: 12
+        },
+        end: {
+          line: 25,
+          column: 51
+        }
+      },
+      "8": {
+        start: {
+          line: 28,
+          column: 12
+        },
+        end: {
+          line: 28,
+          column: 99
+        }
+      },
+      "9": {
+        start: {
+          line: 32,
+          column: 8
+        },
+        end: {
+          line: 34,
+          column: 9
+        }
+      },
+      "10": {
+        start: {
+          line: 33,
+          column: 12
+        },
+        end: {
+          line: 33,
+          column: 97
+        }
+      },
+      "11": {
+        start: {
+          line: 35,
+          column: 8
+        },
+        end: {
+          line: 42,
+          column: 9
+        }
+      },
+      "12": {
+        start: {
+          line: 37,
+          column: 12
+        },
+        end: {
+          line: 37,
+          column: 45
+        }
+      },
+      "13": {
+        start: {
+          line: 38,
+          column: 12
+        },
+        end: {
+          line: 38,
+          column: 42
+        }
+      },
+      "14": {
+        start: {
+          line: 41,
+          column: 12
+        },
+        end: {
+          line: 41,
+          column: 101
+        }
+      },
+      "15": {
+        start: {
+          line: 45,
+          column: 8
+        },
+        end: {
+          line: 47,
+          column: 9
+        }
+      },
+      "16": {
+        start: {
+          line: 46,
+          column: 12
+        },
+        end: {
+          line: 46,
+          column: 101
+        }
+      },
+      "17": {
+        start: {
+          line: 48,
+          column: 8
+        },
+        end: {
+          line: 55,
+          column: 9
+        }
+      },
+      "18": {
+        start: {
+          line: 50,
+          column: 12
+        },
+        end: {
+          line: 50,
+          column: 45
+        }
+      },
+      "19": {
+        start: {
+          line: 51,
+          column: 12
+        },
+        end: {
+          line: 51,
+          column: 42
+        }
+      },
+      "20": {
+        start: {
+          line: 54,
+          column: 12
+        },
+        end: {
+          line: 54,
+          column: 105
+        }
+      },
+      "21": {
+        start: {
+          line: 58,
+          column: 8
+        },
+        end: {
+          line: 58,
+          column: 27
+        }
+      },
+      "22": {
+        start: {
+          line: 59,
+          column: 8
+        },
+        end: {
+          line: 67,
+          column: 9
+        }
+      },
+      "23": {
+        start: {
+          line: 60,
+          column: 27
+        },
+        end: {
+          line: 60,
+          column: 44
+        }
+      },
+      "24": {
+        start: {
+          line: 61,
+          column: 12
+        },
+        end: {
+          line: 61,
+          column: 32
+        }
+      },
+      "25": {
+        start: {
+          line: 62,
+          column: 12
+        },
+        end: {
+          line: 62,
+          column: 26
+        }
+      },
+      "26": {
+        start: {
+          line: 65,
+          column: 12
+        },
+        end: {
+          line: 65,
+          column: 34
+        }
+      },
+      "27": {
+        start: {
+          line: 66,
+          column: 12
+        },
+        end: {
+          line: 66,
+          column: 24
+        }
+      },
+      "28": {
+        start: {
+          line: 70,
+          column: 8
+        },
+        end: {
+          line: 70,
+          column: 40
+        }
+      },
+      "29": {
+        start: {
+          line: 77,
+          column: 8
+        },
+        end: {
+          line: 77,
+          column: 55
+        }
+      }
+    },
+    fnMap: {
+      "0": {
+        name: "(anonymous_0)",
+        decl: {
+          start: {
+            line: 9,
+            column: 4
+          },
+          end: {
+            line: 9,
+            column: 5
+          }
+        },
+        loc: {
+          start: {
+            line: 9,
+            column: 26
+          },
+          end: {
+            line: 13,
+            column: 5
+          }
+        },
+        line: 9
+      },
+      "1": {
+        name: "(anonymous_1)",
+        decl: {
+          start: {
+            line: 14,
+            column: 4
+          },
+          end: {
+            line: 14,
+            column: 5
+          }
+        },
+        loc: {
+          start: {
+            line: 14,
+            column: 18
+          },
+          end: {
+            line: 30,
+            column: 5
+          }
+        },
+        line: 14
+      },
+      "2": {
+        name: "(anonymous_2)",
+        decl: {
+          start: {
+            line: 31,
+            column: 4
+          },
+          end: {
+            line: 31,
+            column: 5
+          }
+        },
+        loc: {
+          start: {
+            line: 31,
+            column: 19
+          },
+          end: {
+            line: 43,
+            column: 5
+          }
+        },
+        line: 31
+      },
+      "3": {
+        name: "(anonymous_3)",
+        decl: {
+          start: {
+            line: 44,
+            column: 4
+          },
+          end: {
+            line: 44,
+            column: 5
+          }
+        },
+        loc: {
+          start: {
+            line: 44,
+            column: 21
+          },
+          end: {
+            line: 56,
+            column: 5
+          }
+        },
+        line: 44
+      },
+      "4": {
+        name: "(anonymous_4)",
+        decl: {
+          start: {
+            line: 57,
+            column: 4
+          },
+          end: {
+            line: 57,
+            column: 5
+          }
+        },
+        loc: {
+          start: {
+            line: 57,
+            column: 29
+          },
+          end: {
+            line: 68,
+            column: 5
+          }
+        },
+        line: 57
+      },
+      "5": {
+        name: "(anonymous_5)",
+        decl: {
+          start: {
+            line: 69,
+            column: 4
+          },
+          end: {
+            line: 69,
+            column: 5
+          }
+        },
+        loc: {
+          start: {
+            line: 69,
+            column: 22
+          },
+          end: {
+            line: 71,
+            column: 5
+          }
+        },
+        line: 69
+      },
+      "6": {
+        name: "(anonymous_6)",
+        decl: {
+          start: {
+            line: 76,
+            column: 4
+          },
+          end: {
+            line: 76,
+            column: 5
+          }
+        },
+        loc: {
+          start: {
+            line: 76,
+            column: 27
+          },
+          end: {
+            line: 78,
+            column: 5
+          }
+        },
+        line: 76
+      }
+    },
+    branchMap: {
+      "0": {
+        loc: {
+          start: {
+            line: 15,
+            column: 8
+          },
+          end: {
+            line: 17,
+            column: 9
+          }
+        },
+        type: "if",
+        locations: [{
+          start: {
+            line: 15,
+            column: 8
+          },
+          end: {
+            line: 17,
+            column: 9
+          }
+        }, {
+          start: {
+            line: undefined,
+            column: undefined
+          },
+          end: {
+            line: undefined,
+            column: undefined
+          }
+        }],
+        line: 15
+      },
+      "1": {
+        loc: {
+          start: {
+            line: 32,
+            column: 8
+          },
+          end: {
+            line: 34,
+            column: 9
+          }
+        },
+        type: "if",
+        locations: [{
+          start: {
+            line: 32,
+            column: 8
+          },
+          end: {
+            line: 34,
+            column: 9
+          }
+        }, {
+          start: {
+            line: undefined,
+            column: undefined
+          },
+          end: {
+            line: undefined,
+            column: undefined
+          }
+        }],
+        line: 32
+      },
+      "2": {
+        loc: {
+          start: {
+            line: 45,
+            column: 8
+          },
+          end: {
+            line: 47,
+            column: 9
+          }
+        },
+        type: "if",
+        locations: [{
+          start: {
+            line: 45,
+            column: 8
+          },
+          end: {
+            line: 47,
+            column: 9
+          }
+        }, {
+          start: {
+            line: undefined,
+            column: undefined
+          },
+          end: {
+            line: undefined,
+            column: undefined
+          }
+        }],
+        line: 45
+      },
+      "3": {
+        loc: {
+          start: {
+            line: 77,
+            column: 15
+          },
+          end: {
+            line: 77,
+            column: 54
+          }
+        },
+        type: "binary-expr",
+        locations: [{
+          start: {
+            line: 77,
+            column: 15
+          },
+          end: {
+            line: 77,
+            column: 37
+          }
+        }, {
+          start: {
+            line: 77,
+            column: 41
+          },
+          end: {
+            line: 77,
+            column: 54
+          }
+        }],
+        line: 77
+      }
+    },
+    s: {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0,
+      "7": 0,
+      "8": 0,
+      "9": 0,
+      "10": 0,
+      "11": 0,
+      "12": 0,
+      "13": 0,
+      "14": 0,
+      "15": 0,
+      "16": 0,
+      "17": 0,
+      "18": 0,
+      "19": 0,
+      "20": 0,
+      "21": 0,
+      "22": 0,
+      "23": 0,
+      "24": 0,
+      "25": 0,
+      "26": 0,
+      "27": 0,
+      "28": 0,
+      "29": 0
+    },
+    f: {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0
+    },
+    b: {
+      "0": [0, 0],
+      "1": [0, 0],
+      "2": [0, 0],
+      "3": [0, 0]
+    },
+    inputSourceMap: {
+      file: "C:\\Users\\User\\Documents\\GitHub\\ema\\src\\infrastructure\\repositories\\SupabaseUnitOfWork.ts",
+      mappings: "AAAA;;;;;GAKG;AAIH,OAAO,EAAE,eAAe,EAAE,MAAM,2BAA2B,CAAA;AAE3D,MAAM,OAAO,kBAAkB;IAI7B,YAA6B,QAAwB;QAAxB,aAAQ,GAAR,QAAQ,CAAgB;QAH7C,wBAAmB,GAAG,KAAK,CAAA;QAC3B,sBAAiB,GAA0B,IAAI,CAAA;IAEC,CAAC;IAEzD,KAAK,CAAC,KAAK;QACT,IAAI,IAAI,CAAC,mBAAmB,EAAE,CAAC;YAC7B,MAAM,IAAI,eAAe,CACvB,+BAA+B,EAC/B,OAAO,EACP,YAAY,CACb,CAAA;QACH,CAAC;QAED,IAAI,CAAC;YACH,yEAAyE;YACzE,sEAAsE;YACtE,4DAA4D;YAC5D,qDAAqD;YACrD,yDAAyD;YAEzD,IAAI,CAAC,mBAAmB,GAAG,IAAI,CAAA;YAC/B,IAAI,CAAC,iBAAiB,GAAG,IAAI,CAAC,QAAQ,CAAA;QACxC,CAAC;QAAC,OAAO,KAAK,EAAE,CAAC;YACf,MAAM,IAAI,eAAe,CACvB,6BAA6B,EAC7B,OAAO,EACP,YAAY,EACZ,KAAc,CACf,CAAA;QACH,CAAC;IACH,CAAC;IAED,KAAK,CAAC,MAAM;QACV,IAAI,CAAC,IAAI,CAAC,mBAAmB,EAAE,CAAC;YAC9B,MAAM,IAAI,eAAe,CACvB,iCAAiC,EACjC,QAAQ,EACR,YAAY,CACb,CAAA;QACH,CAAC;QAED,IAAI,CAAC;YACH,uEAAuE;YACvE,IAAI,CAAC,mBAAmB,GAAG,KAAK,CAAA;YAChC,IAAI,CAAC,iBAAiB,GAAG,IAAI,CAAA;QAC/B,CAAC;QAAC,OAAO,KAAK,EAAE,CAAC;YACf,MAAM,IAAI,eAAe,CACvB,8BAA8B,EAC9B,QAAQ,EACR,YAAY,EACZ,KAAc,CACf,CAAA;QACH,CAAC;IACH,CAAC;IAED,KAAK,CAAC,QAAQ;QACZ,IAAI,CAAC,IAAI,CAAC,mBAAmB,EAAE,CAAC;YAC9B,MAAM,IAAI,eAAe,CACvB,mCAAmC,EACnC,UAAU,EACV,YAAY,CACb,CAAA;QACH,CAAC;QAED,IAAI,CAAC;YACH,yEAAyE;YACzE,IAAI,CAAC,mBAAmB,GAAG,KAAK,CAAA;YAChC,IAAI,CAAC,iBAAiB,GAAG,IAAI,CAAA;QAC/B,CAAC;QAAC,OAAO,KAAK,EAAE,CAAC;YACf,MAAM,IAAI,eAAe,CACvB,gCAAgC,EAChC,UAAU,EACV,YAAY,EACZ,KAAc,CACf,CAAA;QACH,CAAC;IACH,CAAC;IAED,KAAK,CAAC,OAAO,CAAI,SAA2B;QAC1C,MAAM,IAAI,CAAC,KAAK,EAAE,CAAA;QAElB,IAAI,CAAC;YACH,MAAM,MAAM,GAAG,MAAM,SAAS,EAAE,CAAA;YAChC,MAAM,IAAI,CAAC,MAAM,EAAE,CAAA;YACnB,OAAO,MAAM,CAAA;QACf,CAAC;QAAC,OAAO,KAAK,EAAE,CAAC;YACf,MAAM,IAAI,CAAC,QAAQ,EAAE,CAAA;YACrB,MAAM,KAAK,CAAA;QACb,CAAC;IACH,CAAC;IAED,eAAe;QACb,OAAO,IAAI,CAAC,mBAAmB,CAAA;IACjC,CAAC;IAED;;;OAGG;IACH,oBAAoB;QAClB,OAAO,IAAI,CAAC,iBAAiB,IAAI,IAAI,CAAC,QAAQ,CAAA;IAChD,CAAC;CACF",
+      names: [],
+      sources: ["C:\\Users\\User\\Documents\\GitHub\\ema\\src\\infrastructure\\repositories\\SupabaseUnitOfWork.ts"],
+      sourcesContent: ["/**\n * Supabase Unit of Work Implementation\n * \n * Manages database transactions across multiple repository operations.\n * Ensures data consistency and atomicity.\n */\n\nimport { SupabaseClient } from '@supabase/supabase-js'\nimport { UnitOfWork } from '../../domain/repositories'\nimport { RepositoryError } from '../../domain/repositories'\n\nexport class SupabaseUnitOfWork implements UnitOfWork {\n  private isTransactionActive = false\n  private transactionClient: SupabaseClient | null = null\n\n  constructor(private readonly supabase: SupabaseClient) {}\n\n  async begin(): Promise<void> {\n    if (this.isTransactionActive) {\n      throw new RepositoryError(\n        'Transaction is already active',\n        'begin',\n        'UnitOfWork'\n      )\n    }\n\n    try {\n      // Note: Supabase doesn't have explicit transaction support in the client\n      // This is a simplified implementation. In a real scenario, you might:\n      // 1. Use Supabase Edge Functions with database transactions\n      // 2. Use a direct PostgreSQL client for transactions\n      // 3. Implement saga pattern for distributed transactions\n      \n      this.isTransactionActive = true\n      this.transactionClient = this.supabase\n    } catch (error) {\n      throw new RepositoryError(\n        'Failed to begin transaction',\n        'begin',\n        'UnitOfWork',\n        error as Error\n      )\n    }\n  }\n\n  async commit(): Promise<void> {\n    if (!this.isTransactionActive) {\n      throw new RepositoryError(\n        'No active transaction to commit',\n        'commit',\n        'UnitOfWork'\n      )\n    }\n\n    try {\n      // In a real implementation, this would commit the database transaction\n      this.isTransactionActive = false\n      this.transactionClient = null\n    } catch (error) {\n      throw new RepositoryError(\n        'Failed to commit transaction',\n        'commit',\n        'UnitOfWork',\n        error as Error\n      )\n    }\n  }\n\n  async rollback(): Promise<void> {\n    if (!this.isTransactionActive) {\n      throw new RepositoryError(\n        'No active transaction to rollback',\n        'rollback',\n        'UnitOfWork'\n      )\n    }\n\n    try {\n      // In a real implementation, this would rollback the database transaction\n      this.isTransactionActive = false\n      this.transactionClient = null\n    } catch (error) {\n      throw new RepositoryError(\n        'Failed to rollback transaction',\n        'rollback',\n        'UnitOfWork',\n        error as Error\n      )\n    }\n  }\n\n  async execute<T>(operation: () => Promise<T>): Promise<T> {\n    await this.begin()\n    \n    try {\n      const result = await operation()\n      await this.commit()\n      return result\n    } catch (error) {\n      await this.rollback()\n      throw error\n    }\n  }\n\n  isInTransaction(): boolean {\n    return this.isTransactionActive\n  }\n\n  /**\n   * Get the transaction client for use in repositories\n   * This allows repositories to use the same transaction context\n   */\n  getTransactionClient(): SupabaseClient {\n    return this.transactionClient || this.supabase\n  }\n}\n"],
+      version: 3
+    },
+    _coverageSchema: "1a1c01bbd47fc00a2c39e90264f33305004495a9",
+    hash: "cafb8da1f968032b63464beb4aafc7c8c33d3277"
+  };
+  var coverage = global[gcv] || (global[gcv] = {});
+  if (!coverage[path] || coverage[path].hash !== hash) {
+    coverage[path] = coverageData;
+  }
+  var actualCoverage = coverage[path];
+  {
+    // @ts-ignore
+    cov_1zciup9ern = function () {
+      return actualCoverage;
+    };
+  }
+  return actualCoverage;
+}
+cov_1zciup9ern();
+/**
+ * Supabase Unit of Work Implementation
+ *
+ * Manages database transactions across multiple repository operations.
+ * Ensures data consistency and atomicity.
+ */
+import { RepositoryError } from '../../domain/repositories';
+export class SupabaseUnitOfWork {
+  constructor(supabase) {
+    /* istanbul ignore next */
+    cov_1zciup9ern().f[0]++;
+    cov_1zciup9ern().s[0]++;
+    this.supabase = supabase;
+    /* istanbul ignore next */
+    cov_1zciup9ern().s[1]++;
+    this.isTransactionActive = false;
+    /* istanbul ignore next */
+    cov_1zciup9ern().s[2]++;
+    this.transactionClient = null;
+  }
+  async begin() {
+    /* istanbul ignore next */
+    cov_1zciup9ern().f[1]++;
+    cov_1zciup9ern().s[3]++;
+    if (this.isTransactionActive) {
+      /* istanbul ignore next */
+      cov_1zciup9ern().b[0][0]++;
+      cov_1zciup9ern().s[4]++;
+      throw new RepositoryError('Transaction is already active', 'begin', 'UnitOfWork');
+    } else
+    /* istanbul ignore next */
+    {
+      cov_1zciup9ern().b[0][1]++;
+    }
+    cov_1zciup9ern().s[5]++;
+    try {
+      /* istanbul ignore next */
+      cov_1zciup9ern().s[6]++;
+      // Note: Supabase doesn't have explicit transaction support in the client
+      // This is a simplified implementation. In a real scenario, you might:
+      // 1. Use Supabase Edge Functions with database transactions
+      // 2. Use a direct PostgreSQL client for transactions
+      // 3. Implement saga pattern for distributed transactions
+      this.isTransactionActive = true;
+      /* istanbul ignore next */
+      cov_1zciup9ern().s[7]++;
+      this.transactionClient = this.supabase;
+    } catch (error) {
+      /* istanbul ignore next */
+      cov_1zciup9ern().s[8]++;
+      throw new RepositoryError('Failed to begin transaction', 'begin', 'UnitOfWork', error);
+    }
+  }
+  async commit() {
+    /* istanbul ignore next */
+    cov_1zciup9ern().f[2]++;
+    cov_1zciup9ern().s[9]++;
+    if (!this.isTransactionActive) {
+      /* istanbul ignore next */
+      cov_1zciup9ern().b[1][0]++;
+      cov_1zciup9ern().s[10]++;
+      throw new RepositoryError('No active transaction to commit', 'commit', 'UnitOfWork');
+    } else
+    /* istanbul ignore next */
+    {
+      cov_1zciup9ern().b[1][1]++;
+    }
+    cov_1zciup9ern().s[11]++;
+    try {
+      /* istanbul ignore next */
+      cov_1zciup9ern().s[12]++;
+      // In a real implementation, this would commit the database transaction
+      this.isTransactionActive = false;
+      /* istanbul ignore next */
+      cov_1zciup9ern().s[13]++;
+      this.transactionClient = null;
+    } catch (error) {
+      /* istanbul ignore next */
+      cov_1zciup9ern().s[14]++;
+      throw new RepositoryError('Failed to commit transaction', 'commit', 'UnitOfWork', error);
+    }
+  }
+  async rollback() {
+    /* istanbul ignore next */
+    cov_1zciup9ern().f[3]++;
+    cov_1zciup9ern().s[15]++;
+    if (!this.isTransactionActive) {
+      /* istanbul ignore next */
+      cov_1zciup9ern().b[2][0]++;
+      cov_1zciup9ern().s[16]++;
+      throw new RepositoryError('No active transaction to rollback', 'rollback', 'UnitOfWork');
+    } else
+    /* istanbul ignore next */
+    {
+      cov_1zciup9ern().b[2][1]++;
+    }
+    cov_1zciup9ern().s[17]++;
+    try {
+      /* istanbul ignore next */
+      cov_1zciup9ern().s[18]++;
+      // In a real implementation, this would rollback the database transaction
+      this.isTransactionActive = false;
+      /* istanbul ignore next */
+      cov_1zciup9ern().s[19]++;
+      this.transactionClient = null;
+    } catch (error) {
+      /* istanbul ignore next */
+      cov_1zciup9ern().s[20]++;
+      throw new RepositoryError('Failed to rollback transaction', 'rollback', 'UnitOfWork', error);
+    }
+  }
+  async execute(operation) {
+    /* istanbul ignore next */
+    cov_1zciup9ern().f[4]++;
+    cov_1zciup9ern().s[21]++;
+    await this.begin();
+    /* istanbul ignore next */
+    cov_1zciup9ern().s[22]++;
+    try {
+      const result =
+      /* istanbul ignore next */
+      (cov_1zciup9ern().s[23]++, await operation());
+      /* istanbul ignore next */
+      cov_1zciup9ern().s[24]++;
+      await this.commit();
+      /* istanbul ignore next */
+      cov_1zciup9ern().s[25]++;
+      return result;
+    } catch (error) {
+      /* istanbul ignore next */
+      cov_1zciup9ern().s[26]++;
+      await this.rollback();
+      /* istanbul ignore next */
+      cov_1zciup9ern().s[27]++;
+      throw error;
+    }
+  }
+  isInTransaction() {
+    /* istanbul ignore next */
+    cov_1zciup9ern().f[5]++;
+    cov_1zciup9ern().s[28]++;
+    return this.isTransactionActive;
+  }
+  /**
+   * Get the transaction client for use in repositories
+   * This allows repositories to use the same transaction context
+   */
+  getTransactionClient() {
+    /* istanbul ignore next */
+    cov_1zciup9ern().f[6]++;
+    cov_1zciup9ern().s[29]++;
+    return /* istanbul ignore next */(cov_1zciup9ern().b[3][0]++, this.transactionClient) ||
+    /* istanbul ignore next */
+    (cov_1zciup9ern().b[3][1]++, this.supabase);
+  }
+}
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJuYW1lcyI6WyJjb3ZfMXpjaXVwOWVybiIsImFjdHVhbENvdmVyYWdlIiwiUmVwb3NpdG9yeUVycm9yIiwiU3VwYWJhc2VVbml0T2ZXb3JrIiwiY29uc3RydWN0b3IiLCJzdXBhYmFzZSIsImYiLCJzIiwiaXNUcmFuc2FjdGlvbkFjdGl2ZSIsInRyYW5zYWN0aW9uQ2xpZW50IiwiYmVnaW4iLCJiIiwiZXJyb3IiLCJjb21taXQiLCJyb2xsYmFjayIsImV4ZWN1dGUiLCJvcGVyYXRpb24iLCJyZXN1bHQiLCJpc0luVHJhbnNhY3Rpb24iLCJnZXRUcmFuc2FjdGlvbkNsaWVudCJdLCJzb3VyY2VzIjpbIkM6XFxVc2Vyc1xcVXNlclxcRG9jdW1lbnRzXFxHaXRIdWJcXGVtYVxcc3JjXFxpbmZyYXN0cnVjdHVyZVxccmVwb3NpdG9yaWVzXFxTdXBhYmFzZVVuaXRPZldvcmsudHMiXSwic291cmNlc0NvbnRlbnQiOlsiLyoqXG4gKiBTdXBhYmFzZSBVbml0IG9mIFdvcmsgSW1wbGVtZW50YXRpb25cbiAqIFxuICogTWFuYWdlcyBkYXRhYmFzZSB0cmFuc2FjdGlvbnMgYWNyb3NzIG11bHRpcGxlIHJlcG9zaXRvcnkgb3BlcmF0aW9ucy5cbiAqIEVuc3VyZXMgZGF0YSBjb25zaXN0ZW5jeSBhbmQgYXRvbWljaXR5LlxuICovXG5cbmltcG9ydCB7IFN1cGFiYXNlQ2xpZW50IH0gZnJvbSAnQHN1cGFiYXNlL3N1cGFiYXNlLWpzJ1xuaW1wb3J0IHsgVW5pdE9mV29yayB9IGZyb20gJy4uLy4uL2RvbWFpbi9yZXBvc2l0b3JpZXMnXG5pbXBvcnQgeyBSZXBvc2l0b3J5RXJyb3IgfSBmcm9tICcuLi8uLi9kb21haW4vcmVwb3NpdG9yaWVzJ1xuXG5leHBvcnQgY2xhc3MgU3VwYWJhc2VVbml0T2ZXb3JrIGltcGxlbWVudHMgVW5pdE9mV29yayB7XG4gIHByaXZhdGUgaXNUcmFuc2FjdGlvbkFjdGl2ZSA9IGZhbHNlXG4gIHByaXZhdGUgdHJhbnNhY3Rpb25DbGllbnQ6IFN1cGFiYXNlQ2xpZW50IHwgbnVsbCA9IG51bGxcblxuICBjb25zdHJ1Y3Rvcihwcml2YXRlIHJlYWRvbmx5IHN1cGFiYXNlOiBTdXBhYmFzZUNsaWVudCkge31cblxuICBhc3luYyBiZWdpbigpOiBQcm9taXNlPHZvaWQ+IHtcbiAgICBpZiAodGhpcy5pc1RyYW5zYWN0aW9uQWN0aXZlKSB7XG4gICAgICB0aHJvdyBuZXcgUmVwb3NpdG9yeUVycm9yKFxuICAgICAgICAnVHJhbnNhY3Rpb24gaXMgYWxyZWFkeSBhY3RpdmUnLFxuICAgICAgICAnYmVnaW4nLFxuICAgICAgICAnVW5pdE9mV29yaydcbiAgICAgIClcbiAgICB9XG5cbiAgICB0cnkge1xuICAgICAgLy8gTm90ZTogU3VwYWJhc2UgZG9lc24ndCBoYXZlIGV4cGxpY2l0IHRyYW5zYWN0aW9uIHN1cHBvcnQgaW4gdGhlIGNsaWVudFxuICAgICAgLy8gVGhpcyBpcyBhIHNpbXBsaWZpZWQgaW1wbGVtZW50YXRpb24uIEluIGEgcmVhbCBzY2VuYXJpbywgeW91IG1pZ2h0OlxuICAgICAgLy8gMS4gVXNlIFN1cGFiYXNlIEVkZ2UgRnVuY3Rpb25zIHdpdGggZGF0YWJhc2UgdHJhbnNhY3Rpb25zXG4gICAgICAvLyAyLiBVc2UgYSBkaXJlY3QgUG9zdGdyZVNRTCBjbGllbnQgZm9yIHRyYW5zYWN0aW9uc1xuICAgICAgLy8gMy4gSW1wbGVtZW50IHNhZ2EgcGF0dGVybiBmb3IgZGlzdHJpYnV0ZWQgdHJhbnNhY3Rpb25zXG4gICAgICBcbiAgICAgIHRoaXMuaXNUcmFuc2FjdGlvbkFjdGl2ZSA9IHRydWVcbiAgICAgIHRoaXMudHJhbnNhY3Rpb25DbGllbnQgPSB0aGlzLnN1cGFiYXNlXG4gICAgfSBjYXRjaCAoZXJyb3IpIHtcbiAgICAgIHRocm93IG5ldyBSZXBvc2l0b3J5RXJyb3IoXG4gICAgICAgICdGYWlsZWQgdG8gYmVnaW4gdHJhbnNhY3Rpb24nLFxuICAgICAgICAnYmVnaW4nLFxuICAgICAgICAnVW5pdE9mV29yaycsXG4gICAgICAgIGVycm9yIGFzIEVycm9yXG4gICAgICApXG4gICAgfVxuICB9XG5cbiAgYXN5bmMgY29tbWl0KCk6IFByb21pc2U8dm9pZD4ge1xuICAgIGlmICghdGhpcy5pc1RyYW5zYWN0aW9uQWN0aXZlKSB7XG4gICAgICB0aHJvdyBuZXcgUmVwb3NpdG9yeUVycm9yKFxuICAgICAgICAnTm8gYWN0aXZlIHRyYW5zYWN0aW9uIHRvIGNvbW1pdCcsXG4gICAgICAgICdjb21taXQnLFxuICAgICAgICAnVW5pdE9mV29yaydcbiAgICAgIClcbiAgICB9XG5cbiAgICB0cnkge1xuICAgICAgLy8gSW4gYSByZWFsIGltcGxlbWVudGF0aW9uLCB0aGlzIHdvdWxkIGNvbW1pdCB0aGUgZGF0YWJhc2UgdHJhbnNhY3Rpb25cbiAgICAgIHRoaXMuaXNUcmFuc2FjdGlvbkFjdGl2ZSA9IGZhbHNlXG4gICAgICB0aGlzLnRyYW5zYWN0aW9uQ2xpZW50ID0gbnVsbFxuICAgIH0gY2F0Y2ggKGVycm9yKSB7XG4gICAgICB0aHJvdyBuZXcgUmVwb3NpdG9yeUVycm9yKFxuICAgICAgICAnRmFpbGVkIHRvIGNvbW1pdCB0cmFuc2FjdGlvbicsXG4gICAgICAgICdjb21taXQnLFxuICAgICAgICAnVW5pdE9mV29yaycsXG4gICAgICAgIGVycm9yIGFzIEVycm9yXG4gICAgICApXG4gICAgfVxuICB9XG5cbiAgYXN5bmMgcm9sbGJhY2soKTogUHJvbWlzZTx2b2lkPiB7XG4gICAgaWYgKCF0aGlzLmlzVHJhbnNhY3Rpb25BY3RpdmUpIHtcbiAgICAgIHRocm93IG5ldyBSZXBvc2l0b3J5RXJyb3IoXG4gICAgICAgICdObyBhY3RpdmUgdHJhbnNhY3Rpb24gdG8gcm9sbGJhY2snLFxuICAgICAgICAncm9sbGJhY2snLFxuICAgICAgICAnVW5pdE9mV29yaydcbiAgICAgIClcbiAgICB9XG5cbiAgICB0cnkge1xuICAgICAgLy8gSW4gYSByZWFsIGltcGxlbWVudGF0aW9uLCB0aGlzIHdvdWxkIHJvbGxiYWNrIHRoZSBkYXRhYmFzZSB0cmFuc2FjdGlvblxuICAgICAgdGhpcy5pc1RyYW5zYWN0aW9uQWN0aXZlID0gZmFsc2VcbiAgICAgIHRoaXMudHJhbnNhY3Rpb25DbGllbnQgPSBudWxsXG4gICAgfSBjYXRjaCAoZXJyb3IpIHtcbiAgICAgIHRocm93IG5ldyBSZXBvc2l0b3J5RXJyb3IoXG4gICAgICAgICdGYWlsZWQgdG8gcm9sbGJhY2sgdHJhbnNhY3Rpb24nLFxuICAgICAgICAncm9sbGJhY2snLFxuICAgICAgICAnVW5pdE9mV29yaycsXG4gICAgICAgIGVycm9yIGFzIEVycm9yXG4gICAgICApXG4gICAgfVxuICB9XG5cbiAgYXN5bmMgZXhlY3V0ZTxUPihvcGVyYXRpb246ICgpID0+IFByb21pc2U8VD4pOiBQcm9taXNlPFQ+IHtcbiAgICBhd2FpdCB0aGlzLmJlZ2luKClcbiAgICBcbiAgICB0cnkge1xuICAgICAgY29uc3QgcmVzdWx0ID0gYXdhaXQgb3BlcmF0aW9uKClcbiAgICAgIGF3YWl0IHRoaXMuY29tbWl0KClcbiAgICAgIHJldHVybiByZXN1bHRcbiAgICB9IGNhdGNoIChlcnJvcikge1xuICAgICAgYXdhaXQgdGhpcy5yb2xsYmFjaygpXG4gICAgICB0aHJvdyBlcnJvclxuICAgIH1cbiAgfVxuXG4gIGlzSW5UcmFuc2FjdGlvbigpOiBib29sZWFuIHtcbiAgICByZXR1cm4gdGhpcy5pc1RyYW5zYWN0aW9uQWN0aXZlXG4gIH1cblxuICAvKipcbiAgICogR2V0IHRoZSB0cmFuc2FjdGlvbiBjbGllbnQgZm9yIHVzZSBpbiByZXBvc2l0b3JpZXNcbiAgICogVGhpcyBhbGxvd3MgcmVwb3NpdG9yaWVzIHRvIHVzZSB0aGUgc2FtZSB0cmFuc2FjdGlvbiBjb250ZXh0XG4gICAqL1xuICBnZXRUcmFuc2FjdGlvbkNsaWVudCgpOiBTdXBhYmFzZUNsaWVudCB7XG4gICAgcmV0dXJuIHRoaXMudHJhbnNhY3Rpb25DbGllbnQgfHwgdGhpcy5zdXBhYmFzZVxuICB9XG59XG4iXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7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

@@ -1,0 +1,125 @@
+83e6e22cd99f6291915c740c5bf5db75
+/* istanbul ignore next */
+function cov_vyw9djv0i() {
+  var path = "C:\\Users\\User\\Documents\\GitHub\\ema\\src\\app\\api\\v1\\auth\\me\\route.ts";
+  var hash = "0bc7405d1b163c6123e237f1bcd0c315420585b2";
+  var global = new Function("return this")();
+  var gcv = "__coverage__";
+  var coverageData = {
+    path: "C:\\Users\\User\\Documents\\GitHub\\ema\\src\\app\\api\\v1\\auth\\me\\route.ts",
+    statementMap: {
+      "0": {
+        start: {
+          line: 6,
+          column: 21
+        },
+        end: {
+          line: 11,
+          column: 5
+        }
+      },
+      "1": {
+        start: {
+          line: 12,
+          column: 4
+        },
+        end: {
+          line: 12,
+          column: 78
+        }
+      },
+      "2": {
+        start: {
+          line: 14,
+          column: 19
+        },
+        end: {
+          line: 14,
+          column: 67
+        }
+      }
+    },
+    fnMap: {
+      "0": {
+        name: "meHandler",
+        decl: {
+          start: {
+            line: 4,
+            column: 15
+          },
+          end: {
+            line: 4,
+            column: 24
+          }
+        },
+        loc: {
+          start: {
+            line: 4,
+            column: 40
+          },
+          end: {
+            line: 13,
+            column: 1
+          }
+        },
+        line: 4
+      }
+    },
+    branchMap: {},
+    s: {
+      "0": 0,
+      "1": 0,
+      "2": 0
+    },
+    f: {
+      "0": 0
+    },
+    b: {},
+    inputSourceMap: {
+      file: "C:\\Users\\User\\Documents\\GitHub\\ema\\src\\app\\api\\v1\\auth\\me\\route.ts",
+      mappings: "AACA,OAAO,EAAE,QAAQ,EAAqB,MAAM,uBAAuB,CAAC;AACpE,OAAO,EAAE,qBAAqB,EAAE,iBAAiB,EAAE,MAAM,qBAAqB,CAAC;AAC/E,OAAO,EAAE,QAAQ,EAAE,MAAM,gBAAgB,CAAC;AAE1C,KAAK,UAAU,SAAS,CAAC,OAAoB,EAAE,IAAuB;IACpE,kCAAkC;IAClC,MAAM,QAAQ,GAAG;QACf,MAAM,EAAE,IAAI,CAAC,MAAM;QACnB,SAAS,EAAE,IAAI,CAAC,SAAS;QACzB,aAAa,EAAE,IAAI;QACnB,SAAS,EAAE,IAAI,IAAI,EAAE,CAAC,WAAW,EAAE;KACpC,CAAC;IAEF,OAAO,qBAAqB,CAAC,QAAQ,EAAE,iCAAiC,CAAC,CAAC;AAC5E,CAAC;AAED,MAAM,CAAC,MAAM,GAAG,GAAG,QAAQ,CAAC,iBAAiB,CAAC,QAAQ,CAAC,SAAS,CAAC,CAAC,CAAC,CAAC",
+      names: [],
+      sources: ["C:\\Users\\User\\Documents\\GitHub\\ema\\src\\app\\api\\v1\\auth\\me\\route.ts"],
+      sourcesContent: ["import { NextRequest } from 'next/server';\nimport { withAuth, AuthenticatedUser } from '@/lib/auth/middleware';\nimport { createSuccessResponse, withErrorHandling } from '@/lib/api/responses';\nimport { withCors } from '@/lib/api/cors';\n\nasync function meHandler(request: NextRequest, user: AuthenticatedUser) {\n  // Get user information from Clerk\n  const userData = {\n    userId: user.userId,\n    sessionId: user.sessionId,\n    authenticated: true,\n    timestamp: new Date().toISOString()\n  };\n\n  return createSuccessResponse(userData, 'User authenticated successfully');\n}\n\nexport const GET = withCors(withErrorHandling(withAuth(meHandler)));\n"],
+      version: 3
+    },
+    _coverageSchema: "1a1c01bbd47fc00a2c39e90264f33305004495a9",
+    hash: "0bc7405d1b163c6123e237f1bcd0c315420585b2"
+  };
+  var coverage = global[gcv] || (global[gcv] = {});
+  if (!coverage[path] || coverage[path].hash !== hash) {
+    coverage[path] = coverageData;
+  }
+  var actualCoverage = coverage[path];
+  {
+    // @ts-ignore
+    cov_vyw9djv0i = function () {
+      return actualCoverage;
+    };
+  }
+  return actualCoverage;
+}
+cov_vyw9djv0i();
+import { withAuth } from '@/lib/auth/middleware';
+import { createSuccessResponse, withErrorHandling } from '@/lib/api/responses';
+import { withCors } from '@/lib/api/cors';
+async function meHandler(request, user) {
+  /* istanbul ignore next */
+  cov_vyw9djv0i().f[0]++;
+  // Get user information from Clerk
+  const userData =
+  /* istanbul ignore next */
+  (cov_vyw9djv0i().s[0]++, {
+    userId: user.userId,
+    sessionId: user.sessionId,
+    authenticated: true,
+    timestamp: new Date().toISOString()
+  });
+  /* istanbul ignore next */
+  cov_vyw9djv0i().s[1]++;
+  return createSuccessResponse(userData, 'User authenticated successfully');
+}
+export const GET =
+/* istanbul ignore next */
+(cov_vyw9djv0i().s[2]++, withCors(withErrorHandling(withAuth(meHandler))));
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJuYW1lcyI6WyJ3aXRoQXV0aCIsImNyZWF0ZVN1Y2Nlc3NSZXNwb25zZSIsIndpdGhFcnJvckhhbmRsaW5nIiwid2l0aENvcnMiLCJtZUhhbmRsZXIiLCJyZXF1ZXN0IiwidXNlciIsImNvdl92eXc5ZGp2MGkiLCJmIiwidXNlckRhdGEiLCJzIiwidXNlcklkIiwic2Vzc2lvbklkIiwiYXV0aGVudGljYXRlZCIsInRpbWVzdGFtcCIsIkRhdGUiLCJ0b0lTT1N0cmluZyIsIkdFVCJdLCJzb3VyY2VzIjpbIkM6XFxVc2Vyc1xcVXNlclxcRG9jdW1lbnRzXFxHaXRIdWJcXGVtYVxcc3JjXFxhcHBcXGFwaVxcdjFcXGF1dGhcXG1lXFxyb3V0ZS50cyJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgeyBOZXh0UmVxdWVzdCB9IGZyb20gJ25leHQvc2VydmVyJztcbmltcG9ydCB7IHdpdGhBdXRoLCBBdXRoZW50aWNhdGVkVXNlciB9IGZyb20gJ0AvbGliL2F1dGgvbWlkZGxld2FyZSc7XG5pbXBvcnQgeyBjcmVhdGVTdWNjZXNzUmVzcG9uc2UsIHdpdGhFcnJvckhhbmRsaW5nIH0gZnJvbSAnQC9saWIvYXBpL3Jlc3BvbnNlcyc7XG5pbXBvcnQgeyB3aXRoQ29ycyB9IGZyb20gJ0AvbGliL2FwaS9jb3JzJztcblxuYXN5bmMgZnVuY3Rpb24gbWVIYW5kbGVyKHJlcXVlc3Q6IE5leHRSZXF1ZXN0LCB1c2VyOiBBdXRoZW50aWNhdGVkVXNlcikge1xuICAvLyBHZXQgdXNlciBpbmZvcm1hdGlvbiBmcm9tIENsZXJrXG4gIGNvbnN0IHVzZXJEYXRhID0ge1xuICAgIHVzZXJJZDogdXNlci51c2VySWQsXG4gICAgc2Vzc2lvbklkOiB1c2VyLnNlc3Npb25JZCxcbiAgICBhdXRoZW50aWNhdGVkOiB0cnVlLFxuICAgIHRpbWVzdGFtcDogbmV3IERhdGUoKS50b0lTT1N0cmluZygpXG4gIH07XG5cbiAgcmV0dXJuIGNyZWF0ZVN1Y2Nlc3NSZXNwb25zZSh1c2VyRGF0YSwgJ1VzZXIgYXV0aGVudGljYXRlZCBzdWNjZXNzZnVsbHknKTtcbn1cblxuZXhwb3J0IGNvbnN0IEdFVCA9IHdpdGhDb3JzKHdpdGhFcnJvckhhbmRsaW5nKHdpdGhBdXRoKG1lSGFuZGxlcikpKTtcbiJdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7QUFDQSxTQUFTQSxRQUFRLFFBQTJCLHVCQUF1QjtBQUNuRSxTQUFTQyxxQkFBcUIsRUFBRUMsaUJBQWlCLFFBQVEscUJBQXFCO0FBQzlFLFNBQVNDLFFBQVEsUUFBUSxnQkFBZ0I7QUFFekMsZUFBZUMsU0FBU0EsQ0FBQ0MsT0FBb0IsRUFBRUMsSUFBdUI7RUFBQTtFQUFBQyxhQUFBLEdBQUFDLENBQUE7RUFDcEU7RUFDQSxNQUFNQyxRQUFRO0VBQUE7RUFBQSxDQUFBRixhQUFBLEdBQUFHLENBQUEsT0FBRztJQUNmQyxNQUFNLEVBQUVMLElBQUksQ0FBQ0ssTUFBTTtJQUNuQkMsU0FBUyxFQUFFTixJQUFJLENBQUNNLFNBQVM7SUFDekJDLGFBQWEsRUFBRSxJQUFJO0lBQ25CQyxTQUFTLEVBQUUsSUFBSUMsSUFBSSxFQUFFLENBQUNDLFdBQVc7R0FDbEM7RUFBQztFQUFBVCxhQUFBLEdBQUFHLENBQUE7RUFFRixPQUFPVCxxQkFBcUIsQ0FBQ1EsUUFBUSxFQUFFLGlDQUFpQyxDQUFDO0FBQzNFO0FBRUEsT0FBTyxNQUFNUSxHQUFHO0FBQUE7QUFBQSxDQUFBVixhQUFBLEdBQUFHLENBQUEsT0FBR1AsUUFBUSxDQUFDRCxpQkFBaUIsQ0FBQ0YsUUFBUSxDQUFDSSxTQUFTLENBQUMsQ0FBQyxDQUFDIiwiaWdub3JlTGlzdCI6W119

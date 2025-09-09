@@ -1,6 +1,6 @@
 "use client";
 
-import { SignedIn, SignedOut, RedirectToSignIn } from "@clerk/nextjs";
+// Clerk removed - using Supabase Auth
 
 interface ProtectedRouteProps {
   children: React.ReactNode;

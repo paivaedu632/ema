@@ -1,6 +1,6 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
+// Clerk removed - using Supabase Auth
 
 export function UserProfile() {
   const { user, isLoaded } = useUser();

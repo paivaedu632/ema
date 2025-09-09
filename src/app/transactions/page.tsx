@@ -44,9 +44,6 @@ export default function TransactionsPage() {
   const hasMore = false
 
   // TODO: Add real transaction fetching when clean architecture APIs are implemented
-  const handleRefresh = () => {
-    console.log('Refresh transactions - placeholder')
-  }
 
   if (loading) {
     return (

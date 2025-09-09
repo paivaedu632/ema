@@ -2,17 +2,12 @@
 
 import { useRouter } from "next/navigation"
 import { Bell } from "lucide-react"
-import { PageHeader } from "@/components/ui/page-header"
 import { FixedBottomAction } from "@/components/ui/fixed-bottom-action"
 import { useKYC } from "@/contexts/kyc-context"
 
 export default function KYCNotificationsPage() {
   const router = useRouter()
   const { updateData } = useKYC()
-
-  const handleBack = () => {
-    router.push("/dashboard")
-  }
 
   const handleEnableNotifications = () => {
     updateData({ notificationsEnabled: true })

@@ -1,13 +1,13 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { BackButton } from '@/components/ui/back-button'
 import { PrimaryActionButtons } from '@/components/ui/primary-action-buttons'
 import { IconActionButtons } from '@/components/ui/icon-action-buttons'
 
 import { BalanceSelector, type BalanceType, type Currency } from '@/components/ui/balance-selector'
-import { ShoppingBag, ArrowUpRight, ArrowDownLeft, CreditCard, RefreshCw } from 'lucide-react'
+import { ShoppingBag, ArrowUpRight, ArrowDownLeft, CreditCard } from 'lucide-react'
 
 interface WalletProps {
   currency?: string

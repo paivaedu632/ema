@@ -9,7 +9,7 @@ import { useKYC } from "@/contexts/kyc-context"
 
 export default function KYCSelfiePage() {
   const router = useRouter()
-  const { data, updateData, uploadDocument, detectFaceInImage } = useKYC()
+  const { updateData, uploadDocument, detectFaceInImage } = useKYC()
   const [mode, setMode] = useState<'instructions' | 'camera'>('instructions')
   const [isProcessing, setIsProcessing] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -42,7 +42,7 @@ export default function KYCSelfiePage() {
 
       // Navigate to next step
       router.push("/kyc/liveness-check")
-    } catch (error) {
+    } catch {
       setError('Erro ao processar selfie. Tente novamente.')
     } finally {
       setIsProcessing(false)

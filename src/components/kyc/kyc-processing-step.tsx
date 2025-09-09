@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { CheckCircle, XCircle, Loader2 } from "lucide-react"
 import { PageHeader } from "@/components/ui/page-header"
@@ -66,7 +66,7 @@ export function KYCProcessingStep({
   }
 
   // Process all steps sequentially
-  const processSteps = async () => {
+  const processSteps = useCallback(async () => {
     setIsProcessing(true)
     setError(null)
 
@@ -96,14 +96,14 @@ export function KYCProcessingStep({
     } finally {
       setIsProcessing(false)
     }
-  }
+  }, [currentSteps, onComplete, onError])
 
   // Auto-start processing when component mounts
   useEffect(() => {
     if (autoStart) {
       processSteps()
     }
-  }, [autoStart])
+  }, [autoStart, processSteps])
 
   const canContinue = allCompleted && !isProcessing && !error
 

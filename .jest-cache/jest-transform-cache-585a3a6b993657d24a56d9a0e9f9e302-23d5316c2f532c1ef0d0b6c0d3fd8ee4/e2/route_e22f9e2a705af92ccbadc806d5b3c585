@@ -1,0 +1,328 @@
+411344d9d271beb57eff5a46bc9c9c2f
+/* istanbul ignore next */
+function cov_2dejolvorh() {
+  var path = "C:\\Users\\User\\Documents\\GitHub\\ema\\src\\app\\api\\v1\\health\\status\\route.ts";
+  var hash = "2dd3d592978121bb9f91f4aaddc9f5eaacdc8342";
+  var global = new Function("return this")();
+  var gcv = "__coverage__";
+  var coverageData = {
+    path: "C:\\Users\\User\\Documents\\GitHub\\ema\\src\\app\\api\\v1\\health\\status\\route.ts",
+    statementMap: {
+      "0": {
+        start: {
+          line: 7,
+          column: 21
+        },
+        end: {
+          line: 7,
+          column: 48
+        }
+      },
+      "1": {
+        start: {
+          line: 8,
+          column: 4
+        },
+        end: {
+          line: 10,
+          column: 5
+        }
+      },
+      "2": {
+        start: {
+          line: 9,
+          column: 8
+        },
+        end: {
+          line: 9,
+          column: 88
+        }
+      },
+      "3": {
+        start: {
+          line: 11,
+          column: 23
+        },
+        end: {
+          line: 20,
+          column: 5
+        }
+      },
+      "4": {
+        start: {
+          line: 21,
+          column: 4
+        },
+        end: {
+          line: 21,
+          column: 66
+        }
+      },
+      "5": {
+        start: {
+          line: 23,
+          column: 19
+        },
+        end: {
+          line: 23,
+          column: 61
+        }
+      }
+    },
+    fnMap: {
+      "0": {
+        name: "healthHandler",
+        decl: {
+          start: {
+            line: 4,
+            column: 15
+          },
+          end: {
+            line: 4,
+            column: 28
+          }
+        },
+        loc: {
+          start: {
+            line: 4,
+            column: 31
+          },
+          end: {
+            line: 22,
+            column: 1
+          }
+        },
+        line: 4
+      }
+    },
+    branchMap: {
+      "0": {
+        loc: {
+          start: {
+            line: 8,
+            column: 4
+          },
+          end: {
+            line: 10,
+            column: 5
+          }
+        },
+        type: "if",
+        locations: [{
+          start: {
+            line: 8,
+            column: 4
+          },
+          end: {
+            line: 10,
+            column: 5
+          }
+        }, {
+          start: {
+            line: undefined,
+            column: undefined
+          },
+          end: {
+            line: undefined,
+            column: undefined
+          }
+        }],
+        line: 8
+      },
+      "1": {
+        loc: {
+          start: {
+            line: 17,
+            column: 23
+          },
+          end: {
+            line: 17,
+            column: 93
+          }
+        },
+        type: "cond-expr",
+        locations: [{
+          start: {
+            line: 17,
+            column: 72
+          },
+          end: {
+            line: 17,
+            column: 78
+          }
+        }, {
+          start: {
+            line: 17,
+            column: 81
+          },
+          end: {
+            line: 17,
+            column: 93
+          }
+        }],
+        line: 17
+      },
+      "2": {
+        loc: {
+          start: {
+            line: 17,
+            column: 23
+          },
+          end: {
+            line: 17,
+            column: 69
+          }
+        },
+        type: "binary-expr",
+        locations: [{
+          start: {
+            line: 17,
+            column: 23
+          },
+          end: {
+            line: 17,
+            column: 52
+          }
+        }, {
+          start: {
+            line: 17,
+            column: 56
+          },
+          end: {
+            line: 17,
+            column: 69
+          }
+        }],
+        line: 17
+      },
+      "3": {
+        loc: {
+          start: {
+            line: 19,
+            column: 21
+          },
+          end: {
+            line: 19,
+            column: 58
+          }
+        },
+        type: "binary-expr",
+        locations: [{
+          start: {
+            line: 19,
+            column: 21
+          },
+          end: {
+            line: 19,
+            column: 41
+          }
+        }, {
+          start: {
+            line: 19,
+            column: 45
+          },
+          end: {
+            line: 19,
+            column: 58
+          }
+        }],
+        line: 19
+      }
+    },
+    s: {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0
+    },
+    f: {
+      "0": 0
+    },
+    b: {
+      "0": [0, 0],
+      "1": [0, 0],
+      "2": [0, 0],
+      "3": [0, 0]
+    },
+    inputSourceMap: {
+      file: "C:\\Users\\User\\Documents\\GitHub\\ema\\src\\app\\api\\v1\\health\\status\\route.ts",
+      mappings: "AACA,OAAO,EAAE,mBAAmB,EAAE,MAAM,0BAA0B,CAAC;AAC/D,OAAO,EAAE,qBAAqB,EAAE,mBAAmB,EAAE,iBAAiB,EAAE,MAAM,qBAAqB,CAAC;AACpG,OAAO,EAAE,QAAQ,EAAE,MAAM,gBAAgB,CAAC;AAE1C,KAAK,UAAU,aAAa;;IAC1B,8BAA8B;IAC9B,MAAM,QAAQ,GAAG,MAAM,mBAAmB,EAAE,CAAC;IAE7C,IAAI,CAAC,QAAQ,CAAC,OAAO,EAAE,CAAC;QACtB,OAAO,mBAAmB,CACxB,4BAA4B,EAC5B,gBAAgB,EAChB,GAAG,CACJ,CAAC;IACJ,CAAC;IAED,MAAM,UAAU,GAAG;QACjB,MAAM,EAAE,SAAS;QACjB,SAAS,EAAE,IAAI,IAAI,EAAE,CAAC,WAAW,EAAE;QACnC,OAAO,EAAE,OAAO;QAChB,QAAQ,EAAE;YACR,MAAM,EAAE,WAAW;YACnB,SAAS,EAAE,MAAA,QAAQ,CAAC,IAAI,0CAAE,SAAS;SACpC;QACD,WAAW,EAAE,OAAO,CAAC,GAAG,CAAC,QAAQ,IAAI,aAAa;KACnD,CAAC;IAEF,OAAO,qBAAqB,CAAC,UAAU,EAAE,mBAAmB,CAAC,CAAC;AAChE,CAAC;AAED,MAAM,CAAC,MAAM,GAAG,GAAG,QAAQ,CAAC,iBAAiB,CAAC,aAAa,CAAC,CAAC,CAAC",
+      names: [],
+      sources: ["C:\\Users\\User\\Documents\\GitHub\\ema\\src\\app\\api\\v1\\health\\status\\route.ts"],
+      sourcesContent: ["\nimport { checkDatabaseHealth } from '@/lib/database/functions';\nimport { createSuccessResponse, createErrorResponse, withErrorHandling } from '@/lib/api/responses';\nimport { withCors } from '@/lib/api/cors';\n\nasync function healthHandler() {\n  // Check database connectivity\n  const dbHealth = await checkDatabaseHealth();\n\n  if (!dbHealth.success) {\n    return createErrorResponse(\n      'Database connection failed',\n      'DATABASE_ERROR',\n      503\n    );\n  }\n\n  const healthData = {\n    status: 'healthy',\n    timestamp: new Date().toISOString(),\n    version: '1.0.0',\n    database: {\n      status: 'connected',\n      timestamp: dbHealth.data?.timestamp\n    },\n    environment: process.env.NODE_ENV || 'development'\n  };\n\n  return createSuccessResponse(healthData, 'System is healthy');\n}\n\nexport const GET = withCors(withErrorHandling(healthHandler));\n"],
+      version: 3
+    },
+    _coverageSchema: "1a1c01bbd47fc00a2c39e90264f33305004495a9",
+    hash: "2dd3d592978121bb9f91f4aaddc9f5eaacdc8342"
+  };
+  var coverage = global[gcv] || (global[gcv] = {});
+  if (!coverage[path] || coverage[path].hash !== hash) {
+    coverage[path] = coverageData;
+  }
+  var actualCoverage = coverage[path];
+  {
+    // @ts-ignore
+    cov_2dejolvorh = function () {
+      return actualCoverage;
+    };
+  }
+  return actualCoverage;
+}
+cov_2dejolvorh();
+import { checkDatabaseHealth } from '@/lib/database/functions';
+import { createSuccessResponse, createErrorResponse, withErrorHandling } from '@/lib/api/responses';
+import { withCors } from '@/lib/api/cors';
+async function healthHandler() {
+  /* istanbul ignore next */
+  cov_2dejolvorh().f[0]++;
+  var _a;
+  // Check database connectivity
+  const dbHealth =
+  /* istanbul ignore next */
+  (cov_2dejolvorh().s[0]++, await checkDatabaseHealth());
+  /* istanbul ignore next */
+  cov_2dejolvorh().s[1]++;
+  if (!dbHealth.success) {
+    /* istanbul ignore next */
+    cov_2dejolvorh().b[0][0]++;
+    cov_2dejolvorh().s[2]++;
+    return createErrorResponse('Database connection failed', 'DATABASE_ERROR', 503);
+  } else
+  /* istanbul ignore next */
+  {
+    cov_2dejolvorh().b[0][1]++;
+  }
+  const healthData =
+  /* istanbul ignore next */
+  (cov_2dejolvorh().s[3]++, {
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    version: '1.0.0',
+    database: {
+      status: 'connected',
+      timestamp:
+      /* istanbul ignore next */
+      (cov_2dejolvorh().b[2][0]++, (_a = dbHealth.data) === null) ||
+      /* istanbul ignore next */
+      (cov_2dejolvorh().b[2][1]++, _a === void 0) ?
+      /* istanbul ignore next */
+      (cov_2dejolvorh().b[1][0]++, void 0) :
+      /* istanbul ignore next */
+      (cov_2dejolvorh().b[1][1]++, _a.timestamp)
+    },
+    environment:
+    /* istanbul ignore next */
+    (cov_2dejolvorh().b[3][0]++, process.env.NODE_ENV) ||
+    /* istanbul ignore next */
+    (cov_2dejolvorh().b[3][1]++, 'development')
+  });
+  /* istanbul ignore next */
+  cov_2dejolvorh().s[4]++;
+  return createSuccessResponse(healthData, 'System is healthy');
+}
+export const GET =
+/* istanbul ignore next */
+(cov_2dejolvorh().s[5]++, withCors(withErrorHandling(healthHandler)));
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJuYW1lcyI6WyJjb3ZfMmRlam9sdm9yaCIsImFjdHVhbENvdmVyYWdlIiwiY2hlY2tEYXRhYmFzZUhlYWx0aCIsImNyZWF0ZVN1Y2Nlc3NSZXNwb25zZSIsImNyZWF0ZUVycm9yUmVzcG9uc2UiLCJ3aXRoRXJyb3JIYW5kbGluZyIsIndpdGhDb3JzIiwiaGVhbHRoSGFuZGxlciIsImYiLCJkYkhlYWx0aCIsInMiLCJzdWNjZXNzIiwiYiIsImhlYWx0aERhdGEiLCJzdGF0dXMiLCJ0aW1lc3RhbXAiLCJEYXRlIiwidG9JU09TdHJpbmciLCJ2ZXJzaW9uIiwiZGF0YWJhc2UiLCJfYSIsImRhdGEiLCJlbnZpcm9ubWVudCIsInByb2Nlc3MiLCJlbnYiLCJOT0RFX0VOViIsIkdFVCJdLCJzb3VyY2VzIjpbIkM6XFxVc2Vyc1xcVXNlclxcRG9jdW1lbnRzXFxHaXRIdWJcXGVtYVxcc3JjXFxhcHBcXGFwaVxcdjFcXGhlYWx0aFxcc3RhdHVzXFxyb3V0ZS50cyJdLCJzb3VyY2VzQ29udGVudCI6WyJcbmltcG9ydCB7IGNoZWNrRGF0YWJhc2VIZWFsdGggfSBmcm9tICdAL2xpYi9kYXRhYmFzZS9mdW5jdGlvbnMnO1xuaW1wb3J0IHsgY3JlYXRlU3VjY2Vzc1Jlc3BvbnNlLCBjcmVhdGVFcnJvclJlc3BvbnNlLCB3aXRoRXJyb3JIYW5kbGluZyB9IGZyb20gJ0AvbGliL2FwaS9yZXNwb25zZXMnO1xuaW1wb3J0IHsgd2l0aENvcnMgfSBmcm9tICdAL2xpYi9hcGkvY29ycyc7XG5cbmFzeW5jIGZ1bmN0aW9uIGhlYWx0aEhhbmRsZXIoKSB7XG4gIC8vIENoZWNrIGRhdGFiYXNlIGNvbm5lY3Rpdml0eVxuICBjb25zdCBkYkhlYWx0aCA9IGF3YWl0IGNoZWNrRGF0YWJhc2VIZWFsdGgoKTtcblxuICBpZiAoIWRiSGVhbHRoLnN1Y2Nlc3MpIHtcbiAgICByZXR1cm4gY3JlYXRlRXJyb3JSZXNwb25zZShcbiAgICAgICdEYXRhYmFzZSBjb25uZWN0aW9uIGZhaWxlZCcsXG4gICAgICAnREFUQUJBU0VfRVJST1InLFxuICAgICAgNTAzXG4gICAgKTtcbiAgfVxuXG4gIGNvbnN0IGhlYWx0aERhdGEgPSB7XG4gICAgc3RhdHVzOiAnaGVhbHRoeScsXG4gICAgdGltZXN0YW1wOiBuZXcgRGF0ZSgpLnRvSVNPU3RyaW5nKCksXG4gICAgdmVyc2lvbjogJzEuMC4wJyxcbiAgICBkYXRhYmFzZToge1xuICAgICAgc3RhdHVzOiAnY29ubmVjdGVkJyxcbiAgICAgIHRpbWVzdGFtcDogZGJIZWFsdGguZGF0YT8udGltZXN0YW1wXG4gICAgfSxcbiAgICBlbnZpcm9ubWVudDogcHJvY2Vzcy5lbnYuTk9ERV9FTlYgfHwgJ2RldmVsb3BtZW50J1xuICB9O1xuXG4gIHJldHVybiBjcmVhdGVTdWNjZXNzUmVzcG9uc2UoaGVhbHRoRGF0YSwgJ1N5c3RlbSBpcyBoZWFsdGh5Jyk7XG59XG5cbmV4cG9ydCBjb25zdCBHRVQgPSB3aXRoQ29ycyh3aXRoRXJyb3JIYW5kbGluZyhoZWFsdGhIYW5kbGVyKSk7XG4iXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7OztJQXNCTTtJQUFBQSxjQUFBLFlBQUFBLENBQUE7TUFBQSxPQUFBQyxjQUFBO0lBQUE7RUFBQTtFQUFBLE9BQUFBLGNBQUE7QUFBQTtBQUFBRCxjQUFBO0FBckJOLFNBQVNFLG1CQUFtQixRQUFRLDBCQUEwQjtBQUM5RCxTQUFTQyxxQkFBcUIsRUFBRUMsbUJBQW1CLEVBQUVDLGlCQUFpQixRQUFRLHFCQUFxQjtBQUNuRyxTQUFTQyxRQUFRLFFBQVEsZ0JBQWdCO0FBRXpDLGVBQWVDLGFBQWFBLENBQUE7RUFBQTtFQUFBUCxjQUFBLEdBQUFRLENBQUE7O0VBQzFCO0VBQ0EsTUFBTUMsUUFBUTtFQUFBO0VBQUEsQ0FBQVQsY0FBQSxHQUFBVSxDQUFBLE9BQUcsTUFBTVIsbUJBQW1CLEVBQUU7RUFBQztFQUFBRixjQUFBLEdBQUFVLENBQUE7RUFFN0MsSUFBSSxDQUFDRCxRQUFRLENBQUNFLE9BQU8sRUFBRTtJQUFBO0lBQUFYLGNBQUEsR0FBQVksQ0FBQTtJQUFBWixjQUFBLEdBQUFVLENBQUE7SUFDckIsT0FBT04sbUJBQW1CLENBQ3hCLDRCQUE0QixFQUM1QixnQkFBZ0IsRUFDaEIsR0FBRyxDQUNKO0VBQ0gsQ0FBQztFQUFBO0VBQUE7SUFBQUosY0FBQSxHQUFBWSxDQUFBO0VBQUE7RUFFRCxNQUFNQyxVQUFVO0VBQUE7RUFBQSxDQUFBYixjQUFBLEdBQUFVLENBQUEsT0FBRztJQUNqQkksTUFBTSxFQUFFLFNBQVM7SUFDakJDLFNBQVMsRUFBRSxJQUFJQyxJQUFJLEVBQUUsQ0FBQ0MsV0FBVyxFQUFFO0lBQ25DQyxPQUFPLEVBQUUsT0FBTztJQUNoQkMsUUFBUSxFQUFFO01BQ1JMLE1BQU0sRUFBRSxXQUFXO01BQ25CQyxTQUFTO01BQUU7TUFBQSxDQUFBZixjQUFBLEdBQUFZLENBQUEsV0FBQVEsRUFBQSxHQUFBWCxRQUFRLENBQUNZLElBQUk7TUFBQTtNQUFBLENBQUFyQixjQUFBLEdBQUFZLENBQUEsVUFBQVEsRUFBQTtNQUFBO01BQUEsQ0FBQXBCLGNBQUEsR0FBQVksQ0FBQTtNQUFBO01BQUEsQ0FBQVosY0FBQSxHQUFBWSxDQUFBLFVBQUFRLEVBQUEsQ0FBRUwsU0FBUztLQUNwQztJQUNETyxXQUFXO0lBQUU7SUFBQSxDQUFBdEIsY0FBQSxHQUFBWSxDQUFBLFVBQUFXLE9BQU8sQ0FBQ0MsR0FBRyxDQUFDQyxRQUFRO0lBQUE7SUFBQSxDQUFBekIsY0FBQSxHQUFBWSxDQUFBLFVBQUksYUFBYTtHQUNuRDtFQUFDO0VBQUFaLGNBQUEsR0FBQVUsQ0FBQTtFQUVGLE9BQU9QLHFCQUFxQixDQUFDVSxVQUFVLEVBQUUsbUJBQW1CLENBQUM7QUFDL0Q7QUFFQSxPQUFPLE1BQU1hLEdBQUc7QUFBQTtBQUFBLENBQUExQixjQUFBLEdBQUFVLENBQUEsT0FBR0osUUFBUSxDQUFDRCxpQkFBaUIsQ0FBQ0UsYUFBYSxDQUFDLENBQUMiLCJpZ25vcmVMaXN0IjpbXX0=

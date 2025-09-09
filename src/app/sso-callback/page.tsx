@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect } from 'react'
-import { useClerk } from '@clerk/nextjs'
+// Clerk removed - using Supabase Auth
 import { useRouter } from 'next/navigation'
 
 export default function SSOCallback() {
@@ -14,7 +14,7 @@ export default function SSOCallback() {
         await handleRedirectCallback()
         // Redirect to dashboard after successful authentication
         router.push('/dashboard')
-      } catch (error) {
+      } catch {
         // Redirect to login on error
         router.push('/login')
       }

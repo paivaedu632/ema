@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React from 'react'
 import { formatAmountForInput, type Currency } from '@/lib/format'
 import { FlagIcon } from '@/components/ui/flag-icon'
 

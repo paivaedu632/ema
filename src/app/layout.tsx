@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { KYCProvider } from "@/contexts/kyc-context";
-import { ClerkProvider } from "@clerk/nextjs";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -25,20 +24,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider
-      publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
-      signInFallbackRedirectUrl="/dashboard"
-      signUpFallbackRedirectUrl="/dashboard"
-    >
-      <html lang="en">
-        <body
-          className={`${inter.variable} ${jetbrainsMono.variable} antialiased font-inter`}
-        >
-          <KYCProvider>
-            {children}
-          </KYCProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+    <html lang="en">
+      <body
+        className={`${inter.variable} ${jetbrainsMono.variable} antialiased font-inter`}
+      >
+        <KYCProvider>
+          {children}
+        </KYCProvider>
+      </body>
+    </html>
   );
 }

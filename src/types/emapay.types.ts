@@ -130,7 +130,7 @@ export interface ExchangeRateInfo {
 }
 
 // Simple API Response types for clean implementation
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   success: boolean
   data?: T
   error?: string

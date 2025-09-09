@@ -131,7 +131,7 @@ export function KYCProvider({ children }: { children: React.ReactNode }) {
     if (savedData) {
       try {
         setData(JSON.parse(savedData))
-      } catch (error) {
+      } catch {
         // Handle localStorage error silently
       }
     }
@@ -174,7 +174,7 @@ export function KYCProvider({ children }: { children: React.ReactNode }) {
           biValidationError: 'Erro ao validar BI. Tente novamente.'
         })
       }
-    } catch (error) {
+    } catch {
       updateData({
         isValidBI: false,
         biValidationError: 'Erro ao validar BI. Tente novamente.'

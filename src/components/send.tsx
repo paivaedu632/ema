@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -77,10 +77,10 @@ export function WiseStyleTransfer() {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedRecipient, setSelectedRecipient] = useState<Recipient | null>(null)
   // Static wallet balances for visual representation
-  const walletBalances: WalletBalance[] = [
+  const walletBalances: WalletBalance[] = useMemo(() => [
     { currency: 'EUR', available: 1250.75, reserved: 0.00 },
     { currency: 'AOA', available: 485000.00, reserved: 15000.00 }
-  ]
+  ], [])
   const [balancesLoading] = useState(false)
   const [recipients, setRecipients] = useState<Recipient[]>([])
   const [recipientsLoading, setRecipientsLoading] = useState(false)
@@ -121,11 +121,11 @@ export function WiseStyleTransfer() {
   // TODO: Add useEffect here to fetch real wallet balances when clean architecture APIs are implemented
 
   // Static recipients data for visual representation
-  const staticRecipients: Recipient[] = [
+  const staticRecipients: Recipient[] = useMemo(() => [
     { id: '1', name: 'Maria Silva', email: 'maria@example.com' },
     { id: '2', name: 'João Santos', email: 'joao@example.com' },
     { id: '3', name: 'Ana Costa', email: 'ana@example.com' }
-  ]
+  ], [])
 
   // Search recipients function with static data
   const searchRecipients = useCallback(async (query: string) => {
@@ -148,7 +148,7 @@ export function WiseStyleTransfer() {
 
     setRecipients(filtered)
     setRecipientsLoading(false)
-  }, [])
+  }, [staticRecipients])
 
   // Search recipients with debouncing
   useEffect(() => {
@@ -194,7 +194,7 @@ export function WiseStyleTransfer() {
   const handleSend = async () => {
     if (!selectedRecipient || !isValid) return
 
-    const formData = form.getValues()
+    form.getValues()
 
     try {
       // TODO: Replace with real API call when clean architecture APIs are implemented

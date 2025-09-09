@@ -2,11 +2,10 @@
 
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { useUser, useClerk } from '@clerk/nextjs'
+// Clerk removed - using Supabase Auth
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { UnifiedActionButtons } from '@/components/ui/unified-action-buttons'
-import { BalanceCard, ConsolidatedBalanceCard } from '@/components/ui/balance-card'
-import { AngolaFlag, EurFlag } from '@/components/ui/flag-icon'
+import { ConsolidatedBalanceCard } from '@/components/ui/balance-card'
 import { LogOut, Eye, EyeOff } from 'lucide-react'
 import { TransactionListItem, TransactionListItemSkeleton, TransactionListEmpty } from '@/components/ui/transaction-list-item'
 import LoadingAnimation from '@/components/ui/loading-animation'
@@ -32,7 +31,7 @@ export default function Dashboard() {
   const { signOut } = useClerk()
 
   // Static wallet balances for visual representation
-  const [balancesLoading, setBalancesLoading] = useState(false)
+  const [balancesLoading] = useState(false)
   const [isBalanceVisible, setIsBalanceVisible] = useState(true)
   const [walletBalances] = useState([
     {
@@ -57,7 +56,7 @@ export default function Dashboard() {
     try {
       await signOut()
       router.push('/login')
-    } catch (_error) {
+    } catch {
       // Handle sign out error silently
     }
   }

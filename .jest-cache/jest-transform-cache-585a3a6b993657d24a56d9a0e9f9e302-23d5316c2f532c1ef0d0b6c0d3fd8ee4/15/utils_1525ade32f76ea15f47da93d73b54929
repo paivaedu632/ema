@@ -1,0 +1,321 @@
+05094b9cf4ab42d16546ff681b77b2dd
+/* istanbul ignore next */
+function cov_1zxhlnbsq0() {
+  var path = "C:\\Users\\User\\Documents\\GitHub\\ema\\src\\lib\\utils.ts";
+  var hash = "1d495e7aac833348cfbf27b5a4a211ce19cf9a2d";
+  var global = new Function("return this")();
+  var gcv = "__coverage__";
+  var coverageData = {
+    path: "C:\\Users\\User\\Documents\\GitHub\\ema\\src\\lib\\utils.ts",
+    statementMap: {
+      "0": {
+        start: {
+          line: 4,
+          column: 4
+        },
+        end: {
+          line: 4,
+          column: 33
+        }
+      },
+      "1": {
+        start: {
+          line: 11,
+          column: 4
+        },
+        end: {
+          line: 11,
+          column: 41
+        }
+      },
+      "2": {
+        start: {
+          line: 17,
+          column: 4
+        },
+        end: {
+          line: 18,
+          column: 20
+        }
+      },
+      "3": {
+        start: {
+          line: 18,
+          column: 8
+        },
+        end: {
+          line: 18,
+          column: 20
+        }
+      },
+      "4": {
+        start: {
+          line: 19,
+          column: 4
+        },
+        end: {
+          line: 19,
+          column: 52
+        }
+      },
+      "5": {
+        start: {
+          line: 25,
+          column: 4
+        },
+        end: {
+          line: 25,
+          column: 101
+        }
+      }
+    },
+    fnMap: {
+      "0": {
+        name: "cn",
+        decl: {
+          start: {
+            line: 3,
+            column: 16
+          },
+          end: {
+            line: 3,
+            column: 18
+          }
+        },
+        loc: {
+          start: {
+            line: 3,
+            column: 30
+          },
+          end: {
+            line: 5,
+            column: 1
+          }
+        },
+        line: 3
+      },
+      "1": {
+        name: "formatPercentage",
+        decl: {
+          start: {
+            line: 10,
+            column: 16
+          },
+          end: {
+            line: 10,
+            column: 32
+          }
+        },
+        loc: {
+          start: {
+            line: 10,
+            column: 54
+          },
+          end: {
+            line: 12,
+            column: 1
+          }
+        },
+        line: 10
+      },
+      "2": {
+        name: "truncateText",
+        decl: {
+          start: {
+            line: 16,
+            column: 16
+          },
+          end: {
+            line: 16,
+            column: 28
+          }
+        },
+        loc: {
+          start: {
+            line: 16,
+            column: 46
+          },
+          end: {
+            line: 20,
+            column: 1
+          }
+        },
+        line: 16
+      },
+      "3": {
+        name: "generateId",
+        decl: {
+          start: {
+            line: 24,
+            column: 16
+          },
+          end: {
+            line: 24,
+            column: 26
+          }
+        },
+        loc: {
+          start: {
+            line: 24,
+            column: 29
+          },
+          end: {
+            line: 26,
+            column: 1
+          }
+        },
+        line: 24
+      }
+    },
+    branchMap: {
+      "0": {
+        loc: {
+          start: {
+            line: 10,
+            column: 40
+          },
+          end: {
+            line: 10,
+            column: 52
+          }
+        },
+        type: "default-arg",
+        locations: [{
+          start: {
+            line: 10,
+            column: 51
+          },
+          end: {
+            line: 10,
+            column: 52
+          }
+        }],
+        line: 10
+      },
+      "1": {
+        loc: {
+          start: {
+            line: 17,
+            column: 4
+          },
+          end: {
+            line: 18,
+            column: 20
+          }
+        },
+        type: "if",
+        locations: [{
+          start: {
+            line: 17,
+            column: 4
+          },
+          end: {
+            line: 18,
+            column: 20
+          }
+        }, {
+          start: {
+            line: undefined,
+            column: undefined
+          },
+          end: {
+            line: undefined,
+            column: undefined
+          }
+        }],
+        line: 17
+      }
+    },
+    s: {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0
+    },
+    f: {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+    },
+    b: {
+      "0": [0],
+      "1": [0, 0]
+    },
+    inputSourceMap: {
+      file: "C:\\Users\\User\\Documents\\GitHub\\ema\\src\\lib\\utils.ts",
+      mappings: "AAAA,OAAO,EAAE,IAAI,EAAmB,MAAM,MAAM,CAAA;AAC5C,OAAO,EAAE,OAAO,EAAE,MAAM,gBAAgB,CAAA;AAExC,MAAM,UAAU,EAAE,CAAC,GAAG,MAAoB;IACxC,OAAO,OAAO,CAAC,IAAI,CAAC,MAAM,CAAC,CAAC,CAAA;AAC9B,CAAC;AAED,yEAAyE;AAEzE;;GAEG;AACH,MAAM,UAAU,gBAAgB,CAAC,KAAa,EAAE,QAAQ,GAAG,CAAC;IAC1D,OAAO,GAAG,KAAK,CAAC,OAAO,CAAC,QAAQ,CAAC,GAAG,CAAA;AACtC,CAAC;AAED;;GAEG;AACH,MAAM,UAAU,YAAY,CAAC,IAAY,EAAE,SAAiB;IAC1D,IAAI,IAAI,CAAC,MAAM,IAAI,SAAS;QAAE,OAAO,IAAI,CAAA;IACzC,OAAO,IAAI,CAAC,SAAS,CAAC,CAAC,EAAE,SAAS,GAAG,CAAC,CAAC,GAAG,KAAK,CAAA;AACjD,CAAC;AAED;;GAEG;AACH,MAAM,UAAU,UAAU;IACxB,OAAO,IAAI,CAAC,MAAM,EAAE,CAAC,QAAQ,CAAC,EAAE,CAAC,CAAC,SAAS,CAAC,CAAC,EAAE,EAAE,CAAC,GAAG,IAAI,CAAC,MAAM,EAAE,CAAC,QAAQ,CAAC,EAAE,CAAC,CAAC,SAAS,CAAC,CAAC,EAAE,EAAE,CAAC,CAAA;AAClG,CAAC",
+      names: [],
+      sources: ["C:\\Users\\User\\Documents\\GitHub\\ema\\src\\lib\\utils.ts"],
+      sourcesContent: ["import { clsx, type ClassValue } from \"clsx\"\nimport { twMerge } from \"tailwind-merge\"\n\nexport function cn(...inputs: ClassValue[]) {\n  return twMerge(clsx(inputs))\n}\n\n// Date/time formatting functions are in @/lib/format - use those instead\n\n/**\n * Format percentage values\n */\nexport function formatPercentage(value: number, decimals = 2): string {\n  return `${value.toFixed(decimals)}%`\n}\n\n/**\n * Truncate text with ellipsis\n */\nexport function truncateText(text: string, maxLength: number): string {\n  if (text.length <= maxLength) return text\n  return text.substring(0, maxLength - 3) + '...'\n}\n\n/**\n * Generate a random ID\n */\nexport function generateId(): string {\n  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)\n}\n"],
+      version: 3
+    },
+    _coverageSchema: "1a1c01bbd47fc00a2c39e90264f33305004495a9",
+    hash: "1d495e7aac833348cfbf27b5a4a211ce19cf9a2d"
+  };
+  var coverage = global[gcv] || (global[gcv] = {});
+  if (!coverage[path] || coverage[path].hash !== hash) {
+    coverage[path] = coverageData;
+  }
+  var actualCoverage = coverage[path];
+  {
+    // @ts-ignore
+    cov_1zxhlnbsq0 = function () {
+      return actualCoverage;
+    };
+  }
+  return actualCoverage;
+}
+cov_1zxhlnbsq0();
+import { clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+export function cn(...inputs) {
+  /* istanbul ignore next */
+  cov_1zxhlnbsq0().f[0]++;
+  cov_1zxhlnbsq0().s[0]++;
+  return twMerge(clsx(inputs));
+}
+// Date/time formatting functions are in @/lib/format - use those instead
+/**
+ * Format percentage values
+ */
+export function formatPercentage(value, decimals =
+/* istanbul ignore next */
+(cov_1zxhlnbsq0().b[0][0]++, 2)) {
+  /* istanbul ignore next */
+  cov_1zxhlnbsq0().f[1]++;
+  cov_1zxhlnbsq0().s[1]++;
+  return `${value.toFixed(decimals)}%`;
+}
+/**
+ * Truncate text with ellipsis
+ */
+export function truncateText(text, maxLength) {
+  /* istanbul ignore next */
+  cov_1zxhlnbsq0().f[2]++;
+  cov_1zxhlnbsq0().s[2]++;
+  if (text.length <= maxLength) {
+    /* istanbul ignore next */
+    cov_1zxhlnbsq0().b[1][0]++;
+    cov_1zxhlnbsq0().s[3]++;
+    return text;
+  } else
+  /* istanbul ignore next */
+  {
+    cov_1zxhlnbsq0().b[1][1]++;
+  }
+  cov_1zxhlnbsq0().s[4]++;
+  return text.substring(0, maxLength - 3) + '...';
+}
+/**
+ * Generate a random ID
+ */
+export function generateId() {
+  /* istanbul ignore next */
+  cov_1zxhlnbsq0().f[3]++;
+  cov_1zxhlnbsq0().s[5]++;
+  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+}
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJuYW1lcyI6WyJjb3ZfMXp4aGxuYnNxMCIsImFjdHVhbENvdmVyYWdlIiwiY2xzeCIsInR3TWVyZ2UiLCJjbiIsImlucHV0cyIsImYiLCJzIiwiZm9ybWF0UGVyY2VudGFnZSIsInZhbHVlIiwiZGVjaW1hbHMiLCJiIiwidG9GaXhlZCIsInRydW5jYXRlVGV4dCIsInRleHQiLCJtYXhMZW5ndGgiLCJsZW5ndGgiLCJzdWJzdHJpbmciLCJnZW5lcmF0ZUlkIiwiTWF0aCIsInJhbmRvbSIsInRvU3RyaW5nIl0sInNvdXJjZXMiOlsiQzpcXFVzZXJzXFxVc2VyXFxEb2N1bWVudHNcXEdpdEh1YlxcZW1hXFxzcmNcXGxpYlxcdXRpbHMudHMiXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgY2xzeCwgdHlwZSBDbGFzc1ZhbHVlIH0gZnJvbSBcImNsc3hcIlxuaW1wb3J0IHsgdHdNZXJnZSB9IGZyb20gXCJ0YWlsd2luZC1tZXJnZVwiXG5cbmV4cG9ydCBmdW5jdGlvbiBjbiguLi5pbnB1dHM6IENsYXNzVmFsdWVbXSkge1xuICByZXR1cm4gdHdNZXJnZShjbHN4KGlucHV0cykpXG59XG5cbi8vIERhdGUvdGltZSBmb3JtYXR0aW5nIGZ1bmN0aW9ucyBhcmUgaW4gQC9saWIvZm9ybWF0IC0gdXNlIHRob3NlIGluc3RlYWRcblxuLyoqXG4gKiBGb3JtYXQgcGVyY2VudGFnZSB2YWx1ZXNcbiAqL1xuZXhwb3J0IGZ1bmN0aW9uIGZvcm1hdFBlcmNlbnRhZ2UodmFsdWU6IG51bWJlciwgZGVjaW1hbHMgPSAyKTogc3RyaW5nIHtcbiAgcmV0dXJuIGAke3ZhbHVlLnRvRml4ZWQoZGVjaW1hbHMpfSVgXG59XG5cbi8qKlxuICogVHJ1bmNhdGUgdGV4dCB3aXRoIGVsbGlwc2lzXG4gKi9cbmV4cG9ydCBmdW5jdGlvbiB0cnVuY2F0ZVRleHQodGV4dDogc3RyaW5nLCBtYXhMZW5ndGg6IG51bWJlcik6IHN0cmluZyB7XG4gIGlmICh0ZXh0Lmxlbmd0aCA8PSBtYXhMZW5ndGgpIHJldHVybiB0ZXh0XG4gIHJldHVybiB0ZXh0LnN1YnN0cmluZygwLCBtYXhMZW5ndGggLSAzKSArICcuLi4nXG59XG5cbi8qKlxuICogR2VuZXJhdGUgYSByYW5kb20gSURcbiAqL1xuZXhwb3J0IGZ1bmN0aW9uIGdlbmVyYXRlSWQoKTogc3RyaW5nIHtcbiAgcmV0dXJuIE1hdGgucmFuZG9tKCkudG9TdHJpbmcoMzYpLnN1YnN0cmluZygyLCAxNSkgKyBNYXRoLnJhbmRvbSgpLnRvU3RyaW5nKDM2KS5zdWJzdHJpbmcoMiwgMTUpXG59XG4iXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7SUFtQk07SUFBQUEsY0FBQSxZQUFBQSxDQUFBO01BQUEsT0FBQUMsY0FBQTtJQUFBO0VBQUE7RUFBQSxPQUFBQSxjQUFBO0FBQUE7QUFBQUQsY0FBQTtBQW5CTixTQUFTRSxJQUFJLFFBQXlCLE1BQU07QUFDNUMsU0FBU0MsT0FBTyxRQUFRLGdCQUFnQjtBQUV4QyxPQUFNLFNBQVVDLEVBQUVBLENBQUMsR0FBR0MsTUFBb0I7RUFBQTtFQUFBTCxjQUFBLEdBQUFNLENBQUE7RUFBQU4sY0FBQSxHQUFBTyxDQUFBO0VBQ3hDLE9BQU9KLE9BQU8sQ0FBQ0QsSUFBSSxDQUFDRyxNQUFNLENBQUMsQ0FBQztBQUM5QjtBQUVBO0FBRUE7OztBQUdBLE9BQU0sU0FBVUcsZ0JBQWdCQSxDQUFDQyxLQUFhLEVBQUVDLFFBQVE7QUFBQTtBQUFBLENBQUFWLGNBQUEsR0FBQVcsQ0FBQSxVQUFHLENBQUM7RUFBQTtFQUFBWCxjQUFBLEdBQUFNLENBQUE7RUFBQU4sY0FBQSxHQUFBTyxDQUFBO0VBQzFELE9BQU8sR0FBR0UsS0FBSyxDQUFDRyxPQUFPLENBQUNGLFFBQVEsQ0FBQyxHQUFHO0FBQ3RDO0FBRUE7OztBQUdBLE9BQU0sU0FBVUcsWUFBWUEsQ0FBQ0MsSUFBWSxFQUFFQyxTQUFpQjtFQUFBO0VBQUFmLGNBQUEsR0FBQU0sQ0FBQTtFQUFBTixjQUFBLEdBQUFPLENBQUE7RUFDMUQsSUFBSU8sSUFBSSxDQUFDRSxNQUFNLElBQUlELFNBQVMsRUFBRTtJQUFBO0lBQUFmLGNBQUEsR0FBQVcsQ0FBQTtJQUFBWCxjQUFBLEdBQUFPLENBQUE7SUFBQSxPQUFPTyxJQUFJO0VBQUE7RUFBQTtFQUFBO0lBQUFkLGNBQUEsR0FBQVcsQ0FBQTtFQUFBO0VBQUFYLGNBQUEsR0FBQU8sQ0FBQTtFQUN6QyxPQUFPTyxJQUFJLENBQUNHLFNBQVMsQ0FBQyxDQUFDLEVBQUVGLFNBQVMsR0FBRyxDQUFDLENBQUMsR0FBRyxLQUFLO0FBQ2pEO0FBRUE7OztBQUdBLE9BQU0sU0FBVUcsVUFBVUEsQ0FBQTtFQUFBO0VBQUFsQixjQUFBLEdBQUFNLENBQUE7RUFBQU4sY0FBQSxHQUFBTyxDQUFBO0VBQ3hCLE9BQU9ZLElBQUksQ0FBQ0MsTUFBTSxFQUFFLENBQUNDLFFBQVEsQ0FBQyxFQUFFLENBQUMsQ0FBQ0osU0FBUyxDQUFDLENBQUMsRUFBRSxFQUFFLENBQUMsR0FBR0UsSUFBSSxDQUFDQyxNQUFNLEVBQUUsQ0FBQ0MsUUFBUSxDQUFDLEVBQUUsQ0FBQyxDQUFDSixTQUFTLENBQUMsQ0FBQyxFQUFFLEVBQUUsQ0FBQztBQUNsRyIsImlnbm9yZUxpc3QiOltdfQ==

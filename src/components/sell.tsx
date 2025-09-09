@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -72,10 +72,10 @@ export function SellFlow() {
   const [currentStep, setCurrentStep] = useState<Step>("amount")
   const [desiredAmount, setDesiredAmount] = useState("")
   // Static wallet balances for visual representation
-  const walletBalances: WalletBalance[] = [
-    { currency: 'EUR', available_balance: 1250.75, reserved_balance: 0.00 },
-    { currency: 'AOA', available_balance: 485000.00, reserved_balance: 15000.00 }
-  ]
+  const walletBalances: WalletBalance[] = useMemo(() => [
+    { currency: 'EUR', available_balance: 1250.75, reserved_balance: 0.00, last_updated: new Date().toISOString() },
+    { currency: 'AOA', available_balance: 485000.00, reserved_balance: 15000.00, last_updated: new Date().toISOString() }
+  ], [])
   const [balancesLoading] = useState(false)
   const [desiredAmountError, setDesiredAmountError] = useState("")
   const [useAutomaticRate, setUseAutomaticRate] = useState(true)
@@ -87,8 +87,31 @@ export function SellFlow() {
     return wallet?.available_balance || 0
   }
 
+  // React Hook Form setup with custom resolver
+  const form = useForm<SellAmountForm>({
+    resolver: async (data, context, options) => {
+      // Get current currency from form data
+      const currency = (data.currency as Currency) || "AOA"
+      const currentBalance = getCurrentBalance(currency)
+
+      // Create schema with current currency and balance
+      const schema = createSellAmountSchema(currentBalance, currency)
+      const resolver = zodResolver(schema)
+
+      return resolver(data, context, options)
+    },
+    defaultValues: {
+      currency: "AOA",
+      amount: ""
+    }
+  })
+
+  const { watch, setValue, formState: { errors, isValid } } = form
+  const watchedCurrency = watch("currency")
+  const watchedAmount = watch("amount")
+
   // Calculate exchange rate from user inputs (always in AOA per EUR format)
-  const calculateExchangeRate = (): number => {
+  const calculateExchangeRate = useCallback((): number => {
     const sellAmount = Number(watchedAmount) || 0
     const desiredAmountNum = Number(desiredAmount) || 0
 
@@ -105,12 +128,12 @@ export function SellFlow() {
       // Convert to AOA per EUR format: AOA_to_sell / EUR_desired
       return sellAmount / desiredAmountNum
     }
-  }
+  }, [watchedAmount, desiredAmount, watchedCurrency])
 
 
 
   // Validate desired amount and convert rate limits to user-friendly receive amount limits
-  const validateDesiredAmount = (amount: string): string => {
+  const validateDesiredAmount = useCallback((amount: string): string => {
     const sellAmount = Number(watchedAmount) || 0
     const desiredAmountNum = Number(amount) || 0
 
@@ -156,7 +179,7 @@ export function SellFlow() {
     }
 
     return ""
-  }
+  }, [watchedAmount, watchedCurrency, calculateExchangeRate])
 
   // Calculate the exchange rate for display (always show in "AOA per EUR" format)
   const getCalculatedExchangeRate = (): string => {
@@ -169,30 +192,9 @@ export function SellFlow() {
     return "Manual"
   }
 
-  // React Hook Form setup with custom resolver
-  const form = useForm<SellAmountForm>({
-    resolver: async (data, context, options) => {
-      // Get current currency from form data
-      const currency = (data.currency as Currency) || "AOA"
-      const currentBalance = getCurrentBalance(currency)
 
-      // Create schema with current currency and balance
-      const schema = createSellAmountSchema(currentBalance, currency)
-      const resolver = zodResolver(schema)
 
-      // Use Zod resolver with dynamic schema
-      return resolver(data, context, options)
-    },
-    mode: "onChange",
-    defaultValues: {
-      amount: "",
-      currency: "AOA"
-    }
-  })
 
-  const { watch, setValue, formState: { errors, isValid } } = form
-  const watchedCurrency = watch("currency")
-  const watchedAmount = watch("amount")
 
   // Handle sell order placement via order book API
   const handleConfirmSell = async () => {
@@ -263,7 +265,7 @@ export function SellFlow() {
     } else {
       setDesiredAmountError("")
     }
-  }, [desiredAmount, watchedAmount, watchedCurrency])
+  }, [desiredAmount, watchedAmount, watchedCurrency, validateDesiredAmount])
 
   // Format balance for display
   const getFormattedBalance = (): string => {

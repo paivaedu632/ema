@@ -6,11 +6,7 @@ import { useKYC } from "@/contexts/kyc-context"
 
 export default function KYCSuccessPage() {
   const router = useRouter()
-  const { data, clearData } = useKYC()
-
-  const handleBack = () => {
-    router.push("/kyc/app-use")
-  }
+  const { clearData } = useKYC()
 
   const handleContinue = () => {
     // Save all KYC data and redirect to dashboard
@@ -30,7 +26,6 @@ export default function KYCSuccessPage() {
         label: "Continuar",
         onClick: handleContinue
       }}
-      onBack={handleBack}
     />
   )
 }
