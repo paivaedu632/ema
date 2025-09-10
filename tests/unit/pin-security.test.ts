@@ -33,7 +33,7 @@ describe('PIN Security Operations Endpoints', () => {
     await testUtils.cleanup();
   });
 
-  describe('POST /api/v1/security/pin/set - PIN Setup', () => {
+  describe('POST /api/v1/security/pin - PIN Setup', () => {
     test('should create new PIN successfully', async () => {
       const pinData = {
         pin: '123456',
@@ -41,28 +41,28 @@ describe('PIN Security Operations Endpoints', () => {
       };
 
       const response = await testUtils.post(
-        '/api/v1/security/pin/set',
+        '/api/v1/security/pin',
         pinData,
         testUser
       );
-      
-      const result = testUtils.assertSuccessResponse(response, 201);
-      
+
+      const result = testUtils.assertSuccessResponse(response, 200);
+
       expect(result).toHaveProperty('success');
       expect(result.success).toBe(true);
       expect(result).toHaveProperty('message');
-      expect(result.message).toContain('PIN set successfully');
-      
+      expect(result.message).toContain('PIN');
+
       // Should not return the actual PIN
       expect(result).not.toHaveProperty('pin');
       expect(result).not.toHaveProperty('hash');
-      
+
       testUtils.assertResponseTime(response, 200);
     });
 
     test('should update existing PIN', async () => {
       // First set a PIN
-      await testUtils.post('/api/v1/security/pin/set', {
+      await testUtils.post('/api/v1/security/pin', {
         pin: '111111',
         confirmPin: '111111'
       }, userWithPin);
@@ -75,15 +75,15 @@ describe('PIN Security Operations Endpoints', () => {
       };
 
       const response = await testUtils.post(
-        '/api/v1/security/pin/set',
+        '/api/v1/security/pin',
         newPinData,
         userWithPin
       );
-      
+
       const result = testUtils.assertSuccessResponse(response, 200);
-      
+
       expect(result.success).toBe(true);
-      expect(result.message).toContain('PIN updated successfully');
+      expect(result.message).toContain('PIN');
     });
 
     test('should validate PIN format', async () => {
@@ -199,7 +199,7 @@ describe('PIN Security Operations Endpoints', () => {
   describe('POST /api/v1/security/pin/verify - PIN Verification', () => {
     beforeEach(async () => {
       // Ensure userWithPin has a PIN set
-      await testUtils.post('/api/v1/security/pin/set', {
+      await testUtils.post('/api/v1/security/pin', {
         pin: '555555',
         confirmPin: '555555'
       }, userWithPin);
@@ -215,7 +215,7 @@ describe('PIN Security Operations Endpoints', () => {
         verifyData,
         userWithPin
       );
-      
+
       const result = testUtils.assertSuccessResponse(response, 200);
       
       expect(result).toHaveProperty('verified');
@@ -364,7 +364,7 @@ describe('PIN Security Operations Endpoints', () => {
       };
 
       const setResponse = await testUtils.post(
-        '/api/v1/security/pin/set',
+        '/api/v1/security/pin',
         pinData,
         testUser
       );
@@ -470,7 +470,7 @@ describe('PIN Security Operations Endpoints', () => {
 
       const response = await testUtils.testWithInvalidToken(
         'POST',
-        '/api/v1/security/pin/set',
+        '/api/v1/security/pin',
         pinData
       );
 

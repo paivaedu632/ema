@@ -11,16 +11,17 @@ describe('User Management Endpoints', () => {
   let searchTargetUser: TestUser;
 
   beforeAll(async () => {
-    // Create test users
+    // Create test users with dynamic emails to avoid conflicts
+    const timestamp = Date.now();
     testUser = await testUtils.createUser({
-      email: 'user-search-test@emapay.test',
+      email: `user-search-test-${timestamp}@emapay.test`,
       metadata: { purpose: 'User Search Testing' }
     });
 
     // Create a user to search for
     searchTargetUser = await testUtils.createUser({
-      email: 'search-target@emapay.test',
-      metadata: { 
+      email: `search-target-${timestamp}@emapay.test`,
+      metadata: {
         purpose: 'Search Target',
         firstName: 'João',
         lastName: 'Silva',
@@ -37,7 +38,7 @@ describe('User Management Endpoints', () => {
   describe('GET /api/v1/users/search - Valid Queries', () => {
     test('should search users by email', async () => {
       const response = await testUtils.get(
-        '/api/v1/users/search?q=search-target@emapay.test',
+        '/api/v1/users/search?query=search-target@emapay.test',
         testUser
       );
       
@@ -58,7 +59,7 @@ describe('User Management Endpoints', () => {
 
     test('should search users by partial email', async () => {
       const response = await testUtils.get(
-        '/api/v1/users/search?q=search-target',
+        '/api/v1/users/search?query=search-target',
         testUser
       );
       
@@ -75,7 +76,7 @@ describe('User Management Endpoints', () => {
 
     test('should search users by phone number', async () => {
       const response = await testUtils.get(
-        '/api/v1/users/search?q=+244900123456',
+        '/api/v1/users/search?query=+244900123456',
         testUser
       );
       
@@ -93,7 +94,7 @@ describe('User Management Endpoints', () => {
 
     test('should search users by partial phone number', async () => {
       const response = await testUtils.get(
-        '/api/v1/users/search?q=900123456',
+        '/api/v1/users/search?query=900123456',
         testUser
       );
       
@@ -110,7 +111,7 @@ describe('User Management Endpoints', () => {
 
     test('should search users by first name', async () => {
       const response = await testUtils.get(
-        '/api/v1/users/search?q=João',
+        '/api/v1/users/search?query=João',
         testUser
       );
       
@@ -128,7 +129,7 @@ describe('User Management Endpoints', () => {
 
     test('should search users by last name', async () => {
       const response = await testUtils.get(
-        '/api/v1/users/search?q=Silva',
+        '/api/v1/users/search?query=Silva',
         testUser
       );
       
@@ -146,7 +147,7 @@ describe('User Management Endpoints', () => {
 
     test('should search users by full name', async () => {
       const response = await testUtils.get(
-        '/api/v1/users/search?q=João Silva',
+        '/api/v1/users/search?query=João Silva',
         testUser
       );
       
@@ -164,7 +165,7 @@ describe('User Management Endpoints', () => {
 
     test('should handle case-insensitive search', async () => {
       const response = await testUtils.get(
-        '/api/v1/users/search?q=joão silva',
+        '/api/v1/users/search?query=joão silva',
         testUser
       );
       
@@ -181,7 +182,7 @@ describe('User Management Endpoints', () => {
 
     test('should limit search results', async () => {
       const response = await testUtils.get(
-        '/api/v1/users/search?q=test&limit=5',
+        '/api/v1/users/search?query=test&limit=5',
         testUser
       );
       
@@ -193,7 +194,7 @@ describe('User Management Endpoints', () => {
 
     test('should handle pagination', async () => {
       const response = await testUtils.get(
-        '/api/v1/users/search?q=test&limit=2&offset=0',
+        '/api/v1/users/search?query=test&limit=2&offset=0',
         testUser
       );
       
@@ -207,7 +208,7 @@ describe('User Management Endpoints', () => {
   describe('GET /api/v1/users/search - Invalid Queries', () => {
     test('should return empty array for non-existent user', async () => {
       const response = await testUtils.get(
-        '/api/v1/users/search?q=nonexistent@example.com',
+        '/api/v1/users/search?query=nonexistent@example.com',
         testUser
       );
       
@@ -229,17 +230,17 @@ describe('User Management Endpoints', () => {
 
     test('should return 400 for empty query parameter', async () => {
       const response = await testUtils.get(
-        '/api/v1/users/search?q=',
+        '/api/v1/users/search?query=',
         testUser
       );
-      
+
       testUtils.assertErrorResponse(response, 400);
       expect(response.body.error).toContain('query');
     });
 
     test('should return 400 for query too short', async () => {
       const response = await testUtils.get(
-        '/api/v1/users/search?q=a',
+        '/api/v1/users/search?query=a',
         testUser
       );
       
@@ -250,7 +251,7 @@ describe('User Management Endpoints', () => {
     test('should return 400 for query too long', async () => {
       const longQuery = 'a'.repeat(101); // Assuming 100 char limit
       const response = await testUtils.get(
-        `/api/v1/users/search?q=${longQuery}`,
+        `/api/v1/users/search?query=${longQuery}`,
         testUser
       );
       
@@ -260,27 +261,27 @@ describe('User Management Endpoints', () => {
 
     test('should return 400 for invalid limit parameter', async () => {
       const response = await testUtils.get(
-        '/api/v1/users/search?q=test&limit=invalid',
+        '/api/v1/users/search?query=test&limit=invalid',
         testUser
       );
-      
+
       testUtils.assertErrorResponse(response, 400);
       expect(response.body.error).toContain('limit');
     });
 
     test('should return 400 for negative limit', async () => {
       const response = await testUtils.get(
-        '/api/v1/users/search?q=test&limit=-1',
+        '/api/v1/users/search?query=test&limit=-1',
         testUser
       );
-      
+
       testUtils.assertErrorResponse(response, 400);
       expect(response.body.error).toContain('limit');
     });
 
     test('should return 400 for limit too high', async () => {
       const response = await testUtils.get(
-        '/api/v1/users/search?q=test&limit=1000',
+        '/api/v1/users/search?query=test&limit=1000',
         testUser
       );
       
@@ -290,17 +291,17 @@ describe('User Management Endpoints', () => {
 
     test('should return 400 for invalid offset parameter', async () => {
       const response = await testUtils.get(
-        '/api/v1/users/search?q=test&offset=invalid',
+        '/api/v1/users/search?query=test&offset=invalid',
         testUser
       );
-      
+
       testUtils.assertErrorResponse(response, 400);
       expect(response.body.error).toContain('offset');
     });
 
     test('should return 400 for negative offset', async () => {
       const response = await testUtils.get(
-        '/api/v1/users/search?q=test&offset=-1',
+        '/api/v1/users/search?query=test&offset=-1',
         testUser
       );
       
@@ -319,7 +320,7 @@ describe('User Management Endpoints', () => {
 
       for (const email of malformedEmails) {
         const response = await testUtils.get(
-          `/api/v1/users/search?q=${encodeURIComponent(email)}`,
+          `/api/v1/users/search?query=${encodeURIComponent(email)}`,
           testUser
         );
         
@@ -334,7 +335,7 @@ describe('User Management Endpoints', () => {
 
       for (const query of specialChars) {
         const response = await testUtils.get(
-          `/api/v1/users/search?q=${encodeURIComponent(query)}`,
+          `/api/v1/users/search?query=${encodeURIComponent(query)}`,
           testUser
         );
         
@@ -348,7 +349,7 @@ describe('User Management Endpoints', () => {
   describe('User Search Privacy', () => {
     test('should return limited user data in search results', async () => {
       const response = await testUtils.get(
-        '/api/v1/users/search?q=search-target@emapay.test',
+        '/api/v1/users/search?query=search-target@emapay.test',
         testUser
       );
 
@@ -373,7 +374,7 @@ describe('User Management Endpoints', () => {
 
     test('should not expose full phone numbers to non-contacts', async () => {
       const response = await testUtils.get(
-        '/api/v1/users/search?q=João',
+        '/api/v1/users/search?query=João',
         testUser
       );
 
@@ -389,7 +390,7 @@ describe('User Management Endpoints', () => {
 
     test('should not return user own data in search results', async () => {
       const response = await testUtils.get(
-        '/api/v1/users/search?q=user-search-test@emapay.test',
+        '/api/v1/users/search?query=user-search-test@emapay.test',
         testUser
       );
 
@@ -404,7 +405,7 @@ describe('User Management Endpoints', () => {
 
     test('should limit search results to prevent data mining', async () => {
       const response = await testUtils.get(
-        '/api/v1/users/search?q=test&limit=100',
+        '/api/v1/users/search?query=test&limit=100',
         testUser
       );
 
@@ -416,7 +417,7 @@ describe('User Management Endpoints', () => {
 
     test('should not expose user creation dates or metadata', async () => {
       const response = await testUtils.get(
-        '/api/v1/users/search?q=search-target@emapay.test',
+        '/api/v1/users/search?query=search-target@emapay.test',
         testUser
       );
 
@@ -434,16 +435,16 @@ describe('User Management Endpoints', () => {
 
   describe('User Search Authorization', () => {
     test('should require authentication', async () => {
-      const response = await testUtils.publicGet('/api/v1/users/search?q=test');
+      const response = await testUtils.publicGet('/api/v1/users/search?query=test');
 
       testUtils.assertErrorResponse(response, 401);
-      expect(response.body.error).toContain('authorization');
+      expect(response.body.error).toContain('Authorization');
     });
 
     test('should reject invalid JWT tokens', async () => {
       const response = await testUtils.testWithInvalidToken(
         'GET',
-        '/api/v1/users/search?q=test'
+        '/api/v1/users/search?query=test'
       );
 
       testUtils.assertErrorResponse(response, 401);
@@ -453,7 +454,7 @@ describe('User Management Endpoints', () => {
     test('should reject expired JWT tokens', async () => {
       const response = await testUtils.testWithExpiredToken(
         'GET',
-        '/api/v1/users/search?q=test'
+        '/api/v1/users/search?query=test'
       );
 
       testUtils.assertErrorResponse(response, 401);
@@ -462,7 +463,7 @@ describe('User Management Endpoints', () => {
 
     test('should work with valid JWT token', async () => {
       const response = await testUtils.get(
-        '/api/v1/users/search?q=test',
+        '/api/v1/users/search?query=test',
         testUser
       );
 
@@ -475,7 +476,7 @@ describe('User Management Endpoints', () => {
     test('should respond within 200ms for simple queries', async () => {
       const { response, passed } = await testUtils.testPerformance(
         'GET',
-        '/api/v1/users/search?q=test',
+        '/api/v1/users/search?query=test',
         200,
         testUser
       );
@@ -487,7 +488,7 @@ describe('User Management Endpoints', () => {
     test('should respond within 200ms for complex queries', async () => {
       const { response, passed } = await testUtils.testPerformance(
         'GET',
-        '/api/v1/users/search?q=João Silva&limit=10&offset=0',
+        '/api/v1/users/search?query=João Silva&limit=10&offset=0',
         200,
         testUser
       );
@@ -499,7 +500,7 @@ describe('User Management Endpoints', () => {
     test('should handle concurrent search requests', async () => {
       const responses = await testUtils.testConcurrency(
         'GET',
-        '/api/v1/users/search?q=test',
+        '/api/v1/users/search?query=test',
         10,
         testUser
       );
@@ -515,7 +516,7 @@ describe('User Management Endpoints', () => {
     test('should maintain performance with large result sets', async () => {
       const { response, passed } = await testUtils.testPerformance(
         'GET',
-        '/api/v1/users/search?q=test&limit=20',
+        '/api/v1/users/search?query=test&limit=20',
         250,
         testUser
       );
@@ -528,7 +529,7 @@ describe('User Management Endpoints', () => {
       // First request
       const start1 = Date.now();
       const response1 = await testUtils.get(
-        '/api/v1/users/search?q=search-target@emapay.test',
+        '/api/v1/users/search?query=search-target@emapay.test',
         testUser
       );
       const time1 = Date.now() - start1;
@@ -538,7 +539,7 @@ describe('User Management Endpoints', () => {
       // Second request (should be faster due to caching)
       const start2 = Date.now();
       const response2 = await testUtils.get(
-        '/api/v1/users/search?q=search-target@emapay.test',
+        '/api/v1/users/search?query=search-target@emapay.test',
         testUser
       );
       const time2 = Date.now() - start2;

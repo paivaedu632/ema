@@ -24,73 +24,73 @@ describe('Market Data Endpoints', () => {
   describe('GET /api/v1/market/summary - Market Statistics', () => {
     test('should return market summary without authentication', async () => {
       const response = await testUtils.publicGet('/api/v1/market/summary');
-      
-      const summary = testUtils.assertSuccessResponse(response, 200);
-      
-      // Verify market summary structure
-      expect(summary).toHaveProperty('pairs');
-      expect(Array.isArray(summary.pairs)).toBe(true);
-      
+
+      const data = testUtils.assertSuccessResponse(response, 200);
+
+      // Verify market summary structure - API returns single pair object, not array
+      expect(data).toHaveProperty('pair');
+      expect(data).toHaveProperty('baseCurrency');
+      expect(data).toHaveProperty('quoteCurrency');
+      expect(data).toHaveProperty('currentPrice');
+      expect(data).toHaveProperty('bestBid');
+      expect(data).toHaveProperty('bestAsk');
+      expect(data).toHaveProperty('volume24h');
+      expect(data).toHaveProperty('high24h');
+      expect(data).toHaveProperty('low24h');
+      expect(data).toHaveProperty('change24h');
+      expect(data).toHaveProperty('changePercent24h');
+      expect(data).toHaveProperty('tradeCount24h');
+      expect(data).toHaveProperty('lastUpdated');
+      expect(data).toHaveProperty('status');
+
       // Check EUR/AOA pair data
-      const eurAoaPair = summary.pairs.find((pair: any) => pair.symbol === 'EUR/AOA');
-      if (eurAoaPair) {
-        testUtils.assertValidMarketPair(eurAoaPair);
-        expect(eurAoaPair.symbol).toBe('EUR/AOA');
-        expect(eurAoaPair).toHaveProperty('lastPrice');
-        expect(eurAoaPair).toHaveProperty('volume24h');
-        expect(eurAoaPair).toHaveProperty('change24h');
-        expect(eurAoaPair).toHaveProperty('high24h');
-        expect(eurAoaPair).toHaveProperty('low24h');
-        expect(eurAoaPair).toHaveProperty('bid');
-        expect(eurAoaPair).toHaveProperty('ask');
-        
-        // Validate numeric values
-        expect(typeof eurAoaPair.lastPrice).toBe('number');
-        expect(typeof eurAoaPair.volume24h).toBe('number');
-        expect(typeof eurAoaPair.change24h).toBe('number');
-        expect(eurAoaPair.lastPrice).toBeGreaterThan(0);
-        expect(eurAoaPair.volume24h).toBeGreaterThanOrEqual(0);
-      }
-      
+      expect(data.pair).toBe('EUR/AOA');
+      expect(data.baseCurrency).toBe('EUR');
+      expect(data.quoteCurrency).toBe('AOA');
+
+      // Validate numeric values
+      expect(typeof data.currentPrice).toBe('number');
+      expect(typeof data.volume24h).toBe('number');
+      expect(typeof data.change24h).toBe('number');
+      expect(data.currentPrice).toBeGreaterThan(0);
+      expect(data.volume24h).toBeGreaterThanOrEqual(0);
+
       testUtils.assertResponseTime(response, 150);
     });
 
     test('should return consistent data structure', async () => {
       const response = await testUtils.publicGet('/api/v1/market/summary');
-      
-      const summary = testUtils.assertSuccessResponse(response, 200);
-      
-      expect(summary).toHaveProperty('timestamp');
-      expect(summary).toHaveProperty('pairs');
-      expect(typeof summary.timestamp).toBe('string');
-      expect(new Date(summary.timestamp)).toBeValidDate();
-      
-      // Each pair should have consistent structure
-      summary.pairs.forEach((pair: any) => {
-        testUtils.assertValidMarketPair(pair);
-        
-        // Required fields
-        expect(pair).toHaveProperty('symbol');
-        expect(pair).toHaveProperty('lastPrice');
-        expect(pair).toHaveProperty('volume24h');
-        expect(pair).toHaveProperty('change24h');
-        
-        // Optional but common fields
-        if (pair.bid !== null) {
-          expect(typeof pair.bid).toBe('number');
-          expect(pair.bid).toBeGreaterThan(0);
-        }
-        
-        if (pair.ask !== null) {
-          expect(typeof pair.ask).toBe('number');
-          expect(pair.ask).toBeGreaterThan(0);
-        }
-        
-        // Bid should be less than ask (if both exist)
-        if (pair.bid && pair.ask) {
-          expect(pair.bid).toBeLessThan(pair.ask);
-        }
-      });
+
+      const data = testUtils.assertSuccessResponse(response, 200);
+
+      expect(data).toHaveProperty('lastUpdated');
+      expect(typeof data.lastUpdated).toBe('string');
+      expect(new Date(data.lastUpdated).getTime()).not.toBeNaN();
+
+      // Validate all required fields
+      expect(data).toHaveProperty('pair');
+      expect(data).toHaveProperty('currentPrice');
+      expect(data).toHaveProperty('volume24h');
+      expect(data).toHaveProperty('change24h');
+
+      // Validate bid/ask fields
+      if (data.bestBid !== null) {
+        expect(typeof data.bestBid).toBe('number');
+        expect(data.bestBid).toBeGreaterThan(0);
+      }
+
+      if (data.bestAsk !== null) {
+        expect(typeof data.bestAsk).toBe('number');
+        expect(data.bestAsk).toBeGreaterThan(0);
+      }
+
+      // Bid should be less than ask (if both exist)
+      if (data.bestBid && data.bestAsk) {
+        expect(data.bestBid).toBeLessThan(data.bestAsk);
+      }
+
+      // Validate status
+      expect(data.status).toBe('active');
     });
 
     test('should include all supported trading pairs', async () => {
@@ -98,15 +98,10 @@ describe('Market Data Endpoints', () => {
       
       const summary = testUtils.assertSuccessResponse(response, 200);
       
-      const symbols = summary.pairs.map((pair: any) => pair.symbol);
-      
-      // Should include EUR/AOA pair
-      expect(symbols).toContain('EUR/AOA');
-      
-      // All symbols should follow correct format
-      symbols.forEach((symbol: string) => {
-        expect(symbol).toMatch(/^[A-Z]{3}\/[A-Z]{3}$/);
-      });
+      // API returns single pair object, not array
+      expect(summary).toHaveProperty('pair');
+      expect(summary.pair).toBe('EUR/AOA');
+      expect(summary.pair).toMatch(/^[A-Z]{3}\/[A-Z]{3}$/);
     });
 
     test('should handle query parameters for specific pairs', async () => {
@@ -114,11 +109,9 @@ describe('Market Data Endpoints', () => {
       
       const summary = testUtils.assertSuccessResponse(response, 200);
       
-      if (summary.pairs.length > 0) {
-        summary.pairs.forEach((pair: any) => {
-          expect(pair.symbol).toBe('EUR/AOA');
-        });
-      }
+      // API returns single pair object
+      expect(summary).toHaveProperty('pair');
+      expect(summary.pair).toBe('EUR/AOA');
     });
 
     test('should return empty or error for invalid pairs', async () => {
@@ -158,51 +151,63 @@ describe('Market Data Endpoints', () => {
 
   describe('GET /api/v1/market/depth - Order Book', () => {
     test('should return order book depth without authentication', async () => {
-      const response = await testUtils.publicGet('/api/v1/market/depth?pair=EUR/AOA');
-      
-      const depth = testUtils.assertSuccessResponse(response, 200);
-      
+      const response = await testUtils.publicGet('/api/v1/market/depth?baseCurrency=EUR&quoteCurrency=AOA');
+
+      const data = testUtils.assertSuccessResponse(response, 200);
+
       // Verify order book structure
-      expect(depth).toHaveProperty('pair');
-      expect(depth).toHaveProperty('bids');
-      expect(depth).toHaveProperty('asks');
-      expect(depth).toHaveProperty('timestamp');
-      
-      expect(depth.pair).toBe('EUR/AOA');
-      expect(Array.isArray(depth.bids)).toBe(true);
-      expect(Array.isArray(depth.asks)).toBe(true);
-      expect(new Date(depth.timestamp)).toBeValidDate();
-      
+      expect(data).toHaveProperty('pair');
+      expect(data).toHaveProperty('baseCurrency');
+      expect(data).toHaveProperty('quoteCurrency');
+      expect(data).toHaveProperty('bids');
+      expect(data).toHaveProperty('asks');
+      expect(data).toHaveProperty('spread');
+      expect(data).toHaveProperty('lastUpdated');
+      expect(data).toHaveProperty('levels');
+
+      expect(data.pair).toBe('EUR/AOA');
+      expect(data.baseCurrency).toBe('EUR');
+      expect(data.quoteCurrency).toBe('AOA');
+      expect(Array.isArray(data.bids)).toBe(true);
+      expect(Array.isArray(data.asks)).toBe(true);
+      expect(new Date(data.lastUpdated).getTime()).not.toBeNaN();
+
       testUtils.assertResponseTime(response, 150);
     });
 
     test('should return properly formatted bid/ask data', async () => {
-      const response = await testUtils.publicGet('/api/v1/market/depth?pair=EUR/AOA');
-      
-      const depth = testUtils.assertSuccessResponse(response, 200);
-      
-      // Check bids format [price, quantity]
-      depth.bids.forEach((bid: any) => {
-        expect(Array.isArray(bid)).toBe(true);
-        expect(bid).toHaveLength(2);
-        expect(typeof bid[0]).toBe('number'); // price
-        expect(typeof bid[1]).toBe('number'); // quantity
-        expect(bid[0]).toBeGreaterThan(0);
-        expect(bid[1]).toBeGreaterThan(0);
-        testUtils.assertDecimalPrecision(bid[0], 2); // price precision
-        testUtils.assertDecimalPrecision(bid[1], 2); // quantity precision
+      const response = await testUtils.publicGet('/api/v1/market/depth?baseCurrency=EUR&quoteCurrency=AOA');
+
+      const data = testUtils.assertSuccessResponse(response, 200);
+
+      // Check bids format - API returns objects with price, amount, total
+      data.bids.forEach((bid: any) => {
+        expect(bid).toHaveProperty('price');
+        expect(bid).toHaveProperty('amount');
+        expect(bid).toHaveProperty('total');
+        expect(typeof bid.price).toBe('number');
+        expect(typeof bid.amount).toBe('number');
+        expect(typeof bid.total).toBe('number');
+        expect(bid.price).toBeGreaterThan(0);
+        expect(bid.amount).toBeGreaterThan(0);
+        expect(bid.total).toBeGreaterThan(0);
+        // Verify total calculation
+        expect(Math.abs(bid.total - (bid.price * bid.amount))).toBeLessThan(0.01);
       });
-      
-      // Check asks format [price, quantity]
-      depth.asks.forEach((ask: any) => {
-        expect(Array.isArray(ask)).toBe(true);
-        expect(ask).toHaveLength(2);
-        expect(typeof ask[0]).toBe('number'); // price
-        expect(typeof ask[1]).toBe('number'); // quantity
-        expect(ask[0]).toBeGreaterThan(0);
-        expect(ask[1]).toBeGreaterThan(0);
-        testUtils.assertDecimalPrecision(ask[0], 2);
-        testUtils.assertDecimalPrecision(ask[1], 2);
+
+      // Check asks format - API returns objects with price, amount, total
+      data.asks.forEach((ask: any) => {
+        expect(ask).toHaveProperty('price');
+        expect(ask).toHaveProperty('amount');
+        expect(ask).toHaveProperty('total');
+        expect(typeof ask.price).toBe('number');
+        expect(typeof ask.amount).toBe('number');
+        expect(typeof ask.total).toBe('number');
+        expect(ask.price).toBeGreaterThan(0);
+        expect(ask.amount).toBeGreaterThan(0);
+        expect(ask.total).toBeGreaterThan(0);
+        // Verify total calculation
+        expect(Math.abs(ask.total - (ask.price * ask.amount))).toBeLessThan(0.01);
       });
     });
 
@@ -234,12 +239,12 @@ describe('Market Data Endpoints', () => {
     });
 
     test('should support depth limit parameter', async () => {
-      const response = await testUtils.publicGet('/api/v1/market/depth?pair=EUR/AOA&limit=5');
+      const response = await testUtils.publicGet('/api/v1/market/depth?baseCurrency=EUR&quoteCurrency=AOA&levels=5');
       
-      const depth = testUtils.assertSuccessResponse(response, 200);
-      
-      expect(depth.bids.length).toBeLessThanOrEqual(5);
-      expect(depth.asks.length).toBeLessThanOrEqual(5);
+      const data = testUtils.assertSuccessResponse(response, 200);
+
+      expect(data.bids.length).toBeLessThanOrEqual(5);
+      expect(data.asks.length).toBeLessThanOrEqual(5);
     });
 
     test('should require trading pair parameter', async () => {

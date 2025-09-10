@@ -59,10 +59,13 @@ describe('Integration Tests - Complete Workflows', () => {
 
       // Step 3: Check initial wallet balances (should be zero)
       const balanceResponse = await testUtils.get('/api/v1/wallets/balance', newUser);
-      const balances = testUtils.assertSuccessResponse(balanceResponse, 200);
-      
-      expect(Array.isArray(balances)).toBe(true);
-      balances.forEach((balance: any) => {
+      const data = testUtils.assertSuccessResponse(balanceResponse, 200);
+
+      expect(data).toHaveProperty('userId');
+      expect(data).toHaveProperty('balances');
+      expect(data).toHaveProperty('timestamp');
+
+      Object.values(data.balances).forEach((balance: any) => {
         expect(balance.availableBalance).toBe(0);
         expect(balance.reservedBalance).toBe(0);
         expect(balance.totalBalance).toBe(0);

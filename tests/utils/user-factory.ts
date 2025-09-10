@@ -224,6 +224,48 @@ export class UserFactory {
   }
 
   /**
+   * Setup PIN for a user
+   */
+  async setupPin(user: TestUser, pin: string = '123456'): Promise<void> {
+    try {
+      // Import testUtils to make the API call
+      const { testUtils } = await import('./index');
+
+      const response = await testUtils.post('/api/v1/security/pin', {
+        pin,
+        confirmPin: pin
+      }, user);
+
+      if (response.status !== 200) {
+        throw new Error(`PIN setup failed: ${response.body?.error || 'Unknown error'}`);
+      }
+
+      console.log(`🔐 PIN set up for user ${user.email}`);
+    } catch (error) {
+      console.error(`❌ Failed to setup PIN for user ${user.email}:`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Create a user with PIN already set up
+   */
+  async createUserWithPin(userData: Partial<CreateUserData> = {}, pin: string = '123456'): Promise<TestUser> {
+    const user = await this.createUser(userData);
+    await this.setupPin(user, pin);
+    return user;
+  }
+
+  /**
+   * Create a user with balance and PIN already set up
+   */
+  async createUserWithBalanceAndPin(userData: Partial<CreateUserWithBalanceData> = {}, pin: string = '123456'): Promise<TestUser> {
+    const user = await this.createUserWithBalance(userData);
+    await this.setupPin(user, pin);
+    return user;
+  }
+
+  /**
    * Clean up all created users
    */
   async cleanup(): Promise<void> {

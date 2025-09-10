@@ -85,6 +85,17 @@ export class ApiClient {
   }
 
   /**
+   * Make a POST request without authentication
+   */
+  async publicPost<T = any>(
+    endpoint: string,
+    data?: any,
+    options: ApiRequestOptions = {}
+  ): Promise<ApiResponse<T>> {
+    return this.makeRequest('POST', endpoint, data, undefined, options);
+  }
+
+  /**
    * Make a request with custom headers
    */
   async requestWithHeaders<T = any>(

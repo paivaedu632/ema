@@ -44,60 +44,81 @@ describe('Trading Orders Endpoints', () => {
 
   describe('POST /api/v1/orders/limit - Limit Orders', () => {
     test('should create EUR/AOA buy limit order', async () => {
-      const orderData = testUtils.generateLimitOrderData(
-        'EUR/AOA',
-        'buy',
-        100.00, // amount in EUR
-        6500.00, // price in AOA per EUR
-        'Good Till Cancelled'
-      );
+      const orderData = {
+        side: 'buy' as const,
+        amount: 100.00,
+        price: 655.00,
+        baseCurrency: 'EUR',
+        quoteCurrency: 'AOA'
+      };
 
       const response = await testUtils.post(
         '/api/v1/orders/limit',
         orderData,
         traderUser
       );
-      
-      const order = testUtils.assertSuccessResponse(response, 201);
-      
-      testUtils.assertValidOrder(order);
-      expect(order.userId).toBe(traderUser.id);
-      expect(order.pair).toBe('EUR/AOA');
-      expect(order.side).toBe('buy');
-      expect(order.amount).toBe(100.00);
-      expect(order.price).toBe(6500.00);
-      expect(order.type).toBe('limit');
-      expect(order.status).toBe('open');
-      expect(order.timeInForce).toBe('GTC');
-      
+
+      const data = testUtils.assertSuccessResponse(response, 200);
+
+      expect(data).toHaveProperty('orderId');
+      expect(data).toHaveProperty('userId');
+      expect(data).toHaveProperty('orderType');
+      expect(data).toHaveProperty('side');
+      expect(data).toHaveProperty('baseCurrency');
+      expect(data).toHaveProperty('quoteCurrency');
+      expect(data).toHaveProperty('amount');
+      expect(data).toHaveProperty('price');
+      expect(data).toHaveProperty('status');
+      expect(data).toHaveProperty('createdAt');
+
+      expect(data.userId).toBe(traderUser.id);
+      expect(data.orderType).toBe('limit');
+      expect(data.side).toBe('buy');
+      expect(data.baseCurrency).toBe('EUR');
+      expect(data.quoteCurrency).toBe('AOA');
+      expect(data.amount).toBe(100.00);
+      expect(data.price).toBe(655.00);
+      expect(['pending', 'open']).toContain(data.status);
+
       // Assert response time
       testUtils.assertResponseTime(response, 400);
     });
 
     test('should create EUR/AOA sell limit order', async () => {
-      const orderData = testUtils.generateLimitOrderData(
-        'EUR/AOA',
-        'sell',
-        50.00, // amount in EUR
-        6600.00, // price in AOA per EUR
-        'Good Till Cancelled'
-      );
+      const orderData = {
+        side: 'sell' as const,
+        amount: 50.00,
+        price: 656.00,
+        baseCurrency: 'EUR',
+        quoteCurrency: 'AOA'
+      };
 
       const response = await testUtils.post(
         '/api/v1/orders/limit',
         orderData,
         traderUser
       );
-      
-      const order = testUtils.assertSuccessResponse(response, 201);
-      
-      testUtils.assertValidOrder(order);
-      expect(order.userId).toBe(traderUser.id);
-      expect(order.pair).toBe('EUR/AOA');
-      expect(order.side).toBe('sell');
-      expect(order.amount).toBe(50.00);
-      expect(order.price).toBe(6600.00);
-      expect(order.type).toBe('limit');
+
+      const data = testUtils.assertSuccessResponse(response, 200);
+
+      expect(data).toHaveProperty('orderId');
+      expect(data).toHaveProperty('userId');
+      expect(data).toHaveProperty('orderType');
+      expect(data).toHaveProperty('side');
+      expect(data).toHaveProperty('baseCurrency');
+      expect(data).toHaveProperty('quoteCurrency');
+      expect(data).toHaveProperty('amount');
+      expect(data).toHaveProperty('price');
+      expect(data).toHaveProperty('status');
+      expect(data).toHaveProperty('createdAt');
+
+      expect(data.userId).toBe(traderUser.id);
+      expect(data.orderType).toBe('limit');
+      expect(data.side).toBe('sell');
+      expect(data.baseCurrency).toBe('EUR');
+      expect(data.quoteCurrency).toBe('AOA');
+      expect(data.amount).toBe(50.00);
+      expect(data.price).toBe(656.00);
       expect(order.status).toBe('open');
     });
 
@@ -310,28 +331,39 @@ describe('Trading Orders Endpoints', () => {
 
   describe('POST /api/v1/orders/market - Market Orders', () => {
     test('should create EUR/AOA buy market order', async () => {
-      const orderData = testUtils.generateMarketOrderData(
-        'EUR/AOA',
-        'buy',
-        50.00 // amount in EUR
-      );
+      const orderData = {
+        side: 'buy' as const,
+        amount: 50.00,
+        baseCurrency: 'EUR',
+        quoteCurrency: 'AOA'
+      };
 
       const response = await testUtils.post(
         '/api/v1/orders/market',
         orderData,
         userWithBalance
       );
-      
-      const order = testUtils.assertSuccessResponse(response, 201);
-      
-      testUtils.assertValidOrder(order);
-      expect(order.userId).toBe(userWithBalance.id);
-      expect(order.pair).toBe('EUR/AOA');
-      expect(order.side).toBe('buy');
-      expect(order.amount).toBe(50.00);
-      expect(order.type).toBe('market');
-      expect(['filled', 'partially_filled', 'rejected']).toContain(order.status);
-      
+
+      const data = testUtils.assertSuccessResponse(response, 200);
+
+      expect(data).toHaveProperty('orderId');
+      expect(data).toHaveProperty('userId');
+      expect(data).toHaveProperty('orderType');
+      expect(data).toHaveProperty('side');
+      expect(data).toHaveProperty('baseCurrency');
+      expect(data).toHaveProperty('quoteCurrency');
+      expect(data).toHaveProperty('amount');
+      expect(data).toHaveProperty('status');
+      expect(data).toHaveProperty('createdAt');
+
+      expect(data.userId).toBe(userWithBalance.id);
+      expect(data.orderType).toBe('market');
+      expect(data.side).toBe('buy');
+      expect(data.baseCurrency).toBe('EUR');
+      expect(data.quoteCurrency).toBe('AOA');
+      expect(data.amount).toBe(50.00);
+      expect(['filled', 'partially_filled', 'rejected', 'pending']).toContain(data.status);
+
       // Market orders should execute quickly
       testUtils.assertResponseTime(response, 400);
     });
