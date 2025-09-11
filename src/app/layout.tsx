@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { KYCProvider } from "@/contexts/kyc-context";
+import { QueryProvider } from "@/components/providers";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -28,9 +29,11 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${jetbrainsMono.variable} antialiased font-inter`}
       >
-        <KYCProvider>
-          {children}
-        </KYCProvider>
+        <QueryProvider>
+          <KYCProvider>
+            {children}
+          </KYCProvider>
+        </QueryProvider>
       </body>
     </html>
   );

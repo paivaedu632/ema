@@ -1,9 +1,9 @@
 import { NextRequest } from 'next/server';
 import { withAuth, AuthenticatedUser } from '@/lib/auth/middleware';
-import { createSuccessResponse, ErrorResponses, withErrorHandling } from '@/lib/api/responses';
-import { withCors } from '@/lib/api/cors';
-import { validateRouteParams } from '@/lib/validation/helpers';
-import { walletCurrencySchema } from '@/lib/validation/schemas';
+import { createSuccessResponse, ErrorResponses, withErrorHandling } from '@/lib/api';
+import { withCors } from '@/lib/api';
+import { validateRouteParams } from '@/lib/validations';
+import { walletCurrencySchema } from '@/lib/validations';
 import { getWalletBalance } from '@/lib/database/functions';
 
 async function currencyBalanceHandler(

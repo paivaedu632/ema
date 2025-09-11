@@ -1,7 +1,7 @@
 
 import { checkDatabaseHealth } from '@/lib/database/functions';
-import { createSuccessResponse, createErrorResponse, withErrorHandling } from '@/lib/api/responses';
-import { withCors } from '@/lib/api/cors';
+import { createSuccessResponse, createErrorResponse, withErrorHandling } from '@/lib/api';
+import { withCors } from '@/lib/api';
 
 async function healthHandler() {
   // Check database connectivity

@@ -1,9 +1,9 @@
 import { NextRequest } from 'next/server';
 import { withAuth, AuthenticatedUser } from '@/lib/auth/middleware';
-import { createSuccessResponse, ErrorResponses, withErrorHandling } from '@/lib/api/responses';
-import { withCors } from '@/lib/api/cors';
-import { validateRequestBody } from '@/lib/validation/helpers';
-import { transferSendSchema } from '@/lib/validation/schemas';
+import { createSuccessResponse, ErrorResponses, withErrorHandling } from '@/lib/api';
+import { withCors } from '@/lib/api';
+import { validateRequestBody } from '@/lib/validations';
+import { transferSendSchema } from '@/lib/validations';
 import { sendP2PTransfer } from '@/lib/database/functions';
 
 async function transferSendHandler(request: NextRequest, user: AuthenticatedUser) {

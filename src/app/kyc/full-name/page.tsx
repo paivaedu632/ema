@@ -1,6 +1,6 @@
 "use client"
 
-import { KYCFormStep } from "@/components/kyc/kyc-form-step"
+import { KYCFormStep } from '@/components/features/kyc/kyc-form-step'
 
 export default function KYCFullNamePage() {
   return (

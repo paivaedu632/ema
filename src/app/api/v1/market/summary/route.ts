@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
-import { createSuccessResponse, ErrorResponses, withErrorHandling } from '@/lib/api/responses';
-import { withCors } from '@/lib/api/cors';
-import { validateSearchParams } from '@/lib/validation/helpers';
+import { createSuccessResponse, ErrorResponses, withErrorHandling } from '@/lib/api';
+import { withCors } from '@/lib/api';
+import { validateSearchParams } from '@/lib/validations';
 import { z } from 'zod';
 
 // Schema for market summary parameters

@@ -1,5 +1,47 @@
 import { z } from 'zod'
-import { NextRequest } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
+
+// ===== VALIDATION UTILITIES =====
+
+export interface ValidationResult<T> {
+  success: boolean;
+  data?: T;
+  error?: string;
+}
+
+/**
+ * Validate request body against a Zod schema
+ */
+export async function validateRequestBody<T>(
+  request: NextRequest,
+  schema: z.ZodSchema<T>
+): Promise<ValidationResult<T>> {
+  try {
+    const body = await request.json();
+    const result = schema.safeParse(body);
+
+    if (!result.success) {
+      const errorMessage = result.error.issues
+        .map((err: any) => `${err.path.join('.')}: ${err.message}`)
+        .join(', ');
+
+      return {
+        success: false,
+        error: `Validation error: ${errorMessage}`
+      };
+    }
+
+    return {
+      success: true,
+      data: result.data
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: 'Invalid JSON in request body'
+    };
+  }
+}
 
 // ===== BASIC VALIDATION SCHEMAS =====
 
@@ -115,67 +157,34 @@ export const PaginationQuerySchema = z.object({
   limit: z.coerce.number().int().min(1).max(100).default(20)
 })
 
-// ===== VALIDATION UTILITIES =====
+// ===== ADDITIONAL SCHEMAS FROM SCHEMAS.TS =====
 
-/**
- * Validate request body with Zod schema
- */
-export async function validateRequestBody<T>(
-  request: NextRequest,
-  schema: z.ZodSchema<T>
-): Promise<T> {
-  try {
-    const body = await request.json()
-    return schema.parse(body)
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      const errorMessage = error.issues
-        .map((err: any) => `${err.path.join('.')}: ${err.message}`)
-        .join(', ')
-      throw new Error(`Validation error: ${errorMessage}`)
-    }
-    throw new Error('Invalid JSON in request body')
-  }
-}
+// ===== ADDITIONAL SCHEMAS FROM SCHEMAS.TS =====
 
-/**
- * Validate query parameters with Zod schema
- */
-export function validateQueryParams<T>(
-  searchParams: URLSearchParams,
-  schema: z.ZodSchema<T>
-): T {
-  try {
-    const params = Object.fromEntries(searchParams.entries())
-    return schema.parse(params)
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      const errorMessage = error.issues
-        .map((err: any) => `${err.path.join('.')}: ${err.message}`)
-        .join(', ')
-      throw new Error(`Query validation error: ${errorMessage}`)
-    }
-    throw new Error('Invalid query parameters')
-  }
-}
+// Common validation patterns
+export const uuidSchema = z.string().uuid();
+export const emailSchema = z.string().email();
+export const phoneSchema = z.string().min(10).max(15);
+export const pinSchema = z.string().regex(/^\d{6}$/, 'PIN must be exactly 6 digits');
+export const amountSchema = z.number().positive().max(1000000);
 
-/**
- * Safe validation that returns result with success/error
- */
-export function safeValidate<T>(
-  data: unknown,
-  schema: z.ZodSchema<T>
-): { success: true; data: T } | { success: false; error: string } {
-  try {
-    const result = schema.parse(data)
-    return { success: true, data: result }
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      const errorMessage = error.issues
-        .map((err: any) => `${err.path.join('.')}: ${err.message}`)
-        .join(', ')
-      return { success: false, error: errorMessage }
-    }
-    return { success: false, error: 'Validation failed' }
-  }
-}
+// User search schema
+export const userSearchSchema = z.object({
+  query: z.string().min(1).max(100),
+  type: z.enum(['email', 'phone', 'name']).optional()
+});
+
+// Transfer schemas
+export const transferSendSchema = z.object({
+  recipientId: z.union([uuidSchema, emailSchema]), // Allow UUID or email
+  amount: amountSchema,
+  currency: CurrencySchema,
+  pin: pinSchema,
+  description: z.string().max(200).optional()
+});
+
+export const transferHistorySchema = z.object({
+  page: z.number().int().positive().default(1),
+  limit: z.number().int().min(1).max(100).default(20),
+  currency: CurrencySchema.optional()
+});

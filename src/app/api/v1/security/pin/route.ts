@@ -1,9 +1,9 @@
 import { NextRequest } from 'next/server';
 import { withAuth, AuthenticatedUser } from '@/lib/auth/middleware';
-import { createSuccessResponse, ErrorResponses, withErrorHandling } from '@/lib/api/responses';
-import { withCors } from '@/lib/api/cors';
-import { validateRequestBody } from '@/lib/validation/helpers';
-import { pinSetSchema } from '@/lib/validation/schemas';
+import { createSuccessResponse, ErrorResponses, withErrorHandling } from '@/lib/api';
+import { withCors } from '@/lib/api';
+import { validateRequestBody } from '@/lib/validations';
+import { pinSetSchema } from '@/lib/validations';
 import { setUserPin } from '@/lib/database/functions';
 import { createHash } from 'crypto';
 
