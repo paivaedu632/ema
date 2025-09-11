@@ -1,4 +1,4 @@
-import Dashboard from '@/components/dashboard'
+import Dashboard from '@/components/features/dashboard'
 import { ProtectedRoute } from '@/components/auth/protected-route'
 
 export default function Home() {

@@ -1,4 +1,4 @@
-import { TransactionDetails } from "@/components/transaction-details"
+import { TransactionDetails } from '@/components/features/transactions/transaction-details'
 
 interface TransactionPageProps {
   params: Promise<{

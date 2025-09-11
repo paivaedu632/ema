@@ -2,14 +2,19 @@
 
 /**
  * EmaPay Refactoring Phase Runner
- * 
+ *
  * Orchestrates the execution of refactoring phases with safety checks
  * and rollback capabilities.
  */
 
-const RefactorTools = require('./refactor-tools');
-const { execSync } = require('child_process');
-const path = require('path');
+import RefactorTools from './refactor-tools.js';
+import { execSync } from 'child_process';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 class PhaseRunner {
   constructor() {
@@ -160,7 +165,6 @@ class PhaseRunner {
    */
   async executePhase3() {
     await this.executePhase(3, 'Library Simplification', async () => {
-      const fs = require('fs');
       
       // 3.1 Consolidate API client
       const apiFiles = [
@@ -207,7 +211,7 @@ class PhaseRunner {
         cwd: path.join(__dirname, '..'),
         stdio: 'inherit'
       });
-      
+
       // 4.2 Create API hooks (placeholder)
       const apiHooksContent = `// React Query API hooks
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -225,8 +229,8 @@ export const useTransfers = () => {
   // Transfer hooks implementation
 };
 `;
-      
-      require('fs').writeFileSync(
+
+      fs.writeFileSync(
         path.join(__dirname, '..', 'src/hooks/use-api.ts'),
         apiHooksContent
       );
@@ -253,7 +257,7 @@ export const useTransfers = () => {
 }
 
 // CLI usage
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   const runner = new PhaseRunner();
   const command = process.argv[2];
 
@@ -275,4 +279,4 @@ if (require.main === module) {
   }
 }
 
-module.exports = PhaseRunner;
+export default PhaseRunner;

@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { useRouter } from 'next/navigation'
-import { PageHeader } from '@/components/ui/page-header'
+import { PageHeader } from '@/components/layout/page-header'
 import { TransactionListItem, TransactionListItemSkeleton, TransactionListEmpty } from '@/components/ui/transaction-list-item'
 
 export default function TransactionsPage() {

@@ -2,14 +2,18 @@
 
 /**
  * EmaPay Refactoring Tools
- * 
+ *
  * Automated tools for safely refactoring the EmaPay project structure.
  * Provides utilities for moving files, updating imports, and validating changes.
  */
 
-const fs = require('fs');
-const path = require('path');
-const { execSync } = require('child_process');
+import fs from 'fs';
+import path from 'path';
+import { execSync } from 'child_process';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 class RefactorTools {
   constructor() {
@@ -267,10 +271,10 @@ class RefactorTools {
 }
 
 // Export for use in other scripts
-module.exports = RefactorTools;
+export default RefactorTools;
 
 // CLI usage
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   const tools = new RefactorTools();
   const command = process.argv[2];
 

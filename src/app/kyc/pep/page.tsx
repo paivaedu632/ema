@@ -1,7 +1,7 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { PageHeader } from "@/components/ui/page-header"
+import { PageHeader } from '@/components/layout/page-header'
 import { FixedBottomAction } from "@/components/ui/fixed-bottom-action"
 import { useKYC } from "@/contexts/kyc-context"
 
