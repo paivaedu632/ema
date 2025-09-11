@@ -68,5 +68,107 @@
   "extensions.autoUpdate": false,
   "extensions.autoCheckUpdates": false,
   "telemetry.telemetryLevel": "off",
-  "workbench.enableExperiments": false
+  "workbench.enableExperiments": false,
+
+  // AGGRESSIVE MEMORY OPTIMIZATIONS
+  "typescript.tsserver.maxTsServerMemory": 512,
+  "typescript.tsserver.watchOptions": {
+    "watchFile": "useFsEvents",
+    "watchDirectory": "useFsEvents",
+    "fallbackPolling": "dynamicPriority",
+    "synchronousWatchDirectory": true,
+    "excludeDirectories": ["**/node_modules", "**/.git", "**/.next"]
+  },
+  "typescript.preferences.includeCompletionsForModuleExports": false,
+  "typescript.preferences.includeCompletionsForImportStatements": false,
+  "typescript.suggest.completeFunctionCalls": false,
+  "typescript.suggest.includeAutomaticOptionalChainCompletions": false,
+  "typescript.suggest.includeCompletionsForImportStatements": false,
+  "typescript.suggest.includeCompletionsWithSnippetText": false,
+  "typescript.suggest.jsdoc.generateReturns": false,
+  "typescript.suggest.names": false,
+  "typescript.suggest.paths": false,
+  "typescript.suggest.autoImports": false,
+  "typescript.updateImportsOnFileMove.enabled": "never",
+  "typescript.preferences.quoteStyle": "single",
+  "typescript.format.enable": false,
+  "typescript.validate.enable": false,
+
+  // Editor memory optimizations
+  "editor.minimap.enabled": false,
+  "editor.minimap.renderCharacters": false,
+  "editor.minimap.maxColumn": 80,
+  "editor.codeLens": false,
+  "editor.hover.enabled": false,
+  "editor.parameterHints.enabled": false,
+  "editor.quickSuggestions": {
+    "comments": "off",
+    "strings": "off",
+    "other": "off"
+  },
+  "editor.suggestOnTriggerCharacters": false,
+  "editor.wordBasedSuggestions": "off",
+  "editor.suggest.snippetsPreventQuickSuggestions": false,
+  "editor.suggest.localityBonus": false,
+  "editor.suggest.shareSuggestSelections": false,
+  "editor.acceptSuggestionOnCommitCharacter": false,
+  "editor.acceptSuggestionOnEnter": "off",
+  "editor.tabCompletion": "off",
+  "editor.wordWrap": "off",
+  "editor.wrappingIndent": "none",
+  "editor.folding": false,
+  "editor.foldingStrategy": "indentation",
+  "editor.showFoldingControls": "never",
+  "editor.unfoldOnClickAfterEndOfLine": false,
+  "editor.foldingMaximumRegions": 1000,
+
+  // Workbench memory optimizations
+  "workbench.editor.enablePreview": false,
+  "workbench.editor.enablePreviewFromQuickOpen": false,
+  "workbench.editor.enablePreviewFromCodeNavigation": false,
+  "workbench.editor.closeEmptyGroups": true,
+  "workbench.editor.limit.enabled": true,
+  "workbench.editor.limit.value": 5,
+  "workbench.editor.limit.perEditorGroup": true,
+  "workbench.startupEditor": "none",
+  "workbench.tips.enabled": false,
+  "workbench.welcome.enabled": false,
+  "workbench.colorTheme": "Default Dark+",
+  "workbench.iconTheme": null,
+  "workbench.tree.indent": 8,
+  "workbench.tree.renderIndentGuides": "none",
+  "workbench.statusBar.visible": false,
+  "workbench.sideBar.location": "left",
+
+  // Git memory optimizations
+  "git.enabled": false,
+  "git.autorefresh": false,
+  "git.autofetch": false,
+  "git.decorations.enabled": false,
+  "scm.diffDecorations": "none",
+  "scm.diffDecorationsGutterVisibility": "hover",
+
+  // Extension memory optimizations
+  "extensions.ignoreRecommendations": true,
+  "extensions.showRecommendationsOnlyOnDemand": true,
+  "extensions.closeExtensionDetailsOnViewChange": true,
+
+  // Window memory optimizations
+  "window.restoreWindows": "none",
+  "window.newWindowDimensions": "inherit",
+  "window.openFilesInNewWindow": "off",
+  "window.openFoldersInNewWindow": "off",
+
+  // Debug memory optimizations
+  "debug.console.fontSize": 12,
+  "debug.console.lineHeight": 16,
+  "debug.console.wordWrap": false,
+  "debug.openDebug": "neverOpen",
+  "debug.showInStatusBar": "never",
+
+  // Terminal memory optimizations
+  "terminal.integrated.scrollback": 100,
+  "terminal.integrated.fastScrollSensitivity": 1,
+  "terminal.integrated.mouseWheelScrollSensitivity": 1,
+  "workbench.activityBar.location": "default"
 }

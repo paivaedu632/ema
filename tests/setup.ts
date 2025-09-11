@@ -1,161 +1,115 @@
 /**
- * Jest setup file
- * Runs after the test framework is set up but before tests run
+ * Jest Setup File
+ * Configures global test environment and utilities
  */
 
-import { jest } from '@jest/globals';
+import { createClient } from '@supabase/supabase-js'
 
 // Extend Jest matchers
 expect.extend({
   toBeValidUUID(received: string) {
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-    const pass = uuidRegex.test(received);
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+    const pass = uuidRegex.test(received)
     
     if (pass) {
       return {
         message: () => `expected ${received} not to be a valid UUID`,
         pass: true,
-      };
+      }
     } else {
       return {
         message: () => `expected ${received} to be a valid UUID`,
         pass: false,
-      };
+      }
     }
   },
   
-  toBeValidEmail(received: string) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const pass = emailRegex.test(received);
+  toBeValidTimestamp(received: string) {
+    const date = new Date(received)
+    const pass = !isNaN(date.getTime()) && received.includes('T') && received.includes('Z')
     
     if (pass) {
       return {
-        message: () => `expected ${received} not to be a valid email`,
+        message: () => `expected ${received} not to be a valid ISO timestamp`,
         pass: true,
-      };
+      }
     } else {
       return {
-        message: () => `expected ${received} to be a valid email`,
+        message: () => `expected ${received} to be a valid ISO timestamp`,
         pass: false,
-      };
+      }
     }
   },
   
-  toBeValidCurrency(received: string) {
-    const validCurrencies = ['EUR', 'AOA'];
-    const pass = validCurrencies.includes(received);
+  toHaveValidApiResponse(received: any) {
+    const hasSuccess = typeof received.success === 'boolean'
+    const hasData = received.success ? received.data !== undefined : true
+    const hasMessage = typeof received.message === 'string'
+    const hasError = !received.success ? typeof received.error === 'string' : true
+    
+    const pass = hasSuccess && hasData && hasMessage && hasError
     
     if (pass) {
       return {
-        message: () => `expected ${received} not to be a valid currency`,
+        message: () => `expected response not to have valid API structure`,
         pass: true,
-      };
+      }
     } else {
       return {
-        message: () => `expected ${received} to be a valid currency (EUR or AOA)`,
+        message: () => `expected response to have valid API structure with success, data/error, and message fields`,
         pass: false,
-      };
-    }
-  },
-  
-  toBeValidAmount(received: number) {
-    const pass = typeof received === 'number' && received >= 0 && Number.isFinite(received);
-    
-    if (pass) {
-      return {
-        message: () => `expected ${received} not to be a valid amount`,
-        pass: true,
-      };
-    } else {
-      return {
-        message: () => `expected ${received} to be a valid amount (positive number)`,
-        pass: false,
-      };
-    }
-  },
-  
-  toHaveResponseTime(received: number, expected: number) {
-    const pass = received <= expected;
-    
-    if (pass) {
-      return {
-        message: () => `expected response time ${received}ms to be greater than ${expected}ms`,
-        pass: true,
-      };
-    } else {
-      return {
-        message: () => `expected response time ${received}ms to be less than or equal to ${expected}ms`,
-        pass: false,
-      };
+      }
     }
   }
-});
+})
 
 // Global test configuration
-jest.setTimeout(30000); // 30 second timeout for all tests
+global.testConfig = {
+  apiUrl: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000',
+  supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  supabaseAnonKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  testTimeout: 30000,
+}
 
-// Mock console methods to reduce noise in tests
-const originalConsoleError = console.error;
-const originalConsoleWarn = console.warn;
+// Console log suppression for cleaner test output
+const originalConsoleError = console.error
+const originalConsoleWarn = console.warn
 
 beforeAll(() => {
-  // Suppress console.error and console.warn in tests unless explicitly needed
-  console.error = jest.fn();
-  console.warn = jest.fn();
-});
+  console.error = (...args: any[]) => {
+    if (args[0]?.includes?.('Warning:') || args[0]?.includes?.('React')) {
+      return
+    }
+    originalConsoleError(...args)
+  }
+  
+  console.warn = (...args: any[]) => {
+    if (args[0]?.includes?.('Warning:') || args[0]?.includes?.('React')) {
+      return
+    }
+    originalConsoleWarn(...args)
+  }
+})
 
 afterAll(() => {
-  // Restore original console methods
-  console.error = originalConsoleError;
-  console.warn = originalConsoleWarn;
-});
-
-// Global test utilities
-global.testUtils = {
-  // Helper to wait for a specific amount of time
-  wait: (ms: number) => new Promise(resolve => setTimeout(resolve, ms)),
-  
-  // Helper to generate random test data
-  randomString: (length: number = 10) => {
-    const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let result = '';
-    for (let i = 0; i < length; i++) {
-      result += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return result;
-  },
-  
-  // Helper to generate random email
-  randomEmail: () => {
-    const username = global.testUtils.randomString(8);
-    const domain = global.testUtils.randomString(6);
-    return `${username}@${domain}.test`;
-  },
-  
-  // Helper to generate random amount
-  randomAmount: (min: number = 1, max: number = 1000) => {
-    return Math.round((Math.random() * (max - min) + min) * 100) / 100;
-  }
-};
-
-console.log('🧪 Jest setup completed');
+  console.error = originalConsoleError
+  console.warn = originalConsoleWarn
+})
 
 // Type declarations for custom matchers
 declare global {
   namespace jest {
     interface Matchers<R> {
-      toBeValidUUID(): R;
-      toBeValidEmail(): R;
-      toBeValidCurrency(): R;
-      toBeValidAmount(): R;
-      toHaveResponseTime(expected: number): R;
+      toBeValidUUID(): R
+      toBeValidTimestamp(): R
+      toHaveValidApiResponse(): R
     }
   }
   
-  var testUtils: {
-    wait: (ms: number) => Promise<void>;
-    randomString: (length?: number) => string;
-    randomEmail: () => string;
-    randomAmount: (min?: number, max?: number) => number;
-  };
+  var testConfig: {
+    apiUrl: string
+    supabaseUrl: string
+    supabaseAnonKey: string
+    testTimeout: number
+  }
 }

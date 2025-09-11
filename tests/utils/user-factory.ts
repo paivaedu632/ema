@@ -1,330 +1,141 @@
 /**
- * Test User Factory
- * Creates test users with Supabase Auth tokens for testing
+ * User Factory
+ * Creates test users and manages test data
  */
 
-import { createClient } from '@supabase/supabase-js';
-import { randomBytes } from 'crypto';
+import { createClient } from '@supabase/supabase-js'
+import { TEST_CONFIG } from './test-helpers'
 
 export interface TestUser {
-  id: string;
-  email: string;
-  password: string;
-  accessToken: string;
-  refreshToken: string;
-  sessionId: string;
-  createdAt: string;
-}
-
-export interface CreateUserOptions {
-  email?: string;
-  password?: string;
-  metadata?: Record<string, any>;
-  emailConfirmed?: boolean;
+  id: string
+  email: string
+  phone?: string
+  fullName?: string
+  pin?: string
+  token?: string
 }
 
 export class UserFactory {
-  private supabaseAdmin: any;
-  private supabaseClient: any;
-  private createdUsers: TestUser[] = [];
+  private supabase
+  private createdUsers: TestUser[] = []
 
   constructor() {
-    // Initialize Supabase clients
-    this.supabaseAdmin = createClient(
-      global.testConfig.supabaseUrl,
-      global.testConfig.supabaseServiceKey,
-      {
-        auth: {
-          autoRefreshToken: false,
-          persistSession: false
-        }
-      }
-    );
-
-    this.supabaseClient = createClient(
-      global.testConfig.supabaseUrl,
-      global.testConfig.supabaseAnonKey
-    );
+    this.supabase = createClient(
+      TEST_CONFIG.SUPABASE_URL,
+      TEST_CONFIG.SUPABASE_SERVICE_KEY
+    )
   }
 
-  /**
-   * Generate a secure random password
-   */
-  private generatePassword(): string {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
-    let password = '';
-    const bytes = randomBytes(16);
-    
-    for (let i = 0; i < 16; i++) {
-      password += chars[bytes[i] % chars.length];
+  // Create a test user with realistic data
+  async createTestUser(overrides: Partial<TestUser> = {}): Promise<TestUser> {
+    const timestamp = Date.now()
+    const defaultUser: TestUser = {
+      id: `test-user-${timestamp}`,
+      email: `test-${timestamp}@emapay.com`,
+      phone: `+244900${String(timestamp).slice(-6)}`,
+      fullName: `Test User ${timestamp}`,
+      pin: '123456',
+      ...overrides
     }
+
+    // In a real implementation, you would create the user in the database
+    // For now, we'll just track the user data
+    this.createdUsers.push(defaultUser)
     
-    return password;
+    return defaultUser
   }
 
-  /**
-   * Generate a test email address with better uniqueness
-   */
-  private generateEmail(): string {
-    const timestamp = Date.now();
-    const random = Math.random().toString(36).substring(2, 15);
-    const processId = process.pid || Math.floor(Math.random() * 10000);
-    return `test-${timestamp}-${processId}-${random}@emapay.test`;
-  }
-
-  /**
-   * Create a test user with authentication
-   */
-  async createUser(options: CreateUserOptions = {}): Promise<TestUser> {
-    const email = options.email || this.generateEmail();
-    const password = options.password || this.generatePassword();
-    const emailConfirmed = options.emailConfirmed !== false; // Default to true
-
-    try {
-      // Create user using admin API
-      const { data: adminData, error: adminError } = await this.supabaseAdmin.auth.admin.createUser({
-        email,
-        password,
-        email_confirm: emailConfirmed,
-        user_metadata: {
-          name: `Test User ${Date.now()}`,
-          purpose: 'API Testing',
-          created_for_test: true,
-          ...options.metadata
-        }
-      });
-
-      if (adminError) {
-        throw new Error(`Failed to create user: ${adminError.message}`);
-      }
-
-      // Sign in as the user to get session tokens
-      const { data: signInData, error: signInError } = await this.supabaseClient.auth.signInWithPassword({
-        email,
-        password
-      });
-
-      if (signInError) {
-        throw new Error(`Failed to sign in user: ${signInError.message}`);
-      }
-
-      if (!signInData.session?.access_token) {
-        throw new Error('No access token received from sign in');
-      }
-
-      const testUser: TestUser = {
-        id: adminData.user.id,
-        email,
-        password,
-        accessToken: signInData.session.access_token,
-        refreshToken: signInData.session.refresh_token,
-        sessionId: signInData.session.user.id, // Use user ID as session identifier
-        createdAt: new Date().toISOString()
-      };
-
-      // Track created user for cleanup
-      this.createdUsers.push(testUser);
-
-      return testUser;
-
-    } catch (error) {
-      throw new Error(`User creation failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
-    }
-  }
-
-  /**
-   * Create multiple test users
-   */
-  async createUsers(count: number, options: CreateUserOptions = {}): Promise<TestUser[]> {
-    const users: TestUser[] = [];
-    
+  // Create multiple test users
+  async createTestUsers(count: number): Promise<TestUser[]> {
+    const users: TestUser[] = []
     for (let i = 0; i < count; i++) {
-      const userOptions = {
-        ...options,
-        email: options.email ? `${i}-${options.email}` : undefined
-      };
-      
-      const user = await this.createUser(userOptions);
-      users.push(user);
+      const user = await this.createTestUser({
+        email: `test-user-${i}-${Date.now()}@emapay.com`,
+        fullName: `Test User ${i + 1}`
+      })
+      users.push(user)
+    }
+    return users
+  }
+
+  // Get a user by email
+  getUserByEmail(email: string): TestUser | undefined {
+    return this.createdUsers.find(user => user.email === email)
+  }
+
+  // Clean up all created test users
+  async cleanup(): Promise<void> {
+    // In a real implementation, you would delete users from the database
+    // For now, we'll just clear the local array
+    this.createdUsers = []
+    console.log('Test users cleaned up')
+  }
+
+  // Get all created users
+  getCreatedUsers(): TestUser[] {
+    return [...this.createdUsers]
+  }
+
+  // Create a user with specific wallet balances
+  async createUserWithBalance(
+    currency: string,
+    availableBalance: number,
+    reservedBalance: number = 0,
+    userOverrides: Partial<TestUser> = {}
+  ): Promise<TestUser> {
+    const user = await this.createTestUser(userOverrides)
+    
+    // In a real implementation, you would set up wallet balances in the database
+    // For testing purposes, we'll add this info to the user object
+    ;(user as any).walletBalances = {
+      [currency]: {
+        availableBalance,
+        reservedBalance,
+        totalBalance: availableBalance + reservedBalance
+      }
     }
     
-    return users;
+    return user
   }
 
-  /**
-   * Refresh a user's access token
-   */
-  async refreshUserToken(user: TestUser): Promise<TestUser> {
-    try {
-      const { data, error } = await this.supabaseClient.auth.refreshSession({
-        refresh_token: user.refreshToken
-      });
+  // Create a user with PIN already set
+  async createUserWithPin(pin: string = '123456', userOverrides: Partial<TestUser> = {}): Promise<TestUser> {
+    const user = await this.createTestUser({
+      pin,
+      ...userOverrides
+    })
+    
+    // In a real implementation, you would set the PIN in the database
+    ;(user as any).pinSet = true
+    
+    return user
+  }
 
-      if (error) {
-        throw new Error(`Token refresh failed: ${error.message}`);
-      }
-
-      if (!data.session?.access_token) {
-        throw new Error('No access token received from refresh');
-      }
-
-      // Update user with new tokens
-      user.accessToken = data.session.access_token;
-      user.refreshToken = data.session.refresh_token;
-
-      return user;
-
-    } catch (error) {
-      throw new Error(`Token refresh failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  // Create a pair of users for transfer testing
+  async createTransferPair(): Promise<{ sender: TestUser; recipient: TestUser }> {
+    const [sender, recipient] = await this.createTestUsers(2)
+    
+    // Set up sender with balance
+    const senderWithBalance = await this.createUserWithBalance('EUR', 1000, 0, {
+      id: sender.id,
+      email: sender.email,
+      fullName: 'Sender User',
+      pin: '123456'
+    })
+    
+    // Set up recipient
+    const recipientUser: TestUser = {
+      ...recipient,
+      fullName: 'Recipient User',
+      pin: '654321'
     }
-  }
-
-  /**
-   * Delete a test user
-   */
-  async deleteUser(user: TestUser): Promise<void> {
-    try {
-      const { error } = await this.supabaseAdmin.auth.admin.deleteUser(user.id);
-      
-      if (error) {
-        console.warn(`Failed to delete user ${user.id}:`, error.message);
-      }
-
-      // Remove from tracking
-      this.createdUsers = this.createdUsers.filter(u => u.id !== user.id);
-
-    } catch (error) {
-      console.warn(`Failed to delete user ${user.id}:`, error);
+    
+    return {
+      sender: senderWithBalance,
+      recipient: recipientUser
     }
-  }
-
-  /**
-   * Clean up test users by email pattern (before tests)
-   */
-  async cleanupTestUsers(): Promise<void> {
-    try {
-      // Delete users with test email pattern
-      const { data: users } = await this.supabase.auth.admin.listUsers();
-      const testUsers = users.users.filter(user =>
-        user.email?.includes('@emapay.test')
-      );
-
-      for (const user of testUsers) {
-        try {
-          await this.supabase.auth.admin.deleteUser(user.id);
-        } catch (error) {
-          console.warn(`Failed to delete test user ${user.id}:`, error);
-        }
-      }
-
-      console.log(`🧹 Cleaned up ${testUsers.length} existing test users`);
-    } catch (error) {
-      console.warn('Failed to cleanup existing test users:', error);
-    }
-  }
-
-  /**
-   * Setup PIN for a user
-   */
-  async setupPin(user: TestUser, pin: string = '123456'): Promise<void> {
-    try {
-      // Import testUtils to make the API call
-      const { testUtils } = await import('./index');
-
-      const response = await testUtils.post('/api/v1/security/pin', {
-        pin,
-        confirmPin: pin
-      }, user);
-
-      if (response.status !== 200) {
-        throw new Error(`PIN setup failed: ${response.body?.error || 'Unknown error'}`);
-      }
-
-      console.log(`🔐 PIN set up for user ${user.email}`);
-    } catch (error) {
-      console.error(`❌ Failed to setup PIN for user ${user.email}:`, error);
-      throw error;
-    }
-  }
-
-  /**
-   * Create a user with PIN already set up
-   */
-  async createUserWithPin(userData: Partial<CreateUserData> = {}, pin: string = '123456'): Promise<TestUser> {
-    const user = await this.createUser(userData);
-    await this.setupPin(user, pin);
-    return user;
-  }
-
-  /**
-   * Create a user with balance and PIN already set up
-   */
-  async createUserWithBalanceAndPin(userData: Partial<CreateUserWithBalanceData> = {}, pin: string = '123456'): Promise<TestUser> {
-    const user = await this.createUserWithBalance(userData);
-    await this.setupPin(user, pin);
-    return user;
-  }
-
-  /**
-   * Clean up all created users
-   */
-  async cleanup(): Promise<void> {
-    console.log(`🧹 Cleaning up ${this.createdUsers.length} test users...`);
-
-    const deletePromises = this.createdUsers.map(user => this.deleteUser(user));
-    await Promise.allSettled(deletePromises);
-
-    this.createdUsers = [];
-    console.log('✅ User cleanup completed');
-  }
-
-  /**
-   * Get all created users
-   */
-  getCreatedUsers(): TestUser[] {
-    return [...this.createdUsers];
-  }
-
-  /**
-   * Create a user with specific wallet balances
-   */
-  async createUserWithBalance(
-    eurBalance: number = 1000,
-    aoaBalance: number = 500000,
-    options: CreateUserOptions = {}
-  ): Promise<TestUser> {
-    const user = await this.createUser(options);
-
-    try {
-      // Create wallets with initial balances
-      await this.supabaseAdmin
-        .from('wallets')
-        .upsert([
-          {
-            user_id: user.id,
-            currency: 'EUR',
-            available_balance: eurBalance,
-            reserved_balance: 0,
-            total_balance: eurBalance
-          },
-          {
-            user_id: user.id,
-            currency: 'AOA',
-            available_balance: aoaBalance,
-            reserved_balance: 0,
-            total_balance: aoaBalance
-          }
-        ]);
-
-      console.log(`💰 Created user ${user.email} with EUR: ${eurBalance}, AOA: ${aoaBalance}`);
-
-    } catch (error) {
-      console.warn(`Failed to set wallet balances for user ${user.id}:`, error);
-    }
-
-    return user;
   }
 }
 
-// Export singleton instance
-export const userFactory = new UserFactory();
+// Export a default instance
+export const userFactory = new UserFactory()

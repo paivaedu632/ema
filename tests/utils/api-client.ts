@@ -1,278 +1,218 @@
 /**
- * API Client for Testing
- * Provides utilities for making authenticated API requests in tests
+ * API Test Client
+ * Supertest wrapper for EmaPay API testing
  */
 
-import request from 'supertest';
-import { TestUser } from './user-factory';
+import request from 'supertest'
+import { TEST_CONFIG, getAuthHeaders, ApiResponse } from './test-helpers'
 
-export interface ApiResponse<T = any> {
-  status: number;
-  body: T;
-  headers: Record<string, string>;
-  responseTime: number;
+// Create a test client instance
+export function createTestClient() {
+  return request(TEST_CONFIG.API_BASE_URL)
 }
 
-export interface ApiRequestOptions {
-  headers?: Record<string, string>;
-  timeout?: number;
-  expectStatus?: number;
-}
+// API Client class for organized endpoint testing
+export class ApiTestClient {
+  private baseUrl: string
+  private defaultHeaders: Record<string, string>
 
-export class ApiClient {
-  private baseUrl: string;
-  private defaultTimeout: number;
-
-  constructor(baseUrl?: string) {
-    this.baseUrl = baseUrl || global.testConfig.apiBaseUrl;
-    this.defaultTimeout = global.testConfig.apiTimeout;
-  }
-
-  /**
-   * Make an authenticated GET request
-   */
-  async get<T = any>(
-    endpoint: string,
-    user?: TestUser,
-    options: ApiRequestOptions = {}
-  ): Promise<ApiResponse<T>> {
-    return this.makeRequest('GET', endpoint, undefined, user, options);
-  }
-
-  /**
-   * Make an authenticated POST request
-   */
-  async post<T = any>(
-    endpoint: string,
-    data?: any,
-    user?: TestUser,
-    options: ApiRequestOptions = {}
-  ): Promise<ApiResponse<T>> {
-    return this.makeRequest('POST', endpoint, data, user, options);
-  }
-
-  /**
-   * Make an authenticated PUT request
-   */
-  async put<T = any>(
-    endpoint: string,
-    data?: any,
-    user?: TestUser,
-    options: ApiRequestOptions = {}
-  ): Promise<ApiResponse<T>> {
-    return this.makeRequest('PUT', endpoint, data, user, options);
-  }
-
-  /**
-   * Make an authenticated DELETE request
-   */
-  async delete<T = any>(
-    endpoint: string,
-    user?: TestUser,
-    options: ApiRequestOptions = {}
-  ): Promise<ApiResponse<T>> {
-    return this.makeRequest('DELETE', endpoint, undefined, user, options);
-  }
-
-  /**
-   * Make a request without authentication
-   */
-  async publicGet<T = any>(
-    endpoint: string,
-    options: ApiRequestOptions = {}
-  ): Promise<ApiResponse<T>> {
-    return this.makeRequest('GET', endpoint, undefined, undefined, options);
-  }
-
-  /**
-   * Make a POST request without authentication
-   */
-  async publicPost<T = any>(
-    endpoint: string,
-    data?: any,
-    options: ApiRequestOptions = {}
-  ): Promise<ApiResponse<T>> {
-    return this.makeRequest('POST', endpoint, data, undefined, options);
-  }
-
-  /**
-   * Make a request with custom headers
-   */
-  async requestWithHeaders<T = any>(
-    method: string,
-    endpoint: string,
-    data?: any,
-    headers?: Record<string, string>,
-    options: ApiRequestOptions = {}
-  ): Promise<ApiResponse<T>> {
-    const customOptions = {
-      ...options,
-      headers: { ...options.headers, ...headers }
-    };
-    return this.makeRequest(method, endpoint, data, undefined, customOptions);
-  }
-
-  /**
-   * Core request method
-   */
-  private async makeRequest<T = any>(
-    method: string,
-    endpoint: string,
-    data?: any,
-    user?: TestUser,
-    options: ApiRequestOptions = {}
-  ): Promise<ApiResponse<T>> {
-    const startTime = Date.now();
-    
-    // Create the request
-    let req = request(this.baseUrl)[method.toLowerCase()](endpoint);
-
-    // Set timeout
-    const timeout = options.timeout || this.defaultTimeout;
-    req = req.timeout(timeout);
-
-    // Set authentication header
-    if (user) {
-      req = req.set('Authorization', `Bearer ${user.accessToken}`);
-    }
-
-    // Set custom headers
-    if (options.headers) {
-      Object.entries(options.headers).forEach(([key, value]) => {
-        req = req.set(key, value);
-      });
-    }
-
-    // Set content type for POST/PUT requests
-    if ((method === 'POST' || method === 'PUT') && data) {
-      req = req.set('Content-Type', 'application/json');
-      req = req.send(data);
-    }
-
-    try {
-      const response = await req;
-      const responseTime = Date.now() - startTime;
-
-      // Check expected status if provided
-      if (options.expectStatus && response.status !== options.expectStatus) {
-        throw new Error(
-          `Expected status ${options.expectStatus} but got ${response.status}. Response: ${JSON.stringify(response.body)}`
-        );
-      }
-
-      return {
-        status: response.status,
-        body: response.body,
-        headers: response.headers,
-        responseTime
-      };
-
-    } catch (error) {
-      const responseTime = Date.now() - startTime;
-      
-      if (error.response) {
-        // HTTP error response
-        return {
-          status: error.response.status,
-          body: error.response.body,
-          headers: error.response.headers,
-          responseTime
-        };
-      }
-      
-      // Network or other error
-      throw new Error(`Request failed: ${error.message}`);
+  constructor(baseUrl: string = TEST_CONFIG.API_BASE_URL) {
+    this.baseUrl = baseUrl
+    this.defaultHeaders = {
+      'Content-Type': 'application/json'
     }
   }
 
-  /**
-   * Test endpoint performance
-   */
-  async testPerformance<T = any>(
-    method: string,
-    endpoint: string,
-    expectedMaxTime: number,
-    user?: TestUser,
-    data?: any
-  ): Promise<{ response: ApiResponse<T>; passed: boolean }> {
-    const response = await this.makeRequest(method, endpoint, data, user);
-    const passed = response.responseTime <= expectedMaxTime;
-    
-    return { response, passed };
+  // Set authentication token for subsequent requests
+  setAuthToken(token: string) {
+    this.defaultHeaders = {
+      ...this.defaultHeaders,
+      ...getAuthHeaders(token)
+    }
   }
 
-  /**
-   * Test concurrent requests
-   */
-  async testConcurrency<T = any>(
-    method: string,
-    endpoint: string,
-    concurrentRequests: number,
-    user?: TestUser,
-    data?: any
-  ): Promise<ApiResponse<T>[]> {
-    const promises = Array(concurrentRequests)
-      .fill(null)
-      .map(() => this.makeRequest(method, endpoint, data, user));
-
-    return Promise.all(promises);
+  // Clear authentication
+  clearAuth() {
+    delete this.defaultHeaders['Authorization']
   }
 
-  /**
-   * Test with invalid JWT token
-   */
-  async testWithInvalidToken<T = any>(
-    method: string,
-    endpoint: string,
-    data?: any
-  ): Promise<ApiResponse<T>> {
-    const options: ApiRequestOptions = {
-      headers: {
-        'Authorization': 'Bearer invalid-token-12345'
-      }
-    };
-    
-    return this.makeRequest(method, endpoint, data, undefined, options);
+  // Make raw request with custom headers (for testing edge cases)
+  async makeRawRequest(method: string, path: string, headers: Record<string, string> = {}) {
+    const req = request(this.baseUrl)
+
+    switch (method.toUpperCase()) {
+      case 'GET':
+        return req.get(path).set(headers)
+      case 'POST':
+        return req.post(path).set(headers)
+      case 'PUT':
+        return req.put(path).set(headers)
+      case 'DELETE':
+        return req.delete(path).set(headers)
+      default:
+        throw new Error(`Unsupported HTTP method: ${method}`)
+    }
   }
 
-  /**
-   * Test with expired JWT token
-   */
-  async testWithExpiredToken<T = any>(
-    method: string,
-    endpoint: string,
-    data?: any
-  ): Promise<ApiResponse<T>> {
-    // Create an expired JWT token (this is a mock expired token)
-    const expiredToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjE1MTYyMzkwMjJ9.invalid';
-    
-    const options: ApiRequestOptions = {
-      headers: {
-        'Authorization': `Bearer ${expiredToken}`
-      }
-    };
-    
-    return this.makeRequest(method, endpoint, data, undefined, options);
+  // Health endpoints
+  async getHealthStatus() {
+    return request(this.baseUrl)
+      .get('/api/v1/health/status')
+      .set(this.defaultHeaders)
   }
 
-  /**
-   * Test with malformed authorization header
-   */
-  async testWithMalformedAuth<T = any>(
-    method: string,
-    endpoint: string,
-    authHeader: string,
-    data?: any
-  ): Promise<ApiResponse<T>> {
-    const options: ApiRequestOptions = {
-      headers: {
-        'Authorization': authHeader
-      }
-    };
+  // Auth endpoints
+  async getAuthMe(token?: string) {
+    const headers = token ? getAuthHeaders(token) : this.defaultHeaders
+    return request(this.baseUrl)
+      .get('/api/v1/auth/me')
+      .set(headers)
+  }
+
+  // User endpoints
+  async searchUsers(query: string, type?: string, token?: string) {
+    const headers = token ? getAuthHeaders(token) : this.defaultHeaders
+    const params = new URLSearchParams({ query })
+    if (type) params.append('type', type)
     
-    return this.makeRequest(method, endpoint, data, undefined, options);
+    return request(this.baseUrl)
+      .get(`/api/v1/users/search?${params.toString()}`)
+      .set(headers)
+  }
+
+  // Wallet endpoints
+  async getWalletBalance(token?: string) {
+    const headers = token ? getAuthHeaders(token) : this.defaultHeaders
+    return request(this.baseUrl)
+      .get('/api/v1/wallets/balance')
+      .set(headers)
+  }
+
+  async getWalletByCurrency(currency: string, token?: string) {
+    const headers = token ? getAuthHeaders(token) : this.defaultHeaders
+    return request(this.baseUrl)
+      .get(`/api/v1/wallets/${currency}`)
+      .set(headers)
+  }
+
+  async getCurrencyBalance(currency: string, token?: string) {
+    const headers = token ? getAuthHeaders(token) : this.defaultHeaders
+    return request(this.baseUrl)
+      .get(`/api/v1/wallets/${currency}`)
+      .set(headers)
+  }
+
+  // Transfer endpoints
+  async sendTransfer(transferData: any, token?: string) {
+    const headers = token ? getAuthHeaders(token) : this.defaultHeaders
+    return request(this.baseUrl)
+      .post('/api/v1/transfers/send')
+      .set(headers)
+      .send(transferData)
+  }
+
+  async getTransferHistory(params: { page?: number; limit?: number; currency?: string } = {}, token?: string) {
+    const headers = token ? getAuthHeaders(token) : this.defaultHeaders
+    const queryParams = new URLSearchParams()
+    
+    if (params.page) queryParams.append('page', params.page.toString())
+    if (params.limit) queryParams.append('limit', params.limit.toString())
+    if (params.currency) queryParams.append('currency', params.currency)
+    
+    const queryString = queryParams.toString()
+    const url = queryString ? `/api/v1/transfers/history?${queryString}` : '/api/v1/transfers/history'
+    
+    return request(this.baseUrl)
+      .get(url)
+      .set(headers)
+  }
+
+  // Order endpoints
+  async placeLimitOrder(orderData: any, token?: string) {
+    const headers = token ? getAuthHeaders(token) : this.defaultHeaders
+    return request(this.baseUrl)
+      .post('/api/v1/orders/limit')
+      .set(headers)
+      .send(orderData)
+  }
+
+  async placeMarketOrder(orderData: any, token?: string) {
+    const headers = token ? getAuthHeaders(token) : this.defaultHeaders
+    return request(this.baseUrl)
+      .post('/api/v1/orders/market')
+      .set(headers)
+      .send(orderData)
+  }
+
+  // Generic order placement method
+  async placeOrder(orderData: any, token?: string) {
+    if (orderData.type === 'limit') {
+      return this.placeLimitOrder(orderData, token)
+    } else {
+      return this.placeMarketOrder(orderData, token)
+    }
+  }
+
+  async getOrderHistory(params: { page?: number; limit?: number; status?: string } = {}, token?: string) {
+    const headers = token ? getAuthHeaders(token) : this.defaultHeaders
+    const queryParams = new URLSearchParams()
+    
+    if (params.page) queryParams.append('page', params.page.toString())
+    if (params.limit) queryParams.append('limit', params.limit.toString())
+    if (params.status) queryParams.append('status', params.status)
+    
+    const queryString = queryParams.toString()
+    const url = queryString ? `/api/v1/orders/history?${queryString}` : '/api/v1/orders/history'
+    
+    return request(this.baseUrl)
+      .get(url)
+      .set(headers)
+  }
+
+  // Market endpoints
+  async getMarketSummary() {
+    return request(this.baseUrl)
+      .get('/api/v1/market/summary')
+      .set(this.defaultHeaders)
+  }
+
+  // Alias for getMarketSummary to match test expectations
+  async getMarketPairs() {
+    return this.getMarketSummary()
+  }
+
+  async getMarketDepth(params: { baseCurrency?: string; quoteCurrency?: string; levels?: number } = {}) {
+    const queryParams = new URLSearchParams()
+    
+    if (params.baseCurrency) queryParams.append('baseCurrency', params.baseCurrency)
+    if (params.quoteCurrency) queryParams.append('quoteCurrency', params.quoteCurrency)
+    if (params.levels) queryParams.append('levels', params.levels.toString())
+    
+    const queryString = queryParams.toString()
+    const url = queryString ? `/api/v1/market/depth?${queryString}` : '/api/v1/market/depth'
+    
+    return request(this.baseUrl)
+      .get(url)
+      .set(this.defaultHeaders)
+  }
+
+  // Security endpoints
+  async setPin(pinData: any, token?: string) {
+    const headers = token ? getAuthHeaders(token) : this.defaultHeaders
+    return request(this.baseUrl)
+      .post('/api/v1/security/pin')
+      .set(headers)
+      .send(pinData)
+  }
+
+  async verifyPin(pinData: any, token?: string) {
+    const headers = token ? getAuthHeaders(token) : this.defaultHeaders
+    return request(this.baseUrl)
+      .post('/api/v1/security/pin/verify')
+      .set(headers)
+      .send(pinData)
   }
 }
 
-// Export singleton instance
-export const apiClient = new ApiClient();
+// Export a default instance
+export const apiClient = new ApiTestClient()

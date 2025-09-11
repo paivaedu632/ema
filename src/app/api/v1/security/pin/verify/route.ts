@@ -23,18 +23,17 @@ async function pinVerifyHandler(request: NextRequest, user: AuthenticatedUser) {
     });
 
     if (!result.success) {
-      // Check if it's a PIN verification failure vs system error
-      if (result.error?.includes('Invalid PIN') || result.error?.includes('incorrect')) {
-        return ErrorResponses.invalidPin('Invalid PIN');
-      }
       return ErrorResponses.databaseError(result.error);
     }
 
-    const pinData = result.data as { valid?: boolean } | boolean | undefined;
-    const isValid = result.data === true || (typeof pinData === 'object' && pinData?.valid === true);
+    // Parse the JSON response from the database function
+    const pinData = result.data as { valid: boolean; locked: boolean; attempts_remaining: number; message: string };
 
-    if (!isValid) {
-      return ErrorResponses.invalidPin('Invalid PIN');
+    if (!pinData.valid) {
+      if (pinData.locked) {
+        return ErrorResponses.invalidPin(pinData.message);
+      }
+      return ErrorResponses.invalidPin(pinData.message);
     }
 
     const responseData = {
