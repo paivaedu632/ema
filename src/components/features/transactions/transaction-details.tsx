@@ -17,7 +17,7 @@ type EnhancedTransactionData = {
   status: string
   created_at: string
 }
-import { DateUtils } from "@/utils/formatting-utils"
+import { DateUtils } from '@/lib/utils'
 
 interface TransactionDetailsProps {
   transactionId: string

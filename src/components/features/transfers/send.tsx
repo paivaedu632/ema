@@ -15,7 +15,7 @@ import { FixedBottomAction } from "@/components/ui/fixed-bottom-action"
 import { SuccessScreen } from "@/components/ui/success-screen"
 import { ConfirmationSection, ConfirmationRow, ConfirmationWarning } from "@/components/ui/confirmation-section"
 import { AvailableBalance } from "@/components/ui/available-balance"
-import { TRANSACTION_LIMITS, VALIDATION_MESSAGES } from "@/utils/transaction-validation"
+import { TRANSACTION_LIMITS, VALIDATION_MESSAGES } from '@/lib/utils'
 
 
 

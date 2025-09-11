@@ -152,3 +152,13 @@
 [2025-09-11T21:43:24.869Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\dashboard\page.tsx: @/components/auth/protected-route → @/components/features/auth/protected-route
 [2025-09-11T21:43:24.878Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\page.tsx: @/components/auth/protected-route → @/components/features/auth/protected-route
 [2025-09-11T21:43:24.931Z] Updated imports in 2 files
+[2025-09-11T21:49:56.015Z] Updating import paths across codebase...
+[2025-09-11T21:49:56.082Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\features\kyc\kyc-form-step.tsx: @/utils/formatting-utils → @/lib/utils
+[2025-09-11T21:49:56.116Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\features\trading\sell.tsx: @/utils/transaction-validation → @/lib/utils
+[2025-09-11T21:49:56.181Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\features\transactions\transaction-details.tsx: @/utils/formatting-utils → @/lib/utils
+[2025-09-11T21:49:56.379Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\features\transfers\send.tsx: @/utils/transaction-validation → @/lib/utils
+[2025-09-11T21:49:56.441Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\forms\amount-input.tsx: @/utils/amount-validation → @/lib/utils
+[2025-09-11T21:49:56.558Z] Updated imports in 5 files
+[2025-09-11T21:51:07.608Z] Updating import paths across codebase...
+[2025-09-11T21:51:07.699Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\ui\validated-form-field.tsx: @/types/component-props → @/types
+[2025-09-11T21:51:07.762Z] Updated imports in 1 files

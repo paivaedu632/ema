@@ -5,7 +5,7 @@ import { PageHeader } from '@/components/layout/page-header'
 import { FixedBottomAction } from "@/components/ui/fixed-bottom-action"
 import { AuthFormField } from '@/components/forms/auth-form-field'
 import { useKYC } from "@/contexts/kyc-context"
-import { DateUtils } from "@/utils/formatting-utils"
+import { DateUtils } from '@/lib/utils'
 
 interface KYCFormStepProps {
   title: string

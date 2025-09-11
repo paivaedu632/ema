@@ -19,7 +19,7 @@ import {
   TRANSACTION_LIMITS,
   VALIDATION_MESSAGES,
   type Currency
-} from "@/utils/transaction-validation"
+} from '@/lib/utils'
 
 type Step = "amount" | "desiredAmount" | "rateSelection" | "confirmation" | "success"
 

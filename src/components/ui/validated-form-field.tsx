@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { Input } from "@/components/ui/input"
 import { Eye, EyeOff } from "lucide-react"
 import { getValidationTextClass, getFormInputClasses } from '@/utils/styling-utils'
-import type { ValidationState } from '@/types/component-props'
+import type { ValidationState } from '@/types'
 
 interface ValidatedFormFieldProps {
   label: string

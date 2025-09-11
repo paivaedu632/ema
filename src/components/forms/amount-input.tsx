@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { FlagIcon } from '@/components/ui/flag-icon'
-import { validateAmount, type TransactionType, type Currency } from '@/utils/amount-validation'
+import { validateAmount, type TransactionType, type Currency } from '@/lib/utils'
 
 interface AmountInputProps {
   amount: string
