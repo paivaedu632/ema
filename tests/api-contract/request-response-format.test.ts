@@ -2,6 +2,9 @@ import { describe, test, expect, beforeAll } from '@jest/globals'
 import { getRealSupabaseJWT } from '../utils/supabase-auth'
 import { ApiTestClient } from '../utils/api-client'
 
+// Use consistent base URL for all tests
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
+
 describe('API Contract Tests - Request/Response Format', () => {
   let authToken: string
   let userId: string
@@ -33,7 +36,7 @@ describe('API Contract Tests - Request/Response Format', () => {
           {
             name: 'GET Balance - No Content-Type Required',
             test: async () => {
-              const response = await fetch('http://localhost:3000/api/v1/wallets/balance', {
+              const response = await fetch(`${API_BASE_URL}/api/v1/wallets/balance`, {
                 method: 'GET',
                 headers: {
                   'Authorization': `Bearer ${authToken}`
@@ -49,7 +52,7 @@ describe('API Contract Tests - Request/Response Format', () => {
           {
             name: 'GET Balance - JSON Content-Type',
             test: async () => {
-              const response = await fetch('http://localhost:3000/api/v1/wallets/balance', {
+              const response = await fetch(`${API_BASE_URL}/api/v1/wallets/balance`, {
                 method: 'GET',
                 headers: {
                   'Authorization': `Bearer ${authToken}`,
@@ -66,7 +69,7 @@ describe('API Contract Tests - Request/Response Format', () => {
           {
             name: 'POST Transfer - JSON Content-Type',
             test: async () => {
-              const response = await fetch('http://localhost:3000/api/v1/transfers/send', {
+              const response = await fetch(`${API_BASE_URL}/api/v1/transfers/send`, {
                 method: 'POST',
                 headers: {
                   'Authorization': `Bearer ${authToken}`,
@@ -89,7 +92,7 @@ describe('API Contract Tests - Request/Response Format', () => {
           {
             name: 'POST Transfer - Invalid Content-Type',
             test: async () => {
-              const response = await fetch('http://localhost:3000/api/v1/transfers/send', {
+              const response = await fetch(`${API_BASE_URL}/api/v1/transfers/send`, {
                 method: 'POST',
                 headers: {
                   'Authorization': `Bearer ${authToken}`,
@@ -108,7 +111,7 @@ describe('API Contract Tests - Request/Response Format', () => {
           {
             name: 'GET User Search - Query Parameters',
             test: async () => {
-              const response = await fetch('http://localhost:3000/api/v1/users/search?query=test', {
+              const response = await fetch(`${API_BASE_URL}/api/v1/users/search?query=test`, {
                 method: 'GET',
                 headers: {
                   'Authorization': `Bearer ${authToken}`,
@@ -198,7 +201,7 @@ describe('API Contract Tests - Request/Response Format', () => {
         
         for (const headerTest of headerTests) {
           try {
-            const response = await fetch(`http://localhost:3000${headerTest.endpoint}`, {
+            const response = await fetch(`${API_BASE_URL}${headerTest.endpoint}`, {
               method: headerTest.method,
               headers: {
                 'Authorization': `Bearer ${authToken}`,
@@ -309,7 +312,7 @@ describe('API Contract Tests - Request/Response Format', () => {
             name: 'Non-existent Endpoint',
             expectedStatus: 404,
             test: async () => {
-              const response = await fetch('http://localhost:3000/api/v1/nonexistent', {
+              const response = await fetch(`${API_BASE_URL}/api/v1/nonexistent`, {
                 headers: { 'Authorization': `Bearer ${authToken}` }
               })
               return { status: response.status, body: await response.text() }
@@ -417,7 +420,7 @@ describe('API Contract Tests - Request/Response Format', () => {
           {
             name: 'Missing Required Parameters',
             test: async () => {
-              const response = await fetch('http://localhost:3000/api/v1/transfers/send', {
+              const response = await fetch(`${API_BASE_URL}/api/v1/transfers/send`, {
                 method: 'POST',
                 headers: {
                   'Authorization': `Bearer ${authToken}`,

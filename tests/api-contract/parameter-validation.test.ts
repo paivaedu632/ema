@@ -2,6 +2,9 @@ import { describe, test, expect, beforeAll } from '@jest/globals'
 import { getRealSupabaseJWT } from '../utils/supabase-auth'
 import { ApiTestClient } from '../utils/api-client'
 
+// Use consistent base URL for all tests
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
+
 describe('API Contract Tests - Parameter Validation', () => {
   let authToken: string
   let userId: string
@@ -35,7 +38,7 @@ describe('API Contract Tests - Parameter Validation', () => {
           {
             name: 'Transfer - Missing recipientId',
             test: async () => {
-              const response = await fetch('http://localhost:3000/api/v1/transfers/send', {
+              const response = await fetch(`${API_BASE_URL}/api/v1/transfers/send`, {
                 method: 'POST',
                 headers: {
                   'Authorization': `Bearer ${authToken}`,
