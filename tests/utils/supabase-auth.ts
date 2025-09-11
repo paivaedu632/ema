@@ -37,7 +37,7 @@ const JWT_KEY_INFO = {
   }
 }
 
-// Cache for JWT tokens
+// Cache for JWT tokens with longer duration
 const tokenCache = new Map<string, { token: string; expires: number }>()
 
 /**
@@ -62,60 +62,75 @@ export async function getRealSupabaseJWT(
     }
   }
 
-  try {
-    console.log('🔍 Generating real Supabase JWT token...');
+  // Retry mechanism for token generation
+  const maxRetries = 3;
+  let lastError: Error | null = null;
 
-    // Generate a magic link for the existing user
-    const { data: linkData, error: linkError } = await supabaseAdmin.auth.admin.generateLink({
-      type: 'magiclink',
-      email: TEST_USERS.VALID_USER.email,
-      options: {
-        redirectTo: 'http://localhost:3000/auth/callback'
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      console.log(`🔍 Generating real Supabase JWT token... (Attempt ${attempt}/${maxRetries})`);
+
+      // Generate a magic link for the existing user
+      const { data: linkData, error: linkError } = await supabaseAdmin.auth.admin.generateLink({
+        type: 'magiclink',
+        email: TEST_USERS.VALID_USER.email,
+        options: {
+          redirectTo: 'http://localhost:3000/auth/callback'
+        }
+      });
+
+      if (linkError) {
+        throw new Error(`Failed to generate magic link: ${linkError.message}`);
       }
-    });
 
-    if (linkError) {
-      throw new Error(`Failed to generate magic link: ${linkError.message}`);
-    }
+      // Extract the token from the action_link and exchange it for an access token
+      if (linkData.properties?.action_link) {
+        const actionLink = linkData.properties.action_link;
+        const urlParams = new URL(actionLink).searchParams;
+        const token = urlParams.get('token');
 
-    // Extract the token from the action_link and exchange it for an access token
-    if (linkData.properties?.action_link) {
-      const actionLink = linkData.properties.action_link;
-      const urlParams = new URL(actionLink).searchParams;
-      const token = urlParams.get('token');
+        if (token && linkData.properties.hashed_token) {
+          console.log('🔗 Exchanging token for access token...');
 
-      if (token && linkData.properties.hashed_token) {
-        console.log('🔗 Exchanging token for access token...');
-
-        // Exchange the token for an access token
-        const { data: sessionData, error: sessionError } = await supabaseAdmin.auth.verifyOtp({
-          token_hash: linkData.properties.hashed_token,
-          type: 'magiclink'
-        });
-
-        if (!sessionError && sessionData.session?.access_token) {
-          const accessToken = sessionData.session.access_token;
-          console.log('✅ Successfully generated JWT token!');
-
-          // Cache the token for 5 minutes
-          tokenCache.set(cacheKey, {
-            token: accessToken,
-            expires: now + (5 * 60 * 1000)
+          // Exchange the token for an access token
+          const { data: sessionData, error: sessionError } = await supabaseAdmin.auth.verifyOtp({
+            token_hash: linkData.properties.hashed_token,
+            type: 'magiclink'
           });
 
-          return { token: accessToken, userId };
-        }
+          if (!sessionError && sessionData.session?.access_token) {
+            const accessToken = sessionData.session.access_token;
+            console.log('✅ Successfully generated JWT token!');
 
-        throw new Error(`Token exchange failed: ${sessionError?.message || 'No access token'}`);
+            // Cache the token for 15 minutes (longer duration for test stability)
+            tokenCache.set(cacheKey, {
+              token: accessToken,
+              expires: now + (15 * 60 * 1000)
+            });
+
+            return { token: accessToken, userId };
+          }
+
+          throw new Error(`Token exchange failed: ${sessionError?.message || 'No access token'}`);
+        }
+      }
+
+      throw new Error('No action link found in magic link response');
+
+    } catch (error) {
+      lastError = error as Error;
+      console.error(`❌ Attempt ${attempt} failed:`, lastError.message);
+
+      if (attempt < maxRetries) {
+        console.log(`⏳ Waiting before retry...`);
+        await new Promise(resolve => setTimeout(resolve, 1000 * attempt)); // Exponential backoff
       }
     }
-
-    throw new Error('No action link found in magic link response');
-
-  } catch (error) {
-    console.error('❌ Failed to generate JWT:', error);
-    throw error;
   }
+
+  // If all retries failed, throw the last error
+  console.error('❌ All retry attempts failed');
+  throw lastError || new Error('Failed to generate JWT token after all retries');
 }
 
 /**
@@ -138,4 +153,16 @@ export function createMalformedToken(): string {
  */
 export function clearTokenCache(): void {
   tokenCache.clear()
+}
+
+/**
+ * Clear expired tokens from cache
+ */
+export function clearExpiredTokens(): void {
+  const now = Date.now();
+  for (const [key, value] of tokenCache.entries()) {
+    if (value.expires <= now) {
+      tokenCache.delete(key);
+    }
+  }
 }
