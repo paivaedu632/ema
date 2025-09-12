@@ -2,368 +2,436 @@
 
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Card, CardContent } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { Badge } from '@/components/ui/badge'
 import { 
-  Search,
-  Download,
-  HelpCircle,
-  MessageSquare,
-  Type,
-  Globe,
-  Sun,
   ChevronDown,
-  ChevronLeft,
   ChevronRight,
-  Info,
+  Search,
+  Bell,
+  User,
+  Settings,
+  HelpCircle,
+  Globe,
+  Moon,
+  MoreHorizontal,
   TrendingUp,
   TrendingDown,
-  MoreHorizontal,
+  Eye,
+  EyeOff,
+  ArrowUpRight,
+  ArrowDownLeft,
+  Plus,
+  Minus,
+  ArrowLeftRight,
   Wallet,
-  BarChart3,
+  CreditCard,
   Gift,
   Users,
-  User,
-  Settings
+  BarChart3
 } from 'lucide-react'
 import { formatCurrency } from '@/lib/utils'
 
-interface BalanceData {
-  currency: string
-  symbol: string
-  balance: number
-  usdValue: number
-  change24h: number
-  changePercent: number
-  todaysPnL: number
-  todaysPnLPercent: number
-}
-
-interface Transaction {
-  id: string
-  type: 'deposit' | 'withdraw' | 'buy' | 'sell' | 'transfer'
-  asset: string
-  amount: number
-  status: 'completed' | 'pending' | 'failed'
-  date: string
-  description: string
-}
-
 export default function BinanceStyleDashboard() {
   const router = useRouter()
-  const [selectedAsset, setSelectedAsset] = useState('BTC')
+  const [isBalanceVisible, setIsBalanceVisible] = useState(true)
+  const [selectedAsset, setSelectedAsset] = useState('EUR')
 
-  // Mock balance data (adapted for EmaPay)
-  const balanceData: BalanceData = {
-    currency: 'Bitcoin',
-    symbol: 'BTC',
-    balance: 0.00000001,
-    usdValue: 0.00,
-    change24h: 0.00,
-    changePercent: 0.00,
-    todaysPnL: 0.00,
-    todaysPnLPercent: 0.00
+  // Mock user data
+  const user = {
+    name: 'Eduardo Paiva',
+    email: 'paivaedu.br@gmail.com',
+    isVip: false,
+    kycLevel: 'Verified'
   }
 
-  // For EmaPay, we'll show EUR/AOA balances
-  const emapayBalances = [
+  // Mock wallet balances with crypto-style data
+  const walletBalances = [
     {
-      currency: 'Euro',
+      currency: 'EUR',
       symbol: 'EUR',
-      balance: 2847.50,
-      usdValue: 2847.50,
+      available: 2847.50,
+      locked: 152.25,
+      total: 2999.75,
+      usdValue: 3299.73,
       change24h: 45.30,
-      changePercent: 1.61,
-      todaysPnL: 45.30,
-      todaysPnLPercent: 1.61
+      changePercent: 1.53,
+      icon: '€'
     },
     {
-      currency: 'Angolan Kwanza',
+      currency: 'AOA',
       symbol: 'AOA',
-      balance: 1250000,
-      usdValue: 1923.08,
+      available: 1250000,
+      locked: 75000,
+      total: 1325000,
+      usdValue: 2038.46,
+      changePercent: -2.1,
       change24h: -28500,
-      changePercent: -2.23,
-      todaysPnL: -43.85,
-      todaysPnLPercent: -2.23
+      icon: 'Kz'
+    },
+    {
+      currency: 'BTC',
+      symbol: 'BTC',
+      available: 0.00000001,
+      locked: 0,
+      total: 0.00000001,
+      usdValue: 0.00,
+      changePercent: 0,
+      change24h: 0,
+      icon: '₿'
     }
   ]
 
-  const currentBalance = selectedAsset === 'EUR' 
-    ? emapayBalances[0] 
-    : selectedAsset === 'AOA' 
-    ? emapayBalances[1] 
-    : balanceData
+  const totalUSDValue = walletBalances.reduce((sum, wallet) => sum + wallet.usdValue, 0)
+  const todaysPnL = walletBalances.reduce((sum, wallet) => sum + (wallet.change24h * (wallet.currency === 'EUR' ? 1.1 : wallet.currency === 'AOA' ? 0.00154 : 43000)), 0)
 
-  // Mock transactions
-  const transactions: Transaction[] = [
+  // Mock recent transactions
+  const recentTransactions = [
     {
       id: '1',
-      type: 'deposit',
-      asset: 'EUR',
+      type: 'deposit' as const,
+      status: 'completed' as const,
       amount: 500,
-      status: 'completed',
+      currency: 'EUR',
+      description: 'Bank Deposit',
       date: '2024-01-15T10:30:00Z',
-      description: 'Bank deposit'
+      txHash: '0x1234...5678'
     },
     {
       id: '2',
-      type: 'transfer',
-      asset: 'AOA',
+      type: 'send' as const,
+      status: 'completed' as const,
       amount: 150000,
-      status: 'completed',
+      currency: 'AOA',
+      description: 'Transfer to João Santos',
       date: '2024-01-14T16:45:00Z',
-      description: 'Transfer to João Santos'
+      txHash: '0x2345...6789'
+    },
+    {
+      id: '3',
+      type: 'exchange' as const,
+      status: 'pending' as const,
+      amount: 300,
+      currency: 'EUR',
+      description: 'EUR/AOA Exchange',
+      date: '2024-01-14T09:15:00Z',
+      txHash: '0x3456...7890'
     }
   ]
 
-  const sidebarItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: <BarChart3 className="h-5 w-5" />, active: true },
-    { id: 'assets', label: 'Assets', icon: <Wallet className="h-5 w-5" />, active: false, hasSubmenu: true },
-    { id: 'orders', label: 'Orders', icon: <MoreHorizontal className="h-5 w-5" />, active: false, hasSubmenu: true },
-    { id: 'rewards', label: 'Rewards Hub', icon: <Gift className="h-5 w-5" />, active: false },
-    { id: 'referral', label: 'Referral', icon: <Users className="h-5 w-5" />, active: false },
-    { id: 'account', label: 'Account', icon: <User className="h-5 w-5" />, active: false, hasSubmenu: true },
-    { id: 'subaccounts', label: 'Sub Accounts', icon: <Users className="h-5 w-5" />, active: false },
-    { id: 'settings', label: 'Settings', icon: <Settings className="h-5 w-5" />, active: false }
-  ]
-
-  const quickActions = [
-    { id: 'deposit', label: 'Deposit', variant: 'default' as const },
-    { id: 'withdraw', label: 'Withdraw', variant: 'outline' as const },
-    { id: 'transfer', label: 'Transfer', variant: 'outline' as const }
-  ]
-
-  const formatBalance = (balance: number, symbol: string) => {
-    if (symbol === 'BTC') {
-      return balance.toFixed(8)
-    }
-    return balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-  }
-
-  const getTransactionIcon = (type: Transaction['type']) => {
+  const getTransactionIcon = (type: string) => {
     switch (type) {
-      case 'deposit': return <TrendingUp className="h-4 w-4 text-green-500" />
-      case 'withdraw': return <TrendingDown className="h-4 w-4 text-red-500" />
-      case 'transfer': return <MoreHorizontal className="h-4 w-4 text-blue-500" />
+      case 'deposit': return <ArrowDownLeft className="h-4 w-4 text-green-500" />
+      case 'send': return <ArrowUpRight className="h-4 w-4 text-red-500" />
+      case 'exchange': return <ArrowLeftRight className="h-4 w-4 text-blue-500" />
       default: return <MoreHorizontal className="h-4 w-4" />
     }
   }
 
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'completed':
+        return <Badge className="bg-green-100 text-green-800 text-xs">Completed</Badge>
+      case 'pending':
+        return <Badge className="bg-yellow-100 text-yellow-800 text-xs">Pending</Badge>
+      case 'failed':
+        return <Badge variant="destructive" className="text-xs">Failed</Badge>
+      default:
+        return <Badge variant="secondary" className="text-xs">{status}</Badge>
+    }
+  }
+
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      {/* Sidebar */}
-      <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
-        {/* Logo */}
-        <div className="p-6 border-b border-gray-200">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-yellow-500 rounded flex items-center justify-center">
-              <span className="text-white font-bold text-sm">E</span>
-            </div>
-            <span className="text-xl font-bold text-gray-900">EMAPAY</span>
-          </div>
-        </div>
-
-        {/* Navigation */}
-        <nav className="flex-1 py-4">
-          <ul className="space-y-1 px-3">
-            {sidebarItems.map((item) => (
-              <li key={item.id}>
-                <button
-                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-left transition-colors ${
-                    item.active 
-                      ? 'bg-yellow-50 text-yellow-600 font-medium' 
-                      : 'text-gray-600 hover:bg-gray-50'
-                  }`}
-                >
-                  <div className="flex items-center space-x-3">
-                    {item.icon}
-                    <span className="text-sm">{item.label}</span>
-                  </div>
-                  {item.hasSubmenu && (
-                    <ChevronDown className="h-4 w-4" />
-                  )}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        {/* Footer */}
-        <div className="p-4 border-t border-gray-200 text-center">
-          <p className="text-xs text-gray-500">EmaPay© 2025</p>
-          <button className="text-xs text-gray-500 hover:text-gray-700 mt-1">
-            Cookie Preferences
-          </button>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col">
-        {/* Header */}
-        <header className="bg-white border-b border-gray-200 px-6 py-4">
-          <div className="flex items-center justify-between">
-            {/* Left side - empty for Binance style */}
-            <div></div>
-            
-            {/* Right side - actions */}
-            <div className="flex items-center space-x-4">
-              {/* Search */}
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <Input
-                  type="text"
-                  placeholder="Search"
-                  className="pl-10 w-64 bg-gray-50 border-gray-200"
-                />
+    <div className="min-h-screen bg-gray-50">
+      {/* Header - Binance Style */}
+      <header className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex items-center justify-between h-16">
+            {/* Left side - Logo and Navigation */}
+            <div className="flex items-center space-x-8">
+              <div className="flex items-center space-x-3">
+                <div className="h-8 w-8 bg-yellow-400 rounded flex items-center justify-center">
+                  <span className="text-black font-bold text-sm">E</span>
+                </div>
+                <h1 className="text-xl font-bold text-gray-900">EmaPay</h1>
               </div>
-
-              {/* Deposit button */}
-              <Button className="bg-yellow-500 hover:bg-yellow-600 text-black font-medium">
-                <Download className="h-4 w-4 mr-2" />
+              
+              <nav className="hidden md:flex space-x-6">
+                <button className="text-gray-900 font-medium">Dashboard</button>
+                <button className="text-gray-500 hover:text-gray-900">Assets</button>
+                <button className="text-gray-500 hover:text-gray-900">Orders</button>
+                <button className="text-gray-500 hover:text-gray-900">Rewards Hub</button>
+                <button className="text-gray-500 hover:text-gray-900">Referral</button>
+              </nav>
+            </div>
+            
+            {/* Right side - Actions */}
+            <div className="flex items-center space-x-4">
+              <Button className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium">
                 Deposit
               </Button>
-
-              {/* Icon buttons */}
               <Button variant="ghost" size="sm">
-                <HelpCircle className="h-5 w-5" />
+                <Search className="h-5 w-5" />
               </Button>
               <Button variant="ghost" size="sm">
-                <MessageSquare className="h-5 w-5" />
-              </Button>
-              <Button variant="ghost" size="sm">
-                <Type className="h-5 w-5" />
+                <Bell className="h-5 w-5" />
               </Button>
               <Button variant="ghost" size="sm">
                 <Globe className="h-5 w-5" />
               </Button>
               <Button variant="ghost" size="sm">
-                <Sun className="h-5 w-5" />
+                <Moon className="h-5 w-5" />
+              </Button>
+              <Button variant="ghost" size="sm">
+                <User className="h-5 w-5" />
               </Button>
             </div>
           </div>
-        </header>
+        </div>
+      </header>
 
-        {/* Content */}
-        <main className="flex-1 p-6">
-          <div className="max-w-7xl mx-auto">
-            {/* Balance Section */}
-            <div className="mb-8">
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center space-x-4">
-                  <h1 className="text-2xl font-semibold text-gray-900">Estimated Balance</h1>
-                  <Info className="h-5 w-5 text-gray-400" />
-                </div>
-                
-                {/* Asset selector */}
-                <div className="flex items-center space-x-2">
-                  <select 
-                    value={selectedAsset}
-                    onChange={(e) => setSelectedAsset(e.target.value)}
-                    className="px-3 py-1 border border-gray-300 rounded-md text-sm"
-                  >
-                    <option value="BTC">BTC</option>
-                    <option value="EUR">EUR</option>
-                    <option value="AOA">AOA</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Balance Display */}
-              <div className="bg-white rounded-lg p-6 border border-gray-200">
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <div className="flex items-center space-x-2 mb-2">
-                      <span className="text-4xl font-bold text-gray-900">
-                        {formatBalance(currentBalance.balance, currentBalance.symbol)}
-                      </span>
-                      <span className="text-lg text-gray-500">{currentBalance.symbol}</span>
-                      <ChevronDown className="h-5 w-5 text-gray-400" />
-                    </div>
-                    <div className="flex items-center space-x-4 text-sm text-gray-500">
-                      <span>≈ ${currentBalance.usdValue.toFixed(2)}</span>
-                      <span>
-                        Today's PnL ≈ 
-                        <span className={`ml-1 ${currentBalance.todaysPnLPercent >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                          ${currentBalance.todaysPnL.toFixed(2)} ({currentBalance.todaysPnLPercent >= 0 ? '+' : ''}{currentBalance.todaysPnLPercent.toFixed(4)}%)
-                        </span>
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Quick Actions */}
-                  <div className="flex items-center space-x-3">
-                    {quickActions.map((action) => (
-                      <Button key={action.id} variant={action.variant} size="sm">
-                        {action.label}
-                      </Button>
-                    ))}
-                  </div>
-                </div>
-              </div>
+      {/* Sidebar */}
+      <div className="flex">
+        <aside className="w-64 bg-white border-r border-gray-200 min-h-screen">
+          <nav className="p-4 space-y-2">
+            <div className="flex items-center space-x-3 p-3 bg-yellow-50 rounded-lg">
+              <BarChart3 className="h-5 w-5 text-yellow-600" />
+              <span className="font-medium text-gray-900">Dashboard</span>
             </div>
-
-            {/* Navigation arrows */}
-            <div className="flex items-center justify-between mb-6">
-              <Button variant="ghost" size="sm">
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="sm">
+            
+            <div className="space-y-1">
+              <button className="w-full flex items-center justify-between p-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                <div className="flex items-center space-x-3">
+                  <Wallet className="h-5 w-5" />
+                  <span>Assets</span>
+                </div>
                 <ChevronRight className="h-4 w-4" />
-              </Button>
+              </button>
+              
+              <button className="w-full flex items-center justify-between p-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                <div className="flex items-center space-x-3">
+                  <BarChart3 className="h-5 w-5" />
+                  <span>Orders</span>
+                </div>
+                <ChevronRight className="h-4 w-4" />
+              </button>
+              
+              <button className="w-full flex items-center justify-between p-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                <div className="flex items-center space-x-3">
+                  <Gift className="h-5 w-5" />
+                  <span>Rewards Hub</span>
+                </div>
+                <ChevronRight className="h-4 w-4" />
+              </button>
+              
+              <button className="w-full flex items-center justify-between p-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                <div className="flex items-center space-x-3">
+                  <Users className="h-5 w-5" />
+                  <span>Referral</span>
+                </div>
+                <ChevronRight className="h-4 w-4" />
+              </button>
+              
+              <button className="w-full flex items-center justify-between p-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                <div className="flex items-center space-x-3">
+                  <User className="h-5 w-5" />
+                  <span>Account</span>
+                </div>
+                <ChevronRight className="h-4 w-4" />
+              </button>
+              
+              <button className="w-full flex items-center justify-between p-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                <div className="flex items-center space-x-3">
+                  <CreditCard className="h-5 w-5" />
+                  <span>Sub Accounts</span>
+                </div>
+                <ChevronRight className="h-4 w-4" />
+              </button>
+              
+              <button className="w-full flex items-center justify-between p-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                <div className="flex items-center space-x-3">
+                  <Settings className="h-5 w-5" />
+                  <span>Settings</span>
+                </div>
+                <ChevronRight className="h-4 w-4" />
+              </button>
             </div>
+          </nav>
+        </aside>
 
-            {/* Recent Transactions */}
-            <div className="bg-white rounded-lg border border-gray-200">
-              <div className="flex items-center justify-between p-6 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900">Recent Transactions</h2>
+        {/* Main Content */}
+        <main className="flex-1 p-6">
+          {/* Balance Section */}
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">Estimated Balance</h2>
+                <div className="flex items-center space-x-4">
+                  <div className="text-4xl font-bold text-gray-900">
+                    {isBalanceVisible ? `${formatCurrency(totalUSDValue, 'USD')}` : '••••••••'}
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setIsBalanceVisible(!isBalanceVisible)}
+                  >
+                    {isBalanceVisible ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </Button>
+                </div>
+                <div className="flex items-center space-x-4 mt-2">
+                  <span className="text-sm text-gray-500">≈ $0.00</span>
+                  <div className="flex items-center space-x-1">
+                    <span className="text-sm text-gray-500">Today&apos;s PnL</span>
+                    <span className={`text-sm font-medium ${todaysPnL >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                      ≈ ${todaysPnL >= 0 ? '+' : ''}${todaysPnL.toFixed(2)} ({todaysPnL >= 0 ? '+' : ''}0.00%)
+                    </span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex space-x-3">
+                <Button className="bg-yellow-400 hover:bg-yellow-500 text-black">
+                  Deposit
+                </Button>
+                <Button variant="outline">
+                  Withdraw
+                </Button>
+                <Button variant="outline">
+                  Transfer
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* Assets Table */}
+          <Card className="mb-8">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-lg font-semibold">Assets</CardTitle>
+                <div className="flex items-center space-x-2">
+                  <Button variant="ghost" size="sm">
+                    <Search className="h-4 w-4" />
+                  </Button>
+                  <Button variant="ghost" size="sm">
+                    <Settings className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-gray-200">
+                      <th className="text-left py-3 px-4 font-medium text-gray-600">Asset</th>
+                      <th className="text-right py-3 px-4 font-medium text-gray-600">Total Balance</th>
+                      <th className="text-right py-3 px-4 font-medium text-gray-600">Available Balance</th>
+                      <th className="text-right py-3 px-4 font-medium text-gray-600">In Order</th>
+                      <th className="text-right py-3 px-4 font-medium text-gray-600">USD Value</th>
+                      <th className="text-right py-3 px-4 font-medium text-gray-600">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {walletBalances.map((wallet) => (
+                      <tr key={wallet.currency} className="border-b border-gray-100 hover:bg-gray-50">
+                        <td className="py-4 px-4">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+                              <span className="text-sm font-medium">{wallet.icon}</span>
+                            </div>
+                            <div>
+                              <div className="font-medium">{wallet.currency}</div>
+                              <div className="text-sm text-gray-500">{wallet.symbol}</div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="text-right py-4 px-4">
+                          <div className="font-medium">
+                            {isBalanceVisible ? formatCurrency(wallet.total, wallet.currency) : '••••••'}
+                          </div>
+                        </td>
+                        <td className="text-right py-4 px-4">
+                          <div className="font-medium">
+                            {isBalanceVisible ? formatCurrency(wallet.available, wallet.currency) : '••••••'}
+                          </div>
+                        </td>
+                        <td className="text-right py-4 px-4">
+                          <div className="font-medium">
+                            {isBalanceVisible ? formatCurrency(wallet.locked, wallet.currency) : '••••••'}
+                          </div>
+                        </td>
+                        <td className="text-right py-4 px-4">
+                          <div className="font-medium">
+                            {isBalanceVisible ? `$${wallet.usdValue.toFixed(2)}` : '••••••'}
+                          </div>
+                        </td>
+                        <td className="text-right py-4 px-4">
+                          <div className="flex justify-end space-x-2">
+                            <Button size="sm" variant="ghost" className="text-yellow-600 hover:text-yellow-700">
+                              Deposit
+                            </Button>
+                            <Button size="sm" variant="ghost" className="text-gray-600 hover:text-gray-700">
+                              Withdraw
+                            </Button>
+                            <Button size="sm" variant="ghost" className="text-blue-600 hover:text-blue-700">
+                              Trade
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Recent Transactions */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-lg font-semibold">Recent Transactions</CardTitle>
                 <Button variant="ghost" size="sm" className="text-blue-600">
                   More →
                 </Button>
               </div>
-
-              <div className="p-6">
-                {transactions.length === 0 ? (
-                  <div className="text-center py-12">
-                    <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Search className="h-8 w-8 text-gray-400" />
-                    </div>
-                    <p className="text-gray-500">No records</p>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {transactions.map((transaction) => (
-                      <div key={transaction.id} className="flex items-center justify-between p-4 hover:bg-gray-50 rounded-lg">
-                        <div className="flex items-center space-x-3">
-                          <div className="p-2 bg-gray-100 rounded-full">
-                            {getTransactionIcon(transaction.type)}
-                          </div>
-                          <div>
-                            <div className="font-medium text-gray-900">{transaction.description}</div>
-                            <div className="text-sm text-gray-500">
-                              {new Date(transaction.date).toLocaleDateString()}
-                            </div>
-                          </div>
+            </CardHeader>
+            <CardContent>
+              {recentTransactions.length > 0 ? (
+                <div className="space-y-4">
+                  {recentTransactions.map((transaction) => (
+                    <div key={transaction.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
+                      <div className="flex items-center space-x-4">
+                        <div className="p-2 bg-gray-100 rounded-lg">
+                          {getTransactionIcon(transaction.type)}
                         </div>
-                        <div className="text-right">
-                          <div className="font-medium text-gray-900">
-                            {formatCurrency(transaction.amount, transaction.asset)}
-                          </div>
-                          <div className={`text-sm ${
-                            transaction.status === 'completed' ? 'text-green-600' : 
-                            transaction.status === 'pending' ? 'text-yellow-600' : 'text-red-600'
-                          }`}>
-                            {transaction.status}
+                        <div>
+                          <div className="font-medium">{transaction.description}</div>
+                          <div className="text-sm text-gray-500">
+                            {new Date(transaction.date).toLocaleDateString()} • {transaction.txHash}
                           </div>
                         </div>
                       </div>
-                    ))}
+                      <div className="text-right space-y-1">
+                        <div className="font-medium">
+                          {transaction.type === 'deposit' ? '+' : '-'}{formatCurrency(transaction.amount, transaction.currency)}
+                        </div>
+                        {getStatusBadge(transaction.status)}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Search className="h-8 w-8 text-gray-400" />
                   </div>
-                )}
-              </div>
-            </div>
-          </div>
+                  <p className="text-gray-500">No records</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </main>
       </div>
     </div>

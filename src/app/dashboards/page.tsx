@@ -53,37 +53,20 @@ export default function DashboardsPage() {
       color: 'bg-green-500'
     },
     {
-      id: 'coinbase',
-      title: 'Coinbase-Style Dashboard',
-      description: 'Professional crypto exchange interface inspired by Coinbase with sidebar navigation and asset management.',
-      href: '/coinbase-dashboard',
-      icon: <Wallet className="h-8 w-8" />,
-      features: [
-        'Sidebar navigation layout',
-        'Asset portfolio view',
-        'Professional table design',
-        'Quick action cards',
-        'Search functionality',
-        'Clean minimalist UI'
-      ],
-      preview: '/api/placeholder/800/500',
-      color: 'bg-purple-500'
-    },
-    {
       id: 'binance',
       title: 'Binance-Style Dashboard',
-      description: 'Exchange-focused interface inspired by Binance with prominent balance display and comprehensive trading features.',
+      description: 'Professional crypto exchange interface inspired by Binance with advanced trading features and asset management.',
       href: '/binance-dashboard',
       icon: <BarChart3 className="h-8 w-8" />,
       features: [
-        'Prominent balance display',
-        'Asset selector dropdown',
-        'Today\'s P&L tracking',
-        'Comprehensive sidebar nav',
-        'Quick action buttons',
-        'Professional trading UI'
+        'Professional sidebar navigation',
+        'Advanced asset management table',
+        'Crypto-style balance display',
+        'Transaction history with hashes',
+        'Multi-currency support',
+        'Exchange-grade UI components'
       ],
-      preview: '/api/placeholder/900/600',
+      preview: '/api/placeholder/800/500',
       color: 'bg-yellow-500'
     }
   ]
@@ -142,7 +125,7 @@ export default function DashboardsPage() {
         </div>
 
         {/* Dashboard Variants */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 mb-12">
           {dashboardVariants.map((variant) => (
             <Card key={variant.id} className="overflow-hidden hover:shadow-lg transition-shadow">
               <CardHeader>
