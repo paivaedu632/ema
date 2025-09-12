@@ -51,6 +51,23 @@ export default function DashboardsPage() {
       ],
       preview: '/api/placeholder/300/600',
       color: 'bg-green-500'
+    },
+    {
+      id: 'coinbase',
+      title: 'Coinbase-Style Dashboard',
+      description: 'Professional crypto exchange interface inspired by Coinbase with sidebar navigation and asset management.',
+      href: '/coinbase-dashboard',
+      icon: <Wallet className="h-8 w-8" />,
+      features: [
+        'Sidebar navigation layout',
+        'Asset portfolio view',
+        'Professional table design',
+        'Quick action cards',
+        'Search functionality',
+        'Clean minimalist UI'
+      ],
+      preview: '/api/placeholder/800/500',
+      color: 'bg-purple-500'
     }
   ]
 
@@ -108,7 +125,7 @@ export default function DashboardsPage() {
         </div>
 
         {/* Dashboard Variants */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 mb-12">
           {dashboardVariants.map((variant) => (
             <Card key={variant.id} className="overflow-hidden hover:shadow-lg transition-shadow">
               <CardHeader>

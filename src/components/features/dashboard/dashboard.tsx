@@ -22,7 +22,7 @@ import {
   Settings,
   LogOut,
   Wallet,
-  Exchange,
+  ArrowLeftRight,
   History,
   PieChart,
   BarChart3
@@ -112,7 +112,7 @@ export default function Dashboard() {
     switch (type) {
       case 'send': return <ArrowUpRight className="h-4 w-4" />
       case 'receive': return <ArrowDownLeft className="h-4 w-4" />
-      case 'exchange': return <Exchange className="h-4 w-4" />
+      case 'exchange': return <ArrowLeftRight className="h-4 w-4" />
       case 'deposit': return <Plus className="h-4 w-4" />
       case 'withdrawal': return <CreditCard className="h-4 w-4" />
       default: return <MoreHorizontal className="h-4 w-4" />
@@ -207,7 +207,7 @@ export default function Dashboard() {
     {
       id: 'exchange',
       label: 'Exchange',
-      icon: <Exchange className="h-5 w-5" />,
+      icon: <ArrowLeftRight className="h-5 w-5" />,
       href: '/trading/exchange',
       color: 'bg-purple-500 hover:bg-purple-600'
     },
