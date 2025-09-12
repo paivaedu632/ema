@@ -68,6 +68,23 @@ export default function DashboardsPage() {
       ],
       preview: '/api/placeholder/800/500',
       color: 'bg-yellow-500'
+    },
+    {
+      id: 'binance-mobile',
+      title: 'Binance Mobile Dashboard',
+      description: 'Mobile-optimized Binance-style interface with hamburger menu, touch-friendly controls, and streamlined navigation.',
+      href: '/binance-mobile',
+      icon: <Smartphone className="h-8 w-8" />,
+      features: [
+        'Hamburger menu navigation',
+        'Touch-optimized interface',
+        'Gradient balance card',
+        'Quick action grid',
+        'Mobile-first asset list',
+        'Swipe-friendly transactions'
+      ],
+      preview: '/api/placeholder/300/600',
+      color: 'bg-orange-500'
     }
   ]
 
@@ -125,7 +142,7 @@ export default function DashboardsPage() {
         </div>
 
         {/* Dashboard Variants */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-12">
           {dashboardVariants.map((variant) => (
             <Card key={variant.id} className="overflow-hidden hover:shadow-lg transition-shadow">
               <CardHeader>
