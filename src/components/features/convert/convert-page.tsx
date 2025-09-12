@@ -185,9 +185,9 @@ export default function ConvertPage() {
                     )}
                   </div>
                   <div className="flex-1">
-                    <div className="font-medium text-gray-900">Auto:</div>
+                    <div className="text-sm font-semibold text-gray-900">Automático</div>
                     <div className="text-sm text-gray-600">
-                      vc recebe {fromAmount ? (parseFloat(fromAmount) * marketRate).toFixed(fromCurrency === 'EUR' ? 0 : 6) : '0'} {toCurrency}
+                      Você recebe {fromAmount ? (parseFloat(fromAmount) * marketRate).toFixed(fromCurrency === 'EUR' ? 0 : 6) : '0'} {toCurrency}
                     </div>
                   </div>
                 </div>
@@ -209,7 +209,7 @@ export default function ConvertPage() {
                     )}
                   </div>
                   <div className="flex-1">
-                    <div className="font-medium text-gray-900">Manual:</div>
+                    <div className="text-sm font-semibold text-gray-900">Manual</div>
                     <div className="text-sm text-gray-600">
                       Escolha quanto você quer receber.
                     </div>
@@ -224,7 +224,7 @@ export default function ConvertPage() {
                 <strong>Câmbio:</strong> 1 {fromCurrency} = {marketRate.toLocaleString()} {toCurrency}
               </div>
               <div className="text-sm text-gray-600">
-                <strong>Tempo:</strong> {exchangeType === 'auto' ? 'segundos' : 'até encontrarmos um comprador'}
+                <strong>Tempo:</strong> {exchangeType === 'auto' ? 'Segundos' : 'Até encontrarmos um comprador'}
               </div>
             </div>
 
