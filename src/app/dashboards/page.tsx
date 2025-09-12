@@ -70,21 +70,21 @@ export default function DashboardsPage() {
       color: 'bg-yellow-500'
     },
     {
-      id: 'binance-mobile',
-      title: 'Binance Mobile Dashboard',
-      description: 'Mobile-optimized Binance-style interface with hamburger menu, touch-friendly controls, and streamlined navigation.',
-      href: '/binance-mobile',
-      icon: <Smartphone className="h-8 w-8" />,
+      id: 'convert',
+      title: 'Currency Converter',
+      description: 'Professional AOA/EUR conversion interface with real-time exchange rates and market information.',
+      href: '/convert',
+      icon: <ArrowLeftRight className="h-8 w-8" />,
       features: [
-        'Hamburger menu navigation',
-        'Touch-optimized interface',
-        'Gradient balance card',
-        'Quick action grid',
-        'Mobile-first asset list',
-        'Swipe-friendly transactions'
+        'Real-time exchange rates',
+        'AOA ↔ EUR conversion',
+        'Market trend indicators',
+        'Balance validation',
+        'Instant conversion',
+        'Rate lock protection'
       ],
-      preview: '/api/placeholder/300/600',
-      color: 'bg-orange-500'
+      preview: '/api/placeholder/600/400',
+      color: 'bg-purple-500'
     }
   ]
 
@@ -142,7 +142,7 @@ export default function DashboardsPage() {
         </div>
 
         {/* Dashboard Variants */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-8 mb-12">
           {dashboardVariants.map((variant) => (
             <Card key={variant.id} className="overflow-hidden hover:shadow-lg transition-shadow">
               <CardHeader>

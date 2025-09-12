@@ -46,7 +46,7 @@ export default function BinanceStyleDashboard() {
     kycLevel: 'Verified'
   }
 
-  // Mock wallet balances with crypto-style data
+  // Mock wallet balances with AOA/EUR only
   const walletBalances = [
     {
       currency: 'EUR',
@@ -69,17 +69,6 @@ export default function BinanceStyleDashboard() {
       changePercent: -2.1,
       change24h: -28500,
       icon: 'Kz'
-    },
-    {
-      currency: 'BTC',
-      symbol: 'BTC',
-      available: 0.00000001,
-      locked: 0,
-      total: 0.00000001,
-      usdValue: 0.00,
-      changePercent: 0,
-      change24h: 0,
-      icon: '₿'
     }
   ]
 
@@ -290,7 +279,7 @@ export default function BinanceStyleDashboard() {
                 <Button variant="outline">
                   Transfer
                 </Button>
-                <Button variant="outline">
+                <Button variant="outline" onClick={() => router.push('/convert')}>
                   Convert
                 </Button>
               </div>
