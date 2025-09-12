@@ -146,47 +146,27 @@ export default function BinanceStyleDashboard() {
     <div className="min-h-screen bg-gray-50">
       {/* Header - Binance Style */}
       <header className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center justify-between h-16">
-            {/* Left side - Logo and Navigation */}
-            <div className="flex items-center space-x-8">
-              <div className="flex items-center space-x-3">
-                <div className="h-8 w-8 bg-yellow-400 rounded flex items-center justify-center">
-                  <span className="text-black font-bold text-sm">E</span>
-                </div>
-                <h1 className="text-xl font-bold text-gray-900">EmaPay</h1>
-              </div>
-              
-              <nav className="hidden md:flex space-x-6">
-                <button className="text-gray-900 font-medium">Dashboard</button>
-                <button className="text-gray-500 hover:text-gray-900">Assets</button>
-                <button className="text-gray-500 hover:text-gray-900">Orders</button>
-                <button className="text-gray-500 hover:text-gray-900">Rewards Hub</button>
-                <button className="text-gray-500 hover:text-gray-900">Referral</button>
-              </nav>
-            </div>
-            
-            {/* Right side - Actions */}
-            <div className="flex items-center space-x-4">
-              <Button className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium">
-                Deposit
-              </Button>
-              <Button variant="ghost" size="sm">
-                <Search className="h-5 w-5" />
-              </Button>
-              <Button variant="ghost" size="sm">
-                <Bell className="h-5 w-5" />
-              </Button>
-              <Button variant="ghost" size="sm">
-                <Globe className="h-5 w-5" />
-              </Button>
-              <Button variant="ghost" size="sm">
-                <Moon className="h-5 w-5" />
-              </Button>
-              <Button variant="ghost" size="sm">
-                <User className="h-5 w-5" />
-              </Button>
-            </div>
+        <div className="flex items-center justify-between h-16 px-4">
+          {/* Right side - Actions (moved to span full width) */}
+          <div className="flex items-center space-x-4 ml-auto">
+            <Button className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium">
+              Deposit
+            </Button>
+            <Button variant="ghost" size="sm">
+              <Search className="h-5 w-5" />
+            </Button>
+            <Button variant="ghost" size="sm">
+              <Bell className="h-5 w-5" />
+            </Button>
+            <Button variant="ghost" size="sm">
+              <Globe className="h-5 w-5" />
+            </Button>
+            <Button variant="ghost" size="sm">
+              <Moon className="h-5 w-5" />
+            </Button>
+            <Button variant="ghost" size="sm">
+              <User className="h-5 w-5" />
+            </Button>
           </div>
         </div>
       </header>
@@ -194,6 +174,16 @@ export default function BinanceStyleDashboard() {
       {/* Sidebar */}
       <div className="flex">
         <aside className="w-64 bg-white border-r border-gray-200 min-h-screen">
+          {/* Logo in Sidebar */}
+          <div className="p-4 border-b border-gray-200">
+            <div className="flex items-center space-x-3">
+              <div className="h-8 w-8 bg-yellow-400 rounded flex items-center justify-center">
+                <span className="text-black font-bold text-sm">E</span>
+              </div>
+              <h1 className="text-xl font-bold text-gray-900">EmaPay</h1>
+            </div>
+          </div>
+
           <nav className="p-4 space-y-2">
             <div className="flex items-center space-x-3 p-3 bg-yellow-50 rounded-lg">
               <BarChart3 className="h-5 w-5 text-yellow-600" />

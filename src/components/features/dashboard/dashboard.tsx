@@ -22,12 +22,19 @@ import {
   Settings,
   LogOut,
   Wallet,
-  Exchange,
+  ArrowLeftRight,
   History,
   PieChart,
   BarChart3
 } from 'lucide-react'
 import { formatCurrency } from '@/lib/utils'
+
+// Import existing components
+import LoadingAnimation from '@/components/ui/loading-animation'
+import { BalanceCard } from '@/components/ui/balance-card'
+import { UnifiedActionButtons } from '@/components/ui/unified-action-buttons'
+import { Skeleton } from '@/components/ui/skeleton'
+import { TransactionListItem } from '@/components/ui/transaction-list-item'
 
 // Mock data interfaces
 interface WalletBalance {
@@ -112,7 +119,7 @@ export default function Dashboard() {
     switch (type) {
       case 'send': return <ArrowUpRight className="h-4 w-4" />
       case 'receive': return <ArrowDownLeft className="h-4 w-4" />
-      case 'exchange': return <Exchange className="h-4 w-4" />
+      case 'exchange': return <ArrowLeftRight className="h-4 w-4" />
       case 'deposit': return <Plus className="h-4 w-4" />
       case 'withdrawal': return <CreditCard className="h-4 w-4" />
       default: return <MoreHorizontal className="h-4 w-4" />
@@ -207,7 +214,7 @@ export default function Dashboard() {
     {
       id: 'exchange',
       label: 'Exchange',
-      icon: <Exchange className="h-5 w-5" />,
+      icon: <ArrowLeftRight className="h-5 w-5" />,
       href: '/trading/exchange',
       color: 'bg-purple-500 hover:bg-purple-600'
     },
@@ -331,11 +338,17 @@ export default function Dashboard() {
               // Loading skeleton for consolidated balance card
               <div className="w-full h-48 bg-gray-100 rounded-2xl animate-pulse border-2 border-gray-300" />
             ) : (
-              <ConsolidatedBalanceCard
-                walletBalances={walletBalances}
-                onClick={() => router.push('/wallet')}
-                isBalanceVisible={isBalanceVisible}
-              />
+              <div className="space-y-3">
+                {walletBalances.map((balance) => (
+                  <BalanceCard
+                    key={balance.currency}
+                    currency={balance.currency}
+                    availableBalance={balance.available_balance}
+                    reservedBalance={balance.reserved_balance}
+                    isVisible={isBalanceVisible}
+                  />
+                ))}
+              </div>
             )}
           </div>
 
@@ -360,7 +373,7 @@ export default function Dashboard() {
               // Loading skeleton for transactions
               <>
                 {[1, 2, 3].map((i) => (
-                  <TransactionListItemSkeleton key={i} />
+                  <Skeleton key={i} className="h-16 w-full" />
                 ))}
               </>
             ) : dashboardTransactions.length > 0 ? (
@@ -379,7 +392,9 @@ export default function Dashboard() {
                 />
               ))
             ) : (
-              <TransactionListEmpty title="Nenhuma transação encontrada" />
+              <div className="text-center py-8">
+                <p className="text-gray-500">Nenhuma transação encontrada</p>
+              </div>
             )}
           </div>
         </div>
