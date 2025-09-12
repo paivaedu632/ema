@@ -47,6 +47,14 @@ export default function ConvertPage() {
 
   const handleToAmountChange = (value: string) => {
     setToAmount(value)
+
+    // Auto-calculate convert amount for auto mode (bidirectional)
+    if (exchangeType === 'auto') {
+      const numValue = parseFloat(value) || 0
+      const converted = numValue / marketRate
+      setFromAmount(converted.toFixed(fromCurrency === 'AOA' ? 0 : 6))
+    }
+    // In manual mode, don't auto-calculate - preserve user input
   }
 
   const handleSwapCurrencies = () => {
@@ -81,14 +89,12 @@ export default function ConvertPage() {
     setExchangeType(type)
 
     if (type === 'auto' && fromAmount) {
-      // Recalculate with market rate
+      // Recalculate with market rate when switching to auto
       const numValue = parseFloat(fromAmount) || 0
       const converted = numValue * marketRate
       setToAmount(converted.toFixed(fromCurrency === 'EUR' ? 0 : 6))
-    } else if (type === 'manual') {
-      // Clear to amount for manual entry
-      setToAmount('')
     }
+    // In manual mode, preserve existing values - don't clear or change anything
   }
 
   // Confirmation page
@@ -296,14 +302,10 @@ export default function ConvertPage() {
               <div className="relative">
                 <Input
                   type="number"
-                  placeholder={exchangeType === 'auto' ?
-                    (fromAmount ? (parseFloat(fromAmount) * marketRate).toFixed(fromCurrency === 'EUR' ? 0 : 6) : '0') :
-                    '0,00'
-                  }
+                  placeholder="0,00"
                   value={toAmount}
                   onChange={(e) => handleToAmountChange(e.target.value)}
-                  disabled={exchangeType === 'auto'}
-                  className={`pr-20 text-lg h-12 ${exchangeType === 'auto' ? 'bg-gray-50' : ''}`}
+                  className="pr-20 text-lg h-12"
                 />
                 <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-1">
                   <span className="font-medium text-gray-900">{toCurrency}</span>
