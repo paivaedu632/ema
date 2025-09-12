@@ -22,6 +22,7 @@ export default function ConvertPage() {
   const [fromAmount, setFromAmount] = useState('')
   const [toAmount, setToAmount] = useState('')
   const [exchangeType, setExchangeType] = useState<'auto' | 'manual'>('auto')
+  const [currentStep, setCurrentStep] = useState<'convert' | 'confirm' | 'success'>('convert')
   const [isLoading, setIsLoading] = useState(false)
 
   // Mock exchange rate (1 EUR = 1252 AOA)
@@ -59,14 +60,16 @@ export default function ConvertPage() {
     setToAmount('')
   }
 
+  const handleShowConfirmation = () => {
+    setCurrentStep('confirm')
+  }
+
   const handleConvert = async () => {
     setIsLoading(true)
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 2000))
     setIsLoading(false)
-
-    // Show success message or redirect
-    alert(`Successfully converted ${fromAmount} ${fromCurrency} to ${toAmount} ${toCurrency}`)
+    setCurrentStep('success')
   }
 
   const availableBalance = userBalances[fromCurrency]
@@ -88,6 +91,150 @@ export default function ConvertPage() {
     }
   }
 
+  // Confirmation page
+  if (currentStep === 'confirm') {
+    const finalToAmount = exchangeType === 'auto'
+      ? (parseFloat(fromAmount) * marketRate).toFixed(fromCurrency === 'EUR' ? 0 : 6)
+      : toAmount
+
+    return (
+      <div className="min-h-screen bg-gray-50">
+        {/* Header */}
+        <header className="bg-white border-b border-gray-200">
+          <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center h-16">
+              <Button variant="ghost" size="sm" onClick={() => setCurrentStep('convert')}>
+                <ArrowLeft className="h-5 w-5" />
+              </Button>
+              <h1 className="ml-4 text-xl font-bold text-gray-900">Confirmar Conversão</h1>
+            </div>
+          </div>
+        </header>
+
+        <main className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <Card>
+            <CardContent className="p-6 space-y-6">
+              {/* Conversion Summary */}
+              <div className="text-center space-y-4">
+                <div className="text-lg text-gray-600">Você está convertendo</div>
+                <div className="text-3xl font-bold text-gray-900">
+                  {fromAmount} {fromCurrency}
+                </div>
+                <ArrowLeftRight className="h-6 w-6 mx-auto text-gray-400" />
+                <div className="text-3xl font-bold text-yellow-600">
+                  {finalToAmount} {toCurrency}
+                </div>
+              </div>
+
+              {/* Details */}
+              <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Taxa de câmbio:</span>
+                  <span className="font-medium">1 {fromCurrency} = {marketRate.toLocaleString()} {toCurrency}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Tipo:</span>
+                  <span className="font-medium">{exchangeType === 'auto' ? 'Automático' : 'Manual'}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Tempo estimado:</span>
+                  <span className="font-medium">{exchangeType === 'auto' ? 'Segundos' : 'Até encontrarmos um comprador'}</span>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="space-y-3">
+                <Button
+                  onClick={handleConvert}
+                  disabled={isLoading}
+                  className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-medium"
+                  size="lg"
+                >
+                  {isLoading ? (
+                    <>
+                      <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                      Convertendo...
+                    </>
+                  ) : (
+                    'CONFIRMAR CONVERSÃO'
+                  )}
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => setCurrentStep('convert')}
+                  className="w-full"
+                  disabled={isLoading}
+                >
+                  Voltar
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </main>
+      </div>
+    )
+  }
+
+  // Success page
+  if (currentStep === 'success') {
+    const finalToAmount = exchangeType === 'auto'
+      ? (parseFloat(fromAmount) * marketRate).toFixed(fromCurrency === 'EUR' ? 0 : 6)
+      : toAmount
+
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <main className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex items-center justify-center min-h-screen">
+          <Card>
+            <CardContent className="p-8 text-center space-y-6">
+              {/* Success Icon */}
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
+                <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+
+              {/* Success Message */}
+              <div className="space-y-2">
+                <h1 className="text-2xl font-bold text-gray-900">Conversão Realizada!</h1>
+                <p className="text-gray-600">Sua conversão foi processada com sucesso</p>
+              </div>
+
+              {/* Conversion Details */}
+              <div className="bg-gray-50 rounded-lg p-4 space-y-2">
+                <div className="text-sm text-gray-600">Você converteu</div>
+                <div className="text-lg font-semibold">{fromAmount} {fromCurrency} → {finalToAmount} {toCurrency}</div>
+                <div className="text-xs text-gray-500">Taxa: 1 {fromCurrency} = {marketRate.toLocaleString()} {toCurrency}</div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="space-y-3">
+                <Button
+                  onClick={() => {
+                    setCurrentStep('convert')
+                    setFromAmount('')
+                    setToAmount('')
+                  }}
+                  className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-medium"
+                  size="lg"
+                >
+                  Nova Conversão
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => router.push('/dashboards')}
+                  className="w-full"
+                >
+                  Voltar ao Dashboard
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </main>
+      </div>
+    )
+  }
+
+  // Main convert page
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -137,7 +284,7 @@ export default function ConvertPage() {
                 onClick={handleSwapCurrencies}
                 className="rounded-full p-3 bg-gray-50 hover:bg-gray-100"
               >
-                🔄
+                <ArrowLeftRight className="h-4 w-4" />
               </Button>
             </div>
 
@@ -230,19 +377,12 @@ export default function ConvertPage() {
 
             {/* Convert Button */}
             <Button
-              onClick={handleConvert}
-              disabled={!fromAmount || (exchangeType === 'manual' && !toAmount) || isInsufficientBalance || isLoading}
+              onClick={handleShowConfirmation}
+              disabled={!fromAmount || (exchangeType === 'manual' && !toAmount) || isInsufficientBalance}
               className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-medium"
               size="lg"
             >
-              {isLoading ? (
-                <>
-                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                  Convertendo...
-                </>
-              ) : (
-                'CONFIRMAR'
-              )}
+              CONTINUAR
             </Button>
           </CardContent>
         </Card>
