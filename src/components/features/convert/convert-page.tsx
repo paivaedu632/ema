@@ -144,7 +144,7 @@ export default function ConvertPage() {
             {/* To Currency */}
             <div className="space-y-2">
               <Label className="text-sm font-medium text-gray-700">
-                Você recebe {exchangeType === 'auto' ? '(market)' : ''}
+                Você recebe
               </Label>
               <div className="relative">
                 <Input
@@ -224,7 +224,7 @@ export default function ConvertPage() {
                 <strong>Câmbio:</strong> 1 {fromCurrency} = {marketRate.toLocaleString()} {toCurrency}
               </div>
               <div className="text-sm text-gray-600">
-                <strong>Tempo:</strong> {exchangeType === 'auto' ? 'segundos (automático)' : 'até encontrarmos um comprador (Manual)'}
+                <strong>Tempo:</strong> {exchangeType === 'auto' ? 'segundos' : 'até encontrarmos um comprador'}
               </div>
             </div>
 
