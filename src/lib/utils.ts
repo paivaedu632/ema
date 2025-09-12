@@ -158,3 +158,34 @@ export function formatPhoneNumber(phone: string): string {
 
   return phone
 }
+
+// ===== MISSING EXPORTS FOR BACKWARD COMPATIBILITY =====
+
+// DateUtils object for backward compatibility
+export const DateUtils = {
+  formatDateInput,
+  isValidDateFormat,
+  formatCurrency,
+  formatPhoneNumber
+}
+
+// Transaction limits for backward compatibility
+export const TRANSACTION_LIMITS = {
+  buy: { AOA: { min: 10000, max: Infinity }, EUR: { min: 10, max: 50000 } },
+  sell: { AOA: { min: 10000, max: Infinity }, EUR: { min: 10, max: 50000 } },
+  send: { AOA: { min: 1000, max: 1000000 }, EUR: { min: 1, max: 10000 } },
+  exchange: { AOA: { min: 10000, max: Infinity }, EUR: { min: 10, max: Infinity } },
+  deposit: { AOA: { min: 5000, max: Infinity }, EUR: { min: 5, max: Infinity } }
+}
+
+// Validation messages for backward compatibility
+export const VALIDATION_MESSAGES = {
+  REQUIRED: 'Este campo é obrigatório',
+  INVALID_EMAIL: 'Email inválido',
+  INVALID_PHONE: 'Número de telefone inválido',
+  INVALID_DATE: 'Data inválida',
+  AMOUNT_TOO_LOW: 'Valor muito baixo',
+  AMOUNT_TOO_HIGH: 'Valor muito alto',
+  INSUFFICIENT_BALANCE: 'Saldo insuficiente',
+  INVALID_CURRENCY: 'Moeda inválida'
+}

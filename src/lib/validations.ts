@@ -188,3 +188,98 @@ export const transferHistorySchema = z.object({
   limit: z.number().int().min(1).max(100).default(20),
   currency: CurrencySchema.optional()
 });
+
+// ===== MISSING SCHEMAS FOR API ROUTES =====
+
+// Validation functions for search params and route params
+export function validateSearchParams<T>(
+  searchParams: URLSearchParams,
+  schema: z.ZodSchema<T>
+): ValidationResult<T> {
+  try {
+    const params = Object.fromEntries(searchParams.entries());
+    const result = schema.safeParse(params);
+
+    if (!result.success) {
+      return {
+        success: false,
+        error: result.error.issues.map(i => i.message).join(', ')
+      };
+    }
+
+    return {
+      success: true,
+      data: result.data
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: 'Invalid search parameters'
+    };
+  }
+}
+
+export function validateRouteParams<T>(
+  params: Record<string, string>,
+  schema: z.ZodSchema<T>
+): ValidationResult<T> {
+  try {
+    const result = schema.safeParse(params);
+
+    if (!result.success) {
+      return {
+        success: false,
+        error: result.error.issues.map(i => i.message).join(', ')
+      };
+    }
+
+    return {
+      success: true,
+      data: result.data
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: 'Invalid route parameters'
+    };
+  }
+}
+
+// Order schemas
+export const limitOrderSchema = z.object({
+  side: OrderSideSchema,
+  base_currency: CurrencySchema,
+  quote_currency: CurrencySchema,
+  quantity: PositiveNumberSchema,
+  price: PositiveNumberSchema
+});
+
+export const marketOrderSchema = z.object({
+  side: OrderSideSchema,
+  base_currency: CurrencySchema,
+  quote_currency: CurrencySchema,
+  quantity: PositiveNumberSchema
+});
+
+export const orderHistorySchema = z.object({
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(100).default(20)
+});
+
+// Security schemas
+export const pinSetSchema = z.object({
+  pin: pinSchema,
+  confirmPin: pinSchema
+}).refine((data) => data.pin === data.confirmPin, {
+  message: "PINs must match",
+  path: ["confirmPin"]
+});
+
+export const pinVerifySchema = z.object({
+  pin: pinSchema
+});
+
+// Wallet schemas
+export const walletCurrencySchema = z.object({
+  currency: CurrencySchema
+});

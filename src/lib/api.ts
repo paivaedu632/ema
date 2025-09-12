@@ -131,3 +131,58 @@ export class ApiClient {
 
 // Default API client instance
 export const apiClient = new ApiClient()
+
+// Legacy function aliases for backward compatibility
+export const createSuccessResponse = successResponse
+export const createErrorResponse = errorResponse
+
+// Error responses object for backward compatibility
+export const ErrorResponses = {
+  AUTH_REQUIRED: 'Authentication required',
+  INVALID_TOKEN: 'Invalid authentication token',
+  FORBIDDEN: 'Access forbidden',
+  NOT_FOUND: 'Resource not found',
+  VALIDATION_ERROR: 'Validation error',
+  INTERNAL_ERROR: 'Internal server error',
+  INSUFFICIENT_BALANCE: 'Insufficient balance',
+  INVALID_CURRENCY: 'Invalid currency',
+  RATE_LIMITED: 'Rate limit exceeded'
+}
+
+// CORS middleware wrapper
+export function withCors(handler: (request: NextRequest, ...args: any[]) => Promise<NextResponse>) {
+  return async (request: NextRequest, ...args: any[]): Promise<NextResponse> => {
+    // Handle preflight requests
+    const corsResponse = handleCors(request)
+    if (corsResponse) {
+      return corsResponse
+    }
+
+    // Execute the handler
+    const response = await handler(request, ...args)
+
+    // Add CORS headers to the response
+    Object.entries(CORS_HEADERS).forEach(([key, value]) => {
+      response.headers.set(key, value)
+    })
+
+    return response
+  }
+}
+
+// Error handling middleware wrapper
+export function withErrorHandling(handler: (request: NextRequest, ...args: any[]) => Promise<NextResponse>) {
+  return async (request: NextRequest, ...args: any[]): Promise<NextResponse> => {
+    try {
+      return await handler(request, ...args)
+    } catch (error) {
+      console.error('API Error:', error)
+
+      if (error instanceof Error) {
+        return errorResponse(error.message, 500)
+      }
+
+      return errorResponse('Internal server error', 500)
+    }
+  }
+}
