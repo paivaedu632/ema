@@ -68,6 +68,23 @@ export default function DashboardsPage() {
       ],
       preview: '/api/placeholder/800/500',
       color: 'bg-purple-500'
+    },
+    {
+      id: 'binance',
+      title: 'Binance-Style Dashboard',
+      description: 'Exchange-focused interface inspired by Binance with prominent balance display and comprehensive trading features.',
+      href: '/binance-dashboard',
+      icon: <BarChart3 className="h-8 w-8" />,
+      features: [
+        'Prominent balance display',
+        'Asset selector dropdown',
+        'Today\'s P&L tracking',
+        'Comprehensive sidebar nav',
+        'Quick action buttons',
+        'Professional trading UI'
+      ],
+      preview: '/api/placeholder/900/600',
+      color: 'bg-yellow-500'
     }
   ]
 
@@ -125,7 +142,7 @@ export default function DashboardsPage() {
         </div>
 
         {/* Dashboard Variants */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 mb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-4 gap-8 mb-12">
           {dashboardVariants.map((variant) => (
             <Card key={variant.id} className="overflow-hidden hover:shadow-lg transition-shadow">
               <CardHeader>
