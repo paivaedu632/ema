@@ -4,16 +4,17 @@ import React from 'react'
 import Link from 'next/link'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { 
-  Monitor, 
-  Smartphone, 
-  Eye, 
-  Code, 
+import {
+  Monitor,
+  Smartphone,
+  Eye,
+  Code,
   Palette,
   BarChart3,
   Users,
   Wallet,
-  ArrowRight
+  ArrowRight,
+  ArrowLeftRight
 } from 'lucide-react'
 
 export default function DashboardsPage() {
@@ -85,6 +86,23 @@ export default function DashboardsPage() {
       ],
       preview: '/api/placeholder/600/400',
       color: 'bg-purple-500'
+    },
+    {
+      id: 'convert-mobile',
+      title: 'Mobile Currency Converter',
+      description: 'Step-by-step mobile conversion flow similar to the sell component with confirmation screens.',
+      href: '/convert-mobile',
+      icon: <Smartphone className="h-8 w-8" />,
+      features: [
+        'Step-by-step conversion flow',
+        'Mobile-optimized interface',
+        'Currency swap functionality',
+        'Real-time rate display',
+        'Confirmation screens',
+        'Success feedback'
+      ],
+      preview: '/api/placeholder/300/600',
+      color: 'bg-indigo-500'
     }
   ]
 
