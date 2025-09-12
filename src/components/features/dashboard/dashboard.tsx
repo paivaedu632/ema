@@ -2,24 +2,61 @@
 
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
-// Clerk removed - using Supabase Auth
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { UnifiedActionButtons } from '@/components/ui/unified-action-buttons'
-import { ConsolidatedBalanceCard } from '@/components/ui/balance-card'
-import { LogOut, Eye, EyeOff } from 'lucide-react'
-import { TransactionListItem, TransactionListItemSkeleton, TransactionListEmpty } from '@/components/ui/transaction-list-item'
-import LoadingAnimation from '@/components/ui/loading-animation'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Badge } from '@/components/ui/badge'
+import {
+  ArrowUpRight,
+  ArrowDownLeft,
+  Eye,
+  EyeOff,
+  Send,
+  Download,
+  CreditCard,
+  TrendingUp,
+  TrendingDown,
+  Plus,
+  MoreHorizontal,
+  Bell,
+  Settings,
+  LogOut,
+  Wallet,
+  Exchange,
+  History,
+  PieChart,
+  BarChart3
+} from 'lucide-react'
+import { formatCurrency } from '@/lib/utils'
 
-// Interface for display-ready transaction data
-interface DisplayTransaction {
+// Mock data interfaces
+interface WalletBalance {
+  currency: 'EUR' | 'AOA'
+  available: number
+  reserved: number
+  total: number
+  change24h: number
+  changePercent: number
+}
+
+interface Transaction {
   id: string
-  displayId?: string
-  type: string
-  status: string
+  type: 'send' | 'receive' | 'exchange' | 'deposit' | 'withdrawal'
+  status: 'completed' | 'pending' | 'failed'
+  amount: number
+  currency: 'EUR' | 'AOA'
   description: string
-  amount: string
-  currency: string
+  recipient?: string
   date: string
+  fee?: number
+}
+
+interface QuickAction {
+  id: string
+  label: string
+  icon: React.ReactNode
+  href: string
+  color: string
 }
 
 
@@ -27,24 +64,161 @@ interface DisplayTransaction {
 
 export default function Dashboard() {
   const router = useRouter()
-  const { user, isLoaded } = useUser()
-  const { signOut } = useClerk()
-
-  // Static wallet balances for visual representation
-  const [balancesLoading] = useState(false)
   const [isBalanceVisible, setIsBalanceVisible] = useState(true)
-  const [walletBalances] = useState([
+  const [selectedPeriod, setSelectedPeriod] = useState('7d')
+
+  // Mock user data
+  const user = {
+    name: 'Eduardo Paiva',
+    email: 'paivaedu.br@gmail.com',
+    avatar: null,
+    initials: 'EP',
+    kycStatus: 'verified',
+    memberSince: '2024'
+  }
+
+  // Mock wallet balances with realistic data
+  const walletBalances: WalletBalance[] = [
     {
       currency: 'EUR',
-      available_balance: 1250.75,
-      reserved_balance: 0.00
+      available: 2847.50,
+      reserved: 152.25,
+      total: 2999.75,
+      change24h: 45.30,
+      changePercent: 1.53
     },
     {
       currency: 'AOA',
-      available_balance: 485000.00,
-      reserved_balance: 15000.00
+      available: 1250000,
+      reserved: 75000,
+      total: 1325000,
+      changePercent: -2.1,
+      change24h: -28500
     }
-  ])
+  ]
+
+  const totalBalance = walletBalances.reduce((sum, wallet) => {
+    // Convert AOA to EUR for total (mock exchange rate: 1 EUR = 650 AOA)
+    const eurValue = wallet.currency === 'EUR' ? wallet.total : wallet.total / 650
+    return sum + eurValue
+  }, 0)
+
+  const formatTransactionAmount = (transaction: Transaction) => {
+    const sign = transaction.type === 'receive' || transaction.type === 'deposit' ? '+' : '-'
+    return `${sign}${formatCurrency(transaction.amount, transaction.currency)}`
+  }
+
+  const getTransactionIcon = (type: Transaction['type']) => {
+    switch (type) {
+      case 'send': return <ArrowUpRight className="h-4 w-4" />
+      case 'receive': return <ArrowDownLeft className="h-4 w-4" />
+      case 'exchange': return <Exchange className="h-4 w-4" />
+      case 'deposit': return <Plus className="h-4 w-4" />
+      case 'withdrawal': return <CreditCard className="h-4 w-4" />
+      default: return <MoreHorizontal className="h-4 w-4" />
+    }
+  }
+
+  const getStatusBadge = (status: Transaction['status']) => {
+    switch (status) {
+      case 'completed':
+        return <Badge variant="default" className="bg-green-100 text-green-800">Completed</Badge>
+      case 'pending':
+        return <Badge variant="default" className="bg-yellow-100 text-yellow-800">Pending</Badge>
+      case 'failed':
+        return <Badge variant="destructive">Failed</Badge>
+      default:
+        return <Badge variant="secondary">{status}</Badge>
+    }
+  }
+
+  // Mock recent transactions
+  const recentTransactions: Transaction[] = [
+    {
+      id: '1',
+      type: 'receive',
+      status: 'completed',
+      amount: 500,
+      currency: 'EUR',
+      description: 'Received from Maria Silva',
+      recipient: 'Maria Silva',
+      date: '2024-01-15T10:30:00Z',
+      fee: 2.50
+    },
+    {
+      id: '2',
+      type: 'send',
+      status: 'completed',
+      amount: 150000,
+      currency: 'AOA',
+      description: 'Sent to João Santos',
+      recipient: 'João Santos',
+      date: '2024-01-14T16:45:00Z',
+      fee: 1500
+    },
+    {
+      id: '3',
+      type: 'exchange',
+      status: 'completed',
+      amount: 300,
+      currency: 'EUR',
+      description: 'EUR → AOA Exchange',
+      date: '2024-01-14T09:15:00Z',
+      fee: 3.00
+    },
+    {
+      id: '4',
+      type: 'deposit',
+      status: 'pending',
+      amount: 1000,
+      currency: 'EUR',
+      description: 'Bank deposit via IBAN',
+      date: '2024-01-13T14:20:00Z',
+      fee: 5.00
+    },
+    {
+      id: '5',
+      type: 'send',
+      status: 'failed',
+      amount: 75,
+      currency: 'EUR',
+      description: 'Failed transfer to Ana Costa',
+      recipient: 'Ana Costa',
+      date: '2024-01-12T11:10:00Z'
+    }
+  ]
+
+  // Quick actions
+  const quickActions: QuickAction[] = [
+    {
+      id: 'send',
+      label: 'Send Money',
+      icon: <Send className="h-5 w-5" />,
+      href: '/transfers/send',
+      color: 'bg-blue-500 hover:bg-blue-600'
+    },
+    {
+      id: 'receive',
+      label: 'Request Money',
+      icon: <Download className="h-5 w-5" />,
+      href: '/transfers/receive',
+      color: 'bg-green-500 hover:bg-green-600'
+    },
+    {
+      id: 'exchange',
+      label: 'Exchange',
+      icon: <Exchange className="h-5 w-5" />,
+      href: '/trading/exchange',
+      color: 'bg-purple-500 hover:bg-purple-600'
+    },
+    {
+      id: 'deposit',
+      label: 'Add Money',
+      icon: <Plus className="h-5 w-5" />,
+      href: '/wallet/deposit',
+      color: 'bg-orange-500 hover:bg-orange-600'
+    }
+  ]
 
 
 
