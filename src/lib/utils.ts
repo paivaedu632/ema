@@ -178,8 +178,15 @@ export const TRANSACTION_LIMITS = {
   deposit: { AOA: { min: 5000, max: Infinity }, EUR: { min: 5, max: Infinity } }
 }
 
-// Validation messages for backward compatibility
+// Validation messages for forms
 export const VALIDATION_MESSAGES = {
+  AMOUNT: {
+    REQUIRED: 'Este campo é obrigatório',
+    INVALID: 'Valor inválido',
+    MIN: (min: number, currency: Currency) => `Valor mínimo: ${formatCurrency(min, currency)}`,
+    MAX: (max: number, currency: Currency) => `Valor máximo: ${formatCurrency(max, currency)}`,
+    INSUFFICIENT_BALANCE: 'Saldo insuficiente'
+  },
   REQUIRED: 'Este campo é obrigatório',
   INVALID_EMAIL: 'Email inválido',
   INVALID_PHONE: 'Número de telefone inválido',

@@ -32,7 +32,7 @@ interface WalletBalance {
 
 // Zod validation schema using shared validation utilities
 const createSellAmountSchema = (availableBalance: number, currency: Currency) => {
-  const limits = TRANSACTION_LIMITS[currency]
+  const limits = TRANSACTION_LIMITS.sell[currency]
 
   return z.object({
     amount: z.string()
