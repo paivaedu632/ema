@@ -316,7 +316,7 @@ export default function ConvertPage() {
 
             {/* Exchange Type Selection */}
             <div className="space-y-4">
-              <Label className="text-sm font-medium text-gray-700">Tipo de câmbio?</Label>
+              <Label className="text-sm font-medium text-gray-700">Tipo de câmbio</Label>
 
               {/* Auto Option */}
               <div
@@ -336,7 +336,7 @@ export default function ConvertPage() {
                   <div className="flex-1">
                     <div className="text-sm font-semibold text-gray-900">Automático</div>
                     <div className="text-sm text-gray-600">
-                      Você recebe {fromAmount ? (parseFloat(fromAmount) * marketRate).toFixed(fromCurrency === 'EUR' ? 0 : 6) : '0'} {toCurrency}
+                      Você recebe {fromAmount ? (parseFloat(fromAmount) * marketRate).toFixed(fromCurrency === 'EUR' ? 0 : 6) : '0'} {toCurrency} agora
                     </div>
                   </div>
                 </div>
@@ -360,7 +360,7 @@ export default function ConvertPage() {
                   <div className="flex-1">
                     <div className="text-sm font-semibold text-gray-900">Manual</div>
                     <div className="text-sm text-gray-600">
-                      Escolha quanto você quer receber.
+                      Você recebe {toAmount || '0'} {toCurrency} quando encontrarmos um comprador
                     </div>
                   </div>
                 </div>
