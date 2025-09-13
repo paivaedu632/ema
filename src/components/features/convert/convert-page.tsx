@@ -172,32 +172,32 @@ export default function ConvertPage() {
       <main className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Card className="max-w-md mx-auto">
           <CardContent className="p-6 space-y-6">
-            {/* From Currency - Clean Wise style */}
+            {/* From Currency - Exact Wise style */}
             <div className="space-y-3">
               <Label className="text-sm font-medium text-gray-700">
                 Você converte
               </Label>
               <div className="relative">
-                <div className="flex items-center border border-gray-300 rounded-lg bg-white overflow-hidden">
+                <div className="flex items-center border-2 border-gray-300 rounded-lg bg-white min-h-[72px] focus-within:border-blue-500 transition-colors">
                   <Input
                     type="number"
                     placeholder="0"
                     value={fromAmount}
                     onChange={(e) => handleFromAmountChange(e.target.value)}
-                    className="flex-1 border-0 px-4 py-4 text-2xl font-semibold bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    className="flex-1 border-0 px-6 py-6 text-3xl font-semibold bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   />
-                  <div className="flex items-center px-4 py-2 bg-gray-50 border-l border-gray-200">
-                    <div className="flex items-center space-x-2">
+                  <div className="flex items-center px-6 py-4">
+                    <div className="flex items-center space-x-3">
                       <img
                         src={`https://wise.com/web-art/assets/flags/${fromCurrency.toLowerCase()}.svg`}
                         alt={fromCurrency}
-                        className="w-6 h-6 rounded-full"
+                        className="w-6 h-6"
                         onError={(e) => {
                           e.currentTarget.style.display = 'none';
                         }}
                       />
-                      <span className="font-medium text-gray-900">{fromCurrency}</span>
-                      <ChevronDown className="h-4 w-4 text-gray-500" />
+                      <span className="font-semibold text-gray-900 text-lg">{fromCurrency}</span>
+                      <ChevronDown className="h-5 w-5 text-gray-500" />
                     </div>
                   </div>
                 </div>
@@ -222,33 +222,33 @@ export default function ConvertPage() {
               </Button>
             </div>
 
-            {/* To Currency - Clean Wise style */}
+            {/* To Currency - Exact Wise style */}
             <div className="space-y-3">
               <Label className="text-sm font-medium text-gray-700">
                 Você recebe
               </Label>
               <div className="relative">
-                <div className="flex items-center border border-gray-300 rounded-lg bg-white overflow-hidden">
+                <div className="flex items-center border-2 border-gray-300 rounded-lg bg-white min-h-[72px] focus-within:border-blue-500 transition-colors">
                   <Input
                     type="number"
                     placeholder="0"
                     value={toAmount}
                     onChange={(e) => handleToAmountChange(e.target.value)}
                     disabled={exchangeType === 'auto'}
-                    className="flex-1 border-0 px-4 py-4 text-2xl font-semibold bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 disabled:opacity-100 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    className="flex-1 border-0 px-6 py-6 text-3xl font-semibold bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 disabled:opacity-100 disabled:cursor-not-allowed [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   />
-                  <div className="flex items-center px-4 py-2 bg-gray-50 border-l border-gray-200">
-                    <div className="flex items-center space-x-2">
+                  <div className="flex items-center px-6 py-4">
+                    <div className="flex items-center space-x-3">
                       <img
                         src={`https://wise.com/web-art/assets/flags/${toCurrency.toLowerCase()}.svg`}
                         alt={toCurrency}
-                        className="w-6 h-6 rounded-full"
+                        className="w-6 h-6"
                         onError={(e) => {
                           e.currentTarget.style.display = 'none';
                         }}
                       />
-                      <span className="font-medium text-gray-900">{toCurrency}</span>
-                      <ChevronDown className="h-4 w-4 text-gray-500" />
+                      <span className="font-semibold text-gray-900 text-lg">{toCurrency}</span>
+                      <ChevronDown className="h-5 w-5 text-gray-500" />
                     </div>
                   </div>
                 </div>
