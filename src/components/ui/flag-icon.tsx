@@ -28,24 +28,18 @@ export function FlagIcon({
   // Use size prop if no custom className provided
   const sizeClass = className || sizeClasses[size]
 
-  // Simple flag emojis as fallback for now
-  const flagEmojis: { [key: string]: string } = {
-    'eu': '🇪🇺',
-    'ao': '🇦🇴',
-    'us': '🇺🇸'
-  }
-
-  const flagEmoji = flagEmojis[countryCode.toLowerCase()] || '🏳️'
-
   return (
-    <div
-      className={`rounded-full overflow-hidden flex-shrink-0 flex items-center justify-center ${sizeClass}`}
+    <span
+      className={`fi fi-${countryCode.toLowerCase()} rounded-full overflow-hidden flex-shrink-0 ${sizeClass}`}
       title={altText}
       role="img"
       aria-label={altText}
-    >
-      <span className="text-lg">{flagEmoji}</span>
-    </div>
+      style={{
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        display: 'inline-block'
+      }}
+    />
   )
 }
 

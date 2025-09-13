@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Flag Icons */
+@import 'flag-icons/css/flag-icons.min.css';
+
 @layer base {
   :root {
     --radius: 0.625rem;
