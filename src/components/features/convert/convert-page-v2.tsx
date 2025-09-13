@@ -287,8 +287,7 @@ export default function ConvertPageV2() {
                   value={toAmount}
                   onChange={(e) => handleToAmountChange(e.target.value)}
                   placeholder="0"
-                  disabled={exchangeType === 'auto'}
-                  className="text-right text-2xl md:text-2xl font-semibold bg-transparent outline-none flex-1 min-w-0 text-gray-900 placeholder-gray-400 disabled:opacity-100 disabled:cursor-not-allowed overflow-hidden"
+                  className="text-right text-2xl md:text-2xl font-semibold bg-transparent outline-none flex-1 min-w-0 text-gray-900 placeholder-gray-400 overflow-hidden"
                 />
               </div>
             </div>
