@@ -121,9 +121,21 @@ export default function ConvertPage() {
 
 
 
-  // Success step - redirect to success page
+  // Success step - redirect to success page with conversion data
   if (currentStep === 'success') {
-    router.push('/convert/success')
+    const finalAmount = exchangeType === 'auto'
+      ? (parseFloat(fromAmount) * getConversionRate(fromCurrency, toCurrency)).toFixed(toCurrency === 'EUR' ? 6 : 0)
+      : toAmount || '0'
+
+    const params = new URLSearchParams({
+      type: exchangeType,
+      amount: finalAmount,
+      currency: toCurrency,
+      fromAmount: fromAmount,
+      fromCurrency: fromCurrency
+    })
+
+    router.push(`/convert/success?${params.toString()}`)
     return null
   }
 
