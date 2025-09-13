@@ -344,7 +344,7 @@ export default function ConvertPage() {
       <div className="page-container-white">
         <main className="content-container">
           <PageHeader
-            title="Does everything look right?"
+            title="Está tudo correto?"
             onBack={handleBack}
           />
 
@@ -357,7 +357,7 @@ export default function ConvertPage() {
                 size="xl"
               />
               <div>
-                <div className="text-sm text-gray-500">From</div>
+                <div className="text-sm text-gray-500">De</div>
                 <div className="font-medium text-gray-900">{fromCurrency}</div>
               </div>
             </div>
@@ -369,7 +369,7 @@ export default function ConvertPage() {
                 size="xl"
               />
               <div>
-                <div className="text-sm text-gray-500">To</div>
+                <div className="text-sm text-gray-500">Para</div>
                 <div className="font-medium text-gray-900">{toCurrency}</div>
               </div>
             </div>
@@ -378,12 +378,12 @@ export default function ConvertPage() {
           {/* Transaction Details - Wise Style */}
           <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-4 mb-6">
             <div className="flex justify-between items-center">
-              <span className="text-gray-600">You're converting</span>
+              <span className="text-gray-600">Você está convertendo</span>
               <span className="font-medium text-gray-900">{fromAmount} {fromCurrency}</span>
             </div>
 
             <div className="flex justify-between items-center">
-              <span className="text-gray-600">Exchange rate</span>
+              <span className="text-gray-600">Taxa de câmbio</span>
               <span className="font-medium text-gray-900">
                 1 {fromCurrency} = {getConversionRate(fromCurrency, toCurrency).toLocaleString(undefined, {
                   minimumFractionDigits: fromCurrency === 'AOA' ? 6 : 0,
@@ -394,7 +394,7 @@ export default function ConvertPage() {
 
             <div className="border-t border-gray-200 pt-4">
               <div className="flex justify-between items-center">
-                <span className="font-medium text-gray-900">You'll receive</span>
+                <span className="font-medium text-gray-900">Você receberá</span>
                 <span className="font-bold text-lg text-gray-900">
                   {exchangeType === 'auto'
                     ? (parseFloat(fromAmount) * getConversionRate(fromCurrency, toCurrency)).toFixed(toCurrency === 'EUR' ? 6 : 0)
@@ -409,8 +409,8 @@ export default function ConvertPage() {
           <div className="text-center mb-6">
             <p className="text-sm text-gray-600">
               {exchangeType === 'auto'
-                ? 'Your conversion will be processed immediately at the current market rate.'
-                : 'Your conversion will be processed when we find a buyer at your desired rate.'
+                ? 'Sua conversão será processada imediatamente com a taxa atual do mercado.'
+                : 'Sua conversão será processada quando encontrarmos um comprador com a taxa desejada.'
               }
             </p>
           </div>
