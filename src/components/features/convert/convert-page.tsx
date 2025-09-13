@@ -17,21 +17,21 @@ import { formatCurrency } from '@/lib/utils'
 
 export default function ConvertPage() {
   const router = useRouter()
-  const [fromCurrency, setFromCurrency] = useState<'EUR' | 'AOA'>('EUR')
-  const [toCurrency, setToCurrency] = useState<'EUR' | 'AOA'>('AOA')
+  const [fromCurrency, setFromCurrency] = useState<'BRL' | 'EUR'>('BRL')
+  const [toCurrency, setToCurrency] = useState<'BRL' | 'EUR'>('EUR')
   const [fromAmount, setFromAmount] = useState('')
   const [toAmount, setToAmount] = useState('')
   const [exchangeType, setExchangeType] = useState<'auto' | 'manual'>('auto')
-  const [currentStep, setCurrentStep] = useState<'convert' | 'confirm' | 'success'>('convert')
+  const [currentStep, setCurrentStep] = useState<'convert' | 'success'>('convert')
   const [isLoading, setIsLoading] = useState(false)
 
-  // Mock exchange rate (1 EUR = 1252 AOA)
-  const marketRate = fromCurrency === 'EUR' ? 1252 : 0.0007987
+  // Mock exchange rate (1 BRL = 0.1527 EUR, approximately 6.55 BRL = 1 EUR)
+  const marketRate = fromCurrency === 'BRL' ? 0.1527 : 6.55
 
   // Mock user balances
   const userBalances = {
-    EUR: 1250.50,
-    AOA: 1250000
+    BRL: 5000.00,
+    EUR: 1250.50
   }
 
   const handleFromAmountChange = (value: string) => {
@@ -41,7 +41,7 @@ export default function ConvertPage() {
     if (exchangeType === 'auto') {
       const numValue = parseFloat(value) || 0
       const converted = numValue * marketRate
-      setToAmount(converted.toFixed(fromCurrency === 'EUR' ? 0 : 6))
+      setToAmount(converted.toFixed(2))
     }
   }
 
@@ -52,7 +52,7 @@ export default function ConvertPage() {
     if (exchangeType === 'auto') {
       const numValue = parseFloat(value) || 0
       const converted = numValue / marketRate
-      setFromAmount(converted.toFixed(fromCurrency === 'AOA' ? 0 : 6))
+      setFromAmount(converted.toFixed(2))
     }
     // In manual mode, don't auto-calculate - preserve user input
   }
@@ -170,162 +170,107 @@ export default function ConvertPage() {
       </header>
 
       <main className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Card>
-          <CardContent className="p-6 space-y-6">
-            {/* From Currency */}
-            <div className="space-y-2">
-              <Label className="text-sm font-medium text-gray-700">Você converte</Label>
-              <div className="relative">
-                <Input
-                  type="number"
-                  placeholder="0,00"
-                  value={fromAmount}
-                  onChange={(e) => handleFromAmountChange(e.target.value)}
-                  className="pr-20 text-lg h-12"
-                />
-                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-1">
-                  <span className="font-medium text-gray-900">{fromCurrency}</span>
-                  <ChevronDown className="h-4 w-4 text-gray-500" />
-                </div>
-              </div>
-              <div className="text-sm text-gray-500">
-                Disponível: {formatCurrency(availableBalance, fromCurrency)}
-              </div>
-              {isInsufficientBalance && (
-                <p className="text-sm text-red-600">Saldo insuficiente</p>
-              )}
-            </div>
-
-            {/* Swap Button */}
-            <div className="flex justify-center">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleSwapCurrencies}
-                className="rounded-full p-3 bg-gray-50 hover:bg-gray-100"
-              >
-                <ArrowLeftRight className="h-4 w-4" />
-              </Button>
-            </div>
-
-            {/* To Currency */}
-            <div className="space-y-2">
-              <Label className="text-sm font-medium text-gray-700">
-                Você recebe
-              </Label>
-              <div className="relative">
-                <Input
-                  type="number"
-                  placeholder="0,00"
-                  value={toAmount}
-                  onChange={(e) => handleToAmountChange(e.target.value)}
-                  className="pr-20 text-lg h-12"
-                />
-                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-1">
-                  <span className="font-medium text-gray-900">{toCurrency}</span>
-                  <ChevronDown className="h-4 w-4 text-gray-500" />
-                </div>
-              </div>
-            </div>
-
-            {/* Exchange Type Selection */}
-            <div className="space-y-4">
-              <Label className="text-sm font-medium text-gray-700">Tipo de câmbio</Label>
-
-              {/* Auto Option */}
-              <div
-                className={`p-4 border rounded-lg cursor-pointer transition-colors ${
-                  exchangeType === 'auto' ? 'border-yellow-400 bg-yellow-50' : 'border-gray-200 hover:border-gray-300'
-                }`}
-                onClick={() => handleExchangeTypeChange('auto')}
-              >
-                <div className="flex items-center space-x-3">
-                  <div className={`w-4 h-4 rounded-full border-2 ${
-                    exchangeType === 'auto' ? 'border-yellow-400 bg-yellow-400' : 'border-gray-300'
-                  }`}>
-                    {exchangeType === 'auto' && (
-                      <div className="w-2 h-2 bg-white rounded-full mx-auto mt-0.5"></div>
-                    )}
+        <div className="space-y-6">
+          {/* From Currency */}
+          <div className="space-y-3">
+            <Label className="text-lg font-medium text-gray-900">
+              Você converte
+            </Label>
+            <div className="relative">
+              <Input
+                type="number"
+                placeholder="0"
+                value={fromAmount}
+                onChange={(e) => handleFromAmountChange(e.target.value)}
+                className="pr-32 text-3xl font-medium h-20 border-2 rounded-2xl bg-gray-50 border-gray-200"
+              />
+              <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
+                <div className="flex items-center space-x-2">
+                  <div className="w-7 h-7 rounded-full bg-green-500 flex items-center justify-center">
+                    <span className="text-white text-sm">🇧🇷</span>
                   </div>
-                  <div className="flex-1">
-                    <div className="text-sm font-semibold text-gray-900">Automático</div>
-                    <div className="text-sm text-gray-600">
-                      Você recebe {fromAmount ? (parseFloat(fromAmount) * marketRate).toFixed(fromCurrency === 'EUR' ? 0 : 6) : '0'} {toCurrency} agora
-                    </div>
-                  </div>
+                  <span className="font-semibold text-gray-900 text-lg">BRL</span>
                 </div>
-              </div>
-
-              {/* Manual Option */}
-              <div
-                className={`p-4 border rounded-lg cursor-pointer transition-colors ${
-                  exchangeType === 'manual' ? 'border-yellow-400 bg-yellow-50' : 'border-gray-200 hover:border-gray-300'
-                }`}
-                onClick={() => handleExchangeTypeChange('manual')}
-              >
-                <div className="flex items-center space-x-3">
-                  <div className={`w-4 h-4 rounded-full border-2 ${
-                    exchangeType === 'manual' ? 'border-yellow-400 bg-yellow-400' : 'border-gray-300'
-                  }`}>
-                    {exchangeType === 'manual' && (
-                      <div className="w-2 h-2 bg-white rounded-full mx-auto mt-0.5"></div>
-                    )}
-                  </div>
-                  <div className="flex-1">
-                    <div className="text-sm font-semibold text-gray-900">Manual</div>
-                    <div className="text-sm text-gray-600">
-                      Você recebe {toAmount || '0'} {toCurrency} quando encontrarmos um comprador
-                    </div>
-                  </div>
-                </div>
+                <ChevronDown className="h-5 w-5 text-gray-500" />
               </div>
             </div>
+          </div>
 
-            {/* Enhanced Details Section */}
-            <div className="bg-gray-50 rounded-lg p-4 space-y-3">
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Taxa de câmbio:</span>
-                <span className="font-medium">1 {fromCurrency} = {marketRate.toLocaleString()} {toCurrency}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Tipo:</span>
-                <span className="font-medium">{exchangeType === 'auto' ? 'Automático' : 'Manual'}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Tempo estimado:</span>
-                <span className="font-medium">{exchangeType === 'auto' ? 'Segundos' : 'Até encontrarmos um comprador'}</span>
-              </div>
-              {fromAmount && (
-                <div className="flex justify-between text-sm border-t pt-3 mt-3">
-                  <span className="text-gray-600">Você receberá:</span>
-                  <span className="font-semibold text-yellow-600">
-                    {exchangeType === 'auto'
-                      ? (parseFloat(fromAmount) * marketRate).toFixed(fromCurrency === 'EUR' ? 0 : 6)
-                      : toAmount || '0'
-                    } {toCurrency}
-                  </span>
+          {/* To Currency */}
+          <div className="space-y-3">
+            <Label className="text-lg font-medium text-gray-900">
+              Você recebe
+            </Label>
+            <div className="relative">
+              <Input
+                type="number"
+                placeholder="0"
+                value={toAmount}
+                onChange={(e) => handleToAmountChange(e.target.value)}
+                className="pr-32 text-3xl font-medium h-20 border-2 rounded-2xl bg-gray-50 border-gray-200"
+              />
+              <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
+                <div className="flex items-center space-x-2">
+                  <div className="w-7 h-7 rounded-full bg-blue-600 flex items-center justify-center">
+                    <span className="text-white text-sm">🇪🇺</span>
+                  </div>
+                  <span className="font-semibold text-gray-900 text-lg">EUR</span>
                 </div>
-              )}
+                <ChevronDown className="h-5 w-5 text-gray-500" />
+              </div>
             </div>
+          </div>
 
-            {/* Convert Button */}
-            <Button
-              onClick={handleConvert}
-              disabled={!fromAmount || (exchangeType === 'manual' && !toAmount) || isInsufficientBalance || isLoading}
-              className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-medium"
-              size="lg"
-            >
-              {isLoading ? (
-                <>
-                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                  Convertendo...
-                </>
-              ) : (
-                'CONVERTER AGORA'
-              )}
-            </Button>
-          </CardContent>
-        </Card>
+          {/* Exchange Type Selection */}
+          <div className="space-y-3">
+            <Label className="text-lg font-medium text-gray-900">Tipo de câmbio</Label>
+            <div className="p-5 border-2 rounded-2xl bg-gray-50 border-gray-200">
+              <div className="text-xl font-medium text-gray-900">Automático</div>
+            </div>
+          </div>
+
+          {/* Details Breakdown */}
+          <div className="bg-gray-50 rounded-2xl p-5 space-y-4">
+            <div className="flex justify-between items-center">
+              <span className="text-gray-600 text-base">Câmbio</span>
+              <span className="font-medium text-gray-900">1 BRL = {marketRate.toFixed(4)} EUR</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-gray-600 text-base">Taxa</span>
+              <span className="font-medium text-gray-900">
+                {fromAmount ? (parseFloat(fromAmount) * 0.009).toFixed(2) : '0.00'} EUR
+              </span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-gray-600 text-base">Entrega</span>
+              <span className="font-medium text-gray-900">Imediato</span>
+            </div>
+            <div className="border-t pt-4">
+              <div className="flex justify-between items-center">
+                <span className="text-gray-900 font-semibold text-lg">Você recebe total</span>
+                <span className="font-bold text-gray-900 text-xl">
+                  {toAmount ? parseFloat(toAmount).toFixed(2) : '0.00'} EUR
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Convert Button */}
+          <Button
+            onClick={handleConvert}
+            disabled={!fromAmount || !toAmount || isLoading}
+            className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold text-lg h-14 rounded-2xl"
+          >
+            {isLoading ? (
+              <>
+                <RefreshCw className="h-5 w-5 mr-2 animate-spin" />
+                Convertendo...
+              </>
+            ) : (
+              'Confirmar'
+            )}
+          </Button>
+        </div>
       </main>
     </div>
   )
