@@ -172,28 +172,33 @@ export default function ConvertPage() {
       <main className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Card className="max-w-md mx-auto">
           <CardContent className="p-6 space-y-6">
-            {/* You send exactly - Wise style */}
+            {/* From Currency - Clean Wise style */}
             <div className="space-y-3">
               <Label className="text-sm font-medium text-gray-700">
-                Você converte exatamente
+                Você converte
               </Label>
-              <div className="relative border border-gray-300 rounded-lg p-4 bg-white">
-                <Input
-                  type="number"
-                  placeholder="0"
-                  value={fromAmount}
-                  onChange={(e) => handleFromAmountChange(e.target.value)}
-                  className="border-0 p-0 text-2xl font-medium h-auto bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
-                />
-                <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-                  <div className="flex items-center space-x-2 bg-gray-100 rounded-full px-3 py-1">
-                    <div className="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center">
-                      <span className="text-white text-xs font-bold">
-                        {fromCurrency === 'EUR' ? '€' : 'R$'}
-                      </span>
+              <div className="relative">
+                <div className="flex items-center border border-gray-300 rounded-lg bg-white overflow-hidden">
+                  <Input
+                    type="number"
+                    placeholder="0"
+                    value={fromAmount}
+                    onChange={(e) => handleFromAmountChange(e.target.value)}
+                    className="flex-1 border-0 px-4 py-4 text-2xl font-semibold bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  />
+                  <div className="flex items-center px-4 py-2 bg-gray-50 border-l border-gray-200">
+                    <div className="flex items-center space-x-2">
+                      <img
+                        src={`https://wise.com/web-art/assets/flags/${fromCurrency.toLowerCase()}.svg`}
+                        alt={fromCurrency}
+                        className="w-6 h-6 rounded-full"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                        }}
+                      />
+                      <span className="font-medium text-gray-900">{fromCurrency}</span>
+                      <ChevronDown className="h-4 w-4 text-gray-500" />
                     </div>
-                    <span className="font-medium text-gray-900">{fromCurrency}</span>
-                    <ChevronDown className="h-4 w-4 text-gray-500" />
                   </div>
                 </div>
               </div>
@@ -205,82 +210,132 @@ export default function ConvertPage() {
               )}
             </div>
 
-            {/* Recipient gets - Wise style */}
+            {/* Swap Button */}
+            <div className="flex justify-center">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleSwapCurrencies}
+                className="rounded-full p-3 bg-gray-50 hover:bg-gray-100"
+              >
+                <ArrowLeftRight className="h-4 w-4" />
+              </Button>
+            </div>
+
+            {/* To Currency - Clean Wise style */}
             <div className="space-y-3">
               <Label className="text-sm font-medium text-gray-700">
-                Destinatário recebe
+                Você recebe
               </Label>
-              <div className="relative border border-gray-300 rounded-lg p-4 bg-white">
-                <Input
-                  type="number"
-                  placeholder="0"
-                  value={toAmount}
-                  onChange={(e) => handleToAmountChange(e.target.value)}
-                  className="border-0 p-0 text-2xl font-medium h-auto bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
-                />
-                <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-                  <div className="flex items-center space-x-2 bg-gray-100 rounded-full px-3 py-1">
-                    <div className="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center">
-                      <span className="text-white text-xs font-bold">
-                        {toCurrency === 'EUR' ? '€' : 'Kz'}
-                      </span>
+              <div className="relative">
+                <div className="flex items-center border border-gray-300 rounded-lg bg-white overflow-hidden">
+                  <Input
+                    type="number"
+                    placeholder="0"
+                    value={toAmount}
+                    onChange={(e) => handleToAmountChange(e.target.value)}
+                    disabled={exchangeType === 'auto'}
+                    className="flex-1 border-0 px-4 py-4 text-2xl font-semibold bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 disabled:opacity-100 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  />
+                  <div className="flex items-center px-4 py-2 bg-gray-50 border-l border-gray-200">
+                    <div className="flex items-center space-x-2">
+                      <img
+                        src={`https://wise.com/web-art/assets/flags/${toCurrency.toLowerCase()}.svg`}
+                        alt={toCurrency}
+                        className="w-6 h-6 rounded-full"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                        }}
+                      />
+                      <span className="font-medium text-gray-900">{toCurrency}</span>
+                      <ChevronDown className="h-4 w-4 text-gray-500" />
                     </div>
-                    <span className="font-medium text-gray-900">{toCurrency}</span>
-                    <ChevronDown className="h-4 w-4 text-gray-500" />
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Paying with - Wise style */}
-            <div className="space-y-3">
-              <Label className="text-sm font-medium text-gray-700">Convertendo com</Label>
-              <div className="border border-gray-300 rounded-lg p-4 bg-white">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-yellow-400 rounded flex items-center justify-center">
-                      <span className="text-black text-sm font-bold">E</span>
-                    </div>
-                    <span className="font-medium text-gray-900">{exchangeType === 'auto' ? 'Automático' : 'Manual'}</span>
-                  </div>
-                  <div className="flex items-center space-x-2 text-blue-600 cursor-pointer">
-                    <span className="text-sm font-medium">Alterar</span>
-                    <ChevronDown className="h-4 w-4" />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Fee breakdown - Wise style */}
+            {/* Exchange Type Selection - Your original UX with Wise styling */}
             <div className="space-y-4">
-              <div className="space-y-3">
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Taxa EmaPay</span>
-                  <span className="font-medium">0 {fromCurrency}</span>
+              <Label className="text-sm font-medium text-gray-700">Tipo de câmbio</Label>
+
+              {/* Auto Option - Wise styled */}
+              <div
+                className={`border rounded-lg cursor-pointer transition-colors ${
+                  exchangeType === 'auto' ? 'border-yellow-400 bg-yellow-50' : 'border-gray-300 hover:border-gray-400'
+                }`}
+                onClick={() => handleExchangeTypeChange('auto')}
+              >
+                <div className="p-4 flex items-center space-x-3">
+                  <div className={`w-4 h-4 rounded-full border-2 ${
+                    exchangeType === 'auto' ? 'border-yellow-400 bg-yellow-400' : 'border-gray-300'
+                  }`}>
+                    {exchangeType === 'auto' && (
+                      <div className="w-2 h-2 bg-white rounded-full mx-auto mt-0.5"></div>
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-sm font-semibold text-gray-900">Automático</div>
+                    <div className="text-sm text-gray-600">
+                      Você recebe {fromAmount ? (parseFloat(fromAmount) * marketRate).toFixed(fromCurrency === 'EUR' ? 0 : 6) : '0'} {toCurrency} agora
+                    </div>
+                  </div>
                 </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Nossa taxa</span>
-                  <span className="font-medium">
-                    {fromAmount ? (parseFloat(fromAmount) * 0.01).toFixed(2) : '0.00'} {fromCurrency}
+              </div>
+
+              {/* Manual Option - Wise styled */}
+              <div
+                className={`border rounded-lg cursor-pointer transition-colors ${
+                  exchangeType === 'manual' ? 'border-yellow-400 bg-yellow-50' : 'border-gray-300 hover:border-gray-400'
+                }`}
+                onClick={() => handleExchangeTypeChange('manual')}
+              >
+                <div className="p-4 flex items-center space-x-3">
+                  <div className={`w-4 h-4 rounded-full border-2 ${
+                    exchangeType === 'manual' ? 'border-yellow-400 bg-yellow-400' : 'border-gray-300'
+                  }`}>
+                    {exchangeType === 'manual' && (
+                      <div className="w-2 h-2 bg-white rounded-full mx-auto mt-0.5"></div>
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-sm font-semibold text-gray-900">Manual</div>
+                    <div className="text-sm text-gray-600">
+                      Você recebe {toAmount || '0'} {toCurrency} quando encontrarmos um comprador
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Enhanced Details Section - Your original UX with Wise styling */}
+            <div className="border border-gray-300 rounded-lg p-4 bg-gray-50 space-y-3">
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600">Taxa de câmbio:</span>
+                <span className="font-medium">1 {fromCurrency} = {marketRate.toLocaleString()} {toCurrency}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600">Tipo:</span>
+                <span className="font-medium">{exchangeType === 'auto' ? 'Automático' : 'Manual'}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600">Tempo estimado:</span>
+                <span className="font-medium">{exchangeType === 'auto' ? 'Segundos' : 'Até encontrarmos um comprador'}</span>
+              </div>
+              {fromAmount && (
+                <div className="flex justify-between text-sm border-t border-gray-200 pt-3 mt-3">
+                  <span className="text-gray-600">Você receberá:</span>
+                  <span className="font-semibold text-yellow-600">
+                    {exchangeType === 'auto'
+                      ? (parseFloat(fromAmount) * marketRate).toFixed(fromCurrency === 'EUR' ? 0 : 6)
+                      : toAmount || '0'
+                    } {toCurrency}
                   </span>
                 </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Taxa de câmbio</span>
-                  <span className="font-medium">1 {fromCurrency} = {marketRate.toLocaleString()} {toCurrency}</span>
-                </div>
-              </div>
-
-              <hr className="border-gray-200" />
-
-              <div className="flex justify-between text-sm font-semibold">
-                <span className="text-gray-900">Total incluindo taxas (1.0%)</span>
-                <span className="text-gray-900">
-                  {fromAmount ? (parseFloat(fromAmount) * 1.01).toFixed(2) : '0.00'} {fromCurrency}
-                </span>
-              </div>
+              )}
             </div>
 
-            {/* Convert Button - Wise style */}
+            {/* Convert Button - Your original text with Wise styling */}
             <Button
               onClick={handleConvert}
               disabled={!fromAmount || (exchangeType === 'manual' && !toAmount) || isInsufficientBalance || isLoading}
@@ -292,7 +347,7 @@ export default function ConvertPage() {
                   Convertendo...
                 </>
               ) : (
-                'Converter agora'
+                'CONVERTER AGORA'
               )}
             </Button>
           </CardContent>
