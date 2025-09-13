@@ -16,7 +16,7 @@ import { formatCurrency } from '@/lib/utils'
 import { AmountInput } from '@/components/forms/amount-input'
 import { PageHeader } from '@/components/layout/page-header'
 import { FixedBottomAction } from '@/components/ui/fixed-bottom-action'
-import { ConfirmationSection, ConfirmationRow } from '@/components/ui/confirmation-section'
+
 
 export default function ConvertPage() {
   const router = useRouter()
@@ -377,45 +377,49 @@ export default function ConvertPage() {
             onBack={handleBack}
           />
 
-          <div className="space-y-6">
-            {/* Transaction Details */}
-            <ConfirmationSection title="">
-              <ConfirmationRow
-                label="Você converte"
-                value={`${fromAmount} ${fromCurrency}`}
-                highlight
-              />
-              <ConfirmationRow
-                label="Taxa de câmbio"
-                value={`1 ${fromCurrency} = ${getConversionRate(fromCurrency, toCurrency).toLocaleString(undefined, {
+          {/* Transaction Details - Matching Convert Page Style */}
+          <div className="border border-gray-300 rounded-lg p-2 space-y-1 mb-4">
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-600">Você converte:</span>
+              <span className="font-bold text-black">{fromAmount} {fromCurrency}</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-600">Taxa de câmbio:</span>
+              <span className="font-medium text-black">
+                1 {fromCurrency} = {getConversionRate(fromCurrency, toCurrency).toLocaleString(undefined, {
                   minimumFractionDigits: fromCurrency === 'AOA' ? 6 : 0,
                   maximumFractionDigits: fromCurrency === 'AOA' ? 6 : 0
-                })} ${toCurrency}`}
-              />
-              <ConfirmationRow
-                label="Tipo"
-                value={exchangeType === 'auto' ? 'Automático' : 'Manual'}
-              />
-              <ConfirmationRow
-                label="Você recebe"
-                value={`${exchangeType === 'auto'
+                })} {toCurrency}
+              </span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-600">Tipo:</span>
+              <span className="font-medium text-black">{exchangeType === 'auto' ? 'Automático' : 'Manual'}</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-600">Tempo estimado:</span>
+              <span className="font-medium text-black">{exchangeType === 'auto' ? 'Segundos' : 'Até encontrarmos um comprador'}</span>
+            </div>
+            <div className="flex justify-between text-sm border-t border-gray-200 pt-1 mt-1">
+              <span className="text-gray-600">Você receberá:</span>
+              <span className="font-bold text-black">
+                {exchangeType === 'auto'
                   ? (parseFloat(fromAmount) * getConversionRate(fromCurrency, toCurrency)).toFixed(toCurrency === 'EUR' ? 6 : 0)
                   : toAmount || '0'
-                } ${toCurrency}`}
-                highlight
-              />
-            </ConfirmationSection>
-
-            {/* Warning */}
-            <div className="space-y-2">
-              <p className="text-sm font-bold text-gray-900">Atenção:</p>
-              <p className="text-sm text-gray-600">
-                {exchangeType === 'auto'
-                  ? 'A conversão será processada imediatamente com a taxa atual do mercado.'
-                  : 'Sua conversão será processada quando encontrarmos a taxa desejada no mercado.'
-                }
-              </p>
+                } {toCurrency}
+              </span>
             </div>
+          </div>
+
+          {/* Warning - Matching Convert Page Style */}
+          <div className="space-y-1">
+            <p className="text-sm font-bold text-gray-900">Atenção:</p>
+            <p className="text-sm text-gray-600">
+              {exchangeType === 'auto'
+                ? 'A conversão será processada imediatamente com a taxa atual do mercado.'
+                : 'Sua conversão será processada quando encontrarmos a taxa desejada no mercado.'
+              }
+            </p>
           </div>
           {/* Desktop Button */}
           <div className="hidden md:block mt-6">
