@@ -10,7 +10,7 @@ import {
   ArrowLeft,
   RefreshCw,
   Zap,
-  User
+  Clock
 } from 'lucide-react'
 import { formatCurrency } from '@/lib/utils'
 import { AmountInput } from '@/components/forms/amount-input'
@@ -250,21 +250,19 @@ export default function ConvertPage() {
 
             {/* Auto Option */}
             <div
-              className={`border rounded-lg cursor-pointer transition-colors p-2 ${
-                exchangeType === 'auto' ? 'border-black bg-gray-50' : 'border-gray-300 hover:border-gray-400'
+              className={`border rounded-lg cursor-pointer transition-colors p-4 ${
+                exchangeType === 'auto' ? 'border-black bg-gray-50' : 'border-gray-200 hover:border-gray-300'
               }`}
               onClick={() => handleExchangeTypeChange('auto')}
             >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                    <Zap className="h-4 w-4 text-gray-600" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="text-sm font-bold text-gray-900">Automático</div>
-                    <div className="text-sm text-gray-600">
-                      Você recebe {fromAmount ? (parseFloat(fromAmount) * getConversionRate(fromCurrency, toCurrency)).toFixed(toCurrency === 'EUR' ? 6 : 0) : '0'} {toCurrency} agora
-                    </div>
+              <div className="flex items-center gap-4">
+                <div className="w-8 h-8 border border-gray-200 rounded-full flex items-center justify-center">
+                  <Zap className="h-4 w-4 text-gray-600" />
+                </div>
+                <div className="flex-1">
+                  <div className="text-sm font-bold text-gray-900 mb-1">Automático</div>
+                  <div className="text-sm text-gray-600">
+                    Você recebe {fromAmount ? (parseFloat(fromAmount) * getConversionRate(fromCurrency, toCurrency)).toFixed(toCurrency === 'EUR' ? 6 : 0) : '0'} {toCurrency} agora
                   </div>
                 </div>
                 <div className={`w-4 h-4 rounded-full border-2 ${
@@ -279,21 +277,19 @@ export default function ConvertPage() {
 
             {/* Manual Option */}
             <div
-              className={`border rounded-lg cursor-pointer transition-colors p-2 ${
-                exchangeType === 'manual' ? 'border-black bg-gray-50' : 'border-gray-300 hover:border-gray-400'
+              className={`border rounded-lg cursor-pointer transition-colors p-4 ${
+                exchangeType === 'manual' ? 'border-black bg-gray-50' : 'border-gray-200 hover:border-gray-300'
               }`}
               onClick={() => handleExchangeTypeChange('manual')}
             >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                    <User className="h-4 w-4 text-gray-600" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="text-sm font-bold text-gray-900">Manual</div>
-                    <div className="text-sm text-gray-600">
-                      Você recebe {toAmount || '0'} {toCurrency} quando encontrarmos um comprador
-                    </div>
+              <div className="flex items-center gap-4">
+                <div className="w-8 h-8 border border-gray-200 rounded-full flex items-center justify-center">
+                  <Clock className="h-4 w-4 text-gray-600" />
+                </div>
+                <div className="flex-1">
+                  <div className="text-sm font-bold text-gray-900 mb-1">Manual</div>
+                  <div className="text-sm text-gray-600">
+                    Você recebe {toAmount || '0'} {toCurrency} quando encontrarmos um comprador
                   </div>
                 </div>
                 <div className={`w-4 h-4 rounded-full border-2 ${
