@@ -14,6 +14,7 @@ import {
 } from 'lucide-react'
 import { formatCurrency } from '@/lib/utils'
 import { AmountInput } from '@/components/forms/amount-input'
+import { FlagIcon } from '@/components/ui/flag-icon'
 import { PageHeader } from '@/components/layout/page-header'
 import { FixedBottomAction } from '@/components/ui/fixed-bottom-action'
 
@@ -343,51 +344,73 @@ export default function ConvertPage() {
       <div className="page-container-white">
         <main className="content-container">
           <PageHeader
-            title="Confirmar conversão"
+            title="Does everything look right?"
             onBack={handleBack}
           />
 
-          {/* Transaction Details - Clean Style */}
-          <div className="space-y-1 mb-4">
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Você converte:</span>
-              <span className="font-bold text-black">{fromAmount} {fromCurrency}</span>
+          {/* Wise-Style Currency Display */}
+          <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-4 mb-6">
+            {/* From Currency */}
+            <div className="flex items-center space-x-3">
+              <FlagIcon
+                countryCode={fromCurrency === 'EUR' ? 'eu' : 'ao'}
+                size="xl"
+              />
+              <div>
+                <div className="text-sm text-gray-500">From</div>
+                <div className="font-medium text-gray-900">{fromCurrency}</div>
+              </div>
             </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Taxa de câmbio:</span>
-              <span className="font-medium text-black">
+
+            {/* To Currency */}
+            <div className="flex items-center space-x-3">
+              <FlagIcon
+                countryCode={toCurrency === 'EUR' ? 'eu' : 'ao'}
+                size="xl"
+              />
+              <div>
+                <div className="text-sm text-gray-500">To</div>
+                <div className="font-medium text-gray-900">{toCurrency}</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Transaction Details - Wise Style */}
+          <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-4 mb-6">
+            <div className="flex justify-between items-center">
+              <span className="text-gray-600">You're converting</span>
+              <span className="font-medium text-gray-900">{fromAmount} {fromCurrency}</span>
+            </div>
+
+            <div className="flex justify-between items-center">
+              <span className="text-gray-600">Exchange rate</span>
+              <span className="font-medium text-gray-900">
                 1 {fromCurrency} = {getConversionRate(fromCurrency, toCurrency).toLocaleString(undefined, {
                   minimumFractionDigits: fromCurrency === 'AOA' ? 6 : 0,
                   maximumFractionDigits: fromCurrency === 'AOA' ? 6 : 0
                 })} {toCurrency}
               </span>
             </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Tipo:</span>
-              <span className="font-medium text-black">{exchangeType === 'auto' ? 'Automático' : 'Manual'}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Tempo estimado:</span>
-              <span className="font-medium text-black">{exchangeType === 'auto' ? 'Segundos' : 'Até encontrarmos um comprador'}</span>
-            </div>
-            <div className="flex justify-between text-sm border-t border-gray-200 pt-1 mt-1">
-              <span className="text-gray-600">Você receberá:</span>
-              <span className="font-bold text-black">
-                {exchangeType === 'auto'
-                  ? (parseFloat(fromAmount) * getConversionRate(fromCurrency, toCurrency)).toFixed(toCurrency === 'EUR' ? 6 : 0)
-                  : toAmount || '0'
-                } {toCurrency}
-              </span>
+
+            <div className="border-t border-gray-200 pt-4">
+              <div className="flex justify-between items-center">
+                <span className="font-medium text-gray-900">You'll receive</span>
+                <span className="font-bold text-lg text-gray-900">
+                  {exchangeType === 'auto'
+                    ? (parseFloat(fromAmount) * getConversionRate(fromCurrency, toCurrency)).toFixed(toCurrency === 'EUR' ? 6 : 0)
+                    : toAmount || '0'
+                  } {toCurrency}
+                </span>
+              </div>
             </div>
           </div>
 
-          {/* Warning - Matching Convert Page Style */}
-          <div className="space-y-1">
-            <p className="text-sm font-bold text-gray-900">Atenção:</p>
+          {/* Processing Info */}
+          <div className="text-center mb-6">
             <p className="text-sm text-gray-600">
               {exchangeType === 'auto'
-                ? 'A conversão será processada imediatamente com a taxa atual do mercado.'
-                : 'Sua conversão será processada quando encontrarmos a taxa desejada no mercado.'
+                ? 'Your conversion will be processed immediately at the current market rate.'
+                : 'Your conversion will be processed when we find a buyer at your desired rate.'
               }
             </p>
           </div>

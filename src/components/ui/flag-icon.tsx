@@ -1,7 +1,6 @@
 'use client'
 
 import React from 'react'
-import Image from 'next/image'
 
 interface FlagIconProps {
   countryCode: string
@@ -24,20 +23,28 @@ export function FlagIcon({
   className,
   size = 'md'
 }: FlagIconProps) {
-  const flagUrl = `https://flagicons.lipis.dev/flags/4x3/${countryCode.toLowerCase()}.svg`
   const altText = alt || `${countryCode.toUpperCase()} flag`
 
   // Use size prop if no custom className provided
   const sizeClass = className || sizeClasses[size]
 
+  // Simple flag emojis as fallback for now
+  const flagEmojis: { [key: string]: string } = {
+    'eu': '🇪🇺',
+    'ao': '🇦🇴',
+    'us': '🇺🇸'
+  }
+
+  const flagEmoji = flagEmojis[countryCode.toLowerCase()] || '🏳️'
+
   return (
-    <div className={`rounded-full overflow-hidden flex-shrink-0 relative ${sizeClass}`}>
-      <Image
-        src={flagUrl}
-        alt={altText}
-        fill
-        className="object-cover"
-      />
+    <div
+      className={`rounded-full overflow-hidden flex-shrink-0 flex items-center justify-center ${sizeClass}`}
+      title={altText}
+      role="img"
+      aria-label={altText}
+    >
+      <span className="text-lg">{flagEmoji}</span>
     </div>
   )
 }
