@@ -249,23 +249,23 @@ export default function ConvertPage() {
             {/* Auto Option */}
             <div
               className={`border rounded-lg cursor-pointer transition-colors p-2 ${
-                exchangeType === 'auto' ? 'border-yellow-400 bg-yellow-50' : 'border-gray-300 hover:border-gray-400'
+                exchangeType === 'auto' ? 'border-black bg-gray-50' : 'border-gray-300 hover:border-gray-400'
               }`}
               onClick={() => handleExchangeTypeChange('auto')}
             >
-              <div className="flex items-center space-x-2">
-                <div className={`w-4 h-4 rounded-full border-2 ${
-                  exchangeType === 'auto' ? 'border-yellow-400 bg-yellow-400' : 'border-gray-300'
-                }`}>
-                  {exchangeType === 'auto' && (
-                    <div className="w-2 h-2 bg-white rounded-full mx-auto mt-0.5"></div>
-                  )}
-                </div>
+              <div className="flex items-center justify-between">
                 <div className="flex-1">
                   <div className="text-sm font-bold text-gray-900">Automático</div>
                   <div className="text-sm text-gray-600">
                     Você recebe {fromAmount ? (parseFloat(fromAmount) * getConversionRate(fromCurrency, toCurrency)).toFixed(toCurrency === 'EUR' ? 6 : 0) : '0'} {toCurrency} agora
                   </div>
+                </div>
+                <div className={`w-4 h-4 rounded-full border-2 ${
+                  exchangeType === 'auto' ? 'border-black bg-black' : 'border-gray-300'
+                }`}>
+                  {exchangeType === 'auto' && (
+                    <div className="w-2 h-2 bg-white rounded-full mx-auto mt-0.5"></div>
+                  )}
                 </div>
               </div>
             </div>
@@ -273,33 +273,33 @@ export default function ConvertPage() {
             {/* Manual Option */}
             <div
               className={`border rounded-lg cursor-pointer transition-colors p-2 ${
-                exchangeType === 'manual' ? 'border-yellow-400 bg-yellow-50' : 'border-gray-300 hover:border-gray-400'
+                exchangeType === 'manual' ? 'border-black bg-gray-50' : 'border-gray-300 hover:border-gray-400'
               }`}
               onClick={() => handleExchangeTypeChange('manual')}
             >
-              <div className="flex items-center space-x-2">
-                <div className={`w-4 h-4 rounded-full border-2 ${
-                  exchangeType === 'manual' ? 'border-yellow-400 bg-yellow-400' : 'border-gray-300'
-                }`}>
-                  {exchangeType === 'manual' && (
-                    <div className="w-2 h-2 bg-white rounded-full mx-auto mt-0.5"></div>
-                  )}
-                </div>
+              <div className="flex items-center justify-between">
                 <div className="flex-1">
                   <div className="text-sm font-bold text-gray-900">Manual</div>
                   <div className="text-sm text-gray-600">
                     Você recebe {toAmount || '0'} {toCurrency} quando encontrarmos um comprador
                   </div>
                 </div>
+                <div className={`w-4 h-4 rounded-full border-2 ${
+                  exchangeType === 'manual' ? 'border-black bg-black' : 'border-gray-300'
+                }`}>
+                  {exchangeType === 'manual' && (
+                    <div className="w-2 h-2 bg-white rounded-full mx-auto mt-0.5"></div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
 
           {/* Enhanced Details Section */}
-          <div className="border border-gray-300 rounded-lg p-2 bg-gray-50 space-y-1">
+          <div className="border border-gray-300 rounded-lg p-2 space-y-1">
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">Taxa de câmbio:</span>
-              <span className="font-medium">
+              <span className="font-medium text-black">
                 1 {fromCurrency} = {getConversionRate(fromCurrency, toCurrency).toLocaleString(undefined, {
                   minimumFractionDigits: fromCurrency === 'AOA' ? 6 : 0,
                   maximumFractionDigits: fromCurrency === 'AOA' ? 6 : 0
@@ -308,16 +308,16 @@ export default function ConvertPage() {
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">Tipo:</span>
-              <span className="font-medium">{exchangeType === 'auto' ? 'Automático' : 'Manual'}</span>
+              <span className="font-medium text-black">{exchangeType === 'auto' ? 'Automático' : 'Manual'}</span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">Tempo estimado:</span>
-              <span className="font-medium">{exchangeType === 'auto' ? 'Segundos' : 'Até encontrarmos um comprador'}</span>
+              <span className="font-medium text-black">{exchangeType === 'auto' ? 'Segundos' : 'Até encontrarmos um comprador'}</span>
             </div>
             {fromAmount && (
               <div className="flex justify-between text-sm border-t border-gray-200 pt-1 mt-1">
                 <span className="text-gray-600">Você receberá:</span>
-                <span className="font-bold text-yellow-600">
+                <span className="font-bold text-black">
                   {exchangeType === 'auto'
                     ? (parseFloat(fromAmount) * getConversionRate(fromCurrency, toCurrency)).toFixed(toCurrency === 'EUR' ? 6 : 0)
                     : toAmount || '0'
@@ -331,7 +331,7 @@ export default function ConvertPage() {
           <Button
             onClick={handleConvert}
             disabled={!fromAmount || (exchangeType === 'manual' && !toAmount) || isInsufficientBalance || isLoading}
-            className="w-full bg-green-500 hover:bg-green-600 text-white font-bold rounded-lg h-12 text-base"
+            className="primary-action-button"
           >
             {isLoading ? (
               <>
