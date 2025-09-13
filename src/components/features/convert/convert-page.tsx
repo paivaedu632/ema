@@ -8,7 +8,9 @@ import { Badge } from '@/components/ui/badge'
 import {
   ArrowLeftRight,
   ArrowLeft,
-  RefreshCw
+  RefreshCw,
+  Zap,
+  User
 } from 'lucide-react'
 import { formatCurrency } from '@/lib/utils'
 import { AmountInput } from '@/components/forms/amount-input'
@@ -254,10 +256,15 @@ export default function ConvertPage() {
               onClick={() => handleExchangeTypeChange('auto')}
             >
               <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <div className="text-sm font-bold text-gray-900">Automático</div>
-                  <div className="text-sm text-gray-600">
-                    Você recebe {fromAmount ? (parseFloat(fromAmount) * getConversionRate(fromCurrency, toCurrency)).toFixed(toCurrency === 'EUR' ? 6 : 0) : '0'} {toCurrency} agora
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+                    <Zap className="h-4 w-4 text-gray-600" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-sm font-bold text-gray-900">Automático</div>
+                    <div className="text-sm text-gray-600">
+                      Você recebe {fromAmount ? (parseFloat(fromAmount) * getConversionRate(fromCurrency, toCurrency)).toFixed(toCurrency === 'EUR' ? 6 : 0) : '0'} {toCurrency} agora
+                    </div>
                   </div>
                 </div>
                 <div className={`w-4 h-4 rounded-full border-2 ${
@@ -278,10 +285,15 @@ export default function ConvertPage() {
               onClick={() => handleExchangeTypeChange('manual')}
             >
               <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <div className="text-sm font-bold text-gray-900">Manual</div>
-                  <div className="text-sm text-gray-600">
-                    Você recebe {toAmount || '0'} {toCurrency} quando encontrarmos um comprador
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+                    <User className="h-4 w-4 text-gray-600" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-sm font-bold text-gray-900">Manual</div>
+                    <div className="text-sm text-gray-600">
+                      Você recebe {toAmount || '0'} {toCurrency} quando encontrarmos um comprador
+                    </div>
                   </div>
                 </div>
                 <div className={`w-4 h-4 rounded-full border-2 ${
