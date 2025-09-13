@@ -121,63 +121,10 @@ export default function ConvertPage() {
 
 
 
-  // Success page
+  // Success step - redirect to success page
   if (currentStep === 'success') {
-    const finalToAmount = exchangeType === 'auto'
-      ? (parseFloat(fromAmount) * marketRate).toFixed(fromCurrency === 'EUR' ? 0 : 6)
-      : toAmount
-
-    return (
-      <div className="min-h-screen bg-gray-50">
-        <main className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex items-center justify-center min-h-screen">
-          <Card>
-            <CardContent className="p-8 text-center space-y-6">
-              {/* Success Icon */}
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
-                <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-
-              {/* Success Message */}
-              <div className="space-y-2">
-                <h1 className="text-2xl font-bold text-gray-900">Conversão Realizada!</h1>
-                <p className="text-gray-600">Sua conversão foi processada com sucesso</p>
-              </div>
-
-              {/* Conversion Details */}
-              <div className="bg-gray-50 rounded-lg p-4 space-y-2">
-                <div className="text-sm text-gray-600">Você converteu</div>
-                <div className="text-lg font-semibold">{fromAmount} {fromCurrency} → {finalToAmount} {toCurrency}</div>
-                <div className="text-xs text-gray-500">Taxa: 1 {fromCurrency} = {marketRate.toLocaleString()} {toCurrency}</div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="space-y-3">
-                <Button
-                  onClick={() => {
-                    setCurrentStep('convert')
-                    setFromAmount('')
-                    setToAmount('')
-                  }}
-                  className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-medium"
-                  size="lg"
-                >
-                  Nova Conversão
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => router.push('/dashboards')}
-                  className="w-full"
-                >
-                  Voltar ao Dashboard
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </main>
-      </div>
-    )
+    router.push('/convert/success')
+    return null
   }
 
   if (currentStep === 'convert') {
@@ -297,7 +244,10 @@ export default function ConvertPage() {
                 <div className="flex-1">
                   <div className="text-sm font-bold text-gray-900 mb-1">Manual</div>
                   <div className="text-sm text-gray-600">
-                    Você recebe {toAmount || '0'} {toCurrency} quando encontrarmos um comprador
+                    {exchangeType === 'manual' && toAmount && parseFloat(toAmount) > 0
+                      ? `Você recebe ${toAmount} ${toCurrency} quando encontrarmos um comprador`
+                      : 'Escolha quanto você quer receber'
+                    }
                   </div>
                 </div>
                 <div className={`w-4 h-4 rounded-full border-2 ${
@@ -445,12 +395,6 @@ export default function ConvertPage() {
         </div>
       </div>
     )
-  }
-
-  // Success step - redirect to success page
-  if (currentStep === 'success') {
-    router.push('/convert/success')
-    return null
   }
 
   return null
