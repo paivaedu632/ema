@@ -178,9 +178,9 @@ export default function ConvertPage() {
       </header>
 
       <main className="content-container">
-        <div className="space-y-4">
+        <div className="space-y-2">
           {/* From Currency */}
-          <div className="space-y-2">
+          <div className="space-y-1">
             <Label className="text-sm font-medium text-gray-700">
               Você converte
             </Label>
@@ -197,7 +197,6 @@ export default function ConvertPage() {
                 { code: 'EUR', flag: 'eu' },
                 { code: 'AOA', flag: 'ao' }
               ]}
-              className="mb-2"
             />
             <div className="text-sm text-gray-500">
               Disponível: {formatCurrency(availableBalance, fromCurrency)}
@@ -213,14 +212,14 @@ export default function ConvertPage() {
               variant="outline"
               size="sm"
               onClick={handleSwapCurrencies}
-              className="rounded-full p-3 bg-gray-50 hover:bg-gray-100"
+              className="rounded-full p-2"
             >
               <ArrowLeftRight className="h-4 w-4" />
             </Button>
           </div>
 
           {/* To Currency */}
-          <div className="space-y-2">
+          <div className="space-y-1">
             <Label className="text-sm font-medium text-gray-700">
               Você recebe
             </Label>
@@ -240,22 +239,21 @@ export default function ConvertPage() {
                 { code: 'AOA', flag: 'ao' }
               ]}
               disabled={false} // Always enabled for bidirectional editing
-              className="mb-2"
             />
           </div>
 
           {/* Exchange Type Selection */}
-          <div className="space-y-3">
+          <div className="space-y-2">
             <Label className="text-sm font-medium text-gray-700">Tipo de câmbio</Label>
 
             {/* Auto Option */}
             <div
-              className={`border rounded-lg cursor-pointer transition-colors p-3 ${
+              className={`border rounded-lg cursor-pointer transition-colors p-2 ${
                 exchangeType === 'auto' ? 'border-yellow-400 bg-yellow-50' : 'border-gray-300 hover:border-gray-400'
               }`}
               onClick={() => handleExchangeTypeChange('auto')}
             >
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-2">
                 <div className={`w-4 h-4 rounded-full border-2 ${
                   exchangeType === 'auto' ? 'border-yellow-400 bg-yellow-400' : 'border-gray-300'
                 }`}>
@@ -274,12 +272,12 @@ export default function ConvertPage() {
 
             {/* Manual Option */}
             <div
-              className={`border rounded-lg cursor-pointer transition-colors p-3 ${
+              className={`border rounded-lg cursor-pointer transition-colors p-2 ${
                 exchangeType === 'manual' ? 'border-yellow-400 bg-yellow-50' : 'border-gray-300 hover:border-gray-400'
               }`}
               onClick={() => handleExchangeTypeChange('manual')}
             >
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-2">
                 <div className={`w-4 h-4 rounded-full border-2 ${
                   exchangeType === 'manual' ? 'border-yellow-400 bg-yellow-400' : 'border-gray-300'
                 }`}>
@@ -298,7 +296,7 @@ export default function ConvertPage() {
           </div>
 
           {/* Enhanced Details Section */}
-          <div className="border border-gray-300 rounded-lg p-3 bg-gray-50 space-y-2">
+          <div className="border border-gray-300 rounded-lg p-2 bg-gray-50 space-y-1">
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">Taxa de câmbio:</span>
               <span className="font-medium">
@@ -317,7 +315,7 @@ export default function ConvertPage() {
               <span className="font-medium">{exchangeType === 'auto' ? 'Segundos' : 'Até encontrarmos um comprador'}</span>
             </div>
             {fromAmount && (
-              <div className="flex justify-between text-sm border-t border-gray-200 pt-2 mt-2">
+              <div className="flex justify-between text-sm border-t border-gray-200 pt-1 mt-1">
                 <span className="text-gray-600">Você receberá:</span>
                 <span className="font-bold text-yellow-600">
                   {exchangeType === 'auto'
