@@ -310,37 +310,7 @@ export default function ConvertPage() {
             </div>
           </div>
 
-          {/* Enhanced Details Section */}
-          <div className="border border-gray-300 rounded-lg p-2 space-y-1">
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Taxa de câmbio:</span>
-              <span className="font-medium text-black">
-                1 {fromCurrency} = {getConversionRate(fromCurrency, toCurrency).toLocaleString(undefined, {
-                  minimumFractionDigits: fromCurrency === 'AOA' ? 6 : 0,
-                  maximumFractionDigits: fromCurrency === 'AOA' ? 6 : 0
-                })} {toCurrency}
-              </span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Tipo:</span>
-              <span className="font-medium text-black">{exchangeType === 'auto' ? 'Automático' : 'Manual'}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Tempo estimado:</span>
-              <span className="font-medium text-black">{exchangeType === 'auto' ? 'Segundos' : 'Até encontrarmos um comprador'}</span>
-            </div>
-            {fromAmount && (
-              <div className="flex justify-between text-sm border-t border-gray-200 pt-1 mt-1">
-                <span className="text-gray-600">Você receberá:</span>
-                <span className="font-bold text-black">
-                  {exchangeType === 'auto'
-                    ? (parseFloat(fromAmount) * getConversionRate(fromCurrency, toCurrency)).toFixed(toCurrency === 'EUR' ? 6 : 0)
-                    : toAmount || '0'
-                  } {toCurrency}
-                </span>
-              </div>
-            )}
-          </div>
+
         </div>
           {/* Desktop Button */}
           <div className="hidden md:block mt-6">
