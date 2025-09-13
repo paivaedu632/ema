@@ -377,8 +377,8 @@ export default function ConvertPage() {
             onBack={handleBack}
           />
 
-          {/* Transaction Details - Matching Convert Page Style */}
-          <div className="border border-gray-300 rounded-lg p-2 space-y-1 mb-4">
+          {/* Transaction Details - Clean Style */}
+          <div className="space-y-1 mb-4">
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">Você converte:</span>
               <span className="font-bold text-black">{fromAmount} {fromCurrency}</span>
