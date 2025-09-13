@@ -342,15 +342,28 @@ export default function ConvertPage() {
             )}
           </div>
         </div>
+          {/* Desktop Button */}
+          <div className="hidden md:block mt-6">
+            <Button
+              onClick={handleConvert}
+              disabled={!fromAmount || (exchangeType === 'manual' && !toAmount) || isInsufficientBalance || isLoading}
+              className="primary-action-button"
+            >
+              Continuar
+            </Button>
+          </div>
         </main>
 
-        <FixedBottomAction
-          primaryAction={{
-            label: "Continuar",
-            onClick: handleConvert,
-            disabled: !fromAmount || (exchangeType === 'manual' && !toAmount) || isInsufficientBalance || isLoading
-          }}
-        />
+        {/* Mobile Fixed Bottom Button */}
+        <div className="md:hidden">
+          <FixedBottomAction
+            primaryAction={{
+              label: "Continuar",
+              onClick: handleConvert,
+              disabled: !fromAmount || (exchangeType === 'manual' && !toAmount) || isInsufficientBalance || isLoading
+            }}
+          />
+        </div>
       </div>
     )
   }
@@ -404,15 +417,35 @@ export default function ConvertPage() {
               </p>
             </div>
           </div>
+          {/* Desktop Button */}
+          <div className="hidden md:block mt-6">
+            <Button
+              onClick={handleConfirmConvert}
+              disabled={isLoading}
+              className="primary-action-button"
+            >
+              {isLoading ? (
+                <>
+                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                  Processando...
+                </>
+              ) : (
+                "Confirmar"
+              )}
+            </Button>
+          </div>
         </main>
 
-        <FixedBottomAction
-          primaryAction={{
-            label: isLoading ? "Processando..." : "Confirmar",
-            onClick: handleConfirmConvert,
-            disabled: isLoading
-          }}
-        />
+        {/* Mobile Fixed Bottom Button */}
+        <div className="md:hidden">
+          <FixedBottomAction
+            primaryAction={{
+              label: isLoading ? "Processando..." : "Confirmar",
+              onClick: handleConfirmConvert,
+              disabled: isLoading
+            }}
+          />
+        </div>
       </div>
     )
   }
