@@ -181,7 +181,7 @@ export default function ConvertPageV2() {
               <div className="flex items-center justify-between mb-4">
                 <Label className="text-sm text-gray-500 font-medium">De</Label>
                 <div className="text-right">
-                  <div className="text-xs text-gray-400">
+                  <div className="text-sm text-gray-400">
                     Saldo Disponível {userBalances[fromCurrency].toLocaleString(undefined, {
                       minimumFractionDigits: fromCurrency === 'AOA' ? 0 : 2,
                       maximumFractionDigits: fromCurrency === 'AOA' ? 0 : 2
@@ -190,9 +190,9 @@ export default function ConvertPageV2() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-4 min-w-0">
                 <Select value={fromCurrency} onValueChange={handleFromCurrencyChange}>
-                  <SelectTrigger className="w-auto border-0 bg-transparent p-0 h-auto focus:ring-0 focus:ring-offset-0 [&>svg]:hidden">
+                  <SelectTrigger className="w-auto border-0 bg-transparent p-0 h-auto focus:ring-0 focus:ring-offset-0 [&>svg]:hidden flex-shrink-0">
                     <SelectValue>
                       <div className="flex items-center gap-3">
                         <FlagIcon
@@ -219,12 +219,12 @@ export default function ConvertPageV2() {
                   </SelectContent>
                 </Select>
 
-                <Input
+                <input
                   type="text"
                   value={fromAmount}
                   onChange={(e) => handleFromAmountChange(e.target.value)}
                   placeholder="0"
-                  className="text-right text-2xl md:text-2xl font-semibold border-0 bg-transparent p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0 flex-1"
+                  className="text-right text-2xl md:text-2xl font-semibold bg-transparent outline-none flex-1 min-w-0 text-gray-900 placeholder-gray-400 overflow-hidden"
                 />
               </div>
             </div>
@@ -244,7 +244,7 @@ export default function ConvertPageV2() {
               <div className="flex items-center justify-between mb-4">
                 <Label className="text-sm text-gray-500 font-medium">Para</Label>
                 <div className="text-right">
-                  <div className="text-xs text-gray-400">
+                  <div className="text-sm text-gray-400">
                     Saldo Disponível {userBalances[toCurrency].toLocaleString(undefined, {
                       minimumFractionDigits: toCurrency === 'AOA' ? 0 : 2,
                       maximumFractionDigits: toCurrency === 'AOA' ? 0 : 2
@@ -253,9 +253,9 @@ export default function ConvertPageV2() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-4 min-w-0">
                 <Select value={toCurrency} onValueChange={handleToCurrencyChange}>
-                  <SelectTrigger className="w-auto border-0 bg-transparent p-0 h-auto focus:ring-0 focus:ring-offset-0 [&>svg]:hidden">
+                  <SelectTrigger className="w-auto border-0 bg-transparent p-0 h-auto focus:ring-0 focus:ring-offset-0 [&>svg]:hidden flex-shrink-0">
                     <SelectValue>
                       <div className="flex items-center gap-3">
                         <FlagIcon
@@ -282,13 +282,13 @@ export default function ConvertPageV2() {
                   </SelectContent>
                 </Select>
 
-                <Input
+                <input
                   type="text"
                   value={toAmount}
                   onChange={(e) => handleToAmountChange(e.target.value)}
                   placeholder="0"
                   disabled={exchangeType === 'auto'}
-                  className="text-right text-2xl md:text-2xl font-semibold border-0 bg-transparent p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0 disabled:opacity-100 flex-1"
+                  className="text-right text-2xl md:text-2xl font-semibold bg-transparent outline-none flex-1 min-w-0 text-gray-900 placeholder-gray-400 disabled:opacity-100 disabled:cursor-not-allowed overflow-hidden"
                 />
               </div>
             </div>
