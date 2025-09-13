@@ -18,9 +18,17 @@ function ConvertSuccessContent() {
 
   const getSuccessMessage = () => {
     if (exchangeType === 'auto') {
-      return `Você recebeu ${amount} ${currency} na sua carteira.`
+      return (
+        <>
+          Você recebeu <strong>{amount} {currency}</strong> na sua carteira.
+        </>
+      )
     } else {
-      return `Reservamos ${amount} ${currency} da sua carteira até encontrarmos um comprador. Mas você pode retirar sempre que quiser.`
+      return (
+        <>
+          Reservamos <strong>{amount} {currency}</strong> da sua carteira até encontrarmos o câmbio que você quer. Mas você pode retirar sempre que quiser.
+        </>
+      )
     }
   }
 

@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 
 interface SuccessScreenProps {
   title: string
-  message: string
+  message: string | React.ReactNode
   primaryAction?: {
     label: string
     onClick?: () => void

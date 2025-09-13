@@ -257,7 +257,7 @@ export default function ConvertPage() {
                   <div className="text-sm font-bold text-gray-900 mb-1">Manual</div>
                   <div className="text-sm text-gray-600">
                     {exchangeType === 'manual' && toAmount && parseFloat(toAmount) > 0
-                      ? `Você recebe ${toAmount} ${toCurrency} quando encontrarmos um comprador`
+                      ? `Você recebe ${toAmount} ${toCurrency} quando encontrarmos o câmbio que você quer`
                       : 'Escolha quanto você quer receber'
                     }
                   </div>
@@ -372,7 +372,7 @@ export default function ConvertPage() {
             <p className="text-sm text-gray-600">
               {exchangeType === 'auto'
                 ? 'Sua conversão será processada imediatamente com a taxa atual do mercado.'
-                : 'Sua conversão será processada quando encontrarmos um comprador com a taxa desejada.'
+                : 'Sua conversão será processada quando encontrarmos o câmbio que você quer.'
               }
             </p>
           </div>
