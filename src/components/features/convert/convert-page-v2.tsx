@@ -22,15 +22,12 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
-// Available currencies
-type Currency = 'EUR' | 'AOA' | 'USD' | 'GBP' | 'BRL'
+// Available currencies - only AOA and EUR
+type Currency = 'EUR' | 'AOA'
 
 const currencies: { code: Currency; name: string; flag: string }[] = [
   { code: 'EUR', name: 'Euro', flag: 'eu' },
   { code: 'AOA', name: 'Kwanza', flag: 'ao' },
-  { code: 'USD', name: 'US Dollar', flag: 'us' },
-  { code: 'GBP', name: 'British Pound', flag: 'gb' },
-  { code: 'BRL', name: 'Brazilian Real', flag: 'br' },
 ]
 
 export default function ConvertPageV2() {
@@ -43,30 +40,21 @@ export default function ConvertPageV2() {
   const [currentStep, setCurrentStep] = useState<'convert' | 'confirm' | 'success'>('convert')
   const [isLoading, setIsLoading] = useState(false)
 
-  // Mock exchange rates (base rates to USD)
-  const exchangeRates: Record<Currency, number> = {
-    USD: 1,
-    EUR: 0.85,
-    AOA: 825,
-    GBP: 0.73,
-    BRL: 5.2
-  }
+  // Mock exchange rate (1 EUR = 1252 AOA)
+  const baseEurToAoaRate = 1252
 
   // Calculate conversion rate based on currency pair
   const getConversionRate = (from: Currency, to: Currency) => {
     if (from === to) return 1
-    const fromRate = exchangeRates[from]
-    const toRate = exchangeRates[to]
-    return toRate / fromRate
+    if (from === 'EUR' && to === 'AOA') return baseEurToAoaRate
+    if (from === 'AOA' && to === 'EUR') return 1 / baseEurToAoaRate
+    return 1
   }
 
-  // Mock user balances with real numbers
+  // Mock user balances
   const userBalances: Record<Currency, number> = {
-    EUR: 116203.98,
-    AOA: 1250000,
-    USD: 125000.50,
-    GBP: 95000.75,
-    BRL: 580000.25
+    EUR: 1250.50,
+    AOA: 1250000
   }
 
   const handleFromAmountChange = (value: string) => {
@@ -106,6 +94,10 @@ export default function ConvertPageV2() {
 
   const handleFromCurrencyChange = (currency: Currency) => {
     setFromCurrency(currency)
+    // Auto-swap to prevent same currency selection
+    if (currency === toCurrency) {
+      setToCurrency(currency === 'EUR' ? 'AOA' : 'EUR')
+    }
     // Recalculate if we have an amount and auto mode
     if (exchangeType === 'auto' && fromAmount) {
       handleFromAmountChange(fromAmount)
@@ -114,6 +106,10 @@ export default function ConvertPageV2() {
 
   const handleToCurrencyChange = (currency: Currency) => {
     setToCurrency(currency)
+    // Auto-swap to prevent same currency selection
+    if (currency === fromCurrency) {
+      setFromCurrency(currency === 'EUR' ? 'AOA' : 'EUR')
+    }
     // Recalculate if we have an amount and auto mode
     if (exchangeType === 'auto' && fromAmount) {
       handleFromAmountChange(fromAmount)
@@ -185,18 +181,11 @@ export default function ConvertPageV2() {
               <div className="flex items-center justify-between mb-4">
                 <Label className="text-sm text-gray-500 font-medium">De</Label>
                 <div className="text-right">
-                  <div className="text-xs text-gray-400">Saldo Disponível {fromCurrency}</div>
-                  <div className="text-sm font-medium text-gray-900">
-                    {userBalances[fromCurrency].toLocaleString(undefined, {
+                  <div className="text-xs text-gray-400">
+                    Saldo Disponível {userBalances[fromCurrency].toLocaleString(undefined, {
                       minimumFractionDigits: fromCurrency === 'AOA' ? 0 : 2,
                       maximumFractionDigits: fromCurrency === 'AOA' ? 0 : 2
                     })} {fromCurrency}
-                  </div>
-                  <div className="text-xs text-gray-400">
-                    ≈ ${(userBalances[fromCurrency] / exchangeRates[fromCurrency]).toLocaleString(undefined, {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2
-                    })}
                   </div>
                 </div>
               </div>
@@ -235,7 +224,7 @@ export default function ConvertPageV2() {
                   value={fromAmount}
                   onChange={(e) => handleFromAmountChange(e.target.value)}
                   placeholder="0"
-                  className="text-right text-xl font-semibold border-0 bg-transparent p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0 flex-1"
+                  className="text-right text-2xl md:text-2xl font-semibold border-0 bg-transparent p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0 flex-1"
                 />
               </div>
             </div>
@@ -255,18 +244,11 @@ export default function ConvertPageV2() {
               <div className="flex items-center justify-between mb-4">
                 <Label className="text-sm text-gray-500 font-medium">Para</Label>
                 <div className="text-right">
-                  <div className="text-xs text-gray-400">Saldo Disponível {toCurrency}</div>
-                  <div className="text-sm font-medium text-gray-900">
-                    {userBalances[toCurrency].toLocaleString(undefined, {
+                  <div className="text-xs text-gray-400">
+                    Saldo Disponível {userBalances[toCurrency].toLocaleString(undefined, {
                       minimumFractionDigits: toCurrency === 'AOA' ? 0 : 2,
                       maximumFractionDigits: toCurrency === 'AOA' ? 0 : 2
                     })} {toCurrency}
-                  </div>
-                  <div className="text-xs text-gray-400">
-                    ≈ ${(userBalances[toCurrency] / exchangeRates[toCurrency]).toLocaleString(undefined, {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2
-                    })}
                   </div>
                 </div>
               </div>
@@ -306,7 +288,7 @@ export default function ConvertPageV2() {
                   onChange={(e) => handleToAmountChange(e.target.value)}
                   placeholder="0"
                   disabled={exchangeType === 'auto'}
-                  className="text-right text-xl font-semibold border-0 bg-transparent p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0 disabled:opacity-100 flex-1"
+                  className="text-right text-2xl md:text-2xl font-semibold border-0 bg-transparent p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0 disabled:opacity-100 flex-1"
                 />
               </div>
             </div>
