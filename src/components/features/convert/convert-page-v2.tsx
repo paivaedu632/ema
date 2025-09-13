@@ -175,14 +175,14 @@ export default function ConvertPageV2() {
             onBack={handleBack}
           />
 
-          <div className="space-y-6 mt-6">
+          <div className="relative mt-6">
             {/* From Currency Card */}
-            <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+            <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm mb-0">
               <div className="flex items-center justify-between mb-4">
                 <Label className="text-sm text-gray-500 font-medium">De</Label>
                 <div className="text-right">
                   <div className="text-sm text-gray-400">
-                    Saldo Disponível {userBalances[fromCurrency].toLocaleString(undefined, {
+                    Saldo {userBalances[fromCurrency].toLocaleString(undefined, {
                       minimumFractionDigits: fromCurrency === 'AOA' ? 0 : 2,
                       maximumFractionDigits: fromCurrency === 'AOA' ? 0 : 2
                     })} {fromCurrency}
@@ -229,23 +229,23 @@ export default function ConvertPageV2() {
               </div>
             </div>
 
-            {/* Swap Button */}
-            <div className="flex justify-center">
+            {/* Swap Button - Overlapping the cards */}
+            <div className="flex justify-center relative z-20 -my-4">
               <button
                 onClick={handleSwapCurrencies}
-                className="w-12 h-12 bg-white border border-gray-200 rounded-full flex items-center justify-center shadow-sm hover:shadow-md transition-shadow"
+                className="w-12 h-12 bg-white border-2 border-gray-200 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 hover:bg-gray-50"
               >
                 <ArrowUpDown className="w-5 h-5 text-gray-600" />
               </button>
             </div>
 
             {/* To Currency Card */}
-            <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+            <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm mt-0">
               <div className="flex items-center justify-between mb-4">
                 <Label className="text-sm text-gray-500 font-medium">Para</Label>
                 <div className="text-right">
                   <div className="text-sm text-gray-400">
-                    Saldo Disponível {userBalances[toCurrency].toLocaleString(undefined, {
+                    Saldo {userBalances[toCurrency].toLocaleString(undefined, {
                       minimumFractionDigits: toCurrency === 'AOA' ? 0 : 2,
                       maximumFractionDigits: toCurrency === 'AOA' ? 0 : 2
                     })} {toCurrency}
@@ -295,89 +295,77 @@ export default function ConvertPageV2() {
 
 
             {/* Exchange Type Selection */}
-            <div className="space-y-3">
+            <div className="space-y-2">
               <Label className="text-sm font-medium text-gray-700">Tipo de câmbio</Label>
-              
-              <div className="space-y-2">
-                {/* Auto Option */}
-                <div
-                  onClick={() => handleExchangeTypeChange('auto')}
-                  className={`bg-white rounded-2xl border p-4 cursor-pointer transition-all ${
-                    exchangeType === 'auto' 
-                      ? 'border-black shadow-sm' 
-                      : 'border-gray-100 hover:border-gray-200'
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-gray-50 rounded-full flex items-center justify-center">
-                        <Zap className="w-5 h-5 text-gray-600" />
-                      </div>
-                      <div>
-                        <div className="font-medium text-gray-900">Automático</div>
-                        <div className="text-sm text-gray-500">
-                          {isValidAmount && exchangeType === 'auto' 
-                            ? `Você recebe ${toAmount} ${toCurrency} agora`
-                            : 'Conversão imediata com taxa atual'
-                          }
-                        </div>
-                      </div>
-                    </div>
-                    <div className={`w-5 h-5 rounded-full border-2 ${
-                      exchangeType === 'auto' ? 'border-black bg-black' : 'border-gray-300'
-                    }`}>
-                      {exchangeType === 'auto' && (
-                        <div className="w-2 h-2 bg-white rounded-full mx-auto mt-0.5"></div>
-                      )}
+
+              {/* Auto Option */}
+              <div
+                className={`border rounded-lg cursor-pointer transition-colors p-4 ${
+                  exchangeType === 'auto' ? 'border-black bg-gray-50' : 'border-gray-200 hover:border-gray-300'
+                }`}
+                onClick={() => handleExchangeTypeChange('auto')}
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-8 h-8 border border-gray-200 rounded-full flex items-center justify-center">
+                    <Zap className="h-4 w-4 text-gray-600" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-sm font-bold text-gray-900 mb-1">Automático</div>
+                    <div className="text-sm text-gray-600">
+                      Você recebe {fromAmount ? (parseFloat(fromAmount) * getConversionRate(fromCurrency, toCurrency)).toFixed(toCurrency === 'EUR' ? 6 : 0) : '0'} {toCurrency} agora
                     </div>
                   </div>
+                  <div className={`w-4 h-4 rounded-full border-2 ${
+                    exchangeType === 'auto' ? 'border-black bg-black' : 'border-gray-300'
+                  }`}>
+                    {exchangeType === 'auto' && (
+                      <div className="w-2 h-2 bg-white rounded-full mx-auto mt-0.5"></div>
+                    )}
+                  </div>
                 </div>
+              </div>
 
-                {/* Manual Option */}
-                <div
-                  onClick={() => handleExchangeTypeChange('manual')}
-                  className={`bg-white rounded-2xl border p-4 cursor-pointer transition-all ${
-                    exchangeType === 'manual' 
-                      ? 'border-black shadow-sm' 
-                      : 'border-gray-100 hover:border-gray-200'
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-gray-50 rounded-full flex items-center justify-center">
-                        <Clock className="w-5 h-5 text-gray-600" />
-                      </div>
-                      <div>
-                        <div className="font-medium text-gray-900">Manual</div>
-                        <div className="text-sm text-gray-500">
-                          {exchangeType === 'manual' && toAmount && parseFloat(toAmount) > 0
-                            ? `Você recebe ${toAmount} ${toCurrency} quando encontrarmos o câmbio que você quer`
-                            : 'Escolha quanto você quer receber'
-                          }
-                        </div>
-                      </div>
+              {/* Manual Option */}
+              <div
+                className={`border rounded-lg cursor-pointer transition-colors p-4 ${
+                  exchangeType === 'manual' ? 'border-black bg-gray-50' : 'border-gray-200 hover:border-gray-300'
+                }`}
+                onClick={() => handleExchangeTypeChange('manual')}
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-8 h-8 border border-gray-200 rounded-full flex items-center justify-center">
+                    <Clock className="h-4 w-4 text-gray-600" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-sm font-bold text-gray-900 mb-1">Manual</div>
+                    <div className="text-sm text-gray-600">
+                      {exchangeType === 'manual' && toAmount && parseFloat(toAmount) > 0
+                        ? `Você recebe ${toAmount} ${toCurrency} quando encontrarmos o câmbio que você quer`
+                        : 'Escolha quanto você quer receber'
+                      }
                     </div>
-                    <div className={`w-5 h-5 rounded-full border-2 ${
-                      exchangeType === 'manual' ? 'border-black bg-black' : 'border-gray-300'
-                    }`}>
-                      {exchangeType === 'manual' && (
-                        <div className="w-2 h-2 bg-white rounded-full mx-auto mt-0.5"></div>
-                      )}
-                    </div>
+                  </div>
+                  <div className={`w-4 h-4 rounded-full border-2 ${
+                    exchangeType === 'manual' ? 'border-black bg-black' : 'border-gray-300'
+                  }`}>
+                    {exchangeType === 'manual' && (
+                      <div className="w-2 h-2 bg-white rounded-full mx-auto mt-0.5"></div>
+                    )}
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Desktop Continue Button */}
-          <div className="hidden md:block mt-8">
+
+          </div>
+          {/* Desktop Button */}
+          <div className="hidden md:block mt-6">
             <Button
               onClick={handleConvert}
-              disabled={!isValidAmount}
-              className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-semibold py-4 rounded-2xl text-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={!fromAmount || (exchangeType === 'manual' && !toAmount)}
+              className="primary-action-button"
             >
-              Visualizar
+              Continuar
             </Button>
           </div>
         </main>
@@ -386,9 +374,9 @@ export default function ConvertPageV2() {
         <div className="md:hidden">
           <FixedBottomAction
             primaryAction={{
-              label: "Visualizar",
+              label: "Continuar",
               onClick: handleConvert,
-              disabled: !isValidAmount
+              disabled: !fromAmount || (exchangeType === 'manual' && !toAmount)
             }}
           />
         </div>
