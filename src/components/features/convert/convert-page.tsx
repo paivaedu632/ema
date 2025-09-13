@@ -14,6 +14,9 @@ import {
 } from 'lucide-react'
 import { formatCurrency } from '@/lib/utils'
 import { AmountInput } from '@/components/forms/amount-input'
+import { PageHeader } from '@/components/layout/page-header'
+import { FixedBottomAction } from '@/components/ui/fixed-bottom-action'
+import { ConfirmationSection, ConfirmationRow } from '@/components/ui/confirmation-section'
 
 export default function ConvertPage() {
   const router = useRouter()
@@ -77,7 +80,19 @@ export default function ConvertPage() {
     setToAmount('')
   }
 
-  const handleConvert = async () => {
+  const handleBack = () => {
+    if (currentStep === 'confirm') {
+      setCurrentStep('convert')
+    } else {
+      router.back()
+    }
+  }
+
+  const handleConvert = () => {
+    setCurrentStep('confirm')
+  }
+
+  const handleConfirmConvert = async () => {
     setIsLoading(true)
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 2000))
@@ -164,22 +179,14 @@ export default function ConvertPage() {
     )
   }
 
-  // Main convert page
-  return (
-    <div className="page-container-white">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200">
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center h-16">
-            <Button variant="ghost" size="sm" onClick={() => router.back()}>
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-            <h1 className="ml-4 text-xl font-bold text-gray-900">Converter</h1>
-          </div>
-        </div>
-      </header>
-
-      <main className="content-container">
+  if (currentStep === 'convert') {
+    return (
+      <div className="page-container-white">
+        <main className="content-container">
+          <PageHeader
+            title="Converter"
+            onBack={handleBack}
+          />
         <div className="space-y-2">
           {/* From Currency */}
           <div className="space-y-1">
@@ -334,26 +341,89 @@ export default function ConvertPage() {
               </div>
             )}
           </div>
-
-          {/* Convert Button */}
-          <Button
-            onClick={handleConvert}
-            disabled={!fromAmount || (exchangeType === 'manual' && !toAmount) || isInsufficientBalance || isLoading}
-            className="primary-action-button"
-          >
-            {isLoading ? (
-              <>
-                <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                Convertendo...
-              </>
-            ) : (
-              'CONVERTER AGORA'
-            )}
-          </Button>
         </div>
-      </main>
-    </div>
-  )
+        </main>
+
+        <FixedBottomAction
+          primaryAction={{
+            label: "Continuar",
+            onClick: handleConvert,
+            disabled: !fromAmount || (exchangeType === 'manual' && !toAmount) || isInsufficientBalance || isLoading
+          }}
+        />
+      </div>
+    )
+  }
+
+  if (currentStep === 'confirm') {
+    return (
+      <div className="page-container-white">
+        <main className="content-container">
+          <PageHeader
+            title="Confirmar conversão"
+            onBack={handleBack}
+          />
+
+          <div className="space-y-6">
+            {/* Transaction Details */}
+            <ConfirmationSection title="">
+              <ConfirmationRow
+                label="Você converte"
+                value={`${fromAmount} ${fromCurrency}`}
+                highlight
+              />
+              <ConfirmationRow
+                label="Taxa de câmbio"
+                value={`1 ${fromCurrency} = ${getConversionRate(fromCurrency, toCurrency).toLocaleString(undefined, {
+                  minimumFractionDigits: fromCurrency === 'AOA' ? 6 : 0,
+                  maximumFractionDigits: fromCurrency === 'AOA' ? 6 : 0
+                })} ${toCurrency}`}
+              />
+              <ConfirmationRow
+                label="Tipo"
+                value={exchangeType === 'auto' ? 'Automático' : 'Manual'}
+              />
+              <ConfirmationRow
+                label="Você recebe"
+                value={`${exchangeType === 'auto'
+                  ? (parseFloat(fromAmount) * getConversionRate(fromCurrency, toCurrency)).toFixed(toCurrency === 'EUR' ? 6 : 0)
+                  : toAmount || '0'
+                } ${toCurrency}`}
+                highlight
+              />
+            </ConfirmationSection>
+
+            {/* Warning */}
+            <div className="space-y-2">
+              <p className="text-sm font-bold text-gray-900">Atenção:</p>
+              <p className="text-sm text-gray-600">
+                {exchangeType === 'auto'
+                  ? 'A conversão será processada imediatamente com a taxa atual do mercado.'
+                  : 'Sua conversão será processada quando encontrarmos a taxa desejada no mercado.'
+                }
+              </p>
+            </div>
+          </div>
+        </main>
+
+        <FixedBottomAction
+          primaryAction={{
+            label: isLoading ? "Processando..." : "Confirmar",
+            onClick: handleConfirmConvert,
+            disabled: isLoading
+          }}
+        />
+      </div>
+    )
+  }
+
+  // Success step - redirect to success page
+  if (currentStep === 'success') {
+    router.push('/convert/success')
+    return null
+  }
+
+  return null
 }
 
 
