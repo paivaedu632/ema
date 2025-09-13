@@ -147,99 +147,92 @@ export default function ConvertPage() {
             title="Converter"
             onBack={handleBack}
           />
-        <div className="space-y-6">
-          {/* Currency Conversion Card */}
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-6">
-            {/* From Currency */}
-            <div className="space-y-3">
-              <Label className="text-sm font-semibold text-gray-800">
-                Você converte
-              </Label>
-              <AmountInput
-                amount={fromAmount}
-                currency={fromCurrency}
-                onAmountChange={handleFromAmountChange}
-                onCurrencyChange={(currency) => {
-                  setFromCurrency(currency as 'EUR' | 'AOA')
-                  // Auto-swap the other currency
-                  setToCurrency(currency === 'EUR' ? 'AOA' : 'EUR')
-                }}
-                availableCurrencies={[
-                  { code: 'EUR', flag: 'eu' },
-                  { code: 'AOA', flag: 'ao' }
-                ]}
-              />
-              <div className="text-sm text-gray-500 px-1">
-                Disponível: {formatCurrency(availableBalance, fromCurrency)}
-              </div>
-              {isInsufficientBalance && (
-                <p className="text-sm text-red-600 px-1">Saldo insuficiente</p>
-              )}
+        <div className="space-y-2">
+          {/* From Currency */}
+          <div className="space-y-1">
+            <Label className="text-sm font-medium text-gray-700">
+              Você converte
+            </Label>
+            <AmountInput
+              amount={fromAmount}
+              currency={fromCurrency}
+              onAmountChange={handleFromAmountChange}
+              onCurrencyChange={(currency) => {
+                setFromCurrency(currency as 'EUR' | 'AOA')
+                // Auto-swap the other currency
+                setToCurrency(currency === 'EUR' ? 'AOA' : 'EUR')
+              }}
+              availableCurrencies={[
+                { code: 'EUR', flag: 'eu' },
+                { code: 'AOA', flag: 'ao' }
+              ]}
+            />
+            <div className="text-sm text-gray-500">
+              Disponível: {formatCurrency(availableBalance, fromCurrency)}
             </div>
+            {isInsufficientBalance && (
+              <p className="text-sm text-red-600">Saldo insuficiente</p>
+            )}
+          </div>
 
-            {/* Swap Button */}
-            <div className="flex justify-center">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleSwapCurrencies}
-                className="rounded-full p-3 border-2 border-gray-100 hover:border-gray-200 hover:shadow-md transition-all duration-200"
-              >
-                <ArrowLeftRight className="h-5 w-5" />
-              </Button>
-            </div>
+          {/* Swap Button */}
+          <div className="flex justify-center">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleSwapCurrencies}
+              className="rounded-full p-2"
+            >
+              <ArrowLeftRight className="h-4 w-4" />
+            </Button>
+          </div>
 
-            {/* To Currency */}
-            <div className="space-y-3">
-              <Label className="text-sm font-semibold text-gray-800">
-                Você recebe
-              </Label>
-              <AmountInput
-                amount={toAmount}
-                currency={toCurrency}
-                onAmountChange={handleToAmountChange}
-                onCurrencyChange={(currency) => {
-                  setToCurrency(currency as 'EUR' | 'AOA')
-                  // Auto-swap the other currency to prevent same currency selection
-                  if (currency === fromCurrency) {
-                    setFromCurrency(currency === 'EUR' ? 'AOA' : 'EUR')
-                  }
-                }}
-                availableCurrencies={[
-                  { code: 'EUR', flag: 'eu' },
-                  { code: 'AOA', flag: 'ao' }
-                ]}
-                disabled={false} // Always enabled for bidirectional editing
-              />
-            </div>
+          {/* To Currency */}
+          <div className="space-y-1">
+            <Label className="text-sm font-medium text-gray-700">
+              Você recebe
+            </Label>
+            <AmountInput
+              amount={toAmount}
+              currency={toCurrency}
+              onAmountChange={handleToAmountChange}
+              onCurrencyChange={(currency) => {
+                setToCurrency(currency as 'EUR' | 'AOA')
+                // Auto-swap the other currency to prevent same currency selection
+                if (currency === fromCurrency) {
+                  setFromCurrency(currency === 'EUR' ? 'AOA' : 'EUR')
+                }
+              }}
+              availableCurrencies={[
+                { code: 'EUR', flag: 'eu' },
+                { code: 'AOA', flag: 'ao' }
+              ]}
+              disabled={false} // Always enabled for bidirectional editing
+            />
           </div>
 
           {/* Exchange Type Selection */}
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
-            <Label className="text-sm font-semibold text-gray-800">Tipo de câmbio</Label>
+          <div className="space-y-2">
+            <Label className="text-sm font-medium text-gray-700">Tipo de câmbio</Label>
 
             {/* Auto Option */}
             <div
-              className={`border-2 rounded-xl cursor-pointer transition-all duration-200 p-5 ${
-                exchangeType === 'auto'
-                  ? 'border-black bg-black/5 shadow-sm'
-                  : 'border-gray-100 hover:border-gray-200 hover:shadow-sm'
+              className={`border rounded-lg cursor-pointer transition-colors p-4 ${
+                exchangeType === 'auto' ? 'border-black bg-gray-50' : 'border-gray-200 hover:border-gray-300'
               }`}
               onClick={() => handleExchangeTypeChange('auto')}
             >
               <div className="flex items-center gap-4">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
-                  exchangeType === 'auto' ? 'bg-black text-white' : 'bg-gray-100 text-gray-600'
-                }`}>
-                  <Zap className="h-5 w-5" />
+                <div className="w-8 h-8 border border-gray-200 rounded-full flex items-center justify-center">
+                  <Zap className="h-4 w-4 text-gray-600" />
                 </div>
                 <div className="flex-1">
-                  <div className="font-semibold text-gray-900 mb-1">Automático</div>
+                  <div className="text-sm font-bold text-gray-900 mb-1">Automático</div>
                   <div className="text-sm text-gray-600">
                     Você recebe {fromAmount ? (parseFloat(fromAmount) * getConversionRate(fromCurrency, toCurrency)).toFixed(toCurrency === 'EUR' ? 6 : 0) : '0'} {toCurrency} agora
                   </div>
                 </div>
-                <div className={`w-5 h-5 rounded-full border-2 transition-colors ${
+                <div className={`w-4 h-4 rounded-full border-2 ${
                   exchangeType === 'auto' ? 'border-black bg-black' : 'border-gray-300'
                 }`}>
                   {exchangeType === 'auto' && (
@@ -251,21 +244,17 @@ export default function ConvertPage() {
 
             {/* Manual Option */}
             <div
-              className={`border-2 rounded-xl cursor-pointer transition-all duration-200 p-5 ${
-                exchangeType === 'manual'
-                  ? 'border-black bg-black/5 shadow-sm'
-                  : 'border-gray-100 hover:border-gray-200 hover:shadow-sm'
+              className={`border rounded-lg cursor-pointer transition-colors p-4 ${
+                exchangeType === 'manual' ? 'border-black bg-gray-50' : 'border-gray-200 hover:border-gray-300'
               }`}
               onClick={() => handleExchangeTypeChange('manual')}
             >
               <div className="flex items-center gap-4">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
-                  exchangeType === 'manual' ? 'bg-black text-white' : 'bg-gray-100 text-gray-600'
-                }`}>
-                  <Clock className="h-5 w-5" />
+                <div className="w-8 h-8 border border-gray-200 rounded-full flex items-center justify-center">
+                  <Clock className="h-4 w-4 text-gray-600" />
                 </div>
                 <div className="flex-1">
-                  <div className="font-semibold text-gray-900 mb-1">Manual</div>
+                  <div className="text-sm font-bold text-gray-900 mb-1">Manual</div>
                   <div className="text-sm text-gray-600">
                     {exchangeType === 'manual' && toAmount && parseFloat(toAmount) > 0
                       ? `Você recebe ${toAmount} ${toCurrency} quando encontrarmos o câmbio que você quer`
@@ -273,7 +262,7 @@ export default function ConvertPage() {
                     }
                   </div>
                 </div>
-                <div className={`w-5 h-5 rounded-full border-2 transition-colors ${
+                <div className={`w-4 h-4 rounded-full border-2 ${
                   exchangeType === 'manual' ? 'border-black bg-black' : 'border-gray-300'
                 }`}>
                   {exchangeType === 'manual' && (
@@ -284,23 +273,6 @@ export default function ConvertPage() {
             </div>
           </div>
 
-          {/* Exchange Rate Info */}
-          {fromAmount && parseFloat(fromAmount) > 0 && (
-            <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl border border-gray-100 p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  <span className="text-sm font-medium text-gray-700">Taxa atual</span>
-                </div>
-                <div className="text-sm font-semibold text-gray-900">
-                  1 {fromCurrency} = {getConversionRate(fromCurrency, toCurrency).toLocaleString(undefined, {
-                    minimumFractionDigits: fromCurrency === 'AOA' ? 6 : 0,
-                    maximumFractionDigits: fromCurrency === 'AOA' ? 6 : 0
-                  })} {toCurrency}
-                </div>
-              </div>
-            </div>
-          )}
 
         </div>
           {/* Desktop Button */}
