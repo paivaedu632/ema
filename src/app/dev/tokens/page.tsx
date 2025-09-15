@@ -1,13 +1,15 @@
 // Clerk removed - using Supabase Auth
 import { redirect } from 'next/navigation';
 import TokenExtractor from '@/components/dev/token-extractor';
+import { createServerSupabaseClient } from '@/lib/supabase/server';
 
 export default async function TokensPage() {
-  const { userId } = await auth();
+  const supabase = createServerSupabaseClient();
+  const { data: { user } } = await supabase.auth.getUser();
 
   // Redirect to sign-in if not authenticated
-  if (!userId) {
-    redirect('/sign-in');
+  if (!user) {
+    redirect('/login');
   }
 
   return (

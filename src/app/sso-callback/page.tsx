@@ -3,17 +3,26 @@
 import { useEffect } from 'react'
 // Clerk removed - using Supabase Auth
 import { useRouter } from 'next/navigation'
+import { createClientSupabaseClient } from '@/lib/supabase/client'
 
 export default function SSOCallback() {
-  const { handleRedirectCallback } = useClerk()
   const router = useRouter()
+  const supabase = createClientSupabaseClient()
 
   useEffect(() => {
     const handleCallback = async () => {
       try {
-        await handleRedirectCallback()
-        // Redirect to dashboard after successful authentication
-        router.push('/dashboard')
+        // Handle Supabase auth callback
+        const { data, error } = await supabase.auth.getSession()
+        if (error) throw error
+
+        if (data.session) {
+          // Redirect to dashboard after successful authentication
+          router.push('/dashboard')
+        } else {
+          // No session, redirect to login
+          router.push('/login')
+        }
       } catch {
         // Redirect to login on error
         router.push('/login')
@@ -21,7 +30,7 @@ export default function SSOCallback() {
     }
 
     handleCallback()
-  }, [handleRedirectCallback, router])
+  }, [router, supabase.auth])
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-white">

@@ -23,7 +23,7 @@ async function pinVerifyHandler(request: NextRequest, user: AuthenticatedUser) {
     });
 
     if (!result.success) {
-      return ErrorResponses.databaseError(result.error);
+      return ErrorResponses.databaseError(result.error || 'Database operation failed');
     }
 
     // Parse the JSON response from the database function

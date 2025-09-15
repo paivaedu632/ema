@@ -28,7 +28,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { AppHeader } from '@/components/layout/app-header'
 import { BottomNav } from '@/components/layout/bottom-nav'
 import { useAuth } from '@/hooks/use-auth'
-import { useWallets, useTransactions } from '@/hooks/use-api'
+// import { useWallets, useTransactions } from '@/hooks/use-api' // TODO: Re-enable after Supabase integration
 import { ExchangeRateChart } from './exchange-rate-chart'
 
 export default function Home() {
@@ -37,11 +37,17 @@ export default function Home() {
   const [isBalanceVisible, setIsBalanceVisible] = useState(true)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
-  // Fetch wallet data from API
-  const { data: apiWalletBalances, isLoading: walletsLoading, error: walletsError } = useWallets()
+  // TODO: Re-enable API calls after implementing Supabase-compatible endpoints
+  // const { data: apiWalletBalances, isLoading: walletsLoading, error: walletsError } = useWallets()
+  // const { data: apiTransactions, isLoading: transactionsLoading, error: transactionsError } = useTransactions()
 
-  // Fetch transaction data from API
-  const { data: apiTransactions, isLoading: transactionsLoading, error: transactionsError } = useTransactions()
+  // Use mock data for now
+  const apiWalletBalances = null
+  const apiTransactions = null
+  const walletsLoading = false
+  const transactionsLoading = false
+  const walletsError = null
+  const transactionsError = null
 
   // Mock user data (fallback if auth user not available)
   const user = authUser || {
@@ -212,7 +218,7 @@ export default function Home() {
                 </button>
 
                 <button
-                  onClick={() => router.push('/convert-v2')}
+                  onClick={() => router.push('/convert-2')}
                   className="w-full flex items-center p-3 text-gray-600 hover:bg-gray-100 rounded-lg"
                 >
                   <div className="flex items-center space-x-3">
@@ -222,7 +228,7 @@ export default function Home() {
                 </button>
 
                 <button
-                  onClick={() => router.push('/convert-dark')}
+                  onClick={() => router.push('/convert-3')}
                   className="w-full flex items-center p-3 text-gray-600 hover:bg-gray-100 rounded-lg"
                 >
                   <div className="flex items-center space-x-3">
@@ -302,7 +308,7 @@ export default function Home() {
               </button>
 
               <button
-                onClick={() => router.push('/convert-v2')}
+                onClick={() => router.push('/convert-2')}
                 className="w-full flex items-center p-3 text-gray-600 hover:bg-gray-100 rounded-lg"
               >
                 <div className="flex items-center space-x-3">
@@ -312,7 +318,7 @@ export default function Home() {
               </button>
 
               <button
-                onClick={() => router.push('/convert-dark')}
+                onClick={() => router.push('/convert-3')}
                 className="w-full flex items-center p-3 text-gray-600 hover:bg-gray-100 rounded-lg"
               >
                 <div className="flex items-center space-x-3">
@@ -467,12 +473,6 @@ export default function Home() {
                         </div>
                       </div>
                     </>
-                  ) : walletsError ? (
-                    // Error state
-                    <div className="text-center py-4">
-                      <p className="text-red-600 text-sm">Erro ao carregar carteiras</p>
-                      <p className="text-gray-500 text-xs mt-1">Usando dados de exemplo</p>
-                    </div>
                   ) : null}
                   {!walletsLoading && walletBalances.map((wallet) => (
                     <div key={wallet.currency} className="flex items-center justify-between">
@@ -559,12 +559,6 @@ export default function Home() {
                         </div>
                       </div>
                     </>
-                  ) : transactionsError ? (
-                    // Error state
-                    <div className="text-center py-4">
-                      <p className="text-red-600 text-sm">Erro ao carregar transações</p>
-                      <p className="text-gray-500 text-xs mt-1">Usando dados de exemplo</p>
-                    </div>
                   ) : recentTransactions.length > 0 ? (
                     recentTransactions.map((transaction) => (
                       <div key={transaction.id} className="flex items-center justify-between">

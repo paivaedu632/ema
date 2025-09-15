@@ -32,7 +32,7 @@ async function marketSummaryHandler(request: NextRequest) {
 
     let currentPrice = 1252; // Default fallback
     if (rateResult.success && rateResult.data) {
-      currentPrice = parseFloat(rateResult.data);
+      currentPrice = parseFloat(String(rateResult.data));
     } else {
       // Use consistent fallback rates
       currentPrice = baseCurrency === 'EUR' && quoteCurrency === 'AOA' ? 1252 : 1 / 1252;

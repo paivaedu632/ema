@@ -188,4 +188,4 @@ export function WithdrawFlow() {
 }
 
 
-export default WithdrawMoney
+export default WithdrawFlow

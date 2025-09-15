@@ -37,7 +37,7 @@ async function transferSendHandler(request: NextRequest, user: AuthenticatedUser
       return ErrorResponses.userNotFound('Recipient not found');
     }
 
-    return ErrorResponses.transferFailed(result.error);
+    return ErrorResponses.transferFailed(result.error || 'Transfer failed');
   }
 
   const transferData = result.data as { reference_id?: string; id?: string; status?: string } | undefined;

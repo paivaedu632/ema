@@ -41,8 +41,8 @@ export default function Wallet({ currency = 'EUR', amount = '0.00' }: WalletProp
 
   // Static wallet data for visual representation
   const walletData: WalletBalance = currency === 'EUR'
-    ? { currency: 'EUR', available_balance: 1250.75, reserved_balance: 0.00 }
-    : { currency: 'AOA', available_balance: 485000.00, reserved_balance: 15000.00 }
+    ? { currency: 'EUR', balance: 1250.75, available_balance: 1250.75, reserved_balance: 0.00 }
+    : { currency: 'AOA', balance: 500000.00, available_balance: 485000.00, reserved_balance: 15000.00 }
 
   const [loading] = useState(false)
 

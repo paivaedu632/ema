@@ -4,7 +4,7 @@
  */
 
 import { createClient } from '@supabase/supabase-js'
-import jwt from 'jsonwebtoken'
+import * as jwt from 'jsonwebtoken'
 import { TEST_CONFIG, TEST_USERS } from './test-helpers'
 
 // Create admin client for generating test tokens
@@ -160,9 +160,9 @@ export function clearTokenCache(): void {
  */
 export function clearExpiredTokens(): void {
   const now = Date.now();
-  for (const [key, value] of tokenCache.entries()) {
+  Array.from(tokenCache.entries()).forEach(([key, value]) => {
     if (value.expires <= now) {
       tokenCache.delete(key);
     }
-  }
+  });
 }

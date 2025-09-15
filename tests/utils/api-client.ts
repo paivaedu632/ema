@@ -3,7 +3,7 @@
  * Supertest wrapper for EmaPay API testing
  */
 
-import request from 'supertest'
+import * as request from 'supertest'
 import { TEST_CONFIG, getAuthHeaders, ApiResponse } from './test-helpers'
 
 // Create a test client instance

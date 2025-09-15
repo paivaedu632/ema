@@ -46,7 +46,16 @@ export default function ConvertPageV2() {
     fromCurrency,
     toCurrency,
     fromCurrency !== toCurrency
-  )
+  ) as {
+    data?: {
+      baseCurrency: string
+      quoteCurrency: string
+      rate: number
+      source: string
+      lastUpdated: string
+    }
+    isLoading: boolean
+  }
 
   // Calculate conversion rate based on currency pair
   const getConversionRate = (from: Currency, to: Currency) => {

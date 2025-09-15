@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 
 // Define public routes that don't require authentication
 const publicRoutes = [
-  '/',
   '/login',
   '/signup',
   '/api/v1/health',
@@ -28,8 +27,10 @@ export default function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // For protected frontend routes, redirect to login if no session
-  // This is a basic check - detailed auth is handled in components
+  // For protected frontend routes, let ProtectedRoute component handle auth
+  // Supabase handles session persistence automatically
+  // The ProtectedRoute component will redirect if needed
+
   return NextResponse.next();
 }
 

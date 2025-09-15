@@ -31,7 +31,7 @@ export interface Transaction {
   senderId?: string
   recipient?: User
   sender?: User
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
 }
 
 export interface TransferRequest {
@@ -72,7 +72,7 @@ export interface OrderBook {
 }
 
 // API Response Types
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   success: boolean
   data?: T
   error?: string
@@ -174,7 +174,7 @@ export interface PageProps {
 export interface AppError {
   code: string
   message: string
-  details?: Record<string, any>
+  details?: Record<string, unknown>
 }
 
 // Theme Types
@@ -184,7 +184,7 @@ export type Theme = 'light' | 'dark' | 'system'
 export interface NavItem {
   label: string
   href: string
-  icon?: React.ComponentType<any>
+  icon?: React.ComponentType<{ className?: string }>
   badge?: string | number
   disabled?: boolean
 }

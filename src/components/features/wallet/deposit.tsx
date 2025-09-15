@@ -294,4 +294,4 @@ export function DepositFlow() {
 }
 
 
-export default DepositMoney
+export default DepositFlow

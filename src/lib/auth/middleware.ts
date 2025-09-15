@@ -12,18 +12,6 @@ export interface AuthResult {
   error?: string;
 }
 
-// Initialize Supabase client for server-side auth validation
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-  {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false
-    }
-  }
-);
-
 /**
  * Authenticate a request using Supabase Auth JWT validation
  */

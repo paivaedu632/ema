@@ -8,12 +8,13 @@ import { findUserForTransfer } from '@/lib/database/functions';
 
 async function userSearchHandler(request: NextRequest, user: AuthenticatedUser) {
   // Validate search parameters
-  const validation = validateSearchParams(request, userSearchSchema);
+  const { searchParams } = new URL(request.url);
+  const validation = validateSearchParams(searchParams, userSearchSchema);
   if (!validation.success) {
     return ErrorResponses.validationError(validation.error!);
   }
 
-  const { query, type = 'email' } = validation.data!;
+  const { query } = validation.data!;
 
   // Search for users using the correct function signature
   const result = await findUserForTransfer({
@@ -21,7 +22,7 @@ async function userSearchHandler(request: NextRequest, user: AuthenticatedUser) 
   });
 
   if (!result.success) {
-    return ErrorResponses.databaseError(result.error);
+    return ErrorResponses.databaseError(result.error || 'Database operation failed');
   }
 
   // Filter out sensitive information and current user

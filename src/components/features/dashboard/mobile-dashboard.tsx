@@ -137,9 +137,9 @@ export default function MobileDashboard() {
     }
   }
 
-  const formatTransactionAmount = (transaction: any) => {
+  const formatTransactionAmount = (transaction: { type: string; amount: number; currency: string }) => {
     const sign = transaction.type === 'receive' ? '+' : '-'
-    return `${sign}${formatCurrency(transaction.amount, transaction.currency)}`
+    return `${sign}${formatCurrency(transaction.amount, transaction.currency as 'EUR' | 'AOA')}`
   }
 
   return (
@@ -150,7 +150,7 @@ export default function MobileDashboard() {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <Avatar className="h-10 w-10">
-                <AvatarImage src={user.avatar} />
+                <AvatarImage src={user.avatar || undefined} />
                 <AvatarFallback className="bg-blue-100 text-blue-600 font-semibold">
                   {user.initials}
                 </AvatarFallback>

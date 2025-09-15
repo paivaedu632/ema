@@ -13,7 +13,6 @@ export default async function WalletPage({ searchParams }: WalletPageProps) {
   return (
     <Wallet
       currency={params.currency || 'EUR'}
-      accountType={params.type || 'Conta'}
       amount={params.amount || '0.00'}
     />
   )

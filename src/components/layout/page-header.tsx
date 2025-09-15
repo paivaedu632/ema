@@ -13,7 +13,7 @@ interface PageHeaderProps {
 export function PageHeader({ title, subtitle, onBack, className = "" }: PageHeaderProps) {
   return (
     <div className={className}>
-      <BackButton onClick={onBack} />
+      <BackButton onClick={onBack || undefined} />
 
       <div className="mb-4">
         <h1 className="heading-main mb-2">

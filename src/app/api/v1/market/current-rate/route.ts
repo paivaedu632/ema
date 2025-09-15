@@ -45,7 +45,7 @@ async function currentRateHandler(request: NextRequest) {
       return errorResponse(result.error || 'Failed to retrieve current rate', 500);
     }
 
-    const currentRate = parseFloat(result.data || '0');
+    const currentRate = parseFloat(String(result.data || '0'));
 
     const responseData = {
       baseCurrency,

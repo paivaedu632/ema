@@ -253,7 +253,7 @@ export default function MockDashboard() {
               </Button>
               <div className="flex items-center space-x-3">
                 <Avatar className="h-8 w-8">
-                  <AvatarImage src={user.avatar} />
+                  <AvatarImage src={user.avatar || undefined} />
                   <AvatarFallback className="bg-blue-100 text-blue-600 font-semibold">
                     {user.initials}
                   </AvatarFallback>

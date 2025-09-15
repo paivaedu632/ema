@@ -1,13 +1,23 @@
 'use client';
 
 // Clerk removed - using Supabase Auth
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { createClientSupabaseClient } from '@/lib/supabase/client';
 
 export default function TokenExtractor() {
-  const { getToken, isSignedIn } = useAuth();
+  const supabase = createClientSupabaseClient();
+  const [isSignedIn, setIsSignedIn] = useState(false);
   const [token, setToken] = useState<string>('');
   const [apiResult, setApiResult] = useState<string>('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setIsSignedIn(!!session);
+    };
+    checkAuth();
+  }, [supabase.auth]);
 
   const extractToken = async () => {
     if (!isSignedIn) {
@@ -17,7 +27,8 @@ export default function TokenExtractor() {
 
     try {
       setLoading(true);
-      const jwtToken = await getToken();
+      const { data: { session } } = await supabase.auth.getSession();
+      const jwtToken = session?.access_token;
       
       if (jwtToken) {
         setToken(jwtToken);
@@ -196,10 +207,10 @@ export default function TokenExtractor() {
       <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded">
         <h4 className="text-sm font-semibold text-blue-800 mb-2">📋 How to Use:</h4>
         <ol className="text-sm text-blue-700 space-y-1">
-          <li>1. Click "Extract JWT Token" to get your authentication token</li>
+          <li>1. Click &quot;Extract JWT Token&quot; to get your authentication token</li>
           <li>2. Copy the token and use it in curl commands:</li>
           <li className="font-mono text-xs bg-blue-100 p-2 rounded mt-2">
-            curl -H "Authorization: Bearer YOUR_TOKEN_HERE" http://localhost:3000/api/v1/auth/me
+            curl -H &quot;Authorization: Bearer YOUR_TOKEN_HERE&quot; http://localhost:3000/api/v1/auth/me
           </li>
           <li>3. Or test endpoints directly using the buttons above</li>
         </ol>

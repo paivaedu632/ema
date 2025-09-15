@@ -5,7 +5,6 @@ import { withCors } from '@/lib/api';
 import { validateRequestBody } from '@/lib/validations';
 import { pinSetSchema } from '@/lib/validations';
 import { setUserPin } from '@/lib/database/functions';
-import { createHash } from 'crypto';
 
 async function pinSetHandler(request: NextRequest, user: AuthenticatedUser) {
   // Validate request body
@@ -29,7 +28,7 @@ async function pinSetHandler(request: NextRequest, user: AuthenticatedUser) {
     });
 
     if (!result.success) {
-      return ErrorResponses.databaseError(result.error);
+      return ErrorResponses.databaseError(result.error || 'Database operation failed');
     }
 
     const responseData = {

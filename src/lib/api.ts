@@ -25,7 +25,7 @@ export function handleCors(request: NextRequest) {
 }
 
 // API Response Utilities
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   success: boolean
   data?: T
   error?: string
@@ -104,14 +104,14 @@ export class ApiClient {
     return this.request<T>(endpoint, { method: 'GET' })
   }
 
-  async post<T>(endpoint: string, data?: any): Promise<ApiResponse<T>> {
+  async post<T>(endpoint: string, data?: unknown): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, {
       method: 'POST',
       body: data ? JSON.stringify(data) : undefined,
     })
   }
 
-  async put<T>(endpoint: string, data?: any): Promise<ApiResponse<T>> {
+  async put<T>(endpoint: string, data?: unknown): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, {
       method: 'PUT',
       body: data ? JSON.stringify(data) : undefined,
@@ -159,7 +159,10 @@ export const ErrorResponses = {
   authRequired: () => createErrorResponse('Authentication required', 'AUTH_REQUIRED', 401),
   invalidToken: () => createErrorResponse('Invalid authentication token', 'INVALID_TOKEN', 401),
   databaseError: (message: string) => createErrorResponse(message, 'DATABASE_ERROR', 500),
-  internalError: () => createErrorResponse('Internal server error', 'INTERNAL_ERROR', 500)
+  internalError: (message?: string) => createErrorResponse(message || 'Internal server error', 'INTERNAL_ERROR', 500),
+  invalidPin: (message: string) => createErrorResponse(message, 'INVALID_PIN', 400),
+  userNotFound: (message: string) => createErrorResponse(message, 'USER_NOT_FOUND', 404),
+  transferFailed: (message: string) => createErrorResponse(message, 'TRANSFER_FAILED', 400)
 }
 
 // Historical error handling wrapper
@@ -177,8 +180,8 @@ export function withErrorHandling<T extends unknown[]>(
 }
 
 // CORS middleware wrapper
-export function withCors(handler: (request: NextRequest, ...args: any[]) => Promise<NextResponse>) {
-  return async (request: NextRequest, ...args: any[]): Promise<NextResponse> => {
+export function withCors(handler: (request: NextRequest, ...args: unknown[]) => Promise<NextResponse>) {
+  return async (request: NextRequest, ...args: unknown[]): Promise<NextResponse> => {
     // Handle preflight requests
     const corsResponse = handleCors(request)
     if (corsResponse) {

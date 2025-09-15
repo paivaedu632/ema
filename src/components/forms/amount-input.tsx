@@ -49,7 +49,7 @@ export function AmountInput({
       return
     }
 
-    const validation = validateAmount(amount, currency as Currency, transactionType)
+    const validation = validateAmount(parseFloat(amount) || 0, currency as Currency, transactionType)
     setErrorMessage(validation.errorMessage || "")
     onValidationChange?.(validation.isValid, validation.errorMessage)
   }, [amount, currency, transactionType, showValidation, onValidationChange])
@@ -66,7 +66,7 @@ export function AmountInput({
           disabled={disabled}
         />
         <div className="absolute right-4 top-1/2 -translate-y-1/2 currency-selector-container">
-          <FlagIcon countryCode={currentCurrency.flag} className="flag-icon-currency" />
+          <FlagIcon countryCode={currentCurrency?.flag || 'EU'} className="flag-icon-currency" />
           {availableCurrencies.length === 1 ? (
             // Show static text when only one currency is available
             <div className="currency-selector-static">

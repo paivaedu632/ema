@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest } from 'next/server'
 
 // ===== VALIDATION UTILITIES =====
 
@@ -22,7 +22,7 @@ export async function validateRequestBody<T>(
 
     if (!result.success) {
       const errorMessage = result.error.issues
-        .map((err: any) => `${err.path.join('.')}: ${err.message}`)
+        .map((err) => `${err.path.join('.')}: ${err.message}`)
         .join(', ');
 
       return {
@@ -35,7 +35,7 @@ export async function validateRequestBody<T>(
       success: true,
       data: result.data
     };
-  } catch (error) {
+  } catch {
     return {
       success: false,
       error: 'Invalid JSON in request body'
@@ -211,7 +211,7 @@ export function validateSearchParams<T>(
       success: true,
       data: result.data
     };
-  } catch (error) {
+  } catch {
     return {
       success: false,
       error: 'Invalid search parameters'
@@ -237,7 +237,7 @@ export function validateRouteParams<T>(
       success: true,
       data: result.data
     };
-  } catch (error) {
+  } catch {
     return {
       success: false,
       error: 'Invalid route parameters'

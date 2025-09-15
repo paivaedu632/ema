@@ -8,7 +8,8 @@ import { getTransferHistory } from '@/lib/database/functions';
 
 async function transferHistoryHandler(request: NextRequest, user: AuthenticatedUser) {
   // Validate search parameters
-  const validation = validateSearchParams(request, transferHistorySchema);
+  const { searchParams } = new URL(request.url);
+  const validation = validateSearchParams(searchParams, transferHistorySchema);
   if (!validation.success) {
     return ErrorResponses.validationError(validation.error!);
   }
@@ -24,7 +25,7 @@ async function transferHistoryHandler(request: NextRequest, user: AuthenticatedU
   });
 
   if (!result.success) {
-    return ErrorResponses.databaseError(result.error);
+    return ErrorResponses.databaseError(result.error || 'Database operation failed');
   }
 
   const transfers = Array.isArray(result.data) ? result.data : [];

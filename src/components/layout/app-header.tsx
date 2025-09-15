@@ -12,7 +12,7 @@ interface AppHeaderProps {
     sessionId?: string
     authenticated?: boolean
     timestamp?: string
-  }
+  } | null | undefined
   onSignOut?: () => void
   className?: string
 }

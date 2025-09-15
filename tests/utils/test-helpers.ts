@@ -3,7 +3,7 @@
  * Utilities for API testing with Jest and Supertest
  */
 
-import jwt from 'jsonwebtoken'
+import * as jwt from 'jsonwebtoken'
 import { createClient } from '@supabase/supabase-js'
 
 // Test configuration - use real keys from .env.local
@@ -82,11 +82,11 @@ export async function getSupabaseJWT(
       }
     })
 
-    if (error || !data.properties?.access_token) {
+    if (error || !(data.properties as any)?.access_token) {
       throw new Error(`Failed to generate JWT: ${error?.message}`)
     }
 
-    let token = data.properties.access_token
+    let token = (data.properties as any).access_token
 
     // If we need an expired token, create one manually
     if (expired) {

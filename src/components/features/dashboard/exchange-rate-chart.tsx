@@ -60,7 +60,7 @@ export function ExchangeRateChart({ className }: ExchangeRateChartProps) {
     // Generate some sample historical data around the current rate
     Array.from({ length: 24 }, (_, i) => ({
       time: `${i.toString().padStart(2, '0')}:00`,
-      rate: (currentRate as any).rate + (Math.random() - 0.5) * 10 // Add some variation
+      rate: (currentRate as { rate: number }).rate + (Math.random() - 0.5) * 10 // Add some variation
     })) :
     exchangeRateData
 
@@ -154,7 +154,7 @@ export function ExchangeRateChart({ className }: ExchangeRateChartProps) {
             />
             <ChartTooltip
               content={({ active, payload, label }) => {
-                if (active && payload && payload.length) {
+                if (active && payload && payload.length && payload[0]) {
                   return (
                     <div className="bg-black text-white px-3 py-2 rounded-md shadow-lg text-sm">
                       <div className="font-mono font-medium text-white">

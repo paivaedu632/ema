@@ -1,13 +1,15 @@
 'use client'
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { apiClient } from '@/lib/api'
 import { useRouter } from 'next/navigation'
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
+import { supabase } from '@/lib/supabase/client'
+import type { User } from '@supabase/supabase-js'
 
 export interface AuthUser {
   userId: string
-  sessionId: string
+  email?: string
+  emailVerified: boolean
   authenticated: boolean
   timestamp: string
 }
@@ -37,7 +39,7 @@ export function useAuth() {
   const queryClient = useQueryClient()
   const router = useRouter()
 
-  // Get current user
+  // Get current user from Supabase
   const {
     data: user,
     isLoading,
@@ -46,79 +48,128 @@ export function useAuth() {
   } = useQuery({
     queryKey: authQueryKeys.user,
     queryFn: async () => {
-      const response = await apiClient.get<AuthUser>('/auth/me')
-      if (!response.success) {
-        // Return null for authentication failures instead of throwing
-        // This allows the component to render the login form
+      const { data: { user: supabaseUser }, error } = await supabase.auth.getUser()
+      if (error || !supabaseUser) {
         return null
       }
-      return response.data!
+
+      // Convert Supabase user to AuthUser format
+      return {
+        userId: supabaseUser.id,
+        email: supabaseUser.email,
+        emailVerified: !!supabaseUser.email_confirmed_at,
+        authenticated: true,
+        timestamp: new Date().toISOString()
+      } as AuthUser
     },
     retry: false,
     staleTime: 1000 * 60 * 5, // 5 minutes
   })
 
-  // Login mutation
+  // Login mutation using Supabase
   const loginMutation = useMutation({
     mutationFn: async (credentials: LoginCredentials) => {
-      const response = await apiClient.post<{ token: string; user: AuthUser }>('/auth/login', credentials)
-      if (!response.success) {
-        throw new Error(response.error || 'Login failed')
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: credentials.email,
+        password: credentials.password,
+      })
+
+      if (error) {
+        throw new Error(error.message)
       }
-      return response.data!
+
+      if (!data.user || !data.session) {
+        throw new Error('Login failed - no user or session returned')
+      }
+
+      // Convert to AuthUser format
+      return {
+        userId: data.user.id,
+        email: data.user.email,
+        emailVerified: !!data.user.email_confirmed_at,
+        authenticated: true,
+        timestamp: new Date().toISOString()
+      } as AuthUser
     },
-    onSuccess: (data) => {
-      // Set auth token in API client
-      apiClient.setAuthToken(data.token)
-      
+    onSuccess: (user) => {
       // Update user cache
-      queryClient.setQueryData(authQueryKeys.user, data.user)
-      
+      queryClient.setQueryData(authQueryKeys.user, user)
+
       // Navigate to dashboard
-      router.push('/dashboard')
+      router.push('/')
     },
   })
 
-  // Signup mutation
+  // Signup mutation using Supabase
   const signupMutation = useMutation({
     mutationFn: async (signupData: SignupData) => {
-      const response = await apiClient.post<{ token: string; user: AuthUser }>('/auth/signup', signupData)
-      if (!response.success) {
-        throw new Error(response.error || 'Signup failed')
+      const { data, error } = await supabase.auth.signUp({
+        email: signupData.email,
+        password: signupData.password,
+        options: {
+          data: {
+            first_name: signupData.firstName,
+            last_name: signupData.lastName,
+          }
+        }
+      })
+
+      if (error) {
+        throw new Error(error.message)
       }
-      return response.data!
+
+      if (!data.user) {
+        throw new Error('Signup failed - no user returned')
+      }
+
+      // Convert to AuthUser format
+      return {
+        userId: data.user.id,
+        email: data.user.email,
+        emailVerified: !!data.user.email_confirmed_at,
+        authenticated: true,
+        timestamp: new Date().toISOString()
+      } as AuthUser
     },
-    onSuccess: (data) => {
-      // Set auth token in API client
-      apiClient.setAuthToken(data.token)
-      
+    onSuccess: (user) => {
       // Update user cache
-      queryClient.setQueryData(authQueryKeys.user, data.user)
-      
+      queryClient.setQueryData(authQueryKeys.user, user)
+
       // Navigate to dashboard
-      router.push('/dashboard')
+      router.push('/')
     },
   })
 
-  // Logout function
+  // Logout function using Supabase
   const logout = useCallback(async () => {
     try {
-      // Call logout endpoint
-      await apiClient.post('/auth/logout')
+      // Sign out from Supabase
+      await supabase.auth.signOut()
     } catch (error) {
-      // Continue with logout even if API call fails
-      console.warn('Logout API call failed:', error)
+      console.warn('Logout failed:', error)
     } finally {
-      // Remove auth token
-      apiClient.removeAuthToken()
-      
       // Clear all cached data
       queryClient.clear()
-      
+
       // Navigate to login
       router.push('/login')
     }
-  }, [queryClient, router])
+  }, [queryClient, router, supabase.auth])
+
+  // Listen for auth state changes
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+        // Refetch user data when signed in or token refreshed
+        refetchUser()
+      } else if (event === 'SIGNED_OUT') {
+        // Clear user data when signed out
+        queryClient.setQueryData(authQueryKeys.user, null)
+      }
+    })
+
+    return () => subscription.unsubscribe()
+  }, [supabase.auth, refetchUser, queryClient])
 
   // Check if user is authenticated
   const isAuthenticated = !!user?.authenticated

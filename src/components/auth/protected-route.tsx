@@ -7,7 +7,7 @@ import LoadingAnimation from '@/components/ui/loading-animation'
 
 interface ProtectedRouteProps {
   children: React.ReactNode
-  redirectTo?: string
+  redirectTo?: string | undefined
   fallback?: React.ReactNode
 }
 
@@ -38,13 +38,9 @@ export function ProtectedRoute({
     )
   }
 
-  // Don't render children if not authenticated
+  // Don't render children if not authenticated (prevents flash of content)
   if (!isAuthenticated) {
-    return fallback || (
-      <div className="min-h-screen flex items-center justify-center">
-        <LoadingAnimation />
-      </div>
-    )
+    return null
   }
 
   return <>{children}</>
