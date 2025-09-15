@@ -1,3 +1,5 @@
+'use client'
+
 import React from 'react'
 import { ArrowLeft } from 'lucide-react'
 import { useRouter } from 'next/navigation'
@@ -22,7 +24,7 @@ export function FormLayout({
   title,
   subtitle,
   showBackButton = true,
-  backButtonHref = '/dashboard',
+  backButtonHref = '/',
   className = ''
 }: FormLayoutProps) {
   const router = useRouter()
@@ -274,7 +276,7 @@ export function FormResultScreen({
   const router = useRouter()
 
   const handleBack = () => {
-    router.push('/dashboard')
+    router.push('/')
   }
 
   return (

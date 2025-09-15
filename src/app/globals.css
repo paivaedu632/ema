@@ -190,6 +190,23 @@
     @apply min-h-screen bg-gray-100;
   }
 
+  /* Safe Area Support for Mobile Devices */
+  .safe-area-pt {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .safe-area-pb {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .safe-area-pl {
+    padding-left: env(safe-area-inset-left);
+  }
+
+  .safe-area-pr {
+    padding-right: env(safe-area-inset-right);
+  }
+
   /* Content Container - Main content area with consistent spacing and max-width */
   .content-container {
     @apply max-w-sm mx-auto px-4 pt-8 pb-24;
@@ -610,5 +627,37 @@
   /* Button Loading State */
   .btn-loading {
     @apply opacity-75 cursor-not-allowed;
+  }
+
+  /* EmaPay International Phone Input Styling */
+  .phone-input-emapay .PhoneInput {
+    @apply flex items-center;
+  }
+
+  .phone-input-emapay .PhoneInputCountry {
+    @apply flex items-center mr-3;
+  }
+
+  .phone-input-emapay .PhoneInputCountryIcon {
+    @apply w-6 h-4 mr-2;
+  }
+
+  .phone-input-emapay .PhoneInputCountrySelect {
+    @apply border-0 bg-transparent outline-none cursor-pointer text-base;
+    @apply hover:bg-gray-50 rounded-md px-2 py-1;
+  }
+
+  .phone-input-emapay .PhoneInputInput {
+    @apply flex-1 bg-transparent border-0 outline-none text-base;
+    @apply placeholder:text-gray-500;
+  }
+
+  /* Override default react-phone-number-input styles */
+  .phone-input-emapay .PhoneInput--focus {
+    @apply ring-2 ring-black border-transparent;
+  }
+
+  .phone-input-emapay .PhoneInputCountrySelectArrow {
+    @apply ml-1 text-gray-400;
   }
 }

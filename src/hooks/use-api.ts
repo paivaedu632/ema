@@ -156,16 +156,29 @@ export function useMarketSummary() {
   })
 }
 
-export function useMarketDepth() {
+// Note: useMarketDepth removed - endpoint removed for simplicity
+
+// Current market rate hook for real-time pricing
+export function useCurrentMarketRate(
+  baseCurrency: 'EUR' | 'AOA',
+  quoteCurrency: 'EUR' | 'AOA',
+  enabled = true
+) {
   return useQuery({
-    queryKey: ['market', 'depth'],
+    queryKey: ['market', 'currentRate', baseCurrency, quoteCurrency],
     queryFn: async () => {
-      const response = await apiClient.get('/market/depth')
+      const params = new URLSearchParams({
+        baseCurrency,
+        quoteCurrency
+      });
+      const response = await apiClient.get(`/market/current-rate?${params}`)
       if (!response.success) {
-        throw new Error(response.error || 'Failed to fetch market depth')
+        throw new Error(response.error || 'Failed to fetch current rate')
       }
       return response.data
     },
-    refetchInterval: 10000, // Refetch every 10 seconds
+    enabled: enabled && baseCurrency !== quoteCurrency,
+    refetchInterval: 30000, // Refetch every 30 seconds
+    staleTime: 15000, // Consider data stale after 15 seconds
   })
 }

@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { ShoppingBag, ArrowUpRight, ArrowDownLeft, CreditCard } from 'lucide-react'
-import { formatAmountWithCurrency, type Currency } from '@/lib/format'
+import { formatAmountWithCurrency, type Currency } from '@/lib/utils'
 
 interface TransactionListItemProps {
   id: string

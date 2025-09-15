@@ -146,35 +146,18 @@ export async function executeMarketOrder(params: {
   return executeFunction('execute_market_order', dbParams);
 }
 
-export async function getUserOrderHistory(params: {
-  user_id: string;
-  page?: number;
-  limit?: number;
+// Market data functions
+// Note: Removed getUserOrderHistory and getOrderBookDepth - endpoints removed for simplicity
+
+export async function getCurrentMarketRate(params: {
+  base_currency: string;
+  quote_currency: string;
 }) {
   const dbParams = {
-    p_user_id: params.user_id,
-    p_limit: params.limit || 20,
-    p_offset: ((params.page || 1) - 1) * (params.limit || 20)
+    p_base_currency: params.base_currency,
+    p_quote_currency: params.quote_currency
   };
-  return executeFunction('get_user_order_history', dbParams);
-}
-
-
-
-// Market data functions
-export async function getMarketSummary(params: {
-  base_currency: string;
-  quote_currency: string;
-}) {
-  return executeFunction('get_market_summary', params);
-}
-
-export async function getOrderBookDepth(params: {
-  base_currency: string;
-  quote_currency: string;
-  levels?: number;
-}) {
-  return executeFunction('get_order_book_depth', params);
+  return executeFunction('get_current_market_rate', dbParams);
 }
 
 // Security functions

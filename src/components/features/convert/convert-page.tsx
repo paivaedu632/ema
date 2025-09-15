@@ -10,14 +10,29 @@ import {
   ArrowLeft,
   RefreshCw,
   Zap,
-  Clock
+  Clock,
+  ChevronDown
 } from 'lucide-react'
 import { formatCurrency } from '@/lib/utils'
-import { AmountInput } from '@/components/forms/amount-input'
 import { FlagIcon } from '@/components/ui/flag-icon'
 import { PageHeader } from '@/components/layout/page-header'
 import { FixedBottomAction } from '@/components/ui/fixed-bottom-action'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { useCurrentMarketRate } from '@/hooks/use-api'
 
+// Available currencies - only AOA and EUR
+type Currency = 'EUR' | 'AOA'
+
+const currencies: { code: Currency; name: string; flag: string }[] = [
+  { code: 'EUR', name: 'Euro', flag: 'eu' },
+  { code: 'AOA', name: 'Kwanza', flag: 'ao' },
+]
 
 export default function ConvertPage() {
   const router = useRouter()
@@ -29,14 +44,35 @@ export default function ConvertPage() {
   const [currentStep, setCurrentStep] = useState<'convert' | 'confirm' | 'success'>('convert')
   const [isLoading, setIsLoading] = useState(false)
 
-  // Mock exchange rate (1 EUR = 1252 AOA)
-  const baseEurToAoaRate = 1252
+  // Get real-time market rate
+  const { data: marketRateData, isLoading: isRateLoading } = useCurrentMarketRate(
+    fromCurrency,
+    toCurrency,
+    fromCurrency !== toCurrency
+  ) as {
+    data?: {
+      baseCurrency: string
+      quoteCurrency: string
+      rate: number
+      source: string
+      lastUpdated: string
+    }
+    isLoading: boolean
+  }
 
   // Calculate conversion rate based on currency pair
   const getConversionRate = (from: string, to: string) => {
-    if (from === 'EUR' && to === 'AOA') return baseEurToAoaRate
-    if (from === 'AOA' && to === 'EUR') return 1 / baseEurToAoaRate
-    return 1 // Same currency
+    if (from === to) return 1
+
+    // Use real market rate if available
+    if (marketRateData?.rate) {
+      return marketRateData.rate
+    }
+
+    // Fallback to hardcoded rates
+    if (from === 'EUR' && to === 'AOA') return 1252
+    if (from === 'AOA' && to === 'EUR') return 1 / 1252
+    return 1
   }
 
   // Mock user balances
@@ -79,6 +115,30 @@ export default function ConvertPage() {
     // Clear amounts and recalculate
     setFromAmount('')
     setToAmount('')
+  }
+
+  const handleFromCurrencyChange = (currency: Currency) => {
+    setFromCurrency(currency)
+    // Auto-swap to prevent same currency selection
+    if (currency === toCurrency) {
+      setToCurrency(currency === 'EUR' ? 'AOA' : 'EUR')
+    }
+    // Recalculate if we have an amount and auto mode
+    if (exchangeType === 'auto' && fromAmount) {
+      handleFromAmountChange(fromAmount)
+    }
+  }
+
+  const handleToCurrencyChange = (currency: Currency) => {
+    setToCurrency(currency)
+    // Auto-swap to prevent same currency selection
+    if (currency === fromCurrency) {
+      setFromCurrency(currency === 'EUR' ? 'AOA' : 'EUR')
+    }
+    // Recalculate if we have an amount and auto mode
+    if (exchangeType === 'auto' && fromAmount) {
+      handleFromAmountChange(fromAmount)
+    }
   }
 
   const handleBack = () => {
@@ -150,25 +210,53 @@ export default function ConvertPage() {
         <div className="space-y-2">
           {/* From Currency */}
           <div className="space-y-1">
-            <Label className="text-sm font-medium text-gray-700">
+            <Label className="text-sm font-bold text-gray-700">
               Você converte
             </Label>
-            <AmountInput
-              amount={fromAmount}
-              currency={fromCurrency}
-              onAmountChange={handleFromAmountChange}
-              onCurrencyChange={(currency) => {
-                setFromCurrency(currency as 'EUR' | 'AOA')
-                // Auto-swap the other currency
-                setToCurrency(currency === 'EUR' ? 'AOA' : 'EUR')
-              }}
-              availableCurrencies={[
-                { code: 'EUR', flag: 'eu' },
-                { code: 'AOA', flag: 'ao' }
-              ]}
-            />
-            <div className="text-sm text-gray-500">
-              Disponível: {formatCurrency(availableBalance, fromCurrency)}
+            <div className="bg-white rounded-lg border border-black p-4 focus-within:border-2">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-4 min-w-0">
+                  <input
+                    type="text"
+                    value={fromAmount}
+                    onChange={(e) => handleFromAmountChange(e.target.value)}
+                    placeholder="0"
+                    className="flex-1 text-left text-2xl font-semibold bg-transparent border-0 outline-none focus:ring-0 text-gray-900 placeholder-gray-400 min-w-0"
+                  />
+
+                  <div className="flex items-center gap-2">
+                    <FlagIcon
+                      countryCode={currencies.find(c => c.code === fromCurrency)?.flag || 'eu'}
+                      size="lg"
+                    />
+
+                    <Select value={fromCurrency} onValueChange={handleFromCurrencyChange}>
+                    <SelectTrigger className="w-auto border-0 bg-transparent p-0 h-auto focus:ring-0 focus:ring-offset-0 [&>svg]:hidden flex-shrink-0">
+                      <SelectValue>
+                        <div className="flex items-center gap-2">
+                          <span className="text-lg font-semibold text-gray-900">{fromCurrency}</span>
+                          <ChevronDown className="w-4 h-4 text-gray-400" />
+                        </div>
+                      </SelectValue>
+                    </SelectTrigger>
+                    <SelectContent>
+                      {currencies.map((currency) => (
+                        <SelectItem key={currency.code} value={currency.code}>
+                          <div className="flex items-center gap-2">
+                            <FlagIcon countryCode={currency.flag} size="sm" />
+                            <span>{currency.code}</span>
+                            <span className="text-gray-500 text-sm">- {currency.name}</span>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="text-sm text-black">
+              Saldo: {formatCurrency(availableBalance, fromCurrency)}
             </div>
             {isInsufficientBalance && (
               <p className="text-sm text-red-600">Saldo insuficiente</p>
@@ -189,31 +277,82 @@ export default function ConvertPage() {
 
           {/* To Currency */}
           <div className="space-y-1">
-            <Label className="text-sm font-medium text-gray-700">
+            <Label className="text-sm font-bold text-gray-700">
               Você recebe
             </Label>
-            <AmountInput
-              amount={toAmount}
-              currency={toCurrency}
-              onAmountChange={handleToAmountChange}
-              onCurrencyChange={(currency) => {
-                setToCurrency(currency as 'EUR' | 'AOA')
-                // Auto-swap the other currency to prevent same currency selection
-                if (currency === fromCurrency) {
-                  setFromCurrency(currency === 'EUR' ? 'AOA' : 'EUR')
-                }
-              }}
-              availableCurrencies={[
-                { code: 'EUR', flag: 'eu' },
-                { code: 'AOA', flag: 'ao' }
-              ]}
-              disabled={false} // Always enabled for bidirectional editing
-            />
+            <div className="bg-white rounded-lg border border-black p-4 focus-within:border-2">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-4 min-w-0">
+                  <input
+                    type="text"
+                    value={toAmount}
+                    onChange={(e) => handleToAmountChange(e.target.value)}
+                    placeholder="0"
+                    className="flex-1 text-left text-2xl font-semibold bg-transparent border-0 outline-none focus:ring-0 text-gray-900 placeholder-gray-400 min-w-0"
+                  />
+
+                  <div className="flex items-center gap-2">
+                    <FlagIcon
+                      countryCode={currencies.find(c => c.code === toCurrency)?.flag || 'ao'}
+                      size="lg"
+                    />
+
+                    <Select value={toCurrency} onValueChange={handleToCurrencyChange}>
+                    <SelectTrigger className="w-auto border-0 bg-transparent p-0 h-auto focus:ring-0 focus:ring-offset-0 [&>svg]:hidden flex-shrink-0">
+                      <SelectValue>
+                        <div className="flex items-center gap-2">
+                          <span className="text-lg font-semibold text-gray-900">{toCurrency}</span>
+                          <ChevronDown className="w-4 h-4 text-gray-400" />
+                        </div>
+                      </SelectValue>
+                    </SelectTrigger>
+                    <SelectContent>
+                      {currencies.map((currency) => (
+                        <SelectItem key={currency.code} value={currency.code}>
+                          <div className="flex items-center gap-2">
+                            <FlagIcon countryCode={currency.flag} size="sm" />
+                            <span>{currency.code}</span>
+                            <span className="text-gray-500 text-sm">- {currency.name}</span>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Market Rate Warning */}
+            {exchangeType === 'manual' && fromAmount && toAmount && parseFloat(fromAmount) > 0 && parseFloat(toAmount) > 0 && (() => {
+              const userRate = parseFloat(toAmount) / parseFloat(fromAmount)
+              const marketRate = getConversionRate(fromCurrency, toCurrency)
+              const percentageDiff = ((userRate - marketRate) / marketRate) * 100
+              const absDiff = Math.abs(percentageDiff)
+
+              // Only show warning if difference is more than 1%
+              if (absDiff > 1) {
+                return (
+                  <div className="mt-2 text-sm">
+                    {percentageDiff > 0 ? (
+                      <span className="text-orange-600">
+                        Valor {absDiff.toFixed(1)}% acima da taxa de mercado
+                      </span>
+                    ) : (
+                      <span className="text-red-600">
+                        Valor {absDiff.toFixed(1)}% abaixo da taxa de mercado
+                      </span>
+                    )}
+                  </div>
+                )
+              }
+              return null
+            })()}
           </div>
 
           {/* Exchange Type Selection */}
           <div className="space-y-2">
-            <Label className="text-sm font-medium text-gray-700">Tipo de câmbio</Label>
+            <Label className="text-sm font-bold text-gray-700">Tipo de câmbio</Label>
 
             {/* Auto Option */}
             <div
@@ -306,7 +445,7 @@ export default function ConvertPage() {
       <div className="page-container-white">
         <main className="content-container">
           <PageHeader
-            title="Está tudo correto?"
+            title="Tudo certo?"
             onBack={handleBack}
           />
 
@@ -345,7 +484,7 @@ export default function ConvertPage() {
             </div>
 
             <div className="flex justify-between items-center">
-              <span className="text-gray-600">Taxa de câmbio</span>
+              <span className="text-gray-600">Câmbio</span>
               <span className="font-medium text-gray-900">
                 1 {fromCurrency} = {getConversionRate(fromCurrency, toCurrency).toLocaleString(undefined, {
                   minimumFractionDigits: fromCurrency === 'AOA' ? 6 : 0,
@@ -356,7 +495,7 @@ export default function ConvertPage() {
 
             <div className="border-t border-gray-200 pt-4">
               <div className="flex justify-between items-center">
-                <span className="font-medium text-gray-900">Você receberá</span>
+                <span className="font-medium text-gray-900">Você recebe total</span>
                 <span className="font-bold text-lg text-gray-900">
                   {exchangeType === 'auto'
                     ? (parseFloat(fromAmount) * getConversionRate(fromCurrency, toCurrency)).toFixed(toCurrency === 'EUR' ? 6 : 0)

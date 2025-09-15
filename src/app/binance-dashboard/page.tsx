@@ -1,5 +1,5 @@
-import BinanceStyleDashboard from '@/components/features/dashboard/binance-style-dashboard'
+import Home from '@/components/features/dashboard/home'
 
 export default function BinanceDashboardPage() {
-  return <BinanceStyleDashboard />
+  return <Home />
 }

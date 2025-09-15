@@ -7,7 +7,7 @@ interface LoadingAnimationProps {
 }
 
 export default function LoadingAnimation({
-  message = "Aguarde",
+  message,
   size = 'md',
   className = ''
 }: LoadingAnimationProps) {
@@ -29,8 +29,10 @@ export default function LoadingAnimation({
         className="animate-spin rounded-full border-2 border-gray-300 border-t-black"
         style={{ width: config.width, height: config.height }}
       />
-      {/* Clean text below */}
-      <p className={`text-gray-900 font-medium ${config.textSize}`}>{message}</p>
+      {/* Only show text if message is provided */}
+      {message && (
+        <p className={`text-gray-900 font-medium ${config.textSize}`}>{message}</p>
+      )}
     </div>
   )
 }

@@ -21,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { useCurrentMarketRate } from '@/hooks/use-api'
 
 // Available currencies - only AOA and EUR
 type Currency = 'EUR' | 'AOA'
@@ -40,14 +41,25 @@ export default function ConvertPageV2() {
   const [currentStep, setCurrentStep] = useState<'convert' | 'confirm' | 'success'>('convert')
   const [isLoading, setIsLoading] = useState(false)
 
-  // Mock exchange rate (1 EUR = 1252 AOA)
-  const baseEurToAoaRate = 1252
+  // Get real-time market rate
+  const { data: marketRateData, isLoading: isRateLoading } = useCurrentMarketRate(
+    fromCurrency,
+    toCurrency,
+    fromCurrency !== toCurrency
+  )
 
   // Calculate conversion rate based on currency pair
   const getConversionRate = (from: Currency, to: Currency) => {
     if (from === to) return 1
-    if (from === 'EUR' && to === 'AOA') return baseEurToAoaRate
-    if (from === 'AOA' && to === 'EUR') return 1 / baseEurToAoaRate
+
+    // Use real market rate if available
+    if (marketRateData?.rate) {
+      return marketRateData.rate
+    }
+
+    // Fallback to hardcoded rates
+    if (from === 'EUR' && to === 'AOA') return 1252
+    if (from === 'AOA' && to === 'EUR') return 1 / 1252
     return 1
   }
 
@@ -118,12 +130,22 @@ export default function ConvertPageV2() {
 
   const handleExchangeTypeChange = (type: 'auto' | 'manual') => {
     setExchangeType(type)
-    
+
     // Recalculate amounts if switching to auto
     if (type === 'auto' && fromAmount) {
       handleFromAmountChange(fromAmount)
     }
   }
+
+  // Recalculate when market rate changes
+  useEffect(() => {
+    if (exchangeType === 'auto' && fromAmount && marketRateData?.rate) {
+      const numValue = parseFloat(fromAmount) || 0
+      const rate = getConversionRate(fromCurrency, toCurrency)
+      const converted = numValue * rate
+      setToAmount(converted.toFixed(toCurrency === 'EUR' ? 6 : 0))
+    }
+  }, [marketRateData?.rate, fromCurrency, toCurrency, exchangeType, fromAmount])
 
   const handleBack = () => {
     if (currentStep === 'confirm') {
@@ -168,7 +190,7 @@ export default function ConvertPageV2() {
 
   if (currentStep === 'convert') {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-white">
         <main className="max-w-md mx-auto px-4 py-6">
           <PageHeader
             title="Converter"
@@ -177,7 +199,7 @@ export default function ConvertPageV2() {
 
           <div className="relative mt-6">
             {/* From Currency Card */}
-            <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm mb-0">
+            <div className="bg-white rounded-2xl border border-black p-6 shadow-sm mb-0">
               <div className="flex items-center justify-between mb-4">
                 <Label className="text-sm text-gray-500 font-medium">De</Label>
                 <div className="text-right">
@@ -233,14 +255,14 @@ export default function ConvertPageV2() {
             <div className="flex justify-center relative z-20 -my-4">
               <button
                 onClick={handleSwapCurrencies}
-                className="w-12 h-12 bg-white border-2 border-gray-200 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 hover:bg-gray-50"
+                className="w-12 h-12 bg-white border border-gray-300 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 hover:bg-gray-50"
               >
                 <ArrowUpDown className="w-5 h-5 text-gray-600" />
               </button>
             </div>
 
             {/* To Currency Card */}
-            <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm mt-0">
+            <div className="bg-white rounded-2xl border border-black p-6 shadow-sm mt-0">
               <div className="flex items-center justify-between mb-4">
                 <Label className="text-sm text-gray-500 font-medium">Para</Label>
                 <div className="text-right">
@@ -290,12 +312,38 @@ export default function ConvertPageV2() {
                   className="text-right text-2xl md:text-2xl font-semibold bg-transparent outline-none flex-1 min-w-0 text-gray-900 placeholder-gray-400 overflow-hidden"
                 />
               </div>
+
+              {/* Market Rate Warning */}
+              {exchangeType === 'manual' && fromAmount && toAmount && parseFloat(fromAmount) > 0 && parseFloat(toAmount) > 0 && (() => {
+                const userRate = parseFloat(toAmount) / parseFloat(fromAmount)
+                const marketRate = getConversionRate(fromCurrency, toCurrency)
+                const percentageDiff = ((userRate - marketRate) / marketRate) * 100
+                const absDiff = Math.abs(percentageDiff)
+
+                // Only show warning if difference is more than 1%
+                if (absDiff > 1) {
+                  return (
+                    <div className="mt-2 text-sm">
+                      {percentageDiff > 0 ? (
+                        <span className="text-orange-600">
+                          Valor {absDiff.toFixed(1)}% acima da taxa de mercado
+                        </span>
+                      ) : (
+                        <span className="text-red-600">
+                          Valor {absDiff.toFixed(1)}% abaixo da taxa de mercado
+                        </span>
+                      )}
+                    </div>
+                  )
+                }
+                return null
+              })()}
             </div>
 
 
 
             {/* Exchange Type Selection */}
-            <div className="space-y-2">
+            <div className="space-y-2 mt-6">
               <Label className="text-sm font-medium text-gray-700">Tipo de câmbio</Label>
 
               {/* Auto Option */}
@@ -354,6 +402,8 @@ export default function ConvertPageV2() {
                   </div>
                 </div>
               </div>
+
+
             </div>
 
 

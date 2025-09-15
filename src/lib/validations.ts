@@ -247,24 +247,22 @@ export function validateRouteParams<T>(
 
 // Order schemas
 export const limitOrderSchema = z.object({
-  side: OrderSideSchema,
-  base_currency: CurrencySchema,
-  quote_currency: CurrencySchema,
-  quantity: PositiveNumberSchema,
-  price: PositiveNumberSchema
+  side: z.enum(['buy', 'sell']),
+  amount: z.number().positive().max(1000000),
+  price: z.number().positive(),
+  baseCurrency: z.enum(['EUR', 'AOA']),
+  quoteCurrency: z.enum(['EUR', 'AOA'])
 });
 
 export const marketOrderSchema = z.object({
-  side: OrderSideSchema,
-  base_currency: CurrencySchema,
-  quote_currency: CurrencySchema,
-  quantity: PositiveNumberSchema
+  side: z.enum(['buy', 'sell']),
+  amount: z.number().positive().max(1000000),
+  baseCurrency: z.enum(['EUR', 'AOA']),
+  quoteCurrency: z.enum(['EUR', 'AOA']),
+  slippageLimit: z.number().min(0).max(0.1).default(0.05) // 5% default slippage
 });
 
-export const orderHistorySchema = z.object({
-  page: z.coerce.number().int().min(1).default(1),
-  limit: z.coerce.number().int().min(1).max(100).default(20)
-});
+// Note: orderHistorySchema removed - endpoint removed for simplicity
 
 // Security schemas
 export const pinSetSchema = z.object({

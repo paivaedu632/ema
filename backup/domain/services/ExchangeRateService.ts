@@ -171,8 +171,8 @@ export class ExchangeRateService {
  */
 export class MockExchangeRateProvider implements ExchangeRateProvider {
   private readonly mockRates: Map<string, number> = new Map([
-    ['EUR-AOA', 1200], // 1 EUR = 1200 AOA
-    ['AOA-EUR', 1/1200] // 1 AOA = 0.000833 EUR
+    ['EUR-AOA', 1252], // 1 EUR = 1252 AOA (updated to match current system)
+    ['AOA-EUR', 1/1252] // 1 AOA = 0.000799 EUR
   ])
 
   async getCurrentRate(fromCurrency: Currency, toCurrency: Currency): Promise<ExchangeRate> {

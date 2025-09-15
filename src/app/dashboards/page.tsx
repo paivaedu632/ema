@@ -4,16 +4,17 @@ import React from 'react'
 import Link from 'next/link'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { 
-  Monitor, 
-  Smartphone, 
-  Eye, 
-  Code, 
+import {
+  Monitor,
+  Smartphone,
+  Eye,
+  Code,
   Palette,
   BarChart3,
   Users,
   Wallet,
-  ArrowRight
+  ArrowRight,
+  ArrowLeftRight
 } from 'lucide-react'
 
 export default function DashboardsPage() {

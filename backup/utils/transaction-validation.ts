@@ -26,8 +26,8 @@ export const EXCHANGE_RATE_VALIDATION = {
   
   // Fallback rates for frontend validation (1 EUR = X AOA format)
   FALLBACK_RATES: {
-    EUR_TO_AOA: 1100.00, // Updated to match BAI API format
-    AOA_TO_EUR: 0.000909  // Inverse for compatibility (1/1100)
+    EUR_TO_AOA: 1252.00, // Updated to match current system
+    AOA_TO_EUR: 0.000799  // Inverse for compatibility (1/1252)
   }
 } as const
 

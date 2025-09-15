@@ -37,7 +37,7 @@ async function marketOrderHandler(request: NextRequest, user: AuthenticatedUser)
       return ErrorResponses.orderFailed('Insufficient market liquidity');
     }
 
-    return ErrorResponses.orderFailed(result.error);
+    return ErrorResponses.orderFailed(result.error || 'Order failed');
   }
 
   const orderData = result.data as { id?: string; executed_price?: number; executed_amount?: number; status?: string; created_at?: string; executed_at?: string } | undefined;

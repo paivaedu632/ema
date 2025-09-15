@@ -31,7 +31,7 @@ async function limitOrderHandler(request: NextRequest, user: AuthenticatedUser) 
       return ErrorResponses.insufficientBalance(result.error);
     }
 
-    return ErrorResponses.orderFailed(result.error);
+    return ErrorResponses.orderFailed(result.error || 'Order failed');
   }
 
   const orderData = result.data as { id?: string; status?: string; created_at?: string } | undefined;

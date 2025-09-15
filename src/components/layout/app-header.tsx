@@ -7,6 +7,11 @@ import { LogOut } from 'lucide-react'
 interface AppHeaderProps {
   user?: {
     emailAddresses?: Array<{ emailAddress: string }>
+  } | {
+    userId?: string
+    sessionId?: string
+    authenticated?: boolean
+    timestamp?: string
   }
   onSignOut?: () => void
   className?: string
@@ -17,11 +22,19 @@ interface AppHeaderProps {
  * Used across dashboard and other authenticated pages
  */
 export function AppHeader({ user, onSignOut, className = "" }: AppHeaderProps) {
+  // Get email from either user type
+  const getEmailInitial = () => {
+    if (user && 'emailAddresses' in user) {
+      return user.emailAddresses?.[0]?.emailAddress?.charAt(0).toUpperCase() || 'U'
+    }
+    return 'U'
+  }
+
   return (
     <div className={`flex justify-between items-center mb-8 ${className}`}>
       <Avatar className="w-12 h-12">
         <AvatarFallback>
-          {user?.emailAddresses?.[0]?.emailAddress?.charAt(0).toUpperCase() || 'U'}
+          {getEmailInitial()}
         </AvatarFallback>
       </Avatar>
       

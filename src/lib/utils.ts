@@ -130,16 +130,84 @@ export function isValidDateFormat(date: string): boolean {
 }
 
 /**
- * Format currency amount with proper locale formatting
+ * Format currency amount with proper Portuguese locale formatting using currency codes
+ * Ensures thousands separators for ALL numbers ≥ 1,000
  */
 export function formatCurrency(amount: number, currency: Currency): string {
-  const locale = currency === 'EUR' ? 'pt-PT' : 'pt-AO'
-  return new Intl.NumberFormat(locale, {
-    style: 'currency',
-    currency: currency,
-    minimumFractionDigits: currency === 'AOA' ? 0 : 2,
-    maximumFractionDigits: currency === 'AOA' ? 0 : 2,
+  const locale = currency === 'EUR' ? 'pt-PT' : currency === 'AOA' ? 'pt-AO' : 'pt-PT'
+
+  // Format the number with Portuguese locale, explicitly using grouping
+  const formattedNumber = new Intl.NumberFormat(locale, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+    useGrouping: true, // Explicitly enable thousands separators
   }).format(amount)
+
+  // Replace space thousands separator with dot for Portuguese standard
+  // Handle both space and non-breaking space characters
+  const portugueseFormatted = formattedNumber.replace(/[\s\u00A0]/g, '.')
+
+  // Return with currency code instead of symbol
+  return `${portugueseFormatted} ${currency}`
+}
+
+/**
+ * Format number with Portuguese locale formatting (no currency symbol)
+ */
+export function formatNumber(amount: number, minimumFractionDigits: number = 2): string {
+  return new Intl.NumberFormat('pt-PT', {
+    minimumFractionDigits,
+    maximumFractionDigits: minimumFractionDigits,
+  }).format(amount)
+}
+
+/**
+ * Format amount for input fields (without currency symbol) - Unified approach
+ * Replaces the complex formatAmountForInput from format.ts
+ */
+export function formatAmountForInput(amount: number | string, currency: Currency): string {
+  const numericAmount = typeof amount === 'string' ? parseFloat(amount) : amount
+  if (isNaN(numericAmount)) return '0,00'
+
+  const locale = currency === 'EUR' ? 'pt-PT' : currency === 'AOA' ? 'pt-AO' : 'pt-PT'
+
+  const formattedNumber = new Intl.NumberFormat(locale, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+    useGrouping: true, // Explicitly enable thousands separators
+  }).format(numericAmount)
+
+  // Replace space thousands separator with dot for Portuguese standard
+  // Handle both space and non-breaking space characters
+  return formattedNumber.replace(/[\s\u00A0]/g, '.')
+}
+
+/**
+ * Format amount with currency (replaces formatAmountWithCurrency from format.ts)
+ */
+export function formatAmountWithCurrency(amount: number | string, currency: Currency): string {
+  const numericAmount = typeof amount === 'string' ? parseFloat(amount) : amount
+  if (isNaN(numericAmount)) return `0,00 ${currency}`
+
+  return formatCurrency(numericAmount, currency)
+}
+
+/**
+ * Format amount without currency code (for use when currency is already displayed elsewhere)
+ */
+export function formatAmountOnly(amount: number, currency: Currency): string {
+  const locale = currency === 'EUR' ? 'pt-PT' : currency === 'AOA' ? 'pt-AO' : 'pt-PT'
+
+  // Format the number with Portuguese locale, explicitly using grouping
+  const formattedNumber = new Intl.NumberFormat(locale, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+    useGrouping: true, // Explicitly enable thousands separators
+  }).format(amount)
+
+  // Replace space thousands separator with dot for Portuguese standard
+  // Handle both space and non-breaking space characters
+  return formattedNumber.replace(/[\s\u00A0]/g, '.')
 }
 
 /**

@@ -12,29 +12,32 @@ export default function TransactionsPage() {
   const transactions = [
     {
       id: 'tx_001',
+      displayId: 'EP-2025-001',
       type: 'receive',
-      amount: 500,
+      amount: '500,00',
       currency: 'EUR',
       status: 'completed',
-      created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+      date: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
       description: 'Received from John Doe'
     },
     {
       id: 'tx_002',
+      displayId: 'EP-2025-002',
       type: 'send',
-      amount: 150,
+      amount: '150,00',
       currency: 'EUR',
       status: 'completed',
-      created_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+      date: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
       description: 'Sent to Maria Silva'
     },
     {
       id: 'tx_003',
+      displayId: 'EP-2025-003',
       type: 'buy',
-      amount: 250,
+      amount: '250,00',
       currency: 'EUR',
       status: 'pending',
-      created_at: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
+      date: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
       description: 'Currency exchange'
     }
   ]
@@ -42,6 +45,10 @@ export default function TransactionsPage() {
   const loading = false
   const error = null
   const hasMore = false
+
+  const loadMore = () => {
+    // TODO: Implement load more functionality
+  }
 
   // TODO: Add real transaction fetching when clean architecture APIs are implemented
 

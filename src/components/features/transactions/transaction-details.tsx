@@ -6,7 +6,7 @@ import { RefreshCw, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { PageHeader } from '@/components/layout/page-header'
 import { ConfirmationSection, ConfirmationRow } from "@/components/ui/confirmation-section"
-import { formatAmountWithCurrency, type Currency } from '@/lib/format'
+import { formatAmountWithCurrency, type Currency } from '@/lib/utils'
 
 // Static transaction data type for visual representation
 type EnhancedTransactionData = {
@@ -42,7 +42,7 @@ export function TransactionDetails({ transactionId }: TransactionDetailsProps) {
   // TODO: Add useEffect here to fetch real transaction data when clean architecture APIs are implemented
 
   const handleBack = () => {
-    router.push('/dashboard')
+    router.push('/')
   }
 
   if (loading) {
@@ -71,7 +71,7 @@ export function TransactionDetails({ transactionId }: TransactionDetailsProps) {
           <div className="text-center py-12">
             <p className="text-gray-600 mb-4">{error || 'Transação não encontrada'}</p>
             <Button onClick={handleBack} className="primary-button">
-              Voltar ao Dashboard
+              Voltar ao Início
             </Button>
           </div>
         </main>

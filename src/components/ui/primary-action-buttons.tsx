@@ -9,12 +9,6 @@ interface PrimaryActionButtonsProps {
 }
 
 export function PrimaryActionButtons({ className = "" }: PrimaryActionButtonsProps) {
-  const router = useRouter()
-
-  const handleVender = () => {
-    router.push('/sell')
-  }
-
   const handleComprar = () => {
     // TODO: Implement buy functionality
     console.log('Buy functionality not yet implemented')
@@ -23,12 +17,6 @@ export function PrimaryActionButtons({ className = "" }: PrimaryActionButtonsPro
   return (
     <div className={`relative ${className}`}>
       <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 px-1">
-        <Button
-          onClick={handleVender}
-          className="flex-shrink-0 h-10 px-4 bg-gray-100 text-gray-900 border border-gray-100 rounded-full hover:bg-gray-200 transition-colors font-medium text-sm min-w-[100px]"
-        >
-          Vender
-        </Button>
         <Button
           onClick={handleComprar}
           className="flex-shrink-0 h-10 px-4 bg-gray-100 text-gray-900 border border-gray-100 rounded-full hover:bg-gray-200 transition-colors font-medium text-sm min-w-[100px]"

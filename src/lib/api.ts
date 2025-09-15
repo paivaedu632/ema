@@ -47,6 +47,8 @@ export function errorResponse(error: string, status: number = 400): NextResponse
   } as ApiResponse, { status })
 }
 
+
+
 export function validationErrorResponse(errors: Record<string, string>): NextResponse {
   return NextResponse.json({
     success: false,
@@ -132,21 +134,46 @@ export class ApiClient {
 // Default API client instance
 export const apiClient = new ApiClient()
 
-// Legacy function aliases for backward compatibility
-export const createSuccessResponse = successResponse
-export const createErrorResponse = errorResponse
+// Historical API response functions for compatibility
+export function createSuccessResponse<T>(data: T, message?: string, status: number = 200): NextResponse {
+  return NextResponse.json({
+    success: true,
+    data,
+    ...(message && { message })
+  }, { status })
+}
 
-// Error responses object for backward compatibility
+export function createErrorResponse(error: string, code?: string, status: number = 400): NextResponse {
+  return NextResponse.json({
+    success: false,
+    error,
+    ...(code && { code })
+  }, { status })
+}
+
+// Historical ErrorResponses object for compatibility
 export const ErrorResponses = {
-  AUTH_REQUIRED: 'Authentication required',
-  INVALID_TOKEN: 'Invalid authentication token',
-  FORBIDDEN: 'Access forbidden',
-  NOT_FOUND: 'Resource not found',
-  VALIDATION_ERROR: 'Validation error',
-  INTERNAL_ERROR: 'Internal server error',
-  INSUFFICIENT_BALANCE: 'Insufficient balance',
-  INVALID_CURRENCY: 'Invalid currency',
-  RATE_LIMITED: 'Rate limit exceeded'
+  validationError: (message: string) => createErrorResponse(message, 'VALIDATION_ERROR', 400),
+  insufficientBalance: (message: string) => createErrorResponse(message, 'INSUFFICIENT_BALANCE', 400),
+  orderFailed: (message: string) => createErrorResponse(message, 'ORDER_FAILED', 400),
+  authRequired: () => createErrorResponse('Authentication required', 'AUTH_REQUIRED', 401),
+  invalidToken: () => createErrorResponse('Invalid authentication token', 'INVALID_TOKEN', 401),
+  databaseError: (message: string) => createErrorResponse(message, 'DATABASE_ERROR', 500),
+  internalError: () => createErrorResponse('Internal server error', 'INTERNAL_ERROR', 500)
+}
+
+// Historical error handling wrapper
+export function withErrorHandling<T extends unknown[]>(
+  handler: (...args: T) => Promise<NextResponse>
+) {
+  return async (...args: T): Promise<NextResponse> => {
+    try {
+      return await handler(...args);
+    } catch (error) {
+      console.error('API Error:', error);
+      return ErrorResponses.internalError();
+    }
+  };
 }
 
 // CORS middleware wrapper
@@ -170,19 +197,4 @@ export function withCors(handler: (request: NextRequest, ...args: any[]) => Prom
   }
 }
 
-// Error handling middleware wrapper
-export function withErrorHandling(handler: (request: NextRequest, ...args: any[]) => Promise<NextResponse>) {
-  return async (request: NextRequest, ...args: any[]): Promise<NextResponse> => {
-    try {
-      return await handler(request, ...args)
-    } catch (error) {
-      console.error('API Error:', error)
 
-      if (error instanceof Error) {
-        return errorResponse(error.message, 500)
-      }
-
-      return errorResponse('Internal server error', 500)
-    }
-  }
-}
