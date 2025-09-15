@@ -1,5 +1,5 @@
-import Dashboard from '@/components/dashboard'
-import { ProtectedRoute } from '@/components/auth/protected-route'
+import Dashboard from '@/components/features/dashboard'
+import { ProtectedRoute } from '@/components/features/auth/protected-route'
 
 export default function Home() {
   return (

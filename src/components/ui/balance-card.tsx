@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { formatAmountForInput, type Currency } from '@/lib/format'
+import { formatAmountForInput, type Currency } from '@/lib/utils'
 import { FlagIcon } from '@/components/ui/flag-icon'
 
 

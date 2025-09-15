@@ -1,63 +1,134 @@
-"use client";
+'use client'
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { createClient } from '@supabase/supabase-js';
+import { useAuth } from '@/hooks/use-auth'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
+import LoadingAnimation from '@/components/ui/loading-animation'
 
 interface ProtectedRouteProps {
-  children: React.ReactNode;
+  children: React.ReactNode
+  redirectTo?: string
+  fallback?: React.ReactNode
 }
 
-export function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
-  const router = useRouter();
+/**
+ * Protected route wrapper that requires authentication
+ * Redirects to login if user is not authenticated
+ */
+export function ProtectedRoute({ 
+  children, 
+  redirectTo = '/login',
+  fallback 
+}: ProtectedRouteProps) {
+  const { isAuthenticated, isLoading } = useAuth()
+  const router = useRouter()
 
   useEffect(() => {
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    );
+    if (!isLoading && !isAuthenticated) {
+      router.push(redirectTo)
+    }
+  }, [isAuthenticated, isLoading, router, redirectTo])
 
-    const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-
-      if (session) {
-        setIsAuthenticated(true);
-      } else {
-        setIsAuthenticated(false);
-        router.push('/login');
-      }
-    };
-
-    checkAuth();
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (session) {
-        setIsAuthenticated(true);
-      } else {
-        setIsAuthenticated(false);
-        router.push('/login');
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [router]);
-
-  // Show loading state while checking authentication
-  if (isAuthenticated === null) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
+  // Show loading while checking authentication
+  if (isLoading) {
+    return fallback || (
+      <div className="min-h-screen flex items-center justify-center">
+        <LoadingAnimation />
       </div>
-    );
+    )
   }
 
-  // Show children if authenticated
+  // Don't render children if not authenticated
+  if (!isAuthenticated) {
+    return fallback || (
+      <div className="min-h-screen flex items-center justify-center">
+        <LoadingAnimation />
+      </div>
+    )
+  }
+
+  return <>{children}</>
+}
+
+/**
+ * Public route wrapper that redirects authenticated users
+ * Useful for login/signup pages
+ */
+export function PublicRoute({ 
+  children, 
+  redirectTo = '/',
+  fallback 
+}: ProtectedRouteProps) {
+  const { isAuthenticated, isLoading } = useAuth()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (!isLoading && isAuthenticated) {
+      router.push(redirectTo)
+    }
+  }, [isAuthenticated, isLoading, router, redirectTo])
+
+  // Show loading while checking authentication
+  if (isLoading) {
+    return fallback || (
+      <div className="min-h-screen flex items-center justify-center">
+        <LoadingAnimation />
+      </div>
+    )
+  }
+
+  // Don't render children if authenticated
   if (isAuthenticated) {
-    return <>{children}</>;
+    return fallback || (
+      <div className="min-h-screen flex items-center justify-center">
+        <LoadingAnimation />
+      </div>
+    )
   }
 
-  // Return null if not authenticated (will redirect)
-  return null;
+  return <>{children}</>
+}
+
+/**
+ * Higher-order component for protecting pages
+ */
+export function withAuth<P extends object>(
+  Component: React.ComponentType<P>,
+  options?: {
+    redirectTo?: string
+    fallback?: React.ReactNode
+  }
+) {
+  return function AuthenticatedComponent(props: P) {
+    return (
+      <ProtectedRoute 
+        redirectTo={options?.redirectTo}
+        fallback={options?.fallback}
+      >
+        <Component {...props} />
+      </ProtectedRoute>
+    )
+  }
+}
+
+/**
+ * Higher-order component for public pages
+ */
+export function withPublicRoute<P extends object>(
+  Component: React.ComponentType<P>,
+  options?: {
+    redirectTo?: string
+    fallback?: React.ReactNode
+  }
+) {
+  return function PublicComponent(props: P) {
+    return (
+      <PublicRoute 
+        redirectTo={options?.redirectTo}
+        fallback={options?.fallback}
+      >
+        <Component {...props} />
+      </PublicRoute>
+    )
+  }
 }

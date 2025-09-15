@@ -3,10 +3,11 @@
 import React from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
+import { CircleCheckBig } from 'lucide-react'
 
 interface SuccessScreenProps {
   title: string
-  message: string
+  message: string | React.ReactNode
   primaryAction?: {
     label: string
     onClick?: () => void
@@ -21,19 +22,7 @@ interface SuccessScreenProps {
 
 const DefaultSuccessIcon = () => (
   <div className="w-24 h-24 flex items-center justify-center mb-8">
-    <svg
-      className="w-20 h-20 text-black"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={3}
-        d="M5 13l4 4L19 7"
-      />
-    </svg>
+    <CircleCheckBig className="w-20 h-20 text-black" strokeWidth={1.5} />
   </div>
 )
 

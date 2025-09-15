@@ -1,6 +1,6 @@
 "use client"
 
-import { KYCDateFormStep } from "@/components/kyc/kyc-form-step"
+import { KYCDateFormStep } from '@/components/features/kyc/kyc-form-step'
 
 export default function KYCDateOfBirthPage() {
   return (

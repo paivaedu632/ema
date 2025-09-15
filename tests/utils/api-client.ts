@@ -181,20 +181,7 @@ export class ApiTestClient {
     return this.getMarketSummary()
   }
 
-  async getMarketDepth(params: { baseCurrency?: string; quoteCurrency?: string; levels?: number } = {}) {
-    const queryParams = new URLSearchParams()
-    
-    if (params.baseCurrency) queryParams.append('baseCurrency', params.baseCurrency)
-    if (params.quoteCurrency) queryParams.append('quoteCurrency', params.quoteCurrency)
-    if (params.levels) queryParams.append('levels', params.levels.toString())
-    
-    const queryString = queryParams.toString()
-    const url = queryString ? `/api/v1/market/depth?${queryString}` : '/api/v1/market/depth'
-    
-    return request(this.baseUrl)
-      .get(url)
-      .set(this.defaultHeaders)
-  }
+  // Note: getMarketDepth removed - endpoint removed for simplicity
 
   // Security endpoints
   async setPin(pinData: any, token?: string) {

@@ -1,0 +1,164 @@
+[2025-09-11T21:08:50.271Z] Creating backup of current structure...
+[2025-09-11T21:08:50.632Z] Backup created at: C:\Users\User\Documents\GitHub\ema\backup
+[2025-09-11T21:09:41.192Z] Creating new directory structure...
+[2025-09-11T21:09:41.203Z] Created directory: src/components/layout
+[2025-09-11T21:09:41.205Z] Created directory: src/components/forms
+[2025-09-11T21:09:41.210Z] Created directory: src/components/features/auth
+[2025-09-11T21:09:41.216Z] Created directory: src/components/features/dashboard
+[2025-09-11T21:09:41.219Z] Created directory: src/components/features/transfers
+[2025-09-11T21:09:41.221Z] Created directory: src/components/features/wallet
+[2025-09-11T21:09:41.223Z] Created directory: src/components/features/trading
+[2025-09-11T21:09:41.232Z] Created directory: src/components/features/transactions
+[2025-09-11T21:09:41.236Z] Created directory: src/components/features/kyc
+[2025-09-11T21:18:14.499Z] Updating import paths across codebase...
+[2025-09-11T21:18:14.525Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\dashboard\page.tsx: @/components/dashboard → @/components/features/dashboard
+[2025-09-11T21:18:14.533Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\deposit\page.tsx: @/components/deposit → @/components/features/wallet/deposit
+[2025-09-11T21:18:14.538Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\kyc\address\page.tsx: @/components/ui/page-header → @/components/layout/page-header
+[2025-09-11T21:18:14.542Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\kyc\id-matching\page.tsx: @/components/ui/page-header → @/components/layout/page-header
+[2025-09-11T21:18:14.548Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\kyc\id-upload\page.tsx: @/components/ui/page-header → @/components/layout/page-header
+[2025-09-11T21:18:14.556Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\kyc\liveness-check\page.tsx: @/components/ui/page-header → @/components/layout/page-header
+[2025-09-11T21:18:14.559Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\kyc\nationality\page.tsx: @/components/ui/page-header → @/components/layout/page-header
+[2025-09-11T21:18:14.569Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\kyc\passcode\page.tsx: @/components/ui/page-header → @/components/layout/page-header
+[2025-09-11T21:18:14.573Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\kyc\passcode\page.tsx: @/components/ui/code-input → @/components/forms/code-input
+[2025-09-11T21:18:14.575Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\kyc\pep\page.tsx: @/components/ui/page-header → @/components/layout/page-header
+[2025-09-11T21:18:14.583Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\kyc\selfie\page.tsx: @/components/ui/page-header → @/components/layout/page-header
+[2025-09-11T21:18:14.589Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\page.tsx: @/components/dashboard → @/components/features/dashboard
+[2025-09-11T21:18:14.608Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\receive\page.tsx: @/components/receive → @/components/features/transfers/receive
+[2025-09-11T21:18:14.623Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\sell\page.tsx: @/components/sell → @/components/features/trading/sell
+[2025-09-11T21:18:14.638Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\send\page.tsx: @/components/send → @/components/features/transfers/send
+[2025-09-11T21:18:14.651Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\transaction\[id]\page.tsx: @/components/transaction-details → @/components/features/transactions/transaction-details
+[2025-09-11T21:18:14.657Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\transactions\page.tsx: @/components/ui/page-header → @/components/layout/page-header
+[2025-09-11T21:18:14.660Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\wallet\page.tsx: @/components/wallet → @/components/features/wallet/wallet
+[2025-09-11T21:18:14.667Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\withdraw\page.tsx: @/components/withdraw → @/components/features/wallet/withdraw
+[2025-09-11T21:18:14.677Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\deposit.tsx: @/components/ui/page-header → @/components/layout/page-header
+[2025-09-11T21:18:14.683Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\deposit.tsx: @/components/ui/amount-input → @/components/forms/amount-input
+[2025-09-11T21:18:14.693Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\features\auth\login.tsx: @/components/ui/page-header → @/components/layout/page-header
+[2025-09-11T21:18:14.701Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\features\auth\login.tsx: @/components/ui/form-field → @/components/forms/auth-form-field
+[2025-09-11T21:18:14.707Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\features\auth\signup.tsx: @/components/ui/page-header → @/components/layout/page-header
+[2025-09-11T21:18:14.711Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\features\auth\signup.tsx: @/components/ui/form-field → @/components/forms/auth-form-field
+[2025-09-11T21:18:14.719Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\features\auth\signup.tsx: @/components/ui/phone-input → @/components/forms/phone-input
+[2025-09-11T21:18:14.722Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\features\auth\signup.tsx: @/components/ui/code-input → @/components/forms/code-input
+[2025-09-11T21:18:14.726Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\features\kyc\kyc-camera-step.tsx: @/components/ui/page-header → @/components/layout/page-header
+[2025-09-11T21:18:14.731Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\features\kyc\kyc-form-step.tsx: @/components/ui/page-header → @/components/layout/page-header
+[2025-09-11T21:18:14.739Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\features\kyc\kyc-form-step.tsx: @/components/ui/form-field → @/components/forms/auth-form-field
+[2025-09-11T21:18:14.744Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\features\kyc\kyc-processing-step.tsx: @/components/ui/page-header → @/components/layout/page-header
+[2025-09-11T21:18:14.756Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\features\kyc\kyc-radio-selection.tsx: @/components/ui/page-header → @/components/layout/page-header
+[2025-09-11T21:18:14.760Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\features\trading\sell.tsx: @/components/ui/page-header → @/components/layout/page-header
+[2025-09-11T21:18:14.768Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\features\trading\sell.tsx: @/components/ui/amount-input → @/components/forms/amount-input
+[2025-09-11T21:18:14.774Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\features\transactions\transaction-details.tsx: @/components/ui/page-header → @/components/layout/page-header
+[2025-09-11T21:18:14.777Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\features\transfers\receive.tsx: @/components/ui/page-header → @/components/layout/page-header
+[2025-09-11T21:18:14.786Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\features\transfers\send.tsx: @/components/ui/page-header → @/components/layout/page-header
+[2025-09-11T21:18:14.788Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\features\transfers\send.tsx: @/components/ui/amount-input → @/components/forms/amount-input
+[2025-09-11T21:18:14.791Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\features\wallet\deposit.tsx: @/components/ui/page-header → @/components/layout/page-header
+[2025-09-11T21:18:14.793Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\features\wallet\deposit.tsx: @/components/ui/amount-input → @/components/forms/amount-input
+[2025-09-11T21:18:14.806Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\features\wallet\withdraw.tsx: @/components/ui/page-header → @/components/layout/page-header
+[2025-09-11T21:18:14.808Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\features\wallet\withdraw.tsx: @/components/ui/form-field → @/components/forms/auth-form-field
+[2025-09-11T21:18:14.811Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\features\wallet\withdraw.tsx: @/components/ui/amount-input → @/components/forms/amount-input
+[2025-09-11T21:18:14.822Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\kyc\kyc-camera-step.tsx: @/components/ui/page-header → @/components/layout/page-header
+[2025-09-11T21:18:14.836Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\kyc\kyc-form-step.tsx: @/components/ui/page-header → @/components/layout/page-header
+[2025-09-11T21:18:14.850Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\kyc\kyc-form-step.tsx: @/components/ui/form-field → @/components/forms/auth-form-field
+[2025-09-11T21:18:14.856Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\kyc\kyc-processing-step.tsx: @/components/ui/page-header → @/components/layout/page-header
+[2025-09-11T21:18:14.873Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\kyc\kyc-radio-selection.tsx: @/components/ui/page-header → @/components/layout/page-header
+[2025-09-11T21:18:14.888Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\login.tsx: @/components/ui/page-header → @/components/layout/page-header
+[2025-09-11T21:18:14.891Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\login.tsx: @/components/ui/form-field → @/components/forms/auth-form-field
+[2025-09-11T21:18:14.897Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\receive.tsx: @/components/ui/page-header → @/components/layout/page-header
+[2025-09-11T21:18:14.905Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\sell.tsx: @/components/ui/page-header → @/components/layout/page-header
+[2025-09-11T21:18:14.910Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\sell.tsx: @/components/ui/amount-input → @/components/forms/amount-input
+[2025-09-11T21:18:14.919Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\send.tsx: @/components/ui/page-header → @/components/layout/page-header
+[2025-09-11T21:18:14.925Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\send.tsx: @/components/ui/amount-input → @/components/forms/amount-input
+[2025-09-11T21:18:14.932Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\signup.tsx: @/components/ui/page-header → @/components/layout/page-header
+[2025-09-11T21:18:14.935Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\signup.tsx: @/components/ui/form-field → @/components/forms/auth-form-field
+[2025-09-11T21:18:14.940Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\signup.tsx: @/components/ui/phone-input → @/components/forms/phone-input
+[2025-09-11T21:18:14.943Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\signup.tsx: @/components/ui/code-input → @/components/forms/code-input
+[2025-09-11T21:18:14.951Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\transaction-details.tsx: @/components/ui/page-header → @/components/layout/page-header
+[2025-09-11T21:18:14.981Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\withdraw.tsx: @/components/ui/page-header → @/components/layout/page-header
+[2025-09-11T21:18:14.986Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\withdraw.tsx: @/components/ui/form-field → @/components/forms/auth-form-field
+[2025-09-11T21:18:14.991Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\withdraw.tsx: @/components/ui/amount-input → @/components/forms/amount-input
+[2025-09-11T21:18:15.023Z] Updated imports in 42 files
+[2025-09-11T21:36:44.176Z] Updating import paths across codebase...
+[2025-09-11T21:36:44.198Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\auth\me\route.ts: @/lib/api/cors → @/lib/api
+[2025-09-11T21:36:44.199Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\auth\me\route.ts: @/lib/api/responses → @/lib/api
+[2025-09-11T21:36:44.201Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\health\status\route.ts: @/lib/api/cors → @/lib/api
+[2025-09-11T21:36:44.205Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\health\status\route.ts: @/lib/api/responses → @/lib/api
+[2025-09-11T21:36:44.209Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\market\depth\route.ts: @/lib/api/cors → @/lib/api
+[2025-09-11T21:36:44.211Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\market\depth\route.ts: @/lib/api/responses → @/lib/api
+[2025-09-11T21:36:44.213Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\market\depth\route.ts: @/lib/validation/helpers → @/lib/validation
+[2025-09-11T21:36:44.216Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\market\summary\route.ts: @/lib/api/cors → @/lib/api
+[2025-09-11T21:36:44.217Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\market\summary\route.ts: @/lib/api/responses → @/lib/api
+[2025-09-11T21:36:44.222Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\market\summary\route.ts: @/lib/validation/helpers → @/lib/validation
+[2025-09-11T21:36:44.228Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\orders\history\route.ts: @/lib/api/cors → @/lib/api
+[2025-09-11T21:36:44.234Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\orders\history\route.ts: @/lib/api/responses → @/lib/api
+[2025-09-11T21:36:44.249Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\orders\history\route.ts: @/lib/validation/helpers → @/lib/validation
+[2025-09-11T21:36:44.266Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\orders\history\route.ts: @/lib/validation/schemas → @/lib/validation
+[2025-09-11T21:36:44.281Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\orders\limit\route.ts: @/lib/api/cors → @/lib/api
+[2025-09-11T21:36:44.296Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\orders\limit\route.ts: @/lib/api/responses → @/lib/api
+[2025-09-11T21:36:44.304Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\orders\limit\route.ts: @/lib/validation/helpers → @/lib/validation
+[2025-09-11T21:36:44.308Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\orders\limit\route.ts: @/lib/validation/schemas → @/lib/validation
+[2025-09-11T21:36:44.315Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\orders\market\route.ts: @/lib/api/cors → @/lib/api
+[2025-09-11T21:36:44.323Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\orders\market\route.ts: @/lib/api/responses → @/lib/api
+[2025-09-11T21:36:44.328Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\orders\market\route.ts: @/lib/validation/helpers → @/lib/validation
+[2025-09-11T21:36:44.333Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\orders\market\route.ts: @/lib/validation/schemas → @/lib/validation
+[2025-09-11T21:36:44.340Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\security\pin\route.ts: @/lib/api/cors → @/lib/api
+[2025-09-11T21:36:44.340Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\security\pin\route.ts: @/lib/api/responses → @/lib/api
+[2025-09-11T21:36:44.346Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\security\pin\route.ts: @/lib/validation/helpers → @/lib/validation
+[2025-09-11T21:36:44.349Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\security\pin\route.ts: @/lib/validation/schemas → @/lib/validation
+[2025-09-11T21:36:44.356Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\security\pin\verify\route.ts: @/lib/api/cors → @/lib/api
+[2025-09-11T21:36:44.363Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\security\pin\verify\route.ts: @/lib/api/responses → @/lib/api
+[2025-09-11T21:36:44.366Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\security\pin\verify\route.ts: @/lib/validation/helpers → @/lib/validation
+[2025-09-11T21:36:44.374Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\security\pin\verify\route.ts: @/lib/validation/schemas → @/lib/validation
+[2025-09-11T21:36:44.379Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\transfers\history\route.ts: @/lib/api/cors → @/lib/api
+[2025-09-11T21:36:44.392Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\transfers\history\route.ts: @/lib/api/responses → @/lib/api
+[2025-09-11T21:36:44.398Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\transfers\history\route.ts: @/lib/validation/helpers → @/lib/validation
+[2025-09-11T21:36:44.415Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\transfers\history\route.ts: @/lib/validation/schemas → @/lib/validation
+[2025-09-11T21:36:44.432Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\transfers\send\route.ts: @/lib/api/cors → @/lib/api
+[2025-09-11T21:36:44.440Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\transfers\send\route.ts: @/lib/api/responses → @/lib/api
+[2025-09-11T21:36:44.446Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\transfers\send\route.ts: @/lib/validation/helpers → @/lib/validation
+[2025-09-11T21:36:44.448Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\transfers\send\route.ts: @/lib/validation/schemas → @/lib/validation
+[2025-09-11T21:36:44.454Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\users\search\route.ts: @/lib/api/cors → @/lib/api
+[2025-09-11T21:36:44.461Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\users\search\route.ts: @/lib/api/responses → @/lib/api
+[2025-09-11T21:36:44.464Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\users\search\route.ts: @/lib/validation/helpers → @/lib/validation
+[2025-09-11T21:36:44.466Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\users\search\route.ts: @/lib/validation/schemas → @/lib/validation
+[2025-09-11T21:36:44.471Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\wallets\balance\route.ts: @/lib/api/cors → @/lib/api
+[2025-09-11T21:36:44.479Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\wallets\balance\route.ts: @/lib/api/responses → @/lib/api
+[2025-09-11T21:36:44.483Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\wallets\[currency]\route.ts: @/lib/api/cors → @/lib/api
+[2025-09-11T21:36:44.490Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\wallets\[currency]\route.ts: @/lib/api/responses → @/lib/api
+[2025-09-11T21:36:44.497Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\wallets\[currency]\route.ts: @/lib/validation/helpers → @/lib/validation
+[2025-09-11T21:36:44.499Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\wallets\[currency]\route.ts: @/lib/validation/schemas → @/lib/validation
+[2025-09-11T21:36:44.563Z] Updated imports in 14 files
+[2025-09-11T21:37:30.353Z] Updating import paths across codebase...
+[2025-09-11T21:37:30.407Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\market\depth\route.ts: @/lib/validation → @/lib/validations
+[2025-09-11T21:37:30.437Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\market\summary\route.ts: @/lib/validation → @/lib/validations
+[2025-09-11T21:37:30.467Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\orders\history\route.ts: @/lib/validation → @/lib/validations
+[2025-09-11T21:37:30.488Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\orders\limit\route.ts: @/lib/validation → @/lib/validations
+[2025-09-11T21:37:30.536Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\orders\market\route.ts: @/lib/validation → @/lib/validations
+[2025-09-11T21:37:30.560Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\security\pin\route.ts: @/lib/validation → @/lib/validations
+[2025-09-11T21:37:30.574Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\security\pin\verify\route.ts: @/lib/validation → @/lib/validations
+[2025-09-11T21:37:30.587Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\transfers\history\route.ts: @/lib/validation → @/lib/validations
+[2025-09-11T21:37:30.596Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\transfers\send\route.ts: @/lib/validation → @/lib/validations
+[2025-09-11T21:37:30.607Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\users\search\route.ts: @/lib/validation → @/lib/validations
+[2025-09-11T21:37:30.620Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\api\v1\wallets\[currency]\route.ts: @/lib/validation → @/lib/validations
+[2025-09-11T21:37:30.722Z] Updated imports in 11 files
+[2025-09-11T21:42:37.803Z] Updating import paths across codebase...
+[2025-09-11T21:42:37.828Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\kyc\app-use\page.tsx: @/components/kyc/kyc-radio-selection → @/components/features/kyc/kyc-radio-selection
+[2025-09-11T21:42:37.832Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\kyc\date-of-birth\page.tsx: @/components/kyc/kyc-form-step → @/components/features/kyc/kyc-form-step
+[2025-09-11T21:42:37.837Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\kyc\full-name\page.tsx: @/components/kyc/kyc-form-step → @/components/features/kyc/kyc-form-step
+[2025-09-11T21:42:37.844Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\kyc\id-back\page.tsx: @/components/kyc/kyc-camera-step → @/components/features/kyc/kyc-camera-step
+[2025-09-11T21:42:37.855Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\kyc\id-front\page.tsx: @/components/kyc/kyc-camera-step → @/components/features/kyc/kyc-camera-step
+[2025-09-11T21:42:37.869Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\kyc\income-source\page.tsx: @/components/kyc/kyc-radio-selection → @/components/features/kyc/kyc-radio-selection
+[2025-09-11T21:42:37.891Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\kyc\monthly-income\page.tsx: @/components/kyc/kyc-radio-selection → @/components/features/kyc/kyc-radio-selection
+[2025-09-11T21:42:37.921Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\kyc\occupation\page.tsx: @/components/kyc/kyc-form-step → @/components/features/kyc/kyc-form-step
+[2025-09-11T21:42:38.010Z] Updated imports in 8 files
+[2025-09-11T21:43:24.844Z] Updating import paths across codebase...
+[2025-09-11T21:43:24.869Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\dashboard\page.tsx: @/components/auth/protected-route → @/components/features/auth/protected-route
+[2025-09-11T21:43:24.878Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\app\page.tsx: @/components/auth/protected-route → @/components/features/auth/protected-route
+[2025-09-11T21:43:24.931Z] Updated imports in 2 files
+[2025-09-11T21:49:56.015Z] Updating import paths across codebase...
+[2025-09-11T21:49:56.082Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\features\kyc\kyc-form-step.tsx: @/utils/formatting-utils → @/lib/utils
+[2025-09-11T21:49:56.116Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\features\trading\sell.tsx: @/utils/transaction-validation → @/lib/utils
+[2025-09-11T21:49:56.181Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\features\transactions\transaction-details.tsx: @/utils/formatting-utils → @/lib/utils
+[2025-09-11T21:49:56.379Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\features\transfers\send.tsx: @/utils/transaction-validation → @/lib/utils
+[2025-09-11T21:49:56.441Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\forms\amount-input.tsx: @/utils/amount-validation → @/lib/utils
+[2025-09-11T21:49:56.558Z] Updated imports in 5 files
+[2025-09-11T21:51:07.608Z] Updating import paths across codebase...
+[2025-09-11T21:51:07.699Z] Updated import in C:\Users\User\Documents\GitHub\ema\src\components\ui\validated-form-field.tsx: @/types/component-props → @/types
+[2025-09-11T21:51:07.762Z] Updated imports in 1 files

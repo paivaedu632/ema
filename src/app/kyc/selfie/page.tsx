@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Camera } from "lucide-react"
-import { PageHeader } from "@/components/ui/page-header"
+import { PageHeader } from '@/components/layout/page-header'
 import { CameraCapture } from "@/components/ui/camera-capture"
 import { useKYC } from "@/contexts/kyc-context"
 

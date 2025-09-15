@@ -1,7 +1,6 @@
 'use client'
 
 import React from 'react'
-import Image from 'next/image'
 
 interface FlagIconProps {
   countryCode: string
@@ -24,21 +23,23 @@ export function FlagIcon({
   className,
   size = 'md'
 }: FlagIconProps) {
-  const flagUrl = `https://flagicons.lipis.dev/flags/4x3/${countryCode.toLowerCase()}.svg`
   const altText = alt || `${countryCode.toUpperCase()} flag`
 
   // Use size prop if no custom className provided
   const sizeClass = className || sizeClasses[size]
 
   return (
-    <div className={`rounded-full overflow-hidden flex-shrink-0 relative ${sizeClass}`}>
-      <Image
-        src={flagUrl}
-        alt={altText}
-        fill
-        className="object-cover"
-      />
-    </div>
+    <span
+      className={`fi fi-${countryCode.toLowerCase()} rounded-full overflow-hidden flex-shrink-0 ${sizeClass}`}
+      title={altText}
+      role="img"
+      aria-label={altText}
+      style={{
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        display: 'inline-block'
+      }}
+    />
   )
 }
 

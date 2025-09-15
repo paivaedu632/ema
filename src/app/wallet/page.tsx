@@ -1,4 +1,4 @@
-import Wallet from '@/components/wallet'
+import Wallet from '@/components/features/wallet/wallet'
 
 interface WalletPageProps {
   searchParams: Promise<{

@@ -1,6 +1,6 @@
 "use client"
 
-import { KYCMonthlyIncomeSelection } from "@/components/kyc/kyc-radio-selection"
+import { KYCMonthlyIncomeSelection } from '@/components/features/kyc/kyc-radio-selection'
 
 export default function KYCMonthlyIncomePage() {
   return (

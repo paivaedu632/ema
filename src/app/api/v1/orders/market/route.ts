@@ -1,9 +1,9 @@
 import { NextRequest } from 'next/server';
 import { withAuth, AuthenticatedUser } from '@/lib/auth/middleware';
-import { createSuccessResponse, ErrorResponses, withErrorHandling } from '@/lib/api/responses';
-import { withCors } from '@/lib/api/cors';
-import { validateRequestBody } from '@/lib/validation/helpers';
-import { marketOrderSchema } from '@/lib/validation/schemas';
+import { createSuccessResponse, ErrorResponses, withErrorHandling } from '@/lib/api';
+import { withCors } from '@/lib/api';
+import { validateRequestBody } from '@/lib/validations';
+import { marketOrderSchema } from '@/lib/validations';
 import { executeMarketOrder } from '@/lib/database/functions';
 
 async function marketOrderHandler(request: NextRequest, user: AuthenticatedUser) {
@@ -37,7 +37,7 @@ async function marketOrderHandler(request: NextRequest, user: AuthenticatedUser)
       return ErrorResponses.orderFailed('Insufficient market liquidity');
     }
 
-    return ErrorResponses.orderFailed(result.error);
+    return ErrorResponses.orderFailed(result.error || 'Order failed');
   }
 
   const orderData = result.data as { id?: string; executed_price?: number; executed_amount?: number; status?: string; created_at?: string; executed_at?: string } | undefined;

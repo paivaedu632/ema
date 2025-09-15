@@ -2,9 +2,9 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { PageHeader } from "@/components/ui/page-header"
+import { PageHeader } from '@/components/layout/page-header'
 import { FixedBottomAction } from "@/components/ui/fixed-bottom-action"
-import { CodeInput } from "@/components/ui/code-input"
+import { CodeInput } from '@/components/forms/code-input'
 import { useKYC } from "@/contexts/kyc-context"
 
 export default function KYCPasscodePage() {

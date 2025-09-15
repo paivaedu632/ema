@@ -1,9 +1,9 @@
 import { NextRequest } from 'next/server';
 import { withAuth, AuthenticatedUser } from '@/lib/auth/middleware';
-import { createSuccessResponse, ErrorResponses, withErrorHandling } from '@/lib/api/responses';
-import { withCors } from '@/lib/api/cors';
-import { validateSearchParams } from '@/lib/validation/helpers';
-import { userSearchSchema } from '@/lib/validation/schemas';
+import { createSuccessResponse, ErrorResponses, withErrorHandling } from '@/lib/api';
+import { withCors } from '@/lib/api';
+import { validateSearchParams } from '@/lib/validations';
+import { userSearchSchema } from '@/lib/validations';
 import { findUserForTransfer } from '@/lib/database/functions';
 
 async function userSearchHandler(request: NextRequest, user: AuthenticatedUser) {

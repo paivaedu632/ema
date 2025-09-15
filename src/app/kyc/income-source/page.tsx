@@ -1,6 +1,6 @@
 "use client"
 
-import { KYCIncomeSourceSelection } from "@/components/kyc/kyc-radio-selection"
+import { KYCIncomeSourceSelection } from '@/components/features/kyc/kyc-radio-selection'
 
 export default function KYCIncomeSourcePage() {
   return (

@@ -1,6 +1,6 @@
 "use client"
 
-import { KYCIdBackCameraStep } from "@/components/kyc/kyc-camera-step"
+import { KYCIdBackCameraStep } from '@/components/features/kyc/kyc-camera-step'
 
 export default function KYCIdBackPage() {
   return (

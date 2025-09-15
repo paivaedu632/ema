@@ -2,14 +2,15 @@
 
 import React from 'react'
 import { useRouter } from 'next/navigation'
-import { TrendingDown, TrendingUp, Plus, ArrowUp, ArrowDown, Landmark } from 'lucide-react'
+import { ArrowLeftRight, Plus, ArrowUp, ArrowDown, Landmark } from 'lucide-react'
 
 /**
  * Unified Action Buttons - Circular Design Implementation
  *
- * This component displays all 6 financial action buttons using the circular
- * icon-based design with horizontal scrolling. The pill-shaped implementation
- * has been preserved in pill-action-buttons-backup.tsx for future use.
+ * This component displays 5 core financial action buttons using the circular
+ * icon-based design with horizontal scrolling. Includes: Converter, Depositar,
+ * Enviar, Receber, and Retirar. The pill-shaped implementation has been
+ * preserved in pill-action-buttons-backup.tsx for future use.
  */
 
 interface UnifiedActionButtonsProps {
@@ -19,13 +20,8 @@ interface UnifiedActionButtonsProps {
 export function UnifiedActionButtons({ className = "" }: UnifiedActionButtonsProps) {
   const router = useRouter()
 
-  const handleVender = () => {
-    router.push('/sell')
-  }
-
-  const handleComprar = () => {
-    // TODO: Implement buy functionality
-    console.log('Buy functionality not yet implemented')
+  const handleConverter = () => {
+    router.push('/convert')
   }
 
   const handleDepositar = () => {
@@ -48,25 +44,14 @@ export function UnifiedActionButtons({ className = "" }: UnifiedActionButtonsPro
     <div className={`relative ${className}`}>
       <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2 px-1">
         <button
-          onClick={handleVender}
+          onClick={handleConverter}
           className="flex-shrink-0 flex flex-col items-center space-y-2 cursor-pointer p-2 rounded-lg hover:bg-gray-100 transition-colors min-w-[80px]"
         >
           <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center border border-gray-200 hover:bg-gray-200 transition-colors">
-            <TrendingDown className="w-5 h-5 text-gray-900" />
+            <ArrowLeftRight className="w-5 h-5 text-gray-900" />
           </div>
           <span className="text-sm text-gray-900 font-medium text-center leading-tight">
-            Vender
-          </span>
-        </button>
-        <button
-          onClick={handleComprar}
-          className="flex-shrink-0 flex flex-col items-center space-y-2 cursor-pointer p-2 rounded-lg hover:bg-gray-100 transition-colors min-w-[80px]"
-        >
-          <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center border border-gray-200 hover:bg-gray-200 transition-colors">
-            <TrendingUp className="w-5 h-5 text-gray-900" />
-          </div>
-          <span className="text-sm text-gray-900 font-medium text-center leading-tight">
-            Comprar
+            Converter
           </span>
         </button>
         <button

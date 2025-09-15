@@ -1,6 +1,6 @@
 "use client"
 
-import { KYCAppUseSelection } from "@/components/kyc/kyc-radio-selection"
+import { KYCAppUseSelection } from '@/components/features/kyc/kyc-radio-selection'
 
 export default function KYCAppUsePage() {
   return (

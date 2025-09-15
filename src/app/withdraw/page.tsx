@@ -1,4 +1,4 @@
-import { WithdrawFlow } from "@/components/withdraw"
+import { WithdrawFlow } from '@/components/features/wallet/withdraw'
 
 export default function WithdrawPage() {
   return <WithdrawFlow />
