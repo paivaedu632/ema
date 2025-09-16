@@ -17,10 +17,13 @@ export interface CurrencyLimits {
  */
 export function parsePortugueseNumber(value: string): number {
   if (!value || value.trim() === '') return 0
-  
+
+  // Sanitize input first
+  const sanitized = sanitizeInput(value)
+
   // Remove any non-numeric characters except comma and period
-  let cleaned = value.replace(/[^\d,.]/g, '')
-  
+  let cleaned = sanitized.replace(/[^\d,.]/g, '')
+
   // Handle Portuguese format: thousands separator (.) and decimal separator (,)
   // If there's a comma, treat everything after the last comma as decimals
   if (cleaned.includes(',')) {
@@ -35,7 +38,7 @@ export function parsePortugueseNumber(value: string): number {
     // No comma, remove periods (treat as thousands separators)
     cleaned = cleaned.replace(/\./g, '')
   }
-  
+
   const parsed = parseFloat(cleaned)
   return isNaN(parsed) ? 0 : parsed
 }
@@ -69,6 +72,48 @@ export function cleanInputString(value: string): string {
 }
 
 /**
+ * Sanitize input to prevent user confusion
+ * - Remove leading zeros
+ * - Handle multiple decimal separators
+ * - Handle multiple thousand separators
+ */
+export function sanitizeInput(value: string): string {
+  return value
+    .replace(/^0+(?=\d)/, '') // Remove leading zeros (but keep single 0)
+    .replace(/[,]{2,}/g, ',') // Multiple commas to single comma
+    .replace(/[.]{2,}/g, '.') // Multiple periods to single period
+}
+
+/**
+ * Validate decimal places for currency-specific precision
+ * EUR: Maximum 2 decimal places (cents)
+ * AOA: Maximum 0 decimal places (no fractional units)
+ */
+export function validateDecimalPlaces(value: string, currency: Currency): ValidationResult {
+  const maxDecimals = currency === 'EUR' ? 2 : 0
+  const decimalPart = value.split(',')[1]
+
+  if (decimalPart && decimalPart.length > maxDecimals) {
+    const currencyName = currency === 'EUR' ? 'euros' : 'kwanzas'
+    const decimalName = currency === 'EUR' ? 'cêntimos' : ''
+
+    if (maxDecimals === 0) {
+      return {
+        isValid: false,
+        error: `${currency} não aceita casas decimais`
+      }
+    } else {
+      return {
+        isValid: false,
+        error: `Máximo ${maxDecimals} ${decimalName} para ${currencyName}`
+      }
+    }
+  }
+
+  return { isValid: true }
+}
+
+/**
  * Calculate currency limits based on current exchange rate
  */
 export function calculateCurrencyLimits(
@@ -93,33 +138,60 @@ export function calculateCurrencyLimits(
 }
 
 /**
+ * Enhanced balance validation with specific available balance message
+ */
+export function validateBalance(
+  amount: number,
+  availableBalance: number,
+  currency: Currency
+): ValidationResult {
+  if (amount > availableBalance) {
+    return {
+      isValid: false,
+      error: `Saldo insuficiente. Disponível: ${formatPortugueseInput(availableBalance)} ${currency}`
+    }
+  }
+
+  return { isValid: true }
+}
+
+/**
  * Validate amount against currency limits
  */
 export function validateAmount(
   amount: number,
   currency: Currency,
-  exchangeRate: number
+  exchangeRate: number,
+  availableBalance?: number
 ): ValidationResult {
   if (amount === 0) {
     return { isValid: true }
   }
-  
+
   const limits = calculateCurrencyLimits(currency, exchangeRate)
-  
+
   if (amount < limits.min) {
     return {
       isValid: false,
       error: `Mínimo: ${formatPortugueseInput(limits.min)} ${currency}`
     }
   }
-  
+
   if (amount > limits.max) {
     return {
       isValid: false,
       error: `Máximo: ${formatPortugueseInput(limits.max)} ${currency}`
     }
   }
-  
+
+  // Check balance if provided
+  if (availableBalance !== undefined) {
+    const balanceValidation = validateBalance(amount, availableBalance, currency)
+    if (!balanceValidation.isValid) {
+      return balanceValidation
+    }
+  }
+
   return { isValid: true }
 }
 
@@ -129,7 +201,8 @@ export function validateAmount(
 export function processInputChange(
   newValue: string,
   currency: Currency,
-  exchangeRate: number
+  exchangeRate: number,
+  availableBalance?: number
 ): {
   numericValue: number
   formattedValue: string
@@ -137,16 +210,26 @@ export function processInputChange(
 } {
   // Clean the input
   const cleaned = cleanInputString(newValue)
-  
+
+  // Validate decimal places first
+  const decimalValidation = validateDecimalPlaces(cleaned, currency)
+  if (!decimalValidation.isValid) {
+    return {
+      numericValue: 0,
+      formattedValue: cleaned,
+      validation: decimalValidation
+    }
+  }
+
   // Parse to numeric value
   const numericValue = parsePortugueseNumber(cleaned)
-  
+
   // Format for display
   const formattedValue = formatPortugueseInput(numericValue)
-  
-  // Validate
-  const validation = validateAmount(numericValue, currency, exchangeRate)
-  
+
+  // Validate amount limits and balance
+  const validation = validateAmount(numericValue, currency, exchangeRate, availableBalance)
+
   return {
     numericValue,
     formattedValue,
@@ -161,19 +244,20 @@ export function handleCurrencyInput(
   event: React.ChangeEvent<HTMLInputElement>,
   currency: Currency,
   exchangeRate: number,
-  onValueChange: (numericValue: number, formattedValue: string, validation: ValidationResult) => void
+  onValueChange: (numericValue: number, formattedValue: string, validation: ValidationResult) => void,
+  availableBalance?: number
 ) {
   const inputValue = event.target.value
-  
+
   // Allow empty input
   if (inputValue === '') {
     onValueChange(0, '', { isValid: true })
     return
   }
-  
+
   // Process the input
-  const result = processInputChange(inputValue, currency, exchangeRate)
-  
+  const result = processInputChange(inputValue, currency, exchangeRate, availableBalance)
+
   // Call the callback with results
   onValueChange(result.numericValue, result.formattedValue, result.validation)
 }

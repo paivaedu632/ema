@@ -84,6 +84,7 @@ export default function ConvertPageV2() {
   const fromInput = useCurrencyInput({
     currency: fromCurrency,
     exchangeRate: getConversionRate('EUR', 'AOA'),
+    availableBalance: userBalances[fromCurrency],
     onValueChange: (numericValue) => {
       if (exchangeType === 'auto') {
         const rate = getConversionRate(fromCurrency, toCurrency)
@@ -96,6 +97,7 @@ export default function ConvertPageV2() {
   const toInput = useCurrencyInput({
     currency: toCurrency,
     exchangeRate: getConversionRate('EUR', 'AOA'),
+    availableBalance: userBalances[toCurrency],
     onValueChange: (numericValue) => {
       if (exchangeType === 'auto') {
         const rate = getConversionRate(toCurrency, fromCurrency)

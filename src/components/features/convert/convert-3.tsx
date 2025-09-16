@@ -35,8 +35,7 @@ export default function ConvertDark() {
   const router = useRouter()
   const [fromCurrency, setFromCurrency] = useState<Currency>('EUR')
   const [toCurrency, setToCurrency] = useState<Currency>('AOA')
-  const [fromAmount, setFromAmount] = useState('')
-  const [toAmount, setToAmount] = useState('')
+
   const [exchangeType, setExchangeType] = useState<'auto' | 'manual'>('auto')
 
   // Mock conversion rate (1 EUR = 1250 AOA)
@@ -47,31 +46,32 @@ export default function ConvertDark() {
     return 1
   }
 
-  const handleFromAmountChange = (value: string) => {
-    setFromAmount(value)
-
-    // Auto-calculate convert amount for auto mode
-    if (exchangeType === 'auto') {
-      const numValue = parseFloat(value) || 0
-      const rate = getConversionRate(fromCurrency, toCurrency)
-      const converted = numValue * rate
-      setToAmount(converted.toFixed(toCurrency === 'EUR' ? 6 : 0))
+  // Currency input hooks with validation
+  const fromInput = useCurrencyInput({
+    currency: fromCurrency,
+    exchangeRate: getConversionRate('EUR', 'AOA'),
+    availableBalance: userBalances[fromCurrency],
+    onValueChange: (numericValue) => {
+      if (exchangeType === 'auto') {
+        const rate = getConversionRate(fromCurrency, toCurrency)
+        const converted = numericValue * rate
+        toInput.setValue(converted)
+      }
     }
-    // In manual mode, don't auto-calculate - preserve user input
-  }
+  })
 
-  const handleToAmountChange = (value: string) => {
-    setToAmount(value)
-
-    // Auto-calculate convert amount for auto mode (bidirectional)
-    if (exchangeType === 'auto') {
-      const numValue = parseFloat(value) || 0
-      const rate = getConversionRate(toCurrency, fromCurrency)
-      const converted = numValue * rate
-      setFromAmount(converted.toFixed(fromCurrency === 'EUR' ? 6 : 0))
+  const toInput = useCurrencyInput({
+    currency: toCurrency,
+    exchangeRate: getConversionRate('EUR', 'AOA'),
+    availableBalance: userBalances[toCurrency],
+    onValueChange: (numericValue) => {
+      if (exchangeType === 'auto') {
+        const rate = getConversionRate(toCurrency, fromCurrency)
+        const converted = numericValue * rate
+        fromInput.setValue(converted)
+      }
     }
-    // In manual mode, don't auto-calculate - preserve user input
-  }
+  })
 
   const handleSwapCurrencies = () => {
     const newFromCurrency = toCurrency
@@ -79,9 +79,12 @@ export default function ConvertDark() {
     setFromCurrency(newFromCurrency)
     setToCurrency(newToCurrency)
 
-    // Clear amounts and recalculate
-    setFromAmount('')
-    setToAmount('')
+    // Swap the input values
+    const tempFromValue = fromInput.numericValue
+    const tempToValue = toInput.numericValue
+
+    fromInput.setValue(tempToValue)
+    toInput.setValue(tempFromValue)
   }
 
   const handleFromCurrencyChange = (currency: Currency) => {
@@ -91,8 +94,10 @@ export default function ConvertDark() {
       setToCurrency(currency === 'EUR' ? 'AOA' : 'EUR')
     }
     // Recalculate if we have an amount and auto mode
-    if (exchangeType === 'auto' && fromAmount) {
-      handleFromAmountChange(fromAmount)
+    if (exchangeType === 'auto' && fromInput.numericValue > 0) {
+      const rate = getConversionRate(currency, toCurrency)
+      const converted = fromInput.numericValue * rate
+      toInput.setValue(converted)
     }
   }
 
@@ -103,8 +108,10 @@ export default function ConvertDark() {
       setFromCurrency(currency === 'EUR' ? 'AOA' : 'EUR')
     }
     // Recalculate if we have an amount and auto mode
-    if (exchangeType === 'auto' && fromAmount) {
-      handleFromAmountChange(fromAmount)
+    if (exchangeType === 'auto' && fromInput.numericValue > 0) {
+      const rate = getConversionRate(fromCurrency, currency)
+      const converted = fromInput.numericValue * rate
+      toInput.setValue(converted)
     }
   }
 
@@ -112,8 +119,10 @@ export default function ConvertDark() {
     setExchangeType(type)
 
     // Recalculate amounts if switching to auto
-    if (type === 'auto' && fromAmount) {
-      handleFromAmountChange(fromAmount)
+    if (type === 'auto' && fromInput.numericValue > 0) {
+      const rate = getConversionRate(fromCurrency, toCurrency)
+      const converted = fromInput.numericValue * rate
+      toInput.setValue(converted)
     }
   }
 
@@ -125,9 +134,9 @@ export default function ConvertDark() {
     // Redirect to main convert component with confirmation step and form data
     const params = new URLSearchParams({
       step: 'confirm',
-      fromAmount: fromAmount,
+      fromAmount: fromInput.numericValue.toString(),
       fromCurrency: fromCurrency,
-      toAmount: toAmount,
+      toAmount: toInput.numericValue.toString(),
       toCurrency: toCurrency,
       exchangeType: exchangeType,
       source: 'convert-2' // Track which component initiated the conversion
@@ -135,9 +144,6 @@ export default function ConvertDark() {
 
     router.push(`/convert?${params.toString()}`)
   }
-
-  const isValidConversion = fromAmount && parseFloat(fromAmount) > 0 && 
-                          parseFloat(fromAmount) <= userBalances[fromCurrency]
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -183,8 +189,8 @@ export default function ConvertDark() {
               <div className="text-right">
                 <input
                   type="text"
-                  value={fromAmount}
-                  onChange={(e) => handleFromAmountChange(e.target.value)}
+                  value={fromInput.displayValue}
+                  onChange={fromInput.handleInputChange}
                   placeholder="0"
                   className="text-right text-2xl font-semibold bg-transparent border-0 outline-none text-card-foreground placeholder-muted-foreground w-32"
                 />
@@ -194,6 +200,11 @@ export default function ConvertDark() {
             <div className="text-sm text-muted-foreground">
               Saldo: {formatCurrency(userBalances[fromCurrency], fromCurrency)}
             </div>
+            {!fromInput.validation.isValid && (
+              <div className="text-sm text-red-500 mt-1">
+                {fromInput.validation.error}
+              </div>
+            )}
           </div>
 
           {/* Swap Button */}
@@ -240,8 +251,8 @@ export default function ConvertDark() {
               <div className="text-right">
                 <input
                   type="text"
-                  value={toAmount}
-                  onChange={(e) => handleToAmountChange(e.target.value)}
+                  value={toInput.displayValue}
+                  onChange={toInput.handleInputChange}
                   placeholder="0"
                   className="text-right text-2xl font-semibold bg-transparent border-0 outline-none text-card-foreground placeholder-muted-foreground w-32"
                 />
@@ -251,12 +262,16 @@ export default function ConvertDark() {
             <div className="text-sm text-muted-foreground">
               Saldo: {formatCurrency(userBalances[toCurrency], toCurrency)}
             </div>
+            {!toInput.validation.isValid && (
+              <div className="text-sm text-red-500 mt-1">
+                {toInput.validation.error}
+              </div>
+            )}
 
             {/* Market Rate Warning */}
-            {exchangeType === 'manual' && fromAmount && parseFloat(fromAmount) > 0 && (() => {
+            {exchangeType === 'manual' && fromInput.numericValue > 0 && (() => {
               const marketRate = getConversionRate(fromCurrency, toCurrency)
-              const fromAmountNum = parseFloat(fromAmount)
-              const marketAmount = fromAmountNum * marketRate
+              const marketAmount = fromInput.numericValue * marketRate
 
               // Calculate 20% margin range
               const lowerBound = marketAmount * 0.8  // 20% below market
@@ -290,7 +305,7 @@ export default function ConvertDark() {
                 <div className="flex-1">
                   <div className="text-sm font-bold text-card-foreground mb-1">Automático</div>
                   <div className="text-sm text-muted-foreground">
-                    Você recebe <span className="font-bold">{fromAmount ? formatCurrency(parseFloat(fromAmount) * getConversionRate(fromCurrency, toCurrency), toCurrency) : formatCurrency(0, toCurrency)}</span> agora
+                    Você recebe <span className="font-bold">{fromInput.numericValue > 0 ? formatCurrency(fromInput.numericValue * getConversionRate(fromCurrency, toCurrency), toCurrency) : formatCurrency(0, toCurrency)}</span> agora
                   </div>
                 </div>
               </div>
@@ -310,8 +325,8 @@ export default function ConvertDark() {
                 <div className="flex-1">
                   <div className="text-sm font-bold text-card-foreground mb-1">Manual</div>
                   <div className="text-sm text-muted-foreground">
-                    {exchangeType === 'manual' && toAmount && parseFloat(toAmount) > 0
-                      ? <>Você recebe <span className="font-bold">{formatCurrency(parseFloat(toAmount), toCurrency)}</span> quando encontrarmos o câmbio que você quer</>
+                    {exchangeType === 'manual' && toInput.numericValue > 0
+                      ? <>Você recebe <span className="font-bold">{formatCurrency(toInput.numericValue, toCurrency)}</span> quando encontrarmos o câmbio que você quer</>
                       : 'Escolha quanto você quer receber'
                     }
                   </div>
@@ -326,7 +341,7 @@ export default function ConvertDark() {
       <FixedBottomAction>
         <Button
           onClick={handleConvert}
-          disabled={!isValidConversion}
+          disabled={fromInput.numericValue === 0 || (exchangeType === 'manual' && toInput.numericValue === 0) || !fromInput.validation.isValid || !toInput.validation.isValid}
           className="primary-action-button"
         >
           Continuar

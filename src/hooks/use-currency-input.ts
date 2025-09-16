@@ -18,13 +18,15 @@ export interface UseCurrencyInputProps {
   exchangeRate: number
   initialValue?: number
   onValueChange?: (numericValue: number) => void
+  availableBalance?: number
 }
 
 export function useCurrencyInput({
   currency,
   exchangeRate,
   initialValue = 0,
-  onValueChange
+  onValueChange,
+  availableBalance
 }: UseCurrencyInputProps) {
   const [state, setState] = useState<CurrencyInputState>(() => ({
     displayValue: initialValue > 0 ? formatPortugueseInput(initialValue) : '',
@@ -48,7 +50,7 @@ export function useCurrencyInput({
     }
     
     // Process the input
-    const result = processInputChange(inputValue, currency, exchangeRate)
+    const result = processInputChange(inputValue, currency, exchangeRate, availableBalance)
     
     const newState = {
       displayValue: result.formattedValue,
@@ -58,7 +60,7 @@ export function useCurrencyInput({
     
     setState(newState)
     onValueChange?.(result.numericValue)
-  }, [currency, exchangeRate, onValueChange])
+  }, [currency, exchangeRate, onValueChange, availableBalance])
 
   const setValue = useCallback((value: number) => {
     const newState = {
@@ -71,16 +73,16 @@ export function useCurrencyInput({
 
   const setDisplayValue = useCallback((displayValue: string) => {
     const numericValue = parsePortugueseNumber(displayValue)
-    const result = processInputChange(displayValue, currency, exchangeRate)
-    
+    const result = processInputChange(displayValue, currency, exchangeRate, availableBalance)
+
     const newState = {
       displayValue: result.formattedValue,
       numericValue: result.numericValue,
       validation: result.validation
     }
-    
+
     setState(newState)
-  }, [currency, exchangeRate])
+  }, [currency, exchangeRate, availableBalance])
 
   return {
     ...state,

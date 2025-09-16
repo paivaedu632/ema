@@ -79,10 +79,17 @@ export default function ConvertPage() {
     return 1
   }
 
+  // Mock user balances
+  const userBalances = {
+    EUR: 1250.50,
+    AOA: 1250000
+  }
+
   // Currency input hooks with validation
   const fromInput = useCurrencyInput({
     currency: fromCurrency,
     exchangeRate: getConversionRate('EUR', 'AOA'),
+    availableBalance: userBalances[fromCurrency],
     onValueChange: (numericValue) => {
       if (exchangeType === 'auto') {
         const rate = getConversionRate(fromCurrency, toCurrency)
@@ -95,6 +102,7 @@ export default function ConvertPage() {
   const toInput = useCurrencyInput({
     currency: toCurrency,
     exchangeRate: getConversionRate('EUR', 'AOA'),
+    availableBalance: userBalances[toCurrency],
     onValueChange: (numericValue) => {
       if (exchangeType === 'auto') {
         const rate = getConversionRate(toCurrency, fromCurrency)
@@ -103,12 +111,6 @@ export default function ConvertPage() {
       }
     }
   })
-
-  // Mock user balances
-  const userBalances = {
-    EUR: 1250.50,
-    AOA: 1250000
-  }
 
   // Handle URL parameters from other convert components
   useEffect(() => {
@@ -210,8 +212,6 @@ export default function ConvertPage() {
   }
 
   const availableBalance = userBalances[fromCurrency]
-  const fromAmountNum = fromInput.numericValue
-  const isInsufficientBalance = fromAmountNum > availableBalance
 
   // Handle exchange type change
   const handleExchangeTypeChange = (type: 'auto' | 'manual') => {
@@ -305,9 +305,7 @@ export default function ConvertPage() {
             <div className="text-sm text-black">
               Saldo: {formatCurrency(availableBalance, fromCurrency)}
             </div>
-            {isInsufficientBalance && (
-              <p className="text-sm text-red-600">Saldo insuficiente</p>
-            )}
+
             {!fromInput.validation.isValid && (
               <div className="text-sm text-red-500 mt-1">
                 {fromInput.validation.error}
@@ -465,7 +463,7 @@ export default function ConvertPage() {
           <div className="hidden md:block mt-6">
             <Button
               onClick={handleConvert}
-              disabled={fromInput.numericValue === 0 || (exchangeType === 'manual' && toInput.numericValue === 0) || isInsufficientBalance || isLoading || !fromInput.validation.isValid || !toInput.validation.isValid}
+              disabled={fromInput.numericValue === 0 || (exchangeType === 'manual' && toInput.numericValue === 0) || isLoading || !fromInput.validation.isValid || !toInput.validation.isValid}
               className="primary-action-button"
             >
               Continuar
@@ -479,7 +477,7 @@ export default function ConvertPage() {
             primaryAction={{
               label: "Continuar",
               onClick: handleConvert,
-              disabled: fromInput.numericValue === 0 || (exchangeType === 'manual' && toInput.numericValue === 0) || isInsufficientBalance || isLoading || !fromInput.validation.isValid || !toInput.validation.isValid
+              disabled: fromInput.numericValue === 0 || (exchangeType === 'manual' && toInput.numericValue === 0) || isLoading || !fromInput.validation.isValid || !toInput.validation.isValid
             }}
           />
         </div>

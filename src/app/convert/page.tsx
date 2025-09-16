@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import ConvertPage from '@/components/features/convert/convert-page'
+import ConvertPage from '@/components/features/convert/convert'
 
 function ConvertPageContent() {
   return <ConvertPage />
