@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { formatCurrency } from '@/lib/utils'
+import { useCurrencyInput } from '@/hooks/use-currency-input'
 
 // Available currencies - EUR and AOA only
 type Currency = 'EUR' | 'AOA'
@@ -199,9 +200,9 @@ export default function ConvertDark() {
           <div className="flex justify-center -my-2">
             <button
               onClick={handleSwapCurrencies}
-              className="w-12 h-12 bg-card border border-gray-300 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 hover:bg-accent"
+              className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center border border-gray-200 hover:bg-gray-200 transition-colors"
             >
-              <ArrowDown className="w-5 h-5 text-gray-600" />
+              <ArrowDown className="w-5 h-5 text-gray-900" />
             </button>
           </div>
 

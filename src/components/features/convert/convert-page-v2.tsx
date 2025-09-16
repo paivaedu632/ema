@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import {
   ArrowUpDown,
+  ArrowDown,
   ChevronDown,
   Zap,
   Clock
@@ -23,6 +24,7 @@ import {
 } from '@/components/ui/select'
 import { formatCurrency } from '@/lib/utils'
 import { useCurrentMarketRate } from '@/hooks/use-api'
+import { useCurrencyInput } from '@/hooks/use-currency-input'
 
 // Available currencies - only AOA and EUR
 type Currency = 'EUR' | 'AOA'
@@ -36,8 +38,7 @@ export default function ConvertPageV2() {
   const router = useRouter()
   const [fromCurrency, setFromCurrency] = useState<Currency>('EUR')
   const [toCurrency, setToCurrency] = useState<Currency>('AOA')
-  const [fromAmount, setFromAmount] = useState('')
-  const [toAmount, setToAmount] = useState('')
+
   const [exchangeType, setExchangeType] = useState<'auto' | 'manual'>('auto')
   const [currentStep, setCurrentStep] = useState<'convert' | 'confirm' | 'success'>('convert')
   const [isLoading, setIsLoading] = useState(false)
@@ -79,39 +80,43 @@ export default function ConvertPageV2() {
     AOA: 1250000
   }
 
-  const handleFromAmountChange = (value: string) => {
-    setFromAmount(value)
-
-    // Auto-calculate receive amount for auto mode
-    if (exchangeType === 'auto') {
-      const numValue = parseFloat(value) || 0
-      const rate = getConversionRate(fromCurrency, toCurrency)
-      const converted = numValue * rate
-      setToAmount(converted.toFixed(toCurrency === 'EUR' ? 6 : 0))
+  // Currency input hooks with validation
+  const fromInput = useCurrencyInput({
+    currency: fromCurrency,
+    exchangeRate: getConversionRate('EUR', 'AOA'),
+    onValueChange: (numericValue) => {
+      if (exchangeType === 'auto') {
+        const rate = getConversionRate(fromCurrency, toCurrency)
+        const converted = numericValue * rate
+        toInput.setValue(converted)
+      }
     }
-  }
+  })
 
-  const handleToAmountChange = (value: string) => {
-    setToAmount(value)
-
-    // Auto-calculate send amount for auto mode
-    if (exchangeType === 'auto') {
-      const numValue = parseFloat(value) || 0
-      const rate = getConversionRate(toCurrency, fromCurrency)
-      const converted = numValue * rate
-      setFromAmount(converted.toFixed(fromCurrency === 'EUR' ? 6 : 0))
+  const toInput = useCurrencyInput({
+    currency: toCurrency,
+    exchangeRate: getConversionRate('EUR', 'AOA'),
+    onValueChange: (numericValue) => {
+      if (exchangeType === 'auto') {
+        const rate = getConversionRate(toCurrency, fromCurrency)
+        const converted = numericValue * rate
+        fromInput.setValue(converted)
+      }
     }
-  }
+  })
 
   const handleSwapCurrencies = () => {
-    const tempCurrency = fromCurrency
-    setFromCurrency(toCurrency)
-    setToCurrency(tempCurrency)
+    const newFromCurrency = toCurrency
+    const newToCurrency = fromCurrency
+    setFromCurrency(newFromCurrency)
+    setToCurrency(newToCurrency)
 
-    // Swap amounts too
-    const tempAmount = fromAmount
-    setFromAmount(toAmount)
-    setToAmount(tempAmount)
+    // Swap the input values
+    const tempFromValue = fromInput.numericValue
+    const tempToValue = toInput.numericValue
+
+    fromInput.setValue(tempToValue)
+    toInput.setValue(tempFromValue)
   }
 
   const handleFromCurrencyChange = (currency: Currency) => {
@@ -121,8 +126,10 @@ export default function ConvertPageV2() {
       setToCurrency(currency === 'EUR' ? 'AOA' : 'EUR')
     }
     // Recalculate if we have an amount and auto mode
-    if (exchangeType === 'auto' && fromAmount) {
-      handleFromAmountChange(fromAmount)
+    if (exchangeType === 'auto' && fromInput.numericValue > 0) {
+      const rate = getConversionRate(currency, toCurrency)
+      const converted = fromInput.numericValue * rate
+      toInput.setValue(converted)
     }
   }
 
@@ -133,8 +140,10 @@ export default function ConvertPageV2() {
       setFromCurrency(currency === 'EUR' ? 'AOA' : 'EUR')
     }
     // Recalculate if we have an amount and auto mode
-    if (exchangeType === 'auto' && fromAmount) {
-      handleFromAmountChange(fromAmount)
+    if (exchangeType === 'auto' && fromInput.numericValue > 0) {
+      const rate = getConversionRate(fromCurrency, currency)
+      const converted = fromInput.numericValue * rate
+      toInput.setValue(converted)
     }
   }
 
@@ -142,20 +151,21 @@ export default function ConvertPageV2() {
     setExchangeType(type)
 
     // Recalculate amounts if switching to auto
-    if (type === 'auto' && fromAmount) {
-      handleFromAmountChange(fromAmount)
+    if (type === 'auto' && fromInput.numericValue > 0) {
+      const rate = getConversionRate(fromCurrency, toCurrency)
+      const converted = fromInput.numericValue * rate
+      toInput.setValue(converted)
     }
   }
 
   // Recalculate when market rate changes
   useEffect(() => {
-    if (exchangeType === 'auto' && fromAmount && marketRateData?.rate) {
-      const numValue = parseFloat(fromAmount) || 0
+    if (exchangeType === 'auto' && fromInput.numericValue > 0 && marketRateData?.rate) {
       const rate = getConversionRate(fromCurrency, toCurrency)
-      const converted = numValue * rate
-      setToAmount(converted.toFixed(toCurrency === 'EUR' ? 6 : 0))
+      const converted = fromInput.numericValue * rate
+      toInput.setValue(converted)
     }
-  }, [marketRateData?.rate, fromCurrency, toCurrency, exchangeType, fromAmount])
+  }, [marketRateData?.rate, fromCurrency, toCurrency, exchangeType, fromInput.numericValue])
 
   const handleBack = () => {
     if (currentStep === 'confirm') {
@@ -169,9 +179,9 @@ export default function ConvertPageV2() {
     // Redirect to main convert component with confirmation step and form data
     const params = new URLSearchParams({
       step: 'confirm',
-      fromAmount: fromAmount,
+      fromAmount: fromInput.numericValue.toString(),
       fromCurrency: fromCurrency,
-      toAmount: toAmount,
+      toAmount: toInput.numericValue.toString(),
       toCurrency: toCurrency,
       exchangeType: exchangeType,
       source: 'convert-3' // Track which component initiated the conversion
@@ -191,23 +201,23 @@ export default function ConvertPageV2() {
   // Success step - redirect to success page with conversion data
   if (currentStep === 'success') {
     const finalAmount = exchangeType === 'auto'
-      ? (parseFloat(fromAmount) * getConversionRate(fromCurrency, toCurrency)).toFixed(toCurrency === 'EUR' ? 6 : 0)
-      : toAmount || '0'
-    
+      ? (fromInput.numericValue * getConversionRate(fromCurrency, toCurrency)).toFixed(toCurrency === 'EUR' ? 6 : 0)
+      : toInput.numericValue.toFixed(toCurrency === 'EUR' ? 6 : 0)
+
     const params = new URLSearchParams({
       type: exchangeType,
       amount: finalAmount,
       currency: toCurrency,
-      fromAmount: fromAmount,
+      fromAmount: fromInput.numericValue.toString(),
       fromCurrency: fromCurrency
     })
-    
+
     router.push(`/convert/success?${params.toString()}`)
     return null
   }
 
   const currentRate = getConversionRate(fromCurrency, toCurrency)
-  const isValidAmount = fromAmount && parseFloat(fromAmount) > 0
+  const isValidAmount = fromInput.numericValue > 0
 
   if (currentStep === 'convert') {
     return (
@@ -264,21 +274,26 @@ export default function ConvertPageV2() {
 
                 <input
                   type="text"
-                  value={fromAmount}
-                  onChange={(e) => handleFromAmountChange(e.target.value)}
+                  value={fromInput.displayValue}
+                  onChange={fromInput.handleInputChange}
                   placeholder="0"
                   className="text-right text-2xl md:text-2xl font-semibold bg-transparent outline-none flex-1 min-w-0 text-gray-900 placeholder-gray-400 overflow-hidden"
                 />
               </div>
             </div>
+            {!fromInput.validation.isValid && (
+              <div className="text-sm text-red-500 mt-1 text-center">
+                {fromInput.validation.error}
+              </div>
+            )}
 
             {/* Swap Button - Overlapping the cards */}
             <div className="flex justify-center relative z-20 -my-4">
               <button
                 onClick={handleSwapCurrencies}
-                className="w-12 h-12 bg-white border border-gray-300 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 hover:bg-gray-50"
+                className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center border border-gray-200 hover:bg-gray-200 transition-colors"
               >
-                <ArrowUpDown className="w-5 h-5 text-gray-600" />
+                <ArrowDown className="w-5 h-5 text-gray-900" />
               </button>
             </div>
 
@@ -327,18 +342,22 @@ export default function ConvertPageV2() {
 
                 <input
                   type="text"
-                  value={toAmount}
-                  onChange={(e) => handleToAmountChange(e.target.value)}
+                  value={toInput.displayValue}
+                  onChange={toInput.handleInputChange}
                   placeholder="0"
                   className="text-right text-2xl md:text-2xl font-semibold bg-transparent outline-none flex-1 min-w-0 text-gray-900 placeholder-gray-400 overflow-hidden"
                 />
               </div>
+              {!toInput.validation.isValid && (
+                <div className="text-sm text-red-500 mt-1 text-center">
+                  {toInput.validation.error}
+                </div>
+              )}
 
               {/* Market Rate Warning */}
-              {exchangeType === 'manual' && fromAmount && parseFloat(fromAmount) > 0 && (() => {
+              {exchangeType === 'manual' && fromInput.numericValue > 0 && (() => {
                 const marketRate = getConversionRate(fromCurrency, toCurrency)
-                const fromAmountNum = parseFloat(fromAmount)
-                const marketAmount = fromAmountNum * marketRate
+                const marketAmount = fromInput.numericValue * marketRate
 
                 // Calculate 20% margin range
                 const lowerBound = marketAmount * 0.8  // 20% below market
@@ -374,7 +393,7 @@ export default function ConvertPageV2() {
                   <div className="flex-1">
                     <div className="text-sm font-bold text-gray-900 mb-1">Automático</div>
                     <div className="text-sm text-gray-600">
-                      Você recebe <span className="font-bold">{fromAmount ? formatCurrency(parseFloat(fromAmount) * getConversionRate(fromCurrency, toCurrency), toCurrency) : formatCurrency(0, toCurrency)}</span> agora
+                      Você recebe <span className="font-bold">{fromInput.numericValue > 0 ? formatCurrency(fromInput.numericValue * getConversionRate(fromCurrency, toCurrency), toCurrency) : formatCurrency(0, toCurrency)}</span> agora
                     </div>
                   </div>
                   <div className={`w-4 h-4 rounded-full border-2 ${
@@ -401,8 +420,8 @@ export default function ConvertPageV2() {
                   <div className="flex-1">
                     <div className="text-sm font-bold text-gray-900 mb-1">Manual</div>
                     <div className="text-sm text-gray-600">
-                      {exchangeType === 'manual' && toAmount && parseFloat(toAmount) > 0
-                        ? <>Você recebe <span className="font-bold">{formatCurrency(parseFloat(toAmount), toCurrency)}</span> quando encontrarmos o câmbio que você quer</>
+                      {exchangeType === 'manual' && toInput.numericValue > 0
+                        ? <>Você recebe <span className="font-bold">{formatCurrency(toInput.numericValue, toCurrency)}</span> quando encontrarmos o câmbio que você quer</>
                         : 'Escolha quanto você quer receber'
                       }
                     </div>
@@ -426,7 +445,7 @@ export default function ConvertPageV2() {
           <div className="hidden md:block mt-6">
             <Button
               onClick={handleConvert}
-              disabled={!fromAmount || (exchangeType === 'manual' && !toAmount)}
+              disabled={fromInput.numericValue === 0 || (exchangeType === 'manual' && toInput.numericValue === 0) || !fromInput.validation.isValid || !toInput.validation.isValid}
               className="primary-action-button"
             >
               Continuar
@@ -440,7 +459,7 @@ export default function ConvertPageV2() {
             primaryAction={{
               label: "Continuar",
               onClick: handleConvert,
-              disabled: !fromAmount || (exchangeType === 'manual' && !toAmount)
+              disabled: fromInput.numericValue === 0 || (exchangeType === 'manual' && toInput.numericValue === 0) || !fromInput.validation.isValid || !toInput.validation.isValid
             }}
           />
         </div>
