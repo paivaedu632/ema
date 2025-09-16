@@ -17,7 +17,7 @@ async function limitOrderHandler(request: NextRequest, user: AuthenticatedUser) 
 
   // Place limit order
   const result = await placeLimitOrder({
-    user_id: user.userId,
+    user_id: user.databaseId,
     side,
     base_currency: baseCurrency,
     quote_currency: quoteCurrency,

@@ -21,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { formatCurrency } from '@/lib/utils'
 import { useCurrentMarketRate } from '@/hooks/use-api'
 
 // Available currencies - only AOA and EUR
@@ -165,7 +166,18 @@ export default function ConvertPageV2() {
   }
 
   const handleConvert = () => {
-    setCurrentStep('confirm')
+    // Redirect to main convert component with confirmation step and form data
+    const params = new URLSearchParams({
+      step: 'confirm',
+      fromAmount: fromAmount,
+      fromCurrency: fromCurrency,
+      toAmount: toAmount,
+      toCurrency: toCurrency,
+      exchangeType: exchangeType,
+      source: 'convert-3' // Track which component initiated the conversion
+    })
+
+    router.push(`/convert?${params.toString()}`)
   }
 
   const handleConfirmConvert = async () => {
@@ -210,7 +222,7 @@ export default function ConvertPageV2() {
             {/* From Currency Card */}
             <div className="bg-white rounded-2xl border border-black p-6 shadow-sm mb-0">
               <div className="flex items-center justify-between mb-4">
-                <Label className="text-sm text-gray-500 font-medium">De</Label>
+                <Label className="text-sm text-gray-500 font-bold">Converter</Label>
                 <div className="text-right">
                   <div className="text-sm text-gray-400">
                     Saldo {userBalances[fromCurrency].toLocaleString(undefined, {
@@ -273,7 +285,7 @@ export default function ConvertPageV2() {
             {/* To Currency Card */}
             <div className="bg-white rounded-2xl border border-black p-6 shadow-sm mt-0">
               <div className="flex items-center justify-between mb-4">
-                <Label className="text-sm text-gray-500 font-medium">Para</Label>
+                <Label className="text-sm text-gray-500 font-bold">Para</Label>
                 <div className="text-right">
                   <div className="text-sm text-gray-400">
                     Saldo {userBalances[toCurrency].toLocaleString(undefined, {
@@ -323,29 +335,22 @@ export default function ConvertPageV2() {
               </div>
 
               {/* Market Rate Warning */}
-              {exchangeType === 'manual' && fromAmount && toAmount && parseFloat(fromAmount) > 0 && parseFloat(toAmount) > 0 && (() => {
-                const userRate = parseFloat(toAmount) / parseFloat(fromAmount)
+              {exchangeType === 'manual' && fromAmount && parseFloat(fromAmount) > 0 && (() => {
                 const marketRate = getConversionRate(fromCurrency, toCurrency)
-                const percentageDiff = ((userRate - marketRate) / marketRate) * 100
-                const absDiff = Math.abs(percentageDiff)
+                const fromAmountNum = parseFloat(fromAmount)
+                const marketAmount = fromAmountNum * marketRate
 
-                // Only show warning if difference is more than 1%
-                if (absDiff > 1) {
-                  return (
-                    <div className="mt-2 text-sm">
-                      {percentageDiff > 0 ? (
-                        <span className="text-orange-600">
-                          Valor {absDiff.toFixed(1)}% acima da taxa de mercado
-                        </span>
-                      ) : (
-                        <span className="text-red-600">
-                          Valor {absDiff.toFixed(1)}% abaixo da taxa de mercado
-                        </span>
-                      )}
-                    </div>
-                  )
-                }
-                return null
+                // Calculate 20% margin range
+                const lowerBound = marketAmount * 0.8  // 20% below market
+                const upperBound = marketAmount * 1.2  // 20% above market
+
+                return (
+                  <div className="mt-2 text-sm">
+                    <span className="text-red-600">
+                      Recomendado: {formatCurrency(lowerBound, toCurrency)}-{formatCurrency(upperBound, toCurrency)}
+                    </span>
+                  </div>
+                )
               })()}
             </div>
 
@@ -353,7 +358,7 @@ export default function ConvertPageV2() {
 
             {/* Exchange Type Selection */}
             <div className="space-y-2 mt-6">
-              <Label className="text-sm font-medium text-gray-700">Tipo de câmbio</Label>
+              <Label className="text-sm font-bold text-gray-700">Tipo de câmbio</Label>
 
               {/* Auto Option */}
               <div
@@ -369,7 +374,7 @@ export default function ConvertPageV2() {
                   <div className="flex-1">
                     <div className="text-sm font-bold text-gray-900 mb-1">Automático</div>
                     <div className="text-sm text-gray-600">
-                      Você recebe {fromAmount ? (parseFloat(fromAmount) * getConversionRate(fromCurrency, toCurrency)).toFixed(toCurrency === 'EUR' ? 6 : 0) : '0'} {toCurrency} agora
+                      Você recebe <span className="font-bold">{fromAmount ? formatCurrency(parseFloat(fromAmount) * getConversionRate(fromCurrency, toCurrency), toCurrency) : formatCurrency(0, toCurrency)}</span> agora
                     </div>
                   </div>
                   <div className={`w-4 h-4 rounded-full border-2 ${
@@ -397,7 +402,7 @@ export default function ConvertPageV2() {
                     <div className="text-sm font-bold text-gray-900 mb-1">Manual</div>
                     <div className="text-sm text-gray-600">
                       {exchangeType === 'manual' && toAmount && parseFloat(toAmount) > 0
-                        ? `Você recebe ${toAmount} ${toCurrency} quando encontrarmos o câmbio que você quer`
+                        ? <>Você recebe <span className="font-bold">{formatCurrency(parseFloat(toAmount), toCurrency)}</span> quando encontrarmos o câmbio que você quer</>
                         : 'Escolha quanto você quer receber'
                       }
                     </div>

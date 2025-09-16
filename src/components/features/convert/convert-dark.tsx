@@ -121,8 +121,18 @@ export default function ConvertDark() {
   }
 
   const handleConvert = () => {
-    // Handle conversion logic
-    console.log('Converting:', fromAmount, fromCurrency, 'to', toAmount, toCurrency)
+    // Redirect to main convert component with confirmation step and form data
+    const params = new URLSearchParams({
+      step: 'confirm',
+      fromAmount: fromAmount,
+      fromCurrency: fromCurrency,
+      toAmount: toAmount,
+      toCurrency: toCurrency,
+      exchangeType: exchangeType,
+      source: 'convert-2' // Track which component initiated the conversion
+    })
+
+    router.push(`/convert?${params.toString()}`)
   }
 
   const isValidConversion = fromAmount && parseFloat(fromAmount) > 0 && 
@@ -130,7 +140,7 @@ export default function ConvertDark() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <main className="px-4 py-6">
+      <main className="max-w-md mx-auto px-4 py-6">
         <PageHeader
           title="Converter"
           onBack={handleBack}
@@ -139,7 +149,7 @@ export default function ConvertDark() {
 
         <div className="mt-8 space-y-4">
           {/* From Currency Card */}
-          <div className="bg-card rounded-2xl p-6 border border-border shadow-sm">
+          <div className="bg-card rounded-2xl p-6 border border-black shadow-sm">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                 <FlagIcon
@@ -186,17 +196,17 @@ export default function ConvertDark() {
           </div>
 
           {/* Swap Button */}
-          <div className="flex justify-center">
-            <Button
+          <div className="flex justify-center -my-2">
+            <button
               onClick={handleSwapCurrencies}
-              className="w-12 h-12 rounded-full bg-primary hover:bg-primary/90 border-4 border-background"
+              className="w-12 h-12 bg-card border border-gray-300 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 hover:bg-accent"
             >
-              <ArrowDown className="w-5 h-5 text-primary-foreground" />
-            </Button>
+              <ArrowDown className="w-5 h-5 text-gray-600" />
+            </button>
           </div>
 
           {/* To Currency Card */}
-          <div className="bg-card rounded-2xl p-6 border border-border shadow-sm">
+          <div className="bg-card rounded-2xl p-6 border border-black shadow-sm">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                 <FlagIcon
@@ -242,29 +252,22 @@ export default function ConvertDark() {
             </div>
 
             {/* Market Rate Warning */}
-            {exchangeType === 'manual' && fromAmount && toAmount && parseFloat(fromAmount) > 0 && parseFloat(toAmount) > 0 && (() => {
-              const userRate = parseFloat(toAmount) / parseFloat(fromAmount)
+            {exchangeType === 'manual' && fromAmount && parseFloat(fromAmount) > 0 && (() => {
               const marketRate = getConversionRate(fromCurrency, toCurrency)
-              const percentageDiff = ((userRate - marketRate) / marketRate) * 100
-              const absDiff = Math.abs(percentageDiff)
+              const fromAmountNum = parseFloat(fromAmount)
+              const marketAmount = fromAmountNum * marketRate
 
-              // Only show warning if difference is more than 1%
-              if (absDiff > 1) {
-                return (
-                  <div className="mt-2 text-sm">
-                    {percentageDiff > 0 ? (
-                      <span className="text-orange-600">
-                        Valor {absDiff.toFixed(1)}% acima da taxa de mercado
-                      </span>
-                    ) : (
-                      <span className="text-red-600">
-                        Valor {absDiff.toFixed(1)}% abaixo da taxa de mercado
-                      </span>
-                    )}
-                  </div>
-                )
-              }
-              return null
+              // Calculate 20% margin range
+              const lowerBound = marketAmount * 0.8  // 20% below market
+              const upperBound = marketAmount * 1.2  // 20% above market
+
+              return (
+                <div className="mt-2 text-sm">
+                  <span className="text-red-600">
+                    Recomendado: {formatCurrency(lowerBound, toCurrency)}-{formatCurrency(upperBound, toCurrency)}
+                  </span>
+                </div>
+              )
             })()}
           </div>
 
@@ -286,7 +289,7 @@ export default function ConvertDark() {
                 <div className="flex-1">
                   <div className="text-sm font-bold text-card-foreground mb-1">Automático</div>
                   <div className="text-sm text-muted-foreground">
-                    Você recebe {fromAmount ? (parseFloat(fromAmount) * getConversionRate(fromCurrency, toCurrency)).toFixed(toCurrency === 'EUR' ? 6 : 0) : '0'} {toCurrency} agora
+                    Você recebe <span className="font-bold">{fromAmount ? formatCurrency(parseFloat(fromAmount) * getConversionRate(fromCurrency, toCurrency), toCurrency) : formatCurrency(0, toCurrency)}</span> agora
                   </div>
                 </div>
               </div>
@@ -307,7 +310,7 @@ export default function ConvertDark() {
                   <div className="text-sm font-bold text-card-foreground mb-1">Manual</div>
                   <div className="text-sm text-muted-foreground">
                     {exchangeType === 'manual' && toAmount && parseFloat(toAmount) > 0
-                      ? `Você recebe ${toAmount} ${toCurrency} quando encontrarmos o câmbio que você quer`
+                      ? <>Você recebe <span className="font-bold">{formatCurrency(parseFloat(toAmount), toCurrency)}</span> quando encontrarmos o câmbio que você quer</>
                       : 'Escolha quanto você quer receber'
                     }
                   </div>
@@ -323,7 +326,7 @@ export default function ConvertDark() {
         <Button
           onClick={handleConvert}
           disabled={!isValidConversion}
-          className="w-full h-12 bg-primary hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground text-primary-foreground font-semibold"
+          className="primary-action-button"
         >
           Continuar
         </Button>

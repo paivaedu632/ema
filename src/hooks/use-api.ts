@@ -1,6 +1,18 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { apiClient } from '@/lib/api'
+import { supabase } from '@/lib/supabase/client'
 import type { User, WalletBalance, Transaction, TransferRequest } from '@/types'
+
+// Helper function to get authentication token
+async function getAuthToken(): Promise<string | null> {
+  try {
+    const { data: { session } } = await supabase.auth.getSession()
+    return session?.access_token || null
+  } catch (error) {
+    console.error('Failed to get auth token:', error)
+    return null
+  }
+}
 
 // Query Keys
 export const queryKeys = {
@@ -43,16 +55,34 @@ export function useUserSearch(query: string, enabled = true) {
 }
 
 // Wallet Queries
-export function useWallets() {
+export function useWallets(enabled: boolean = true) {
   return useQuery({
     queryKey: queryKeys.wallets,
     queryFn: async () => {
-      const response = await apiClient.get<WalletBalance[]>('/wallets/balance')
+      const token = await getAuthToken()
+      if (!token) {
+        throw new Error('Authentication required')
+      }
+
+      // Set auth token for this request
+      apiClient.setAuthToken(token)
+
+      const response = await apiClient.get<{ balances: Record<string, any> }>('/wallets/balance')
       if (!response.success) {
         throw new Error(response.error || 'Failed to fetch wallets')
       }
-      return response.data!
+
+      // Transform API response to array format expected by dashboard
+      const balances = response.data!.balances
+      return Object.values(balances).map((balance: any) => ({
+        currency: balance.currency,
+        available: Number(balance.availableBalance),
+        pending: Number(balance.reservedBalance),
+        total: Number(balance.totalBalance),
+        lastUpdated: new Date().toISOString()
+      })) as WalletBalance[]
     },
+    enabled, // Only run when enabled
   })
 }
 
@@ -70,16 +100,40 @@ export function useWallet(currency: 'EUR' | 'AOA') {
 }
 
 // Transaction Queries
-export function useTransactions() {
+export function useTransactions(enabled: boolean = true) {
   return useQuery({
     queryKey: queryKeys.transactions,
     queryFn: async () => {
-      const response = await apiClient.get<Transaction[]>('/transfers/history')
+      const token = await getAuthToken()
+      if (!token) {
+        throw new Error('Authentication required')
+      }
+
+      // Set auth token for this request
+      apiClient.setAuthToken(token)
+
+      const response = await apiClient.get<{ transfers: any[] }>('/transfers/history')
       if (!response.success) {
         throw new Error(response.error || 'Failed to fetch transactions')
       }
-      return response.data!
+
+      // Transform API response to format expected by dashboard
+      return response.data!.transfers.map((transfer: any) => ({
+        id: transfer.id,
+        displayId: transfer.displayId,
+        type: transfer.type,
+        amount: transfer.amount,
+        currency: transfer.currency,
+        status: transfer.status,
+        description: transfer.description,
+        createdAt: transfer.createdAt,
+        updatedAt: transfer.updatedAt,
+        recipientId: transfer.recipientId,
+        senderId: transfer.senderId,
+        metadata: transfer.metadata || {}
+      })) as Transaction[]
     },
+    enabled, // Only run when enabled
   })
 }
 

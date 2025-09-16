@@ -23,7 +23,7 @@ async function pinSetHandler(request: NextRequest, user: AuthenticatedUser) {
   try {
     // Set/update user PIN (database function handles hashing)
     const result = await setUserPin({
-      user_id: user.userId,
+      user_id: user.databaseId,
       pin: pin
     });
 

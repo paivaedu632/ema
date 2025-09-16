@@ -28,7 +28,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { AppHeader } from '@/components/layout/app-header'
 import { BottomNav } from '@/components/layout/bottom-nav'
 import { useAuth } from '@/hooks/use-auth'
-// import { useWallets, useTransactions } from '@/hooks/use-api' // TODO: Re-enable after Supabase integration
+import { useWallets, useTransactions } from '@/hooks/use-api'
 import { ExchangeRateChart } from './exchange-rate-chart'
 
 export default function Home() {
@@ -37,17 +37,9 @@ export default function Home() {
   const [isBalanceVisible, setIsBalanceVisible] = useState(true)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
-  // TODO: Re-enable API calls after implementing Supabase-compatible endpoints
-  // const { data: apiWalletBalances, isLoading: walletsLoading, error: walletsError } = useWallets()
-  // const { data: apiTransactions, isLoading: transactionsLoading, error: transactionsError } = useTransactions()
-
-  // Use mock data for now
-  const apiWalletBalances = null
-  const apiTransactions = null
-  const walletsLoading = false
-  const transactionsLoading = false
-  const walletsError = null
-  const transactionsError = null
+  // Fetch real financial data from backend APIs - only when user is authenticated
+  const { data: apiWalletBalances, isLoading: walletsLoading, error: walletsError } = useWallets(!!authUser)
+  const { data: apiTransactions, isLoading: transactionsLoading, error: transactionsError } = useTransactions(!!authUser)
 
   // Mock user data (fallback if auth user not available)
   const user = authUser || {

@@ -1,13 +1,14 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
 import {
   ArrowLeftRight,
   ArrowLeft,
+  ArrowRight,
   RefreshCw,
   Zap,
   Clock,
@@ -36,6 +37,7 @@ const currencies: { code: Currency; name: string; flag: string }[] = [
 
 export default function ConvertPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [fromCurrency, setFromCurrency] = useState<'EUR' | 'AOA'>('EUR')
   const [toCurrency, setToCurrency] = useState<'EUR' | 'AOA'>('AOA')
   const [fromAmount, setFromAmount] = useState('')
@@ -43,6 +45,7 @@ export default function ConvertPage() {
   const [exchangeType, setExchangeType] = useState<'auto' | 'manual'>('auto')
   const [currentStep, setCurrentStep] = useState<'convert' | 'confirm' | 'success'>('convert')
   const [isLoading, setIsLoading] = useState(false)
+  const [sourceComponent, setSourceComponent] = useState<string | null>(null)
 
   // Get real-time market rate
   const { data: marketRateData, isLoading: isRateLoading } = useCurrentMarketRate(
@@ -80,6 +83,33 @@ export default function ConvertPage() {
     EUR: 1250.50,
     AOA: 1250000
   }
+
+  // Handle URL parameters from other convert components
+  useEffect(() => {
+    const step = searchParams.get('step')
+    const fromAmountParam = searchParams.get('fromAmount')
+    const fromCurrencyParam = searchParams.get('fromCurrency') as Currency
+    const toAmountParam = searchParams.get('toAmount')
+    const toCurrencyParam = searchParams.get('toCurrency') as Currency
+    const exchangeTypeParam = searchParams.get('exchangeType') as 'auto' | 'manual'
+    const source = searchParams.get('source')
+
+    if (step === 'confirm' && fromAmountParam && fromCurrencyParam && toCurrencyParam) {
+      // Set form data from URL parameters
+      setFromAmount(fromAmountParam)
+      setFromCurrency(fromCurrencyParam)
+      setToAmount(toAmountParam || '')
+      setToCurrency(toCurrencyParam)
+      setExchangeType(exchangeTypeParam || 'auto')
+      setSourceComponent(source)
+      setCurrentStep('confirm')
+
+      // Clean up URL parameters after setting state
+      const newUrl = new URL(window.location.href)
+      newUrl.search = ''
+      window.history.replaceState({}, '', newUrl.toString())
+    }
+  }, [searchParams])
 
   const handleFromAmountChange = (value: string) => {
     setFromAmount(value)
@@ -143,7 +173,15 @@ export default function ConvertPage() {
 
   const handleBack = () => {
     if (currentStep === 'confirm') {
-      setCurrentStep('convert')
+      // If we came from another convert component, go back to that component
+      if (sourceComponent === 'convert-2') {
+        router.push('/convert-2')
+      } else if (sourceComponent === 'convert-3') {
+        router.push('/convert-3')
+      } else {
+        // Otherwise, go back to the convert step within this component
+        setCurrentStep('convert')
+      }
     } else {
       router.back()
     }
@@ -202,7 +240,7 @@ export default function ConvertPage() {
   if (currentStep === 'convert') {
     return (
       <div className="page-container-white">
-        <main className="content-container">
+        <main className="max-w-md mx-auto px-4 py-6">
           <PageHeader
             title="Converter"
             onBack={handleBack}
@@ -324,29 +362,22 @@ export default function ConvertPage() {
             </div>
 
             {/* Market Rate Warning */}
-            {exchangeType === 'manual' && fromAmount && toAmount && parseFloat(fromAmount) > 0 && parseFloat(toAmount) > 0 && (() => {
-              const userRate = parseFloat(toAmount) / parseFloat(fromAmount)
+            {exchangeType === 'manual' && fromAmount && parseFloat(fromAmount) > 0 && (() => {
               const marketRate = getConversionRate(fromCurrency, toCurrency)
-              const percentageDiff = ((userRate - marketRate) / marketRate) * 100
-              const absDiff = Math.abs(percentageDiff)
+              const fromAmountNum = parseFloat(fromAmount)
+              const marketAmount = fromAmountNum * marketRate
 
-              // Only show warning if difference is more than 1%
-              if (absDiff > 1) {
-                return (
-                  <div className="mt-2 text-sm">
-                    {percentageDiff > 0 ? (
-                      <span className="text-orange-600">
-                        Valor {absDiff.toFixed(1)}% acima da taxa de mercado
-                      </span>
-                    ) : (
-                      <span className="text-red-600">
-                        Valor {absDiff.toFixed(1)}% abaixo da taxa de mercado
-                      </span>
-                    )}
-                  </div>
-                )
-              }
-              return null
+              // Calculate 20% margin range
+              const lowerBound = marketAmount * 0.8  // 20% below market
+              const upperBound = marketAmount * 1.2  // 20% above market
+
+              return (
+                <div className="mt-2 text-sm">
+                  <span className="text-red-600">
+                    Recomendado: {formatCurrency(lowerBound, toCurrency)}-{formatCurrency(upperBound, toCurrency)}
+                  </span>
+                </div>
+              )
             })()}
           </div>
 
@@ -368,7 +399,7 @@ export default function ConvertPage() {
                 <div className="flex-1">
                   <div className="text-sm font-bold text-gray-900 mb-1">Automático</div>
                   <div className="text-sm text-gray-600">
-                    Você recebe {fromAmount ? (parseFloat(fromAmount) * getConversionRate(fromCurrency, toCurrency)).toFixed(toCurrency === 'EUR' ? 6 : 0) : '0'} {toCurrency} agora
+                    Você recebe <span className="font-bold">{fromAmount ? formatCurrency(parseFloat(fromAmount) * getConversionRate(fromCurrency, toCurrency), toCurrency) : formatCurrency(0, toCurrency)}</span> agora
                   </div>
                 </div>
                 <div className={`w-4 h-4 rounded-full border-2 ${
@@ -396,7 +427,7 @@ export default function ConvertPage() {
                   <div className="text-sm font-bold text-gray-900 mb-1">Manual</div>
                   <div className="text-sm text-gray-600">
                     {exchangeType === 'manual' && toAmount && parseFloat(toAmount) > 0
-                      ? `Você recebe ${toAmount} ${toCurrency} quando encontrarmos o câmbio que você quer`
+                      ? <>Você recebe <span className="font-bold">{formatCurrency(parseFloat(toAmount), toCurrency)}</span> quando encontrarmos o câmbio que você quer</>
                       : 'Escolha quanto você quer receber'
                     }
                   </div>
@@ -443,35 +474,49 @@ export default function ConvertPage() {
   if (currentStep === 'confirm') {
     return (
       <div className="page-container-white">
-        <main className="content-container">
+        <main className="max-w-md mx-auto px-4 py-6">
           <PageHeader
             title="Tudo certo?"
             onBack={handleBack}
           />
 
-          {/* Wise-Style Currency Display */}
-          <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-4 mb-6">
-            {/* From Currency */}
-            <div className="flex items-center space-x-3">
-              <FlagIcon
-                countryCode={fromCurrency === 'EUR' ? 'eu' : 'ao'}
-                size="xl"
-              />
-              <div>
-                <div className="text-sm text-gray-500">De</div>
-                <div className="font-medium text-gray-900">{fromCurrency}</div>
-              </div>
-            </div>
 
-            {/* To Currency */}
-            <div className="flex items-center space-x-3">
-              <FlagIcon
-                countryCode={toCurrency === 'EUR' ? 'eu' : 'ao'}
-                size="xl"
-              />
-              <div>
-                <div className="text-sm text-gray-500">Para</div>
-                <div className="font-medium text-gray-900">{toCurrency}</div>
+
+          {/* Currency Exchange Display */}
+          <div className="bg-white rounded-lg border border-gray-200 p-6 mb-6">
+            <div className="flex items-center justify-between">
+              {/* From Currency */}
+              <div className="flex flex-col items-center text-center">
+                <FlagIcon
+                  countryCode={fromCurrency === 'EUR' ? 'eu' : 'ao'}
+                  size="xl"
+                />
+                <div className="text-sm text-gray-500 mt-2">Converter</div>
+                <div className="font-medium text-gray-900">
+                  {formatCurrency(parseFloat(fromAmount) || 0, fromCurrency)}
+                </div>
+              </div>
+
+              {/* Arrow */}
+              <div className="mx-4">
+                <ArrowRight className="h-4 w-4 text-gray-400" />
+              </div>
+
+              {/* To Currency */}
+              <div className="flex flex-col items-center text-center">
+                <FlagIcon
+                  countryCode={toCurrency === 'EUR' ? 'eu' : 'ao'}
+                  size="xl"
+                />
+                <div className="text-sm text-gray-500 mt-2">Para</div>
+                <div className="font-medium text-gray-900">
+                  {formatCurrency(
+                    exchangeType === 'auto'
+                      ? parseFloat(fromAmount) * getConversionRate(fromCurrency, toCurrency)
+                      : parseFloat(toAmount) || 0,
+                    toCurrency
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -480,16 +525,13 @@ export default function ConvertPage() {
           <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-4 mb-6">
             <div className="flex justify-between items-center">
               <span className="text-gray-600">Você está convertendo</span>
-              <span className="font-medium text-gray-900">{fromAmount} {fromCurrency}</span>
+              <span className="font-medium text-gray-900">{formatCurrency(parseFloat(fromAmount) || 0, fromCurrency)}</span>
             </div>
 
             <div className="flex justify-between items-center">
               <span className="text-gray-600">Câmbio</span>
               <span className="font-medium text-gray-900">
-                1 {fromCurrency} = {getConversionRate(fromCurrency, toCurrency).toLocaleString(undefined, {
-                  minimumFractionDigits: fromCurrency === 'AOA' ? 6 : 0,
-                  maximumFractionDigits: fromCurrency === 'AOA' ? 6 : 0
-                })} {toCurrency}
+                1 {fromCurrency} = {formatCurrency(getConversionRate(fromCurrency, toCurrency), toCurrency)}
               </span>
             </div>
 
@@ -497,10 +539,12 @@ export default function ConvertPage() {
               <div className="flex justify-between items-center">
                 <span className="font-medium text-gray-900">Você recebe total</span>
                 <span className="font-bold text-lg text-gray-900">
-                  {exchangeType === 'auto'
-                    ? (parseFloat(fromAmount) * getConversionRate(fromCurrency, toCurrency)).toFixed(toCurrency === 'EUR' ? 6 : 0)
-                    : toAmount || '0'
-                  } {toCurrency}
+                  {formatCurrency(
+                    exchangeType === 'auto'
+                      ? parseFloat(fromAmount) * getConversionRate(fromCurrency, toCurrency)
+                      : parseFloat(toAmount) || 0,
+                    toCurrency
+                  )}
                 </span>
               </div>
             </div>

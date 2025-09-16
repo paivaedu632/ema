@@ -1,8 +1,10 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
+import { createServerSupabaseClient } from '@/lib/supabase/server';
 
 export interface AuthenticatedUser {
-  userId: string;
+  userId: string;        // Supabase auth user ID
+  databaseId: string;    // Database user primary key ID
   sessionId: string;
 }
 
@@ -67,10 +69,27 @@ export async function authenticateRequest(request?: NextRequest): Promise<AuthRe
       const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64url').toString());
       const sessionId = payload.session_id || payload.sid || `session_${payload.jti}`;
 
+      // Look up the user's database ID using their Supabase auth ID
+      const dbSupabase = createServerSupabaseClient();
+      const { data: dbUser, error: dbUserError } = await dbSupabase
+        .from('users')
+        .select('id')
+        .eq('clerk_user_id', user.id)
+        .single();
+
+      if (dbUserError || !dbUser) {
+        console.error('Failed to find user in database:', dbUserError);
+        return {
+          success: false,
+          error: 'User not found in database'
+        };
+      }
+
       return {
         success: true,
         user: {
           userId: user.id,
+          databaseId: dbUser.id,
           sessionId: sessionId
         }
       };

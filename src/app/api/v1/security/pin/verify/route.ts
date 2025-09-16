@@ -18,7 +18,7 @@ async function pinVerifyHandler(request: NextRequest, user: AuthenticatedUser) {
   try {
     // Verify user PIN
     const result = await verifyUserPin({
-      user_id: user.userId,
+      user_id: user.databaseId,
       pin
     });
 

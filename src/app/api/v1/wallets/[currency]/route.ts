@@ -22,7 +22,7 @@ async function currencyBalanceHandler(
 
   // Get balance for specific currency
   const result = await getWalletBalance({
-    user_id: user.userId,
+    user_id: user.databaseId,
     currency
   });
 

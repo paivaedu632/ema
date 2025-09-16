@@ -11,7 +11,7 @@ async function walletBalanceHandler(request: NextRequest, user: AuthenticatedUse
 
   for (const currency of currencies) {
     const result = await getWalletBalance({
-      user_id: user.userId,
+      user_id: user.databaseId, // Use the database user ID from middleware
       currency
     });
 

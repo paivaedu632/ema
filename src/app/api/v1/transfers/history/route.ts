@@ -18,7 +18,7 @@ async function transferHistoryHandler(request: NextRequest, user: AuthenticatedU
 
   // Get transfer history
   const result = await getTransferHistory({
-    user_id: user.userId,
+    user_id: user.databaseId, // Use the database user ID from middleware
     page,
     limit,
     ...(currency && { currency })

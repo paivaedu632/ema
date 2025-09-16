@@ -28,7 +28,7 @@ async function userSearchHandler(request: NextRequest, user: AuthenticatedUser) 
   // Filter out sensitive information and current user
   const users = Array.isArray(result.data) ? result.data : [];
   const filteredUsers = users
-    .filter((foundUser: { user_id: string }) => foundUser.user_id !== user.userId)
+    .filter((foundUser: { user_id: string }) => foundUser.user_id !== user.databaseId)
     .map((foundUser: { user_id: string; email: string; phone?: string; full_name?: string; identifier_type: string }) => ({
       id: foundUser.user_id,
       email: foundUser.email,

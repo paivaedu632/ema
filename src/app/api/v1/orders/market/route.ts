@@ -17,7 +17,7 @@ async function marketOrderHandler(request: NextRequest, user: AuthenticatedUser)
 
   // Execute market order
   const result = await executeMarketOrder({
-    user_id: user.userId,
+    user_id: user.databaseId,
     side,
     base_currency: baseCurrency,
     quote_currency: quoteCurrency,

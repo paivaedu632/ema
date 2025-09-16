@@ -17,7 +17,7 @@ async function transferSendHandler(request: NextRequest, user: AuthenticatedUser
 
   // Send P2P transfer
   const result = await sendP2PTransfer({
-    sender_id: user.userId,
+    sender_id: user.databaseId,
     recipient_identifier: recipientId,
     currency,
     amount,

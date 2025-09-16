@@ -4,12 +4,12 @@ import React from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
-import { 
-  Home, 
-  ArrowUpDown, 
-  Wallet, 
-  Clock, 
-  User 
+import {
+  Home,
+  ArrowUpDown,
+  ArrowLeftRight,
+  RefreshCw,
+  User
 } from 'lucide-react'
 
 interface NavItem {
@@ -30,19 +30,19 @@ const navItems: NavItem[] = [
     href: '/convert',
     label: 'Converter',
     icon: ArrowUpDown,
-    activePattern: /^\/convert/
+    activePattern: /^\/convert$/
   },
   {
-    href: '/wallet',
-    label: 'Carteira',
-    icon: Wallet,
-    activePattern: /^\/wallet$/
+    href: '/convert-2',
+    label: 'Converter 2',
+    icon: ArrowLeftRight,
+    activePattern: /^\/convert-2$/
   },
   {
-    href: '/transactions',
-    label: 'Histórico',
-    icon: Clock,
-    activePattern: /^\/transactions/
+    href: '/convert-3',
+    label: 'Converter 3',
+    icon: RefreshCw,
+    activePattern: /^\/convert-3$/
   },
   {
     href: '/profile',
