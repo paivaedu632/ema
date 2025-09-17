@@ -356,19 +356,15 @@ export default function ConvertPageV2() {
                 </div>
               )}
 
-              {/* Market Rate Warning */}
+              {/* Market Rate Recommendation */}
               {exchangeType === 'manual' && fromInput.numericValue > 0 && (() => {
                 const marketRate = getConversionRate(fromCurrency, toCurrency)
                 const marketAmount = fromInput.numericValue * marketRate
 
-                // Calculate 20% margin range
-                const lowerBound = marketAmount * 0.8  // 20% below market
-                const upperBound = marketAmount * 1.2  // 20% above market
-
                 return (
                   <div className="mt-2 text-sm">
-                    <span className="text-red-600">
-                      Recomendado: {formatCurrency(lowerBound, toCurrency)}-{formatCurrency(upperBound, toCurrency)}
+                    <span className="text-gray-600">
+                      Recomendado: {formatCurrency(marketAmount, toCurrency)}
                     </span>
                   </div>
                 )

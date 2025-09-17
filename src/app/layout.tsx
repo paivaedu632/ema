@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { KYCProvider } from "@/contexts/kyc-context";
+import { AuthProvider } from "@/contexts/auth-context";
 import { QueryProvider } from "@/components/providers";
 
 const inter = Inter({
@@ -30,9 +31,11 @@ export default function RootLayout({
         className={`${inter.variable} ${jetbrainsMono.variable} antialiased font-inter`}
       >
         <QueryProvider>
-          <KYCProvider>
-            {children}
-          </KYCProvider>
+          <AuthProvider>
+            <KYCProvider>
+              {children}
+            </KYCProvider>
+          </AuthProvider>
         </QueryProvider>
       </body>
     </html>

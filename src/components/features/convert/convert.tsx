@@ -19,6 +19,7 @@ import { FlagIcon } from '@/components/ui/flag-icon'
 import { PageHeader } from '@/components/layout/page-header'
 import { LoadingOverlay } from '@/components/ui/loading-overlay'
 import { FixedBottomAction } from '@/components/ui/fixed-bottom-action'
+import { ReceiveAmountTooltip } from '@/components/ui/receive-amount-tooltip'
 import {
   Select,
   SelectContent,
@@ -26,9 +27,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { useMidpointExchangeRate, usePlaceMarketOrder, usePlaceLimitOrder, useLiquidityCheck } from '@/hooks/use-api'
+import { useMidpointExchangeRate, usePlaceMarketOrder, usePlaceLimitOrder, useWallets } from '@/hooks/use-api'
 import { useCurrencyInput } from '@/hooks/use-currency-input'
 import { getValidationMessageWithRecommendations, PriorityValidationResult } from '@/lib/currency-validation'
+import { useReceiveAmountDisplay } from '@/hooks/use-actual-receive-amount'
 import type { MarketOrderRequest, LimitOrderRequest } from '@/types'
 
 // Available currencies - only AOA and EUR
@@ -50,22 +52,17 @@ export default function ConvertPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [sourceComponent, setSourceComponent] = useState<string | null>(null)
   const [orderError, setOrderError] = useState<string | null>(null)
+  const [showTooltip, setShowTooltip] = useState(false)
 
   // Get real-time market rate from midpoint endpoint
   const { data: marketRateData, isLoading: isRateLoading } = useMidpointExchangeRate(
     fromCurrency,
     toCurrency,
     fromCurrency !== toCurrency
-  ) as {
-    data?: {
-      baseCurrency: string
-      quoteCurrency: string
-      rate: number
-      source: string
-      lastUpdated: string
-    }
-    isLoading: boolean
-  }
+  )
+
+  // Get real user wallet balances
+  const { data: walletBalances, isLoading: isWalletsLoading } = useWallets(true)
 
   // Order placement hooks
   const placeMarketOrder = usePlaceMarketOrder()
@@ -76,17 +73,18 @@ export default function ConvertPage() {
     if (from === to) return 1
 
     // Use real market rate if available and matches the requested pair
-    if (marketRateData?.rate &&
-        marketRateData.baseCurrency === from &&
-        marketRateData.quoteCurrency === to) {
-      return marketRateData.rate
+    const rateData = marketRateData as any
+    if (rateData?.rate &&
+        rateData.baseCurrency === from &&
+        rateData.quoteCurrency === to) {
+      return rateData.rate
     }
 
     // If market rate is for the inverse pair, calculate the inverse
-    if (marketRateData?.rate &&
-        marketRateData.baseCurrency === to &&
-        marketRateData.quoteCurrency === from) {
-      return 1 / marketRateData.rate
+    if (rateData?.rate &&
+        rateData.baseCurrency === to &&
+        rateData.quoteCurrency === from) {
+      return 1 / rateData.rate
     }
 
     // Fallback to hardcoded rates
@@ -95,10 +93,10 @@ export default function ConvertPage() {
     return 1
   }
 
-  // Mock user balances
+  // Get user balances from wallet data
   const userBalances = {
-    EUR: 1250.50,
-    AOA: 1250000
+    EUR: walletBalances?.find(w => w.currency === 'EUR')?.available || 0,
+    AOA: walletBalances?.find(w => w.currency === 'AOA')?.available || 0
   }
 
   // Currency input hooks with priority-based validation
@@ -132,27 +130,16 @@ export default function ConvertPage() {
     }
   })
 
-  // Liquidity check for market orders
-  const side: 'buy' | 'sell' = fromCurrency === 'EUR' ? 'sell' : 'buy'
-  const liquidityCheck = useLiquidityCheck(
-    side,
+  // Calculate actual receive amount accounting for fees, slippage, and execution risks
+  const actualReceiveAmount = useReceiveAmountDisplay({
+    fromAmount: fromInput.numericValue,
     fromCurrency,
     toCurrency,
-    fromInput.numericValue,
-    5.0, // 5% max slippage
-    fromInput.numericValue > 0 && fromCurrency !== toCurrency
-  )
-
-  // Determine if automatic mode should be available
-  const hasLiquidity = liquidityCheck.data?.canExecuteMarketOrder ?? false
-  const shouldShowAutomatic = hasLiquidity
-
-  // Auto-select manual mode if automatic is not available
-  useEffect(() => {
-    if (!shouldShowAutomatic && exchangeType === 'auto') {
-      setExchangeType('manual')
-    }
-  }, [shouldShowAutomatic, exchangeType])
+    exchangeType,
+    exchangeRate: getConversionRate(fromCurrency, toCurrency),
+    liquidityData: undefined, // Simplified: no real-time liquidity dependency
+    userSpecifiedToAmount: exchangeType === 'manual' ? toInput.numericValue : undefined
+  })
 
   // Helper function to get priority validation message for "from" input
   const getFromInputMessage = (): PriorityValidationResult => {
@@ -188,6 +175,11 @@ export default function ConvertPage() {
     return { isValid: true, priority: 0 }
   }
 
+  // Helper function to determine if a message should trigger error border styling
+  const shouldShowErrorBorder = (message: PriorityValidationResult) => {
+    return message.message && message.messageType !== 'info'
+  }
+
   // Component to display priority validation messages
   const ValidationMessage = ({ message }: { message: PriorityValidationResult }) => {
     if (!message.message) return null
@@ -195,11 +187,11 @@ export default function ConvertPage() {
     const getMessageStyle = () => {
       switch (message.messageType) {
         case 'error':
-          return 'text-red-700' // Standardized dark red for errors
+          return 'text-red-700' // Dark red for errors
         case 'warning':
-          return 'text-red-700' // Standardized dark red for warnings
+          return 'text-red-700' // Dark red for warnings
         case 'info':
-          return 'text-red-700' // Standardized dark red for recommendations
+          return 'text-gray-600' // Gray for informational recommendations
         default:
           return 'text-gray-500'
       }
@@ -238,6 +230,13 @@ export default function ConvertPage() {
       window.history.replaceState({}, '', newUrl.toString())
     }
   }, [searchParams])
+
+  // Auto-switch to manual mode when automatic mode is not executable due to liquidity
+  useEffect(() => {
+    if (exchangeType === 'auto' && !actualReceiveAmount.isExecutable && fromInput.numericValue > 0) {
+      setExchangeType('manual')
+    }
+  }, [exchangeType, actualReceiveAmount.isExecutable, fromInput.numericValue])
 
   const handleSwapCurrencies = () => {
     const newFromCurrency = toCurrency
@@ -439,7 +438,7 @@ export default function ConvertPage() {
               Você converte
             </Label>
             <div className={`bg-white rounded-lg p-4 focus-within:border-2 ${
-              getFromInputMessage().message ? 'border-red-700 border-2' : 'border border-black'
+              shouldShowErrorBorder(getFromInputMessage()) ? 'border-red-700 border-2' : 'border border-black'
             }`}>
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-4 min-w-0">
@@ -505,7 +504,7 @@ export default function ConvertPage() {
               Você recebe
             </Label>
             <div className={`bg-white rounded-lg p-4 focus-within:border-2 ${
-              getToInputMessage().message ? 'border-red-700 border-2' : 'border border-black'
+              shouldShowErrorBorder(getToInputMessage()) ? 'border-red-700 border-2' : 'border border-black'
             }`}>
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-4 min-w-0">
@@ -555,22 +554,23 @@ export default function ConvertPage() {
           <div className="space-y-2">
             <Label className="text-sm font-bold text-gray-700">Tipo de câmbio</Label>
 
-            {/* Auto Option - Only show if liquidity is available */}
-            {shouldShowAutomatic && (
-              <div
-                className={`border rounded-lg cursor-pointer transition-colors p-4 ${
-                  exchangeType === 'auto' ? 'border-black bg-gray-50' : 'border-gray-200 hover:border-gray-300'
-                }`}
-                onClick={() => handleExchangeTypeChange('auto')}
-              >
+            {/* Auto Option - Always available with risk-based warnings */}
+            <div
+              className={`border rounded-lg cursor-pointer transition-colors p-4 ${
+                exchangeType === 'auto' ? 'border-black bg-gray-50' : 'border-gray-200 hover:border-gray-300'
+              }`}
+              onClick={() => handleExchangeTypeChange('auto')}
+            >
                 <div className="flex items-center gap-4">
                   <div className="w-8 h-8 border border-gray-200 rounded-full flex items-center justify-center">
                     <Zap className="h-4 w-4 text-gray-600" />
                   </div>
                   <div className="flex-1">
-                    <div className="text-sm font-bold text-gray-900 mb-1">Automático</div>
+                    <div className="text-sm font-bold text-gray-900 mb-1">Automático (Taxa: 2%)</div>
                     <div className="text-sm text-gray-600">
-                      Você recebe <span className="font-bold">{fromInput.numericValue > 0 ? formatCurrency(fromInput.numericValue * getConversionRate(fromCurrency, toCurrency), toCurrency) : formatCurrency(0, toCurrency)}</span> agora
+                      Você recebe no mínimo <span className="font-bold text-gray-900">
+                        {fromInput.numericValue > 0 ? actualReceiveAmount.displayText : `-- ${toCurrency}`}
+                      </span> agora
                     </div>
                   </div>
                   <div className={`w-4 h-4 rounded-full border-2 ${
@@ -582,7 +582,6 @@ export default function ConvertPage() {
                   </div>
                 </div>
               </div>
-            )}
 
             {/* Manual Option */}
             <div
@@ -596,12 +595,14 @@ export default function ConvertPage() {
                   <Clock className="h-4 w-4 text-gray-600" />
                 </div>
                 <div className="flex-1">
-                  <div className="text-sm font-bold text-gray-900 mb-1">Manual</div>
+                  <div className="text-sm font-bold text-gray-900 mb-1">Manual (Taxa: 2%)</div>
                   <div className="text-sm text-gray-600">
-                    {exchangeType === 'manual' && toInput.numericValue > 0
-                      ? <>Você recebe <span className="font-bold">{formatCurrency(toInput.numericValue, toCurrency)}</span> quando encontrarmos o câmbio que você quer</>
-                      : 'Escolha quanto você quer receber'
-                    }
+                    Você recebe no mínimo <span className="font-bold text-gray-900">
+                      {fromInput.numericValue > 0 && toInput.numericValue > 0
+                        ? actualReceiveAmount.displayText
+                        : `-- ${toCurrency}`
+                      }
+                    </span> quando encontrarmos o câmbio que você quer
                   </div>
                 </div>
                 <div className={`w-4 h-4 rounded-full border-2 ${
@@ -709,15 +710,22 @@ export default function ConvertPage() {
 
             <div className="border-t border-gray-200 pt-4">
               <div className="flex justify-between items-center">
-                <span className="font-medium text-gray-900">Você recebe total</span>
-                <span className="font-bold text-lg text-gray-900">
-                  {formatCurrency(
-                    exchangeType === 'auto'
-                      ? fromInput.numericValue * getConversionRate(fromCurrency, toCurrency)
-                      : toInput.numericValue,
-                    toCurrency
+                <div className="flex items-center">
+                  <span className="font-medium text-gray-900">Você recebe total</span>
+                  {fromInput.numericValue > 0 && (
+                    <ReceiveAmountTooltip
+                      breakdown={actualReceiveAmount.breakdown}
+                      warnings={actualReceiveAmount.warnings}
+                      isVisible={showTooltip}
+                      onToggle={() => setShowTooltip(!showTooltip)}
+                    />
                   )}
-                </span>
+                </div>
+                <div className="text-right">
+                  <span className="font-bold text-lg text-gray-900">
+                    {fromInput.numericValue > 0 ? actualReceiveAmount.displayText : formatCurrency(0, toCurrency)}
+                  </span>
+                </div>
               </div>
             </div>
           </div>

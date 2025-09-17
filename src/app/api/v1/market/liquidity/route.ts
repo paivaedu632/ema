@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server';
 import { withAuth, AuthenticatedUser } from '@/lib/auth/middleware';
 import { createSuccessResponse, ErrorResponses, withErrorHandling } from '@/lib/api';
 import { withCors } from '@/lib/api';
-import { execute_sql_supabase } from '@/lib/database/functions';
+import { createServerSupabaseClient } from '@/lib/supabase/server';
 
 async function liquidityCheckHandler(request: NextRequest, user: AuthenticatedUser) {
   const { searchParams } = new URL(request.url);
@@ -45,19 +45,24 @@ async function liquidityCheckHandler(request: NextRequest, user: AuthenticatedUs
   }
 
   try {
-    // Use the enhanced cross-user liquidity check function that matches execute_market_order logic
-    const result = await execute_sql_supabase(
-      'kjqcfedvilcnwzfjlqtq',
-      `SELECT * FROM check_cross_user_market_liquidity($1, $2, $3, $4, $5, $6)`,
-      [user.databaseId, side, baseCurrency, quoteCurrency, quantityNum, maxSlippageNum]
-    );
+    // Use Supabase RPC to call the cross-user liquidity check function
+    const supabase = createServerSupabaseClient();
 
-    if (!result.success) {
-      console.error('Liquidity check failed:', result.error);
+    const { data, error } = await supabase.rpc('check_cross_user_market_liquidity', {
+      p_user_id: user.databaseId,
+      p_side: side,
+      p_base_currency: baseCurrency,
+      p_quote_currency: quoteCurrency,
+      p_quantity: quantityNum,
+      p_max_slippage_percent: maxSlippageNum
+    });
+
+    if (error) {
+      console.error('Liquidity check failed:', error);
       return ErrorResponses.internalError('Failed to check market liquidity');
     }
 
-    const liquidityData = result.data?.[0] as {
+    const liquidityData = data as {
       has_liquidity: boolean;
       available_quantity: string;
       best_price: string;
