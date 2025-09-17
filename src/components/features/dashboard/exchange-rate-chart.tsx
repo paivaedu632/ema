@@ -3,7 +3,7 @@
 import React from 'react'
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Area, AreaChart } from 'recharts'
-import { useCurrentMarketRate, useMarketSummary } from '@/hooks/use-api'
+import { useMidpointExchangeRate } from '@/hooks/use-api'
 import { Skeleton } from '@/components/ui/skeleton'
 
 // Mock exchange rate data for EUR/AOA with more realistic fluctuations
@@ -46,21 +46,20 @@ interface ExchangeRateChartProps {
 }
 
 export function ExchangeRateChart({ className }: ExchangeRateChartProps) {
-  // Fetch real-time market data
-  const { data: currentRate, isLoading: rateLoading, error: rateError } = useCurrentMarketRate('EUR', 'AOA')
-  const { data: marketSummary, isLoading: summaryLoading, error: summaryError } = useMarketSummary()
+  // Fetch real-time exchange rate data from midpoint endpoint
+  const { data: midpointRate, isLoading: midpointLoading, error: midpointError } = useMidpointExchangeRate('EUR', 'AOA')
 
   // Use API data or fallback to mock data
-  const isLoading = rateLoading || summaryLoading
-  const hasError = rateError || summaryError
+  const isLoading = midpointLoading
+  const hasError = midpointError
 
-  // Generate chart data from current rate (for now, we'll use the static data as fallback)
+  // Generate chart data from midpoint rate (for now, we'll use the static data as fallback)
   // TODO: In a real implementation, this would come from historical data API
-  const chartData = currentRate ?
-    // Generate some sample historical data around the current rate
+  const chartData = midpointRate ?
+    // Generate some sample historical data around the midpoint rate
     Array.from({ length: 24 }, (_, i) => ({
       time: `${i.toString().padStart(2, '0')}:00`,
-      rate: (currentRate as { rate: number }).rate + (Math.random() - 0.5) * 10 // Add some variation
+      rate: (midpointRate as { rate: number }).rate + (Math.random() - 0.5) * 10 // Add some variation
     })) :
     exchangeRateData
 

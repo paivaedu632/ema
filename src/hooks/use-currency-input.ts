@@ -45,20 +45,16 @@ export function useCurrencyInput({
   const handleInputChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = event.target.value
 
-    // Allow empty input
+    // Allow empty input - no validation message for empty fields
     if (inputValue === '') {
       const newState = {
         displayValue: '',
         numericValue: 0,
-        validation: { isValid: !isRequired },
+        validation: { isValid: true }, // Always valid for empty fields
         priorityValidation: {
-          isValid: !isRequired,
-          priority: 0,
-          ...(isRequired && {
-            message: 'Este campo é obrigatório',
-            messageType: 'error' as const,
-            priority: 2
-          })
+          isValid: true,
+          priority: 0
+          // No message for empty fields - completely removed required field validation
         }
       }
       setState(newState)

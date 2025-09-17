@@ -130,24 +130,25 @@ export function validateDecimalPlaces(value: string, currency: Currency): Valida
 
 /**
  * Calculate currency limits based on current exchange rate
+ * exchangeRate should always be EUR->AOA rate (e.g., 1190)
  */
 export function calculateCurrencyLimits(
   currency: Currency,
-  exchangeRate: number
+  eurToAoaRate: number
 ): CurrencyLimits {
   const EUR_MIN = 10.00
   const EUR_MAX = 1000000.00
-  
+
   if (currency === 'EUR') {
     return {
       min: EUR_MIN,
       max: EUR_MAX
     }
   } else {
-    // AOA limits based on EUR equivalent
+    // AOA limits based on EUR equivalent using EUR->AOA rate
     return {
-      min: EUR_MIN * exchangeRate,
-      max: EUR_MAX * exchangeRate
+      min: EUR_MIN * eurToAoaRate,
+      max: EUR_MAX * eurToAoaRate
     }
   }
 }
@@ -235,10 +236,9 @@ export function getAllValidationResults(
   // Parse to numeric value
   const numericValue = parsePortugueseNumber(cleaned)
 
-  // 2. Required field errors - Skip these for standardized messages
+  // 2. Required field errors - Completely skip, show no message for empty fields
   if (isRequired && numericValue === 0) {
-    // Skip required field errors - only show standardized messages
-    return results
+    return results // Return empty results - no validation message for empty fields
   }
 
   // For zero values, don't check other validations
@@ -371,22 +371,34 @@ export function processInputChange(
 
 /**
  * Generate recommendation message for manual exchange mode
+ * eurToAoaRate should always be EUR->AOA rate (e.g., 1190)
  */
 export function generateRecommendationMessage(
   fromAmount: number,
   fromCurrency: Currency,
   toCurrency: Currency,
-  exchangeRate: number
+  eurToAoaRate: number
 ): PriorityValidationResult | null {
   if (fromAmount <= 0) return null
 
-  const marketAmount = fromAmount * exchangeRate
-  const lowerBound = marketAmount * 0.8  // 20% below market
-  const upperBound = marketAmount * 1.2  // 20% above market
+  let marketAmount: number
 
+  // Calculate market amount based on conversion direction
+  if (fromCurrency === 'EUR' && toCurrency === 'AOA') {
+    // EUR to AOA: multiply by EUR->AOA rate
+    marketAmount = fromAmount * eurToAoaRate
+  } else if (fromCurrency === 'AOA' && toCurrency === 'EUR') {
+    // AOA to EUR: divide by EUR->AOA rate (inverse)
+    marketAmount = fromAmount / eurToAoaRate
+  } else {
+    // Same currency, no conversion needed
+    marketAmount = fromAmount
+  }
+
+  // Display only the midpoint market rate (no ±20% range)
   return {
     isValid: true,
-    message: `Recomendado: ${formatPortugueseInput(lowerBound)}-${formatPortugueseInput(upperBound)} ${toCurrency}`,
+    message: `Recomendado: ${formatPortugueseInput(marketAmount)} ${toCurrency}`,
     messageType: 'info',
     priority: ValidationPriority.RECOMMENDATION
   }
@@ -414,11 +426,19 @@ export function getValidationMessageWithRecommendations(
     return standardValidation
   }
 
-  // If no errors and recommendations are enabled, show recommendation
+  // Only show recommendations for amounts that meet minimum requirements
   if (showRecommendations && fromAmount && fromCurrency && toCurrency) {
-    const recommendation = generateRecommendationMessage(fromAmount, fromCurrency, toCurrency, exchangeRate)
-    if (recommendation) {
-      return recommendation
+    // Check if fromAmount meets minimum requirement (10 EUR equivalent)
+    const EUR_MIN = 10.00
+    // exchangeRate here is always EUR->AOA rate
+    const fromAmountInEUR = fromCurrency === 'EUR' ? fromAmount : fromAmount / exchangeRate
+
+    // Only show recommendation if amount meets minimum threshold
+    if (fromAmountInEUR >= EUR_MIN) {
+      const recommendation = generateRecommendationMessage(fromAmount, fromCurrency, toCurrency, exchangeRate)
+      if (recommendation) {
+        return recommendation
+      }
     }
   }
 

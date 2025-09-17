@@ -23,7 +23,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { formatCurrency } from '@/lib/utils'
-import { useCurrentMarketRate } from '@/hooks/use-api'
+import { useMidpointExchangeRate } from '@/hooks/use-api'
 import { useCurrencyInput } from '@/hooks/use-currency-input'
 
 // Available currencies - only AOA and EUR
@@ -43,8 +43,8 @@ export default function ConvertPageV2() {
   const [currentStep, setCurrentStep] = useState<'convert' | 'confirm' | 'success'>('convert')
   const [isLoading, setIsLoading] = useState(false)
 
-  // Get real-time market rate
-  const { data: marketRateData, isLoading: isRateLoading } = useCurrentMarketRate(
+  // Get real-time market rate from midpoint endpoint
+  const { data: marketRateData, isLoading: isRateLoading } = useMidpointExchangeRate(
     fromCurrency,
     toCurrency,
     fromCurrency !== toCurrency

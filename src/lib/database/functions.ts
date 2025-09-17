@@ -200,7 +200,7 @@ export async function executeMarketOrder(params: {
 // Market data functions
 // Note: Removed getUserOrderHistory and getOrderBookDepth - endpoints removed for simplicity
 
-export async function getCurrentMarketRate(params: {
+export async function getMidpointExchangeRate(params: {
   base_currency: string;
   quote_currency: string;
 }) {
@@ -208,7 +208,15 @@ export async function getCurrentMarketRate(params: {
     p_base_currency: params.base_currency,
     p_quote_currency: params.quote_currency
   };
-  return executeFunction('get_current_market_rate', dbParams);
+  return executeFunction('get_midpoint_exchange_rate', dbParams);
+}
+
+// Legacy function for backward compatibility - redirects to new function
+export async function getCurrentMarketRate(params: {
+  base_currency: string;
+  quote_currency: string;
+}) {
+  return getMidpointExchangeRate(params);
 }
 
 export async function checkMarketLiquidity(params: {

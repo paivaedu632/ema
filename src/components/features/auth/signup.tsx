@@ -28,7 +28,7 @@ export function Signup() {
       <div className="flex min-h-screen">
         {/* Main Content */}
         <div className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8">
-          <div className="w-full max-w-sm space-y-8">
+          <div className="w-full max-w-md space-y-8">
             {/* Logo */}
             <div className="text-left">
               <div className="h-12 w-auto flex items-center">

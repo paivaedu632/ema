@@ -202,39 +202,22 @@ export function useSetPin() {
   })
 }
 
-// Market Data Queries
-export function useMarketSummary() {
-  return useQuery({
-    queryKey: ['market', 'summary'],
-    queryFn: async () => {
-      const response = await apiClient.get('/market/summary')
-      if (!response.success) {
-        throw new Error(response.error || 'Failed to fetch market summary')
-      }
-      return response.data
-    },
-    refetchInterval: 30000, // Refetch every 30 seconds
-  })
-}
-
-// Note: useMarketDepth removed - endpoint removed for simplicity
-
-// Current market rate hook for real-time pricing
-export function useCurrentMarketRate(
-  baseCurrency: 'EUR' | 'AOA',
-  quoteCurrency: 'EUR' | 'AOA',
+// Exchange Rate Queries
+export function useMidpointExchangeRate(
+  baseCurrency: 'EUR' | 'AOA' = 'EUR',
+  quoteCurrency: 'EUR' | 'AOA' = 'AOA',
   enabled = true
 ) {
   return useQuery({
-    queryKey: ['market', 'currentRate', baseCurrency, quoteCurrency],
+    queryKey: ['exchange-rates', 'midpoint', baseCurrency, quoteCurrency],
     queryFn: async () => {
       const params = new URLSearchParams({
         baseCurrency,
         quoteCurrency
       });
-      const response = await apiClient.get(`/market/current-rate?${params}`)
+      const response = await apiClient.get(`/exchange-rates/midpoint?${params}`)
       if (!response.success) {
-        throw new Error(response.error || 'Failed to fetch current rate')
+        throw new Error(response.error || 'Failed to fetch midpoint exchange rate')
       }
       return response.data
     },
@@ -243,6 +226,15 @@ export function useCurrentMarketRate(
     staleTime: 15000, // Consider data stale after 15 seconds
   })
 }
+
+// Legacy hook for backward compatibility - will be removed
+export function useMarketSummary() {
+  return useMidpointExchangeRate('EUR', 'AOA');
+}
+
+// Note: useMarketDepth removed - endpoint removed for simplicity
+
+
 
 // Order Mutations
 export function usePlaceMarketOrder() {

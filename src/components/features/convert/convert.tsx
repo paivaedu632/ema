@@ -26,7 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { useCurrentMarketRate, usePlaceMarketOrder, usePlaceLimitOrder, useLiquidityCheck } from '@/hooks/use-api'
+import { useMidpointExchangeRate, usePlaceMarketOrder, usePlaceLimitOrder, useLiquidityCheck } from '@/hooks/use-api'
 import { useCurrencyInput } from '@/hooks/use-currency-input'
 import { getValidationMessageWithRecommendations, PriorityValidationResult } from '@/lib/currency-validation'
 import type { MarketOrderRequest, LimitOrderRequest } from '@/types'
@@ -51,8 +51,8 @@ export default function ConvertPage() {
   const [sourceComponent, setSourceComponent] = useState<string | null>(null)
   const [orderError, setOrderError] = useState<string | null>(null)
 
-  // Get real-time market rate
-  const { data: marketRateData, isLoading: isRateLoading } = useCurrentMarketRate(
+  // Get real-time market rate from midpoint endpoint
+  const { data: marketRateData, isLoading: isRateLoading } = useMidpointExchangeRate(
     fromCurrency,
     toCurrency,
     fromCurrency !== toCurrency
@@ -75,9 +75,18 @@ export default function ConvertPage() {
   const getConversionRate = (from: string, to: string) => {
     if (from === to) return 1
 
-    // Use real market rate if available
-    if (marketRateData?.rate) {
+    // Use real market rate if available and matches the requested pair
+    if (marketRateData?.rate &&
+        marketRateData.baseCurrency === from &&
+        marketRateData.quoteCurrency === to) {
       return marketRateData.rate
+    }
+
+    // If market rate is for the inverse pair, calculate the inverse
+    if (marketRateData?.rate &&
+        marketRateData.baseCurrency === to &&
+        marketRateData.quoteCurrency === from) {
+      return 1 / marketRateData.rate
     }
 
     // Fallback to hardcoded rates
@@ -95,7 +104,7 @@ export default function ConvertPage() {
   // Currency input hooks with priority-based validation
   const fromInput = useCurrencyInput({
     currency: fromCurrency,
-    exchangeRate: getConversionRate('EUR', 'AOA'),
+    exchangeRate: getConversionRate('EUR', 'AOA'), // Always use EUR->AOA rate for limit calculations
     availableBalance: userBalances[fromCurrency],
     isRequired: true,
     usePriorityValidation: true,
@@ -110,7 +119,7 @@ export default function ConvertPage() {
 
   const toInput = useCurrencyInput({
     currency: toCurrency,
-    exchangeRate: getConversionRate('EUR', 'AOA'),
+    exchangeRate: getConversionRate('EUR', 'AOA'), // Always use EUR->AOA rate for limit calculations
     availableBalance: userBalances[toCurrency],
     isRequired: false,
     usePriorityValidation: true,
@@ -186,11 +195,11 @@ export default function ConvertPage() {
     const getMessageStyle = () => {
       switch (message.messageType) {
         case 'error':
-          return 'text-red-500'
+          return 'text-red-700' // Standardized dark red for errors
         case 'warning':
-          return 'text-orange-500'
+          return 'text-red-700' // Standardized dark red for warnings
         case 'info':
-          return 'text-red-600' // Keep red for recommendations as per current design
+          return 'text-red-700' // Standardized dark red for recommendations
         default:
           return 'text-gray-500'
       }
@@ -429,7 +438,9 @@ export default function ConvertPage() {
             <Label className="text-sm font-bold text-gray-700">
               Você converte
             </Label>
-            <div className="bg-white rounded-lg border border-black p-4 focus-within:border-2">
+            <div className={`bg-white rounded-lg p-4 focus-within:border-2 ${
+              getFromInputMessage().message ? 'border-red-700 border-2' : 'border border-black'
+            }`}>
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-4 min-w-0">
                   <input
@@ -493,7 +504,9 @@ export default function ConvertPage() {
             <Label className="text-sm font-bold text-gray-700">
               Você recebe
             </Label>
-            <div className="bg-white rounded-lg border border-black p-4 focus-within:border-2">
+            <div className={`bg-white rounded-lg p-4 focus-within:border-2 ${
+              getToInputMessage().message ? 'border-red-700 border-2' : 'border border-black'
+            }`}>
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-4 min-w-0">
                   <input

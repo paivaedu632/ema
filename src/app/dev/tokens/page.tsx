@@ -55,7 +55,7 @@ export default async function TokensPage() {
                 <h4 className="font-medium text-gray-800 mb-2">🌐 Public Endpoints:</h4>
                 <ul className="text-sm text-gray-600 space-y-1">
                   <li>• <code>/api/v1/health/status</code> - System health</li>
-                  <li>• <code>/api/v1/market/summary</code> - Market data</li>
+                  <li>• <code>/api/v1/exchange-rates/midpoint</code> - Midpoint exchange rates</li>
                   <li>• <code>/api/v1/market/depth</code> - Order book</li>
                 </ul>
               </div>

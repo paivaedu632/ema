@@ -169,11 +169,17 @@ export class ApiTestClient {
       .set(headers)
   }
 
-  // Market endpoints
-  async getMarketSummary() {
+  // Exchange Rate endpoints
+  async getMidpointExchangeRate(baseCurrency = 'EUR', quoteCurrency = 'AOA') {
+    const params = new URLSearchParams({ baseCurrency, quoteCurrency });
     return request(this.baseUrl)
-      .get('/api/v1/market/summary')
+      .get(`/api/v1/exchange-rates/midpoint?${params}`)
       .set(this.defaultHeaders)
+  }
+
+  // Legacy endpoints for backward compatibility
+  async getMarketSummary() {
+    return this.getMidpointExchangeRate('EUR', 'AOA')
   }
 
   // Alias for getMarketSummary to match test expectations

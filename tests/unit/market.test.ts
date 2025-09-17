@@ -17,37 +17,44 @@ describe('Market Data API', () => {
     // Cleanup if needed
   })
 
-  describe('GET /api/v1/market/summary - Market Summary', () => {
-    test('should return 200 with market summary data', async () => {
-      const response = await apiClient.getMarketSummary()
-      
+  describe('GET /api/v1/exchange-rates/midpoint - Midpoint Exchange Rate', () => {
+    test('should return 200 with midpoint exchange rate data', async () => {
+      const response = await apiClient.getMidpointExchangeRate('EUR', 'AOA')
+
       expect(response.status).toBe(200)
       expectSuccessResponse(response.body)
-      
+
       // Verify response structure
-      expect(response.body.data).toHaveProperty('pairs')
-      expect(response.body.data).toHaveProperty('timestamp')
-      
-      expect(Array.isArray(response.body.data.pairs)).toBe(true)
-      expect(response.body.data.timestamp).toBeValidTimestamp()
-      
-      // Verify pair data structure
-      if (response.body.data.pairs.length > 0) {
-        const pair = response.body.data.pairs[0]
-        expect(pair).toHaveProperty('pair')
-        expect(pair).toHaveProperty('lastPrice')
-        expect(pair).toHaveProperty('change24h')
-        expect(pair).toHaveProperty('volume24h')
-        expect(pair).toHaveProperty('high24h')
-        expect(pair).toHaveProperty('low24h')
-      }
-      
-      expect(response.body.message).toBe('Market summary retrieved successfully')
+      expect(response.body.data).toHaveProperty('pair')
+      expect(response.body.data).toHaveProperty('baseCurrency')
+      expect(response.body.data).toHaveProperty('quoteCurrency')
+      expect(response.body.data).toHaveProperty('midpointRate')
+      expect(response.body.data).toHaveProperty('bidRate')
+      expect(response.body.data).toHaveProperty('askRate')
+      expect(response.body.data).toHaveProperty('spread')
+      expect(response.body.data).toHaveProperty('source')
+      expect(response.body.data).toHaveProperty('lastUpdated')
+      expect(response.body.data).toHaveProperty('status')
+
+      // Verify data types
+      expect(typeof response.body.data.midpointRate).toBe('number')
+      expect(typeof response.body.data.bidRate).toBe('number')
+      expect(typeof response.body.data.askRate).toBe('number')
+      expect(typeof response.body.data.spread).toBe('number')
+
+      expect(response.body.message).toBe('Midpoint exchange rate retrieved successfully')
     })
 
     test('should not require authentication', async () => {
-      const response = await apiClient.getMarketSummary()
+      const response = await apiClient.getMidpointExchangeRate('EUR', 'AOA')
       expect(response.status).toBe(200)
+    })
+
+    test('should handle different currency pairs', async () => {
+      const response = await apiClient.getMidpointExchangeRate('AOA', 'EUR')
+      expect(response.status).toBe(200)
+      expect(response.body.data.baseCurrency).toBe('AOA')
+      expect(response.body.data.quoteCurrency).toBe('EUR')
     })
   })
 

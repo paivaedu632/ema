@@ -49,6 +49,20 @@ export interface ExchangeRate {
   timestamp: string
 }
 
+export interface MidpointExchangeRate {
+  pair: string
+  baseCurrency: string
+  quoteCurrency: string
+  midpointRate: number
+  bidRate: number
+  askRate: number
+  spread: number
+  source: string
+  lastUpdated: string
+  status: string
+}
+
+// Legacy interface for backward compatibility
 export interface MarketData {
   pair: string
   price: number
