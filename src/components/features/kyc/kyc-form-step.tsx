@@ -70,7 +70,7 @@ export function KYCFormStep({
       <main className="content-container">
         <PageHeader
           title={title}
-          subtitle={subtitle}
+          subtitle={subtitle || ''}
           onBack={handleBack}
         />
 
@@ -115,13 +115,13 @@ export function KYCDateFormStep({
 }: Omit<KYCFormStepProps, 'validation' | 'formatValue' | 'inputType' | 'placeholder'>) {
   
   // Use centralized date utilities
-  const formatDateValue = DateUtils.formatInput
-  const validateDate = DateUtils.isValid
+  const formatDateValue = DateUtils.formatDateInput
+  const validateDate = DateUtils.isValidDateFormat
 
   return (
     <KYCFormStep
       title={title}
-      subtitle={subtitle}
+      subtitle={subtitle || ''}
       fieldKey={fieldKey}
       placeholder="DD/MM/AAAA"
       inputType="text"
@@ -155,7 +155,7 @@ export function KYCEmailFormStep({
   return (
     <KYCFormStep
       title={title}
-      subtitle={subtitle}
+      subtitle={subtitle || ''}
       fieldKey={fieldKey}
       placeholder="seu@email.com"
       inputType="email"

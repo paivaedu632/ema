@@ -79,8 +79,8 @@ export function TransactionDetails({ transactionId }: TransactionDetailsProps) {
     )
   }
 
-  const formattedTransaction = formatTransactionForDisplay(transaction)
-  const statusInfo = getTransactionStatusInfo(transaction.status)
+  const formattedTransaction = transaction
+  const statusInfo = { color: 'text-green-600', label: transaction.status }
 
   // Get transaction type title
   const getTransactionTitle = (type: string) => {
@@ -111,7 +111,7 @@ export function TransactionDetails({ transactionId }: TransactionDetailsProps) {
             )}
             <span className="text-green-600 font-medium">{statusInfo.label}</span>
             <span className="text-gray-500">
-              {DateUtils.format(new Date(transaction.created_at), 'dd/mm/yyyy')}
+              {new Date(transaction.created_at).toLocaleDateString('pt-PT')}
             </span>
           </div>
 

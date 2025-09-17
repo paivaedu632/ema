@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { apiClient } from '@/lib/api'
 import { supabase } from '@/lib/supabase/client'
-import type { User, WalletBalance, Transaction, TransferRequest } from '@/types'
+import type { User, WalletBalance, Transaction, TransferRequest, MarketOrderRequest, LimitOrderRequest, OrderResponse, LiquidityCheckResponse } from '@/types'
 
 // Helper function to get authentication token
 async function getAuthToken(): Promise<string | null> {
@@ -21,6 +21,7 @@ export const queryKeys = {
   wallet: (currency: string) => ['wallet', currency] as const,
   transactions: ['transactions'] as const,
   transaction: (id: string) => ['transaction', id] as const,
+  orders: ['orders'] as const,
   users: {
     search: (query: string) => ['users', 'search', query] as const,
   },
@@ -67,20 +68,23 @@ export function useWallets(enabled: boolean = true) {
       // Set auth token for this request
       apiClient.setAuthToken(token)
 
-      const response = await apiClient.get<{ balances: Record<string, any> }>('/wallets/balance')
+      const response = await apiClient.get<{ balances: Record<string, unknown> }>('/wallets/balance')
       if (!response.success) {
         throw new Error(response.error || 'Failed to fetch wallets')
       }
 
       // Transform API response to array format expected by dashboard
       const balances = response.data!.balances
-      return Object.values(balances).map((balance: any) => ({
-        currency: balance.currency,
-        available: Number(balance.availableBalance),
-        pending: Number(balance.reservedBalance),
-        total: Number(balance.totalBalance),
-        lastUpdated: new Date().toISOString()
-      })) as WalletBalance[]
+      return Object.values(balances).map((balance: unknown) => {
+        const b = balance as Record<string, unknown>
+        return {
+          currency: b.currency as string,
+          available: Number(b.availableBalance),
+          pending: Number(b.reservedBalance),
+          total: Number(b.totalBalance),
+          lastUpdated: new Date().toISOString()
+        }
+      }) as WalletBalance[]
     },
     enabled, // Only run when enabled
   })
@@ -112,26 +116,29 @@ export function useTransactions(enabled: boolean = true) {
       // Set auth token for this request
       apiClient.setAuthToken(token)
 
-      const response = await apiClient.get<{ transfers: any[] }>('/transfers/history')
+      const response = await apiClient.get<{ transfers: unknown[] }>('/transfers/history')
       if (!response.success) {
         throw new Error(response.error || 'Failed to fetch transactions')
       }
 
       // Transform API response to format expected by dashboard
-      return response.data!.transfers.map((transfer: any) => ({
-        id: transfer.id,
-        displayId: transfer.displayId,
-        type: transfer.type,
-        amount: transfer.amount,
-        currency: transfer.currency,
-        status: transfer.status,
-        description: transfer.description,
-        createdAt: transfer.createdAt,
-        updatedAt: transfer.updatedAt,
-        recipientId: transfer.recipientId,
-        senderId: transfer.senderId,
-        metadata: transfer.metadata || {}
-      })) as Transaction[]
+      return response.data!.transfers.map((transfer: unknown) => {
+        const t = transfer as Record<string, unknown>
+        return {
+          id: t.id as string,
+          displayId: t.displayId as string,
+          type: t.type as string,
+          amount: t.amount as number,
+          currency: t.currency as string,
+          status: t.status as string,
+          description: t.description as string,
+          createdAt: t.createdAt as string,
+          updatedAt: t.updatedAt as string,
+          recipientId: t.recipientId as string,
+          senderId: t.senderId as string,
+          metadata: (t.metadata as Record<string, unknown>) || {}
+        }
+      }) as Transaction[]
     },
     enabled, // Only run when enabled
   })
@@ -234,5 +241,136 @@ export function useCurrentMarketRate(
     enabled: enabled && baseCurrency !== quoteCurrency,
     refetchInterval: 30000, // Refetch every 30 seconds
     staleTime: 15000, // Consider data stale after 15 seconds
+  })
+}
+
+// Order Mutations
+export function usePlaceMarketOrder() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (orderData: MarketOrderRequest) => {
+      const token = await getAuthToken()
+      if (!token) {
+        throw new Error('Authentication required')
+      }
+
+      // Set auth token for this request
+      apiClient.setAuthToken(token)
+
+      const response = await apiClient.post<OrderResponse>('/orders/market', orderData)
+      if (!response.success) {
+        throw new Error(response.error || 'Failed to place market order')
+      }
+      return response.data!
+    },
+    onSuccess: () => {
+      // Invalidate and refetch related queries
+      queryClient.invalidateQueries({ queryKey: queryKeys.wallets })
+      queryClient.invalidateQueries({ queryKey: queryKeys.transactions })
+      queryClient.invalidateQueries({ queryKey: queryKeys.orders })
+    },
+  })
+}
+
+export function usePlaceLimitOrder() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (orderData: LimitOrderRequest) => {
+      const token = await getAuthToken()
+      if (!token) {
+        throw new Error('Authentication required')
+      }
+
+      // Set auth token for this request
+      apiClient.setAuthToken(token)
+
+      const response = await apiClient.post<OrderResponse>('/orders/limit', orderData)
+      if (!response.success) {
+        throw new Error(response.error || 'Failed to place limit order')
+      }
+      return response.data!
+    },
+    onSuccess: () => {
+      // Invalidate and refetch related queries
+      queryClient.invalidateQueries({ queryKey: queryKeys.wallets })
+      queryClient.invalidateQueries({ queryKey: queryKeys.transactions })
+      queryClient.invalidateQueries({ queryKey: queryKeys.orders })
+    },
+  })
+}
+
+// Liquidity Check Query
+export function useLiquidityCheck(
+  side: 'buy' | 'sell',
+  baseCurrency: 'EUR' | 'AOA',
+  quoteCurrency: 'EUR' | 'AOA',
+  quantity: number,
+  maxSlippage = 5.0,
+  enabled = true
+) {
+  return useQuery({
+    queryKey: ['market', 'liquidity', side, baseCurrency, quoteCurrency, quantity, maxSlippage],
+    queryFn: async () => {
+      const params = new URLSearchParams({
+        side,
+        baseCurrency,
+        quoteCurrency,
+        quantity: quantity.toString(),
+        maxSlippage: maxSlippage.toString()
+      });
+
+      const response = await apiClient.get<LiquidityCheckResponse>(`/market/liquidity?${params}`)
+      if (!response.success) {
+        throw new Error(response.error || 'Failed to check liquidity')
+      }
+      return response.data!
+    },
+    enabled: enabled && quantity > 0 && baseCurrency !== quoteCurrency,
+    staleTime: 10000, // Consider data stale after 10 seconds
+    refetchInterval: 15000, // Refetch every 15 seconds
+  })
+}
+
+// Liquidity Reservation Mutation
+export function useReserveLiquidity() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (params: {
+      side: 'buy' | 'sell'
+      baseCurrency: 'EUR' | 'AOA'
+      quoteCurrency: 'EUR' | 'AOA'
+      quantity: number
+      maxSlippage?: number
+      reservationDuration?: number
+    }) => {
+      const token = await getAuthToken()
+      if (!token) {
+        throw new Error('Authentication required')
+      }
+
+      apiClient.setAuthToken(token)
+
+      const searchParams = new URLSearchParams({
+        side: params.side,
+        baseCurrency: params.baseCurrency,
+        quoteCurrency: params.quoteCurrency,
+        quantity: params.quantity.toString(),
+        maxSlippage: (params.maxSlippage || 5.0).toString(),
+        reservationDuration: (params.reservationDuration || 30).toString()
+      });
+
+      const response = await apiClient.post<LiquidityCheckResponse>(`/market/reserve?${searchParams}`)
+      if (!response.success) {
+        throw new Error(response.error || 'Failed to reserve liquidity')
+      }
+      return response.data!
+    },
+    onSuccess: () => {
+      // Invalidate liquidity checks to refresh data
+      queryClient.invalidateQueries({ queryKey: ['market', 'liquidity'] })
+    },
   })
 }

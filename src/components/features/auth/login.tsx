@@ -5,6 +5,7 @@ import { Eye, EyeOff, QrCode } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { SmartEmailPhoneInput } from "@/components/ui/phone-input"
+import { LoadingOverlay } from "@/components/ui/loading-overlay"
 import { useAuth } from "@/hooks/use-auth"
 import Link from 'next/link'
 
@@ -174,9 +175,9 @@ export function Login() {
                 <Button
                   type="submit"
                   className="w-full h-12 bg-black hover:bg-gray-900 text-white font-medium rounded-lg transition-colors"
-                  disabled={!password || isLoggingIn}
+                  disabled={!password}
                 >
-                  {isLoggingIn ? 'Entrando...' : 'Entrar'}
+                  Entrar
                 </Button>
 
                 <div className="text-center">
@@ -217,6 +218,9 @@ export function Login() {
           </div>
         </div>
       </footer>
+
+      {/* Loading Overlay */}
+      <LoadingOverlay isVisible={isLoggingIn} />
     </div>
   )
 }

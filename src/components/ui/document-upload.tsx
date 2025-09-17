@@ -4,6 +4,7 @@ import React, { useState, useRef, useCallback } from "react"
 import Image from "next/image"
 import { Upload, Camera, FileImage, X, Check } from "lucide-react"
 import { useFileUpload } from "@/hooks/use-async-operation"
+import { LoadingOverlay } from "./loading-overlay"
 
 interface DocumentUploadProps {
   onUpload: (file: File) => void
@@ -222,7 +223,6 @@ export function DocumentUpload({
             <button
               onClick={clearSelection}
               className="flex-1 h-12 rounded-full bg-gray-100 flex items-center justify-center"
-              disabled={isUploading}
             >
               <span className="text-gray-600 font-medium">Cancelar</span>
             </button>
@@ -230,15 +230,10 @@ export function DocumentUpload({
             <button
               onClick={confirmUpload}
               className="flex-1 h-12 rounded-full bg-black flex items-center justify-center space-x-2"
-              disabled={isUploading}
             >
-              {isUploading ? (
-                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              ) : (
-                <Check className="w-5 h-5 text-white" />
-              )}
+              <Check className="w-5 h-5 text-white" />
               <span className="text-white font-medium">
-                {isUploading ? 'Enviando...' : 'Confirmar'}
+                Confirmar
               </span>
             </button>
           </div>
@@ -272,6 +267,9 @@ export function DocumentUpload({
           className="hidden"
         />
       </div>
+
+      {/* Loading Overlay */}
+      <LoadingOverlay isVisible={isUploading} />
     </div>
   )
 }

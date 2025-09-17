@@ -71,6 +71,75 @@ export interface OrderBook {
   timestamp: string
 }
 
+// Order Types
+export interface MarketOrderRequest {
+  side: 'buy' | 'sell'
+  amount: number
+  baseCurrency: 'EUR' | 'AOA'
+  quoteCurrency: 'EUR' | 'AOA'
+  slippageLimit?: number
+}
+
+export interface LimitOrderRequest {
+  side: 'buy' | 'sell'
+  amount: number
+  price: number
+  baseCurrency: 'EUR' | 'AOA'
+  quoteCurrency: 'EUR' | 'AOA'
+}
+
+export interface OrderResponse {
+  orderId: string
+  userId: string
+  orderType: 'market' | 'limit'
+  side: 'buy' | 'sell'
+  baseCurrency: 'EUR' | 'AOA'
+  quoteCurrency: 'EUR' | 'AOA'
+  amount: number
+  price?: number
+  slippageLimit?: number
+  executedPrice?: number
+  executedAmount?: number
+  status: 'pending' | 'filled' | 'cancelled'
+  createdAt: string
+  executedAt?: string
+  orderDetails?: object
+}
+
+export interface LiquidityCheckResponse {
+  hasLiquidity: boolean
+  availableQuantity: number
+  bestPrice?: number
+  worstPrice?: number
+  estimatedSlippage: number
+  message: string
+  canExecuteMarketOrder: boolean
+  reservationId?: string
+  expiresAt?: string
+  reservationDurationSeconds?: number
+}
+
+export interface LiquidityReservation {
+  id: string
+  userId: string
+  side: 'buy' | 'sell'
+  baseCurrency: 'EUR' | 'AOA'
+  quoteCurrency: 'EUR' | 'AOA'
+  quantity: number
+  maxSlippagePercent: number
+  reservedOrders: Array<{
+    orderId: string
+    quantity: number
+    price: number
+  }>
+  estimatedPrice: number
+  estimatedSlippage: number
+  expiresAt: string
+  status: 'active' | 'used' | 'expired' | 'cancelled'
+  createdAt: string
+  usedAt?: string
+}
+
 // API Response Types
 export interface ApiResponse<T = unknown> {
   success: boolean

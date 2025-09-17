@@ -55,7 +55,7 @@ export function KYCRadioSelection({
       <main className="content-container">
         <PageHeader
           title={title}
-          subtitle={subtitle}
+          subtitle={subtitle || ''}
           onBack={handleBack}
         />
 

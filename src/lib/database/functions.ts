@@ -15,7 +15,7 @@ async function executeFunction<T>(
 ): Promise<DatabaseResult<T>> {
   try {
     const supabase = createServerSupabaseClient();
-    
+
     const { data, error } = await supabase.rpc(functionName, params);
 
     if (error) {
@@ -32,6 +32,57 @@ async function executeFunction<T>(
     };
   } catch (error) {
     console.error(`Database function ${functionName} exception:`, error);
+    return {
+      success: false,
+      error: 'Database connection failed'
+    };
+  }
+}
+
+/**
+ * Execute raw SQL with parameters
+ */
+export async function execute_sql_supabase<T>(
+  projectId: string,
+  query: string,
+  params: unknown[] = []
+): Promise<DatabaseResult<T[]>> {
+  try {
+    const supabase = createServerSupabaseClient();
+
+    // For parameterized queries, we need to use rpc with a custom function
+    // For now, we'll use the check_market_liquidity function directly
+    if (query.includes('check_market_liquidity')) {
+      const [side, baseCurrency, quoteCurrency, quantity, maxSlippage] = params;
+      const { data, error } = await supabase.rpc('check_market_liquidity', {
+        p_side: side,
+        p_base_currency: baseCurrency,
+        p_quote_currency: quoteCurrency,
+        p_quantity: quantity,
+        p_max_slippage_percent: maxSlippage
+      });
+
+      if (error) {
+        console.error('SQL execution error:', error);
+        return {
+          success: false,
+          error: error.message || 'SQL execution failed'
+        };
+      }
+
+      return {
+        success: true,
+        data: Array.isArray(data) ? data : [data]
+      };
+    }
+
+    // For other queries, return error for now
+    return {
+      success: false,
+      error: 'Raw SQL execution not supported in this context'
+    };
+  } catch (error) {
+    console.error('SQL execution exception:', error);
     return {
       success: false,
       error: 'Database connection failed'
@@ -158,6 +209,23 @@ export async function getCurrentMarketRate(params: {
     p_quote_currency: params.quote_currency
   };
   return executeFunction('get_current_market_rate', dbParams);
+}
+
+export async function checkMarketLiquidity(params: {
+  side: 'buy' | 'sell';
+  base_currency: string;
+  quote_currency: string;
+  quantity: number;
+  max_slippage_percent?: number;
+}) {
+  const dbParams = {
+    p_side: params.side,
+    p_base_currency: params.base_currency,
+    p_quote_currency: params.quote_currency,
+    p_quantity: params.quantity,
+    p_max_slippage_percent: params.max_slippage_percent || 5.0
+  };
+  return executeFunction('check_market_liquidity', dbParams);
 }
 
 // Security functions

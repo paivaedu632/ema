@@ -53,4 +53,4 @@ async function currencyBalanceHandler(
   return createSuccessResponse(responseData, 'Wallet balance retrieved successfully');
 }
 
-export const GET = withCors(withErrorHandling(withAuth(currencyBalanceHandler)));
+export const GET = withAuth(currencyBalanceHandler);

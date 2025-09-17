@@ -10,7 +10,6 @@ import {
   ArrowLeft,
   ArrowRight,
   ArrowDown,
-  RefreshCw,
   Zap,
   Clock,
   ChevronDown
@@ -18,6 +17,7 @@ import {
 import { formatCurrency } from '@/lib/utils'
 import { FlagIcon } from '@/components/ui/flag-icon'
 import { PageHeader } from '@/components/layout/page-header'
+import { LoadingOverlay } from '@/components/ui/loading-overlay'
 import { FixedBottomAction } from '@/components/ui/fixed-bottom-action'
 import {
   Select,
@@ -26,8 +26,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { useCurrentMarketRate } from '@/hooks/use-api'
+import { useCurrentMarketRate, usePlaceMarketOrder, usePlaceLimitOrder, useLiquidityCheck } from '@/hooks/use-api'
 import { useCurrencyInput } from '@/hooks/use-currency-input'
+import { getValidationMessageWithRecommendations, PriorityValidationResult } from '@/lib/currency-validation'
+import type { MarketOrderRequest, LimitOrderRequest } from '@/types'
 
 // Available currencies - only AOA and EUR
 type Currency = 'EUR' | 'AOA'
@@ -47,6 +49,7 @@ export default function ConvertPage() {
   const [currentStep, setCurrentStep] = useState<'convert' | 'confirm' | 'success'>('convert')
   const [isLoading, setIsLoading] = useState(false)
   const [sourceComponent, setSourceComponent] = useState<string | null>(null)
+  const [orderError, setOrderError] = useState<string | null>(null)
 
   // Get real-time market rate
   const { data: marketRateData, isLoading: isRateLoading } = useCurrentMarketRate(
@@ -63,6 +66,10 @@ export default function ConvertPage() {
     }
     isLoading: boolean
   }
+
+  // Order placement hooks
+  const placeMarketOrder = usePlaceMarketOrder()
+  const placeLimitOrder = usePlaceLimitOrder()
 
   // Calculate conversion rate based on currency pair
   const getConversionRate = (from: string, to: string) => {
@@ -85,11 +92,13 @@ export default function ConvertPage() {
     AOA: 1250000
   }
 
-  // Currency input hooks with validation
+  // Currency input hooks with priority-based validation
   const fromInput = useCurrencyInput({
     currency: fromCurrency,
     exchangeRate: getConversionRate('EUR', 'AOA'),
     availableBalance: userBalances[fromCurrency],
+    isRequired: true,
+    usePriorityValidation: true,
     onValueChange: (numericValue) => {
       if (exchangeType === 'auto') {
         const rate = getConversionRate(fromCurrency, toCurrency)
@@ -103,6 +112,8 @@ export default function ConvertPage() {
     currency: toCurrency,
     exchangeRate: getConversionRate('EUR', 'AOA'),
     availableBalance: userBalances[toCurrency],
+    isRequired: false,
+    usePriorityValidation: true,
     onValueChange: (numericValue) => {
       if (exchangeType === 'auto') {
         const rate = getConversionRate(toCurrency, fromCurrency)
@@ -111,6 +122,86 @@ export default function ConvertPage() {
       }
     }
   })
+
+  // Liquidity check for market orders
+  const side: 'buy' | 'sell' = fromCurrency === 'EUR' ? 'sell' : 'buy'
+  const liquidityCheck = useLiquidityCheck(
+    side,
+    fromCurrency,
+    toCurrency,
+    fromInput.numericValue,
+    5.0, // 5% max slippage
+    fromInput.numericValue > 0 && fromCurrency !== toCurrency
+  )
+
+  // Determine if automatic mode should be available
+  const hasLiquidity = liquidityCheck.data?.canExecuteMarketOrder ?? false
+  const shouldShowAutomatic = hasLiquidity
+
+  // Auto-select manual mode if automatic is not available
+  useEffect(() => {
+    if (!shouldShowAutomatic && exchangeType === 'auto') {
+      setExchangeType('manual')
+    }
+  }, [shouldShowAutomatic, exchangeType])
+
+  // Helper function to get priority validation message for "from" input
+  const getFromInputMessage = (): PriorityValidationResult => {
+    if (fromInput.priorityValidation && !fromInput.priorityValidation.isValid) {
+      return fromInput.priorityValidation
+    }
+    return { isValid: true, priority: 0 }
+  }
+
+  // Helper function to get priority validation message for "to" input
+  const getToInputMessage = (): PriorityValidationResult => {
+    // First check for validation errors
+    if (toInput.priorityValidation && !toInput.priorityValidation.isValid) {
+      return toInput.priorityValidation
+    }
+
+    // If no errors and in manual mode, show recommendation
+    if (exchangeType === 'manual' && fromInput.numericValue > 0) {
+      const marketRate = getConversionRate(fromCurrency, toCurrency)
+      return getValidationMessageWithRecommendations(
+        toInput.displayValue,
+        toCurrency,
+        getConversionRate('EUR', 'AOA'),
+        userBalances[toCurrency],
+        false,
+        true, // show recommendations
+        fromInput.numericValue,
+        fromCurrency,
+        toCurrency
+      )
+    }
+
+    return { isValid: true, priority: 0 }
+  }
+
+  // Component to display priority validation messages
+  const ValidationMessage = ({ message }: { message: PriorityValidationResult }) => {
+    if (!message.message) return null
+
+    const getMessageStyle = () => {
+      switch (message.messageType) {
+        case 'error':
+          return 'text-red-500'
+        case 'warning':
+          return 'text-orange-500'
+        case 'info':
+          return 'text-red-600' // Keep red for recommendations as per current design
+        default:
+          return 'text-gray-500'
+      }
+    }
+
+    return (
+      <div className={`text-sm mt-1 ${getMessageStyle()}`}>
+        {message.message}
+      </div>
+    )
+  }
 
   // Handle URL parameters from other convert components
   useEffect(() => {
@@ -200,15 +291,93 @@ export default function ConvertPage() {
   }
 
   const handleConvert = () => {
+    setOrderError(null) // Clear any previous errors
     setCurrentStep('confirm')
   }
 
   const handleConfirmConvert = async () => {
     setIsLoading(true)
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    setIsLoading(false)
-    setCurrentStep('success')
+    setOrderError(null) // Clear any previous errors
+
+    try {
+      // Determine order side based on currency conversion
+      // When converting EUR to AOA: sell EUR (buy AOA)
+      // When converting AOA to EUR: sell AOA (buy EUR)
+      const side: 'buy' | 'sell' = fromCurrency === 'EUR' ? 'sell' : 'buy'
+
+      if (exchangeType === 'auto') {
+        // Place market order for automatic exchange
+        const marketOrderData: MarketOrderRequest = {
+          side,
+          amount: fromInput.numericValue,
+          baseCurrency: fromCurrency,
+          quoteCurrency: toCurrency,
+          slippageLimit: 0.05 // 5% slippage limit
+        }
+
+        await placeMarketOrder.mutateAsync(marketOrderData)
+      } else {
+        // Place limit order for manual exchange
+        // Calculate the desired exchange rate from user input
+        const desiredRate = toInput.numericValue / fromInput.numericValue
+
+        const limitOrderData: LimitOrderRequest = {
+          side,
+          amount: fromInput.numericValue,
+          price: desiredRate,
+          baseCurrency: fromCurrency,
+          quoteCurrency: toCurrency
+        }
+
+        await placeLimitOrder.mutateAsync(limitOrderData)
+      }
+
+      setCurrentStep('success')
+    } catch (error) {
+      console.error('Order placement failed:', error)
+
+      // Check if this is a liquidity-related error for market orders
+      if (exchangeType === 'auto' && error instanceof Error) {
+        if (error.message.includes('INSUFFICIENT_LIQUIDITY') ||
+            error.message.includes('SLIPPAGE_EXCEEDED') ||
+            error.message.includes('liquidity') ||
+            error.message.includes('slippage') ||
+            error.message.includes('insufficient market')) {
+
+          // Redirect to liquidity-changed screen with current market data
+          const params = new URLSearchParams({
+            fromAmount: fromInput.numericValue.toString(),
+            fromCurrency,
+            toCurrency,
+            originalExpectedAmount: toInput.numericValue.toString(),
+            // For now, use a reduced amount as current available
+            // In a real implementation, this would come from the error response
+            currentAvailableAmount: (toInput.numericValue * 0.7).toString(),
+            currentRate: getConversionRate(fromCurrency, toCurrency).toString()
+          })
+
+          router.push(`/convert/liquidity-changed?${params}`)
+          return
+        }
+      }
+
+      // Extract error message for user display
+      let errorMessage = 'Falha ao processar a conversão. Tente novamente.'
+
+      if (error instanceof Error) {
+        if (error.message.includes('insufficient')) {
+          errorMessage = 'Saldo insuficiente para esta conversão.'
+        } else if (error.message.includes('Authentication')) {
+          errorMessage = 'Sessão expirada. Faça login novamente.'
+        } else if (error.message.includes('network') || error.message.includes('fetch')) {
+          errorMessage = 'Erro de conexão. Verifique sua internet.'
+        }
+      }
+
+      setOrderError(errorMessage)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const availableBalance = userBalances[fromCurrency]
@@ -306,11 +475,7 @@ export default function ConvertPage() {
               Saldo: {formatCurrency(availableBalance, fromCurrency)}
             </div>
 
-            {!fromInput.validation.isValid && (
-              <div className="text-sm text-red-500 mt-1">
-                {fromInput.validation.error}
-              </div>
-            )}
+            <ValidationMessage message={getFromInputMessage()} />
           </div>
 
           {/* Swap Button */}
@@ -370,61 +535,41 @@ export default function ConvertPage() {
                 </div>
               </div>
             </div>
-            {!toInput.validation.isValid && (
-              <div className="text-sm text-red-500 mt-1">
-                {toInput.validation.error}
-              </div>
-            )}
-
-            {/* Market Rate Warning */}
-            {exchangeType === 'manual' && fromInput.numericValue > 0 && (() => {
-              const marketRate = getConversionRate(fromCurrency, toCurrency)
-              const marketAmount = fromInput.numericValue * marketRate
-
-              // Calculate 20% margin range
-              const lowerBound = marketAmount * 0.8  // 20% below market
-              const upperBound = marketAmount * 1.2  // 20% above market
-
-              return (
-                <div className="mt-2 text-sm">
-                  <span className="text-red-600">
-                    Recomendado: {formatCurrency(lowerBound, toCurrency)}-{formatCurrency(upperBound, toCurrency)}
-                  </span>
-                </div>
-              )
-            })()}
+            <ValidationMessage message={getToInputMessage()} />
           </div>
 
           {/* Exchange Type Selection */}
           <div className="space-y-2">
             <Label className="text-sm font-bold text-gray-700">Tipo de câmbio</Label>
 
-            {/* Auto Option */}
-            <div
-              className={`border rounded-lg cursor-pointer transition-colors p-4 ${
-                exchangeType === 'auto' ? 'border-black bg-gray-50' : 'border-gray-200 hover:border-gray-300'
-              }`}
-              onClick={() => handleExchangeTypeChange('auto')}
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-8 h-8 border border-gray-200 rounded-full flex items-center justify-center">
-                  <Zap className="h-4 w-4 text-gray-600" />
-                </div>
-                <div className="flex-1">
-                  <div className="text-sm font-bold text-gray-900 mb-1">Automático</div>
-                  <div className="text-sm text-gray-600">
-                    Você recebe <span className="font-bold">{fromInput.numericValue > 0 ? formatCurrency(fromInput.numericValue * getConversionRate(fromCurrency, toCurrency), toCurrency) : formatCurrency(0, toCurrency)}</span> agora
+            {/* Auto Option - Only show if liquidity is available */}
+            {shouldShowAutomatic && (
+              <div
+                className={`border rounded-lg cursor-pointer transition-colors p-4 ${
+                  exchangeType === 'auto' ? 'border-black bg-gray-50' : 'border-gray-200 hover:border-gray-300'
+                }`}
+                onClick={() => handleExchangeTypeChange('auto')}
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-8 h-8 border border-gray-200 rounded-full flex items-center justify-center">
+                    <Zap className="h-4 w-4 text-gray-600" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-sm font-bold text-gray-900 mb-1">Automático</div>
+                    <div className="text-sm text-gray-600">
+                      Você recebe <span className="font-bold">{fromInput.numericValue > 0 ? formatCurrency(fromInput.numericValue * getConversionRate(fromCurrency, toCurrency), toCurrency) : formatCurrency(0, toCurrency)}</span> agora
+                    </div>
+                  </div>
+                  <div className={`w-4 h-4 rounded-full border-2 ${
+                    exchangeType === 'auto' ? 'border-black bg-black' : 'border-gray-300'
+                  }`}>
+                    {exchangeType === 'auto' && (
+                      <div className="w-2 h-2 bg-white rounded-full mx-auto mt-0.5"></div>
+                    )}
                   </div>
                 </div>
-                <div className={`w-4 h-4 rounded-full border-2 ${
-                  exchangeType === 'auto' ? 'border-black bg-black' : 'border-gray-300'
-                }`}>
-                  {exchangeType === 'auto' && (
-                    <div className="w-2 h-2 bg-white rounded-full mx-auto mt-0.5"></div>
-                  )}
-                </div>
               </div>
-            </div>
+            )}
 
             {/* Manual Option */}
             <div
@@ -463,7 +608,7 @@ export default function ConvertPage() {
           <div className="hidden md:block mt-6">
             <Button
               onClick={handleConvert}
-              disabled={fromInput.numericValue === 0 || (exchangeType === 'manual' && toInput.numericValue === 0) || isLoading || !fromInput.validation.isValid || !toInput.validation.isValid}
+              disabled={fromInput.numericValue === 0 || (exchangeType === 'manual' && toInput.numericValue === 0) || !fromInput.validation.isValid || !toInput.validation.isValid}
               className="primary-action-button"
             >
               Continuar
@@ -477,7 +622,7 @@ export default function ConvertPage() {
             primaryAction={{
               label: "Continuar",
               onClick: handleConvert,
-              disabled: fromInput.numericValue === 0 || (exchangeType === 'manual' && toInput.numericValue === 0) || isLoading || !fromInput.validation.isValid || !toInput.validation.isValid
+              disabled: fromInput.numericValue === 0 || (exchangeType === 'manual' && toInput.numericValue === 0) || !fromInput.validation.isValid || !toInput.validation.isValid
             }}
           />
         </div>
@@ -573,21 +718,20 @@ export default function ConvertPage() {
               }
             </p>
           </div>
+          {/* Error Display */}
+          {orderError && (
+            <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-sm text-red-600">{orderError}</p>
+            </div>
+          )}
+
           {/* Desktop Button */}
           <div className="hidden md:block mt-6">
             <Button
               onClick={handleConfirmConvert}
-              disabled={isLoading}
               className="primary-action-button"
             >
-              {isLoading ? (
-                <>
-                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                  Processando...
-                </>
-              ) : (
-                "Confirmar"
-              )}
+              Confirmar
             </Button>
           </div>
         </main>
@@ -596,12 +740,16 @@ export default function ConvertPage() {
         <div className="md:hidden">
           <FixedBottomAction
             primaryAction={{
-              label: isLoading ? "Processando..." : "Confirmar",
-              onClick: handleConfirmConvert,
-              disabled: isLoading
+              label: "Confirmar",
+              onClick: handleConfirmConvert
             }}
           />
         </div>
+
+        {/* Loading Overlay */}
+        <LoadingOverlay
+          isVisible={isLoading || placeMarketOrder.isPending || placeLimitOrder.isPending}
+        />
       </div>
     )
   }

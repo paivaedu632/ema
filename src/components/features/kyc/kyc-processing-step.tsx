@@ -112,7 +112,7 @@ export function KYCProcessingStep({
       <main className="content-container">
         <PageHeader
           title={title}
-          subtitle={subtitle}
+          subtitle={subtitle || ''}
           onBack={handleBack}
         />
 

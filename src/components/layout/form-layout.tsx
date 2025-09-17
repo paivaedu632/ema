@@ -132,12 +132,12 @@ interface FormButtonProps {
   type?: 'button' | 'submit'
   variant?: 'primary' | 'secondary'
   disabled?: boolean
-  loading?: boolean
   className?: string
 }
 
 /**
  * Standard form button following EmaPay design system
+ * Note: Loading states should be handled by parent component using LoadingOverlay
  */
 export function FormButton({
   children,
@@ -145,11 +145,10 @@ export function FormButton({
   type = 'button',
   variant = 'primary',
   disabled = false,
-  loading = false,
   className = ''
 }: FormButtonProps) {
   const baseClasses = 'w-full h-12 text-base px-4 rounded-full font-medium transition-colors'
-  
+
   const variantClasses = {
     primary: 'bg-black text-white hover:bg-gray-800 disabled:bg-gray-300',
     secondary: 'bg-gray-100 text-gray-900 hover:bg-gray-200 disabled:bg-gray-100'
@@ -159,10 +158,10 @@ export function FormButton({
     <button
       type={type}
       onClick={onClick}
-      disabled={disabled || loading}
+      disabled={disabled}
       className={`${baseClasses} ${variantClasses[variant]} ${className}`}
     >
-      {loading ? 'Carregando...' : children}
+      {children}
     </button>
   )
 }

@@ -6,6 +6,21 @@ export interface ValidationResult {
   formattedValue?: string
 }
 
+export interface PriorityValidationResult {
+  isValid: boolean
+  message?: string
+  messageType?: 'error' | 'warning' | 'info'
+  priority: number
+}
+
+export enum ValidationPriority {
+  FORMAT_ERROR = 1,        // Invalid number format, decimal places
+  REQUIRED_FIELD = 2,      // Empty input when required
+  MIN_MAX_VIOLATION = 3,   // Minimum/maximum amount violations
+  INSUFFICIENT_BALANCE = 4, // Balance warnings
+  RECOMMENDATION = 5       // Recommendation messages
+}
+
 export interface CurrencyLimits {
   min: number
   max: number
@@ -138,17 +153,17 @@ export function calculateCurrencyLimits(
 }
 
 /**
- * Enhanced balance validation with specific available balance message
+ * Enhanced balance validation with standardized message
  */
 export function validateBalance(
   amount: number,
   availableBalance: number,
-  currency: Currency
+  _currency: Currency
 ): ValidationResult {
   if (amount > availableBalance) {
     return {
       isValid: false,
-      error: `Saldo insuficiente. Disponível: ${formatPortugueseInput(availableBalance)} ${currency}`
+      error: `Saldo insuficiente`
     }
   }
 
@@ -196,7 +211,145 @@ export function validateAmount(
 }
 
 /**
- * Process input change with validation and formatting
+ * Get all validation results with priorities
+ */
+export function getAllValidationResults(
+  value: string,
+  currency: Currency,
+  exchangeRate: number,
+  availableBalance?: number,
+  isRequired: boolean = false
+): PriorityValidationResult[] {
+  const results: PriorityValidationResult[] = []
+
+  // Clean the input
+  const cleaned = cleanInputString(value)
+
+  // 1. Format/parsing errors (highest priority) - Skip these for standardized messages
+  const decimalValidation = validateDecimalPlaces(cleaned, currency)
+  if (!decimalValidation.isValid) {
+    // Skip format errors - only show standardized messages
+    return results
+  }
+
+  // Parse to numeric value
+  const numericValue = parsePortugueseNumber(cleaned)
+
+  // 2. Required field errors - Skip these for standardized messages
+  if (isRequired && numericValue === 0) {
+    // Skip required field errors - only show standardized messages
+    return results
+  }
+
+  // For zero values, don't check other validations
+  if (numericValue === 0) {
+    return results
+  }
+
+  // 3. Min/max violations - Use standardized messages
+  const limits = calculateCurrencyLimits(currency, exchangeRate)
+  if (numericValue < limits.min) {
+    results.push({
+      isValid: false,
+      message: `Mínimo: ${formatPortugueseInput(limits.min)} ${currency}`,
+      messageType: 'error',
+      priority: ValidationPriority.MIN_MAX_VIOLATION
+    })
+  }
+
+  if (numericValue > limits.max) {
+    results.push({
+      isValid: false,
+      message: `Máximo: ${formatPortugueseInput(limits.max)} ${currency}`,
+      messageType: 'error',
+      priority: ValidationPriority.MIN_MAX_VIOLATION
+    })
+  }
+
+  // 4. Insufficient balance warnings - Use standardized message
+  if (availableBalance !== undefined && numericValue > availableBalance) {
+    results.push({
+      isValid: false,
+      message: `Saldo insuficiente`,
+      messageType: 'warning',
+      priority: ValidationPriority.INSUFFICIENT_BALANCE
+    })
+  }
+
+  return results
+}
+
+/**
+ * Get the highest priority validation message
+ */
+export function getPriorityValidationMessage(
+  value: string,
+  currency: Currency,
+  exchangeRate: number,
+  availableBalance?: number,
+  isRequired: boolean = false
+): PriorityValidationResult {
+  const results = getAllValidationResults(value, currency, exchangeRate, availableBalance, isRequired)
+
+  if (results.length === 0) {
+    return {
+      isValid: true,
+      priority: 0
+    }
+  }
+
+  // Return the highest priority (lowest number) validation result
+  return results.reduce((highest, current) =>
+    current.priority < highest.priority ? current : highest
+  )
+}
+
+/**
+ * Process input change with priority-based validation and formatting
+ */
+export function processInputChangeWithPriority(
+  newValue: string,
+  currency: Currency,
+  exchangeRate: number,
+  availableBalance?: number,
+  isRequired: boolean = false
+): {
+  numericValue: number
+  formattedValue: string
+  validation: ValidationResult
+  priorityValidation: PriorityValidationResult
+} {
+  // Clean the input
+  const cleaned = cleanInputString(newValue)
+
+  // Get priority validation
+  const priorityValidation = getPriorityValidationMessage(cleaned, currency, exchangeRate, availableBalance, isRequired)
+
+  // Parse to numeric value
+  const numericValue = parsePortugueseNumber(cleaned)
+
+  // Format for display (only if no format errors)
+  let formattedValue = cleaned
+  if (priorityValidation.priority !== ValidationPriority.FORMAT_ERROR) {
+    formattedValue = formatPortugueseInput(numericValue)
+  }
+
+  // Create legacy validation result for backward compatibility
+  const validation: ValidationResult = {
+    isValid: priorityValidation.isValid,
+    error: priorityValidation.message
+  }
+
+  return {
+    numericValue,
+    formattedValue,
+    validation,
+    priorityValidation
+  }
+}
+
+/**
+ * Process input change with validation and formatting (legacy function)
  */
 export function processInputChange(
   newValue: string,
@@ -208,33 +361,68 @@ export function processInputChange(
   formattedValue: string
   validation: ValidationResult
 } {
-  // Clean the input
-  const cleaned = cleanInputString(newValue)
+  const result = processInputChangeWithPriority(newValue, currency, exchangeRate, availableBalance)
+  return {
+    numericValue: result.numericValue,
+    formattedValue: result.formattedValue,
+    validation: result.validation
+  }
+}
 
-  // Validate decimal places first
-  const decimalValidation = validateDecimalPlaces(cleaned, currency)
-  if (!decimalValidation.isValid) {
-    return {
-      numericValue: 0,
-      formattedValue: cleaned,
-      validation: decimalValidation
+/**
+ * Generate recommendation message for manual exchange mode
+ */
+export function generateRecommendationMessage(
+  fromAmount: number,
+  fromCurrency: Currency,
+  toCurrency: Currency,
+  exchangeRate: number
+): PriorityValidationResult | null {
+  if (fromAmount <= 0) return null
+
+  const marketAmount = fromAmount * exchangeRate
+  const lowerBound = marketAmount * 0.8  // 20% below market
+  const upperBound = marketAmount * 1.2  // 20% above market
+
+  return {
+    isValid: true,
+    message: `Recomendado: ${formatPortugueseInput(lowerBound)}-${formatPortugueseInput(upperBound)} ${toCurrency}`,
+    messageType: 'info',
+    priority: ValidationPriority.RECOMMENDATION
+  }
+}
+
+/**
+ * Get the most appropriate validation message including recommendations
+ */
+export function getValidationMessageWithRecommendations(
+  value: string,
+  currency: Currency,
+  exchangeRate: number,
+  availableBalance?: number,
+  isRequired: boolean = false,
+  showRecommendations: boolean = false,
+  fromAmount?: number,
+  fromCurrency?: Currency,
+  toCurrency?: Currency
+): PriorityValidationResult {
+  // Get standard validation first
+  const standardValidation = getPriorityValidationMessage(value, currency, exchangeRate, availableBalance, isRequired)
+
+  // If there's an error or warning, return it (higher priority)
+  if (!standardValidation.isValid) {
+    return standardValidation
+  }
+
+  // If no errors and recommendations are enabled, show recommendation
+  if (showRecommendations && fromAmount && fromCurrency && toCurrency) {
+    const recommendation = generateRecommendationMessage(fromAmount, fromCurrency, toCurrency, exchangeRate)
+    if (recommendation) {
+      return recommendation
     }
   }
 
-  // Parse to numeric value
-  const numericValue = parsePortugueseNumber(cleaned)
-
-  // Format for display
-  const formattedValue = formatPortugueseInput(numericValue)
-
-  // Validate amount limits and balance
-  const validation = validateAmount(numericValue, currency, exchangeRate, availableBalance)
-
-  return {
-    numericValue,
-    formattedValue,
-    validation
-  }
+  return standardValidation
 }
 
 /**

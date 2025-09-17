@@ -31,19 +31,54 @@ async function marketOrderHandler(request: NextRequest, user: AuthenticatedUser)
       return ErrorResponses.insufficientBalance(result.error);
     }
     if (result.error?.includes('slippage')) {
-      return ErrorResponses.orderFailed('Order rejected due to slippage limit');
+      return ErrorResponses.orderFailed('SLIPPAGE_EXCEEDED: Order rejected due to slippage limit');
     }
     if (result.error?.includes('liquidity')) {
-      return ErrorResponses.orderFailed('Insufficient market liquidity');
+      return ErrorResponses.orderFailed('INSUFFICIENT_LIQUIDITY: Insufficient market liquidity');
     }
 
     return ErrorResponses.orderFailed(result.error || 'Order failed');
   }
 
-  const orderData = result.data as { id?: string; executed_price?: number; executed_amount?: number; status?: string; created_at?: string; executed_at?: string } | undefined;
+  // Parse the database function response with proper typing
+  const orderData = result.data as {
+    order_id?: string;
+    status?: string;
+    filled_quantity?: number;
+    average_fill_price?: number;
+    total_cost?: number;
+    slippage_percent?: number;
+    message?: string;
+    created_at?: string;
+    executed_at?: string;
+  } | undefined;
+
+  // Check if the order was actually rejected by the database
+  if (orderData?.status === 'rejected') {
+    // Handle specific rejection cases based on the message
+    const message = orderData.message || 'Market order was rejected';
+
+    if (message.includes('No liquidity available')) {
+      return ErrorResponses.orderFailed('INSUFFICIENT_LIQUIDITY: No liquidity available for this currency pair');
+    }
+    if (message.includes('Slippage exceeds maximum') || message.includes('slippage')) {
+      return ErrorResponses.orderFailed('SLIPPAGE_EXCEEDED: Order rejected due to slippage limit');
+    }
+    if (message.includes('could not be filled')) {
+      return ErrorResponses.orderFailed('EXECUTION_FAILED: Market order could not be filled');
+    }
+
+    // Generic rejection error
+    return ErrorResponses.orderFailed(`ORDER_REJECTED: ${message}`);
+  }
+
+  // Only proceed with success response if order was actually filled
+  if (orderData?.status !== 'filled') {
+    return ErrorResponses.orderFailed('UNEXPECTED_STATUS: Market order did not complete successfully');
+  }
 
   const responseData = {
-    orderId: orderData?.id,
+    orderId: orderData.order_id,
     userId: user.userId,
     orderType: 'market' as const,
     side,
@@ -51,12 +86,16 @@ async function marketOrderHandler(request: NextRequest, user: AuthenticatedUser)
     quoteCurrency,
     amount,
     slippageLimit,
-    executedPrice: orderData?.executed_price,
-    executedAmount: orderData?.executed_amount,
-    status: orderData?.status || 'filled',
-    createdAt: orderData?.created_at || new Date().toISOString(),
-    executedAt: orderData?.executed_at || new Date().toISOString(),
-    orderDetails: orderData
+    executedPrice: orderData.average_fill_price,
+    executedAmount: orderData.filled_quantity,
+    status: orderData.status,
+    createdAt: orderData.created_at || new Date().toISOString(),
+    executedAt: orderData.executed_at || new Date().toISOString(),
+    orderDetails: {
+      totalCost: orderData.total_cost,
+      slippagePercent: orderData.slippage_percent,
+      message: orderData.message
+    }
   };
 
   return createSuccessResponse(responseData, 'Market order executed successfully');

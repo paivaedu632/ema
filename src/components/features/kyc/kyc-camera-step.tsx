@@ -52,7 +52,7 @@ export function KYCCameraStep({
       <main className="content-container">
         <PageHeader
           title={title}
-          subtitle={subtitle}
+          subtitle={subtitle || ''}
           onBack={handleBack}
         />
 

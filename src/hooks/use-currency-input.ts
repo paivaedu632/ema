@@ -2,7 +2,9 @@ import { useState, useCallback } from 'react'
 import { Currency } from '@/types'
 import {
   ValidationResult,
+  PriorityValidationResult,
   processInputChange,
+  processInputChangeWithPriority,
   formatPortugueseInput,
   parsePortugueseNumber
 } from '@/lib/currency-validation'
@@ -11,6 +13,7 @@ export interface CurrencyInputState {
   displayValue: string
   numericValue: number
   validation: ValidationResult
+  priorityValidation?: PriorityValidationResult
 }
 
 export interface UseCurrencyInputProps {
@@ -19,6 +22,8 @@ export interface UseCurrencyInputProps {
   initialValue?: number
   onValueChange?: (numericValue: number) => void
   availableBalance?: number
+  isRequired?: boolean
+  usePriorityValidation?: boolean
 }
 
 export function useCurrencyInput({
@@ -26,63 +31,107 @@ export function useCurrencyInput({
   exchangeRate,
   initialValue = 0,
   onValueChange,
-  availableBalance
+  availableBalance,
+  isRequired = false,
+  usePriorityValidation = false
 }: UseCurrencyInputProps) {
   const [state, setState] = useState<CurrencyInputState>(() => ({
     displayValue: initialValue > 0 ? formatPortugueseInput(initialValue) : '',
     numericValue: initialValue,
-    validation: { isValid: true }
+    validation: { isValid: true },
+    priorityValidation: { isValid: true, priority: 0 }
   }))
 
   const handleInputChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = event.target.value
-    
+
     // Allow empty input
     if (inputValue === '') {
       const newState = {
         displayValue: '',
         numericValue: 0,
-        validation: { isValid: true }
+        validation: { isValid: !isRequired },
+        priorityValidation: {
+          isValid: !isRequired,
+          priority: 0,
+          ...(isRequired && {
+            message: 'Este campo é obrigatório',
+            messageType: 'error' as const,
+            priority: 2
+          })
+        }
       }
       setState(newState)
       onValueChange?.(0)
       return
     }
-    
-    // Process the input
-    const result = processInputChange(inputValue, currency, exchangeRate, availableBalance)
-    
-    const newState = {
-      displayValue: result.formattedValue,
-      numericValue: result.numericValue,
-      validation: result.validation
+
+    // Process the input with priority validation if enabled
+    if (usePriorityValidation) {
+      const result = processInputChangeWithPriority(inputValue, currency, exchangeRate, availableBalance, isRequired)
+
+      const newState = {
+        displayValue: result.formattedValue,
+        numericValue: result.numericValue,
+        validation: result.validation,
+        priorityValidation: result.priorityValidation
+      }
+
+      setState(newState)
+      onValueChange?.(result.numericValue)
+    } else {
+      // Legacy processing
+      const result = processInputChange(inputValue, currency, exchangeRate, availableBalance)
+
+      const newState = {
+        displayValue: result.formattedValue,
+        numericValue: result.numericValue,
+        validation: result.validation,
+        priorityValidation: { isValid: result.validation.isValid, priority: 0 }
+      }
+
+      setState(newState)
+      onValueChange?.(result.numericValue)
     }
-    
-    setState(newState)
-    onValueChange?.(result.numericValue)
-  }, [currency, exchangeRate, onValueChange, availableBalance])
+  }, [currency, exchangeRate, onValueChange, availableBalance, isRequired, usePriorityValidation])
 
   const setValue = useCallback((value: number) => {
     const newState = {
       displayValue: value > 0 ? formatPortugueseInput(value) : '',
       numericValue: value,
-      validation: { isValid: true }
+      validation: { isValid: true },
+      priorityValidation: { isValid: true, priority: 0 }
     }
     setState(newState)
   }, [])
 
   const setDisplayValue = useCallback((displayValue: string) => {
     const numericValue = parsePortugueseNumber(displayValue)
-    const result = processInputChange(displayValue, currency, exchangeRate, availableBalance)
 
-    const newState = {
-      displayValue: result.formattedValue,
-      numericValue: result.numericValue,
-      validation: result.validation
+    if (usePriorityValidation) {
+      const result = processInputChangeWithPriority(displayValue, currency, exchangeRate, availableBalance, isRequired)
+
+      const newState = {
+        displayValue: result.formattedValue,
+        numericValue: result.numericValue,
+        validation: result.validation,
+        priorityValidation: result.priorityValidation
+      }
+
+      setState(newState)
+    } else {
+      const result = processInputChange(displayValue, currency, exchangeRate, availableBalance)
+
+      const newState = {
+        displayValue: result.formattedValue,
+        numericValue: result.numericValue,
+        validation: result.validation,
+        priorityValidation: { isValid: result.validation.isValid, priority: 0 }
+      }
+
+      setState(newState)
     }
-
-    setState(newState)
-  }, [currency, exchangeRate, availableBalance])
+  }, [currency, exchangeRate, availableBalance, isRequired, usePriorityValidation])
 
   return {
     ...state,

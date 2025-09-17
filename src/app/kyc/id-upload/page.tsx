@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { CheckCircle, XCircle, Loader2 } from "lucide-react"
 import { PageHeader } from '@/components/layout/page-header'
 import { FixedBottomAction } from "@/components/ui/fixed-bottom-action"
+import { LoadingOverlay } from "@/components/ui/loading-overlay"
 import { useKYC } from "@/contexts/kyc-context"
 
 export default function KYCIdUploadPage() {
@@ -172,11 +173,14 @@ export default function KYCIdUploadPage() {
 
       <FixedBottomAction
         primaryAction={{
-          label: canContinue ? "Continuar" : error ? "Tentar Novamente" : "Processando...",
+          label: canContinue ? "Continuar" : error ? "Tentar Novamente" : "Aguardar",
           onClick: canContinue ? handleContinue : error ? handleRetryProcessing : () => {},
-          disabled: isProcessing || (!canContinue && !error)
+          disabled: !canContinue && !error
         }}
       />
+
+      {/* Loading Overlay */}
+      <LoadingOverlay isVisible={isProcessing} />
     </div>
   )
 }
