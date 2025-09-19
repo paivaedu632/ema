@@ -197,6 +197,25 @@ export async function executeMarketOrder(params: {
   return executeFunction('execute_market_order', dbParams);
 }
 
+export async function executeHybridMarketOrder(params: {
+  user_id: string;
+  side: 'buy' | 'sell';
+  base_currency: string;
+  quote_currency: string;
+  quantity: number;
+  max_slippage_percent?: number;
+}) {
+  const dbParams = {
+    p_user_id: params.user_id,
+    p_side: params.side,
+    p_base_currency: params.base_currency,
+    p_quote_currency: params.quote_currency,
+    p_quantity: params.quantity,
+    p_max_slippage_percent: params.max_slippage_percent || 5.0
+  };
+  return executeFunction('execute_hybrid_market_order', dbParams);
+}
+
 // Market data functions
 // Note: Removed getUserOrderHistory and getOrderBookDepth - endpoints removed for simplicity
 

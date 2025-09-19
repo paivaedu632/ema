@@ -11,6 +11,10 @@ export interface LiquidityCheckResponse {
   estimatedSlippage: number;
   message: string;
   canExecuteMarketOrder: boolean;
+  // Hybrid execution support
+  hybridExecutionAvailable: boolean;
+  partialExecutionQuantity: number;
+  remainingQuantityForLimitOrder: number;
 }
 
 export interface ActualReceiveAmount {
@@ -97,7 +101,7 @@ export function calculateActualReceiveAmount(
 }
 
 /**
- * Calculate amounts for market orders (automatic mode)
+ * Calculate amounts for market orders (automatic mode) with hybrid execution support
  */
 function calculateMarketOrderAmount(
   result: ActualReceiveAmount,
@@ -106,31 +110,36 @@ function calculateMarketOrderAmount(
   fees: number,
   liquidityData?: LiquidityCheckResponse
 ): ActualReceiveAmount {
-  
-  // Check liquidity availability (simplified: assume available if no data)
-  if (liquidityData && (!liquidityData.hasLiquidity || !liquidityData.canExecuteMarketOrder)) {
+
+  // With hybrid execution, orders are always executable (partial + limit order)
+  // Only completely reject if no liquidity exists at all
+  if (liquidityData && liquidityData.availableQuantity === 0) {
     result.isExecutable = false;
-    result.warnings.push('Liquidez insuficiente para execução automática');
+    result.warnings.push('Nenhuma liquidez disponível no momento');
     return result;
   }
 
-  // If no liquidity data, add warning but allow execution
+  // If no liquidity data, add informational message about hybrid execution
   if (!liquidityData) {
-    result.warnings.push('Execução sujeita à disponibilidade de liquidez no momento');
+    result.warnings.push('Execução híbrida: imediata + automática conforme liquidez');
   }
 
-  // Apply liquidity constraints (use defaults if no liquidity data)
-  const availableLiquidity = liquidityData?.availableQuantity || grossAmount * 2; // Assume 2x liquidity available
-  const liquidityConstrainedAmount = Math.min(grossAmount, availableLiquidity);
+  // Apply liquidity constraints for hybrid execution
+  const availableLiquidity = liquidityData?.availableQuantity || grossAmount;
+  const immediateExecutionAmount = Math.min(grossAmount, availableLiquidity);
+  const limitOrderAmount = grossAmount - immediateExecutionAmount;
 
-  // Calculate slippage buffer (5% maximum protection)
+  // Calculate slippage buffer only for immediate execution portion
   const estimatedSlippage = liquidityData ? Math.min(liquidityData.estimatedSlippage / 100, MAX_SLIPPAGE) : MAX_SLIPPAGE;
-  const slippageBuffer = liquidityConstrainedAmount * estimatedSlippage;
-  
-  // Calculate final amounts
-  const netAfterFees = liquidityConstrainedAmount - fees;
-  const guaranteedMinimum = Math.max(0, netAfterFees - slippageBuffer);
-  const estimatedAmount = Math.max(0, netAfterFees * (1 - estimatedSlippage * 0.5)); // Use half estimated slippage for realistic estimate
+  const slippageBuffer = immediateExecutionAmount * estimatedSlippage;
+
+  // Calculate final amounts considering hybrid execution
+  const immediateNetAfterFees = immediateExecutionAmount - (fees * (immediateExecutionAmount / grossAmount));
+  const limitOrderNetAfterFees = limitOrderAmount - (fees * (limitOrderAmount / grossAmount));
+
+  // Guaranteed minimum: immediate execution (with slippage protection) + limit order (exact)
+  const guaranteedMinimum = Math.max(0, immediateNetAfterFees - slippageBuffer) + Math.max(0, limitOrderNetAfterFees);
+  const estimatedAmount = Math.max(0, immediateNetAfterFees * (1 - estimatedSlippage * 0.3)) + Math.max(0, limitOrderNetAfterFees);
 
   // Update result
   result.guaranteedMinimum = guaranteedMinimum;
@@ -184,7 +193,7 @@ function calculateLimitOrderAmount(
 }
 
 /**
- * Add appropriate warnings for market orders
+ * Add appropriate warnings for hybrid market orders
  */
 function addMarketOrderWarnings(
   result: ActualReceiveAmount,
@@ -192,16 +201,17 @@ function addMarketOrderWarnings(
   grossAmount: number,
   liquidityData: LiquidityCheckResponse
 ): void {
-  
-  // High slippage warning
-  if (liquidityData.estimatedSlippage > LIQUIDITY_THRESHOLDS.HIGH_IMPACT_THRESHOLD * 100) {
-    result.warnings.push(`Alto impacto no preço: deslizamento estimado de ${liquidityData.estimatedSlippage.toFixed(2)}%`);
+
+  // Hybrid execution information
+  const liquidityRatio = grossAmount / liquidityData.availableQuantity;
+  if (liquidityRatio > 1) {
+    const immediatePercent = ((liquidityData.availableQuantity / grossAmount) * 100).toFixed(0);
+    result.warnings.push(`Execução híbrida: ${immediatePercent}% imediato, restante como ordem automática`);
   }
 
-  // Large order warning
-  const liquidityRatio = grossAmount / liquidityData.availableQuantity;
-  if (liquidityRatio > LIQUIDITY_THRESHOLDS.LOW_LIQUIDITY_RATIO) {
-    result.warnings.push('Ordem grande: pode afetar significativamente o preço de mercado');
+  // High slippage warning only for immediate execution portion
+  if (liquidityData.estimatedSlippage > LIQUIDITY_THRESHOLDS.HIGH_IMPACT_THRESHOLD * 100) {
+    result.warnings.push(`Deslizamento estimado na execução imediata: ${liquidityData.estimatedSlippage.toFixed(2)}%`);
   }
 
   // Partial execution warning

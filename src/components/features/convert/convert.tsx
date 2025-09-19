@@ -53,6 +53,7 @@ export default function ConvertPage() {
   const [sourceComponent, setSourceComponent] = useState<string | null>(null)
   const [orderError, setOrderError] = useState<string | null>(null)
   const [showTooltip, setShowTooltip] = useState(false)
+  const [orderResult, setOrderResult] = useState<any>(null)
 
   // Get real-time market rate from midpoint endpoint
   const { data: marketRateData, isLoading: isRateLoading } = useMidpointExchangeRate(
@@ -140,6 +141,13 @@ export default function ConvertPage() {
     liquidityData: undefined, // Simplified: no real-time liquidity dependency
     userSpecifiedToAmount: exchangeType === 'manual' ? toInput.numericValue : undefined
   })
+
+  // Function to detect significant amount changes that might require fallback UI
+  const detectSignificantAmountChange = (originalAmount: number, currentAmount: number): boolean => {
+    if (originalAmount === 0) return false
+    const changePercentage = Math.abs((currentAmount - originalAmount) / originalAmount)
+    return changePercentage > 0.05 // 5% threshold for significant change
+  }
 
   // Helper function to get priority validation message for "from" input
   const getFromInputMessage = (): PriorityValidationResult => {
@@ -323,7 +331,8 @@ export default function ConvertPage() {
           slippageLimit: 0.05 // 5% slippage limit
         }
 
-        await placeMarketOrder.mutateAsync(marketOrderData)
+        const marketResult = await placeMarketOrder.mutateAsync(marketOrderData)
+        setOrderResult(marketResult)
       } else {
         // Place limit order for manual exchange
         // Calculate the desired exchange rate from user input
@@ -337,7 +346,8 @@ export default function ConvertPage() {
           quoteCurrency: toCurrency
         }
 
-        await placeLimitOrder.mutateAsync(limitOrderData)
+        const limitResult = await placeLimitOrder.mutateAsync(limitOrderData)
+        setOrderResult(limitResult)
       }
 
       setCurrentStep('success')
@@ -350,7 +360,22 @@ export default function ConvertPage() {
             error.message.includes('SLIPPAGE_EXCEEDED') ||
             error.message.includes('liquidity') ||
             error.message.includes('slippage') ||
-            error.message.includes('insufficient market')) {
+            error.message.includes('insufficient market') ||
+            error.message.includes('market conditions') ||
+            error.message.includes('rate changed') ||
+            error.message.includes('price impact')) {
+
+          // Calculate current available amount based on error or use fallback
+          let currentAvailableAmount = toInput.numericValue * 0.7 // Default fallback
+
+          // Try to extract actual available amount from error message if provided
+          const availableMatch = error.message.match(/available[:\s]+([0-9,.]+)/)
+          if (availableMatch && availableMatch[1]) {
+            const extractedAmount = parseFloat(availableMatch[1].replace(/,/g, ''))
+            if (!isNaN(extractedAmount)) {
+              currentAvailableAmount = extractedAmount
+            }
+          }
 
           // Redirect to liquidity-changed screen with current market data
           const params = new URLSearchParams({
@@ -358,9 +383,7 @@ export default function ConvertPage() {
             fromCurrency,
             toCurrency,
             originalExpectedAmount: toInput.numericValue.toString(),
-            // For now, use a reduced amount as current available
-            // In a real implementation, this would come from the error response
-            currentAvailableAmount: (toInput.numericValue * 0.7).toString(),
+            currentAvailableAmount: currentAvailableAmount.toString(),
             currentRate: getConversionRate(fromCurrency, toCurrency).toString()
           })
 
@@ -407,17 +430,43 @@ export default function ConvertPage() {
 
   // Success step - redirect to success page with conversion data
   if (currentStep === 'success') {
-    const finalAmount = exchangeType === 'auto'
-      ? (fromInput.numericValue * getConversionRate(fromCurrency, toCurrency)).toFixed(toCurrency === 'EUR' ? 6 : 0)
-      : toInput.numericValue.toFixed(toCurrency === 'EUR' ? 6 : 0)
-
     const params = new URLSearchParams({
       type: exchangeType,
-      amount: finalAmount,
-      currency: toCurrency,
       fromAmount: fromInput.numericValue.toString(),
-      fromCurrency: fromCurrency
+      fromCurrency: fromCurrency,
+      toCurrency: toCurrency
     })
+
+    // Add hybrid execution data if available
+    if (orderResult && exchangeType === 'auto') {
+      const hybridData = orderResult.hybridExecution
+      if (hybridData?.isHybrid) {
+        params.set('executionType', 'hybrid')
+        params.set('marketExecutedAmount', hybridData.marketFilledQuantity?.toString() || '0')
+        params.set('limitPendingAmount', hybridData.limitQuantity?.toString() || '0')
+        params.set('marketPrice', hybridData.marketAvgPrice?.toString() || '0')
+        params.set('limitPrice', hybridData.limitPrice?.toString() || '0')
+      } else if (hybridData?.marketFilledQuantity > 0) {
+        params.set('executionType', 'market')
+        params.set('executedAmount', hybridData.marketFilledQuantity?.toString() || '0')
+        params.set('executedPrice', hybridData.marketAvgPrice?.toString() || '0')
+      } else {
+        params.set('executionType', 'limit')
+        params.set('pendingAmount', hybridData.limitQuantity?.toString() || '0')
+        params.set('limitPrice', hybridData.limitPrice?.toString() || '0')
+      }
+    } else if (orderResult && exchangeType === 'manual') {
+      params.set('executionType', 'limit')
+      params.set('pendingAmount', fromInput.numericValue.toString())
+      params.set('limitPrice', (toInput.numericValue / fromInput.numericValue).toString())
+    } else {
+      // Fallback for legacy behavior
+      const finalAmount = exchangeType === 'auto'
+        ? (fromInput.numericValue * getConversionRate(fromCurrency, toCurrency)).toFixed(toCurrency === 'EUR' ? 6 : 0)
+        : toInput.numericValue.toFixed(toCurrency === 'EUR' ? 6 : 0)
+      params.set('amount', finalAmount)
+      params.set('currency', toCurrency)
+    }
 
     router.push(`/convert/success?${params.toString()}`)
     return null
@@ -552,7 +601,9 @@ export default function ConvertPage() {
 
           {/* Exchange Type Selection */}
           <div className="space-y-2">
-            <Label className="text-sm font-bold text-gray-700">Tipo de câmbio</Label>
+            <Label className="text-sm font-bold text-gray-700">
+              Tipo de câmbio
+            </Label>
 
             {/* Auto Option - Always available with risk-based warnings */}
             <div
@@ -566,11 +617,9 @@ export default function ConvertPage() {
                     <Zap className="h-4 w-4 text-gray-600" />
                   </div>
                   <div className="flex-1">
-                    <div className="text-sm font-bold text-gray-900 mb-1">Automático (Taxa: 2%)</div>
+                    <div className="text-sm font-bold text-gray-900 mb-1">Automático</div>
                     <div className="text-sm text-gray-600">
-                      Você recebe no mínimo <span className="font-bold text-gray-900">
-                        {fromInput.numericValue > 0 ? actualReceiveAmount.displayText : `-- ${toCurrency}`}
-                      </span> agora
+                      Você recebe agora
                     </div>
                   </div>
                   <div className={`w-4 h-4 rounded-full border-2 ${
@@ -595,14 +644,9 @@ export default function ConvertPage() {
                   <Clock className="h-4 w-4 text-gray-600" />
                 </div>
                 <div className="flex-1">
-                  <div className="text-sm font-bold text-gray-900 mb-1">Manual (Taxa: 2%)</div>
+                  <div className="text-sm font-bold text-gray-900 mb-1">Manual</div>
                   <div className="text-sm text-gray-600">
-                    Você recebe no mínimo <span className="font-bold text-gray-900">
-                      {fromInput.numericValue > 0 && toInput.numericValue > 0
-                        ? actualReceiveAmount.displayText
-                        : `-- ${toCurrency}`
-                      }
-                    </span> quando encontrarmos o câmbio que você quer
+                    Você escolhe quanto receber e faremos a conversão quando encontramos o valor
                   </div>
                 </div>
                 <div className={`w-4 h-4 rounded-full border-2 ${
@@ -694,7 +738,7 @@ export default function ConvertPage() {
             </div>
           </div>
 
-          {/* Transaction Details - Wise Style */}
+          {/* Transaction Details - Dynamic Layout Based on Exchange Type */}
           <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-4 mb-6">
             <div className="flex justify-between items-center">
               <span className="text-gray-600">Você está convertendo</span>
@@ -708,33 +752,87 @@ export default function ConvertPage() {
               </span>
             </div>
 
+            <div className="flex justify-between items-center">
+              <span className="text-gray-600">Taxa</span>
+              <span className="font-medium text-gray-900">2%</span>
+            </div>
+
             <div className="border-t border-gray-200 pt-4">
-              <div className="flex justify-between items-center">
-                <div className="flex items-center">
-                  <span className="font-medium text-gray-900">Você recebe total</span>
-                  {fromInput.numericValue > 0 && (
-                    <ReceiveAmountTooltip
-                      breakdown={actualReceiveAmount.breakdown}
-                      warnings={actualReceiveAmount.warnings}
-                      isVisible={showTooltip}
-                      onToggle={() => setShowTooltip(!showTooltip)}
-                    />
-                  )}
+              {/* Market Orders (Automatic Mode) */}
+              {exchangeType === 'auto' && (
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center">
+                    <span className="font-medium text-gray-900">Você recebe agora</span>
+                    {fromInput.numericValue > 0 && (
+                      <ReceiveAmountTooltip
+                        breakdown={actualReceiveAmount.breakdown}
+                        warnings={actualReceiveAmount.warnings}
+                        isVisible={showTooltip}
+                        onToggle={() => setShowTooltip(!showTooltip)}
+                      />
+                    )}
+                  </div>
+                  <div className="text-right">
+                    <span className="font-bold text-lg text-gray-900">
+                      ~{fromInput.numericValue > 0
+                        ? formatCurrency(fromInput.numericValue * getConversionRate(fromCurrency, toCurrency) * 0.98, toCurrency)
+                        : formatCurrency(0, toCurrency)}
+                    </span>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <span className="font-bold text-lg text-gray-900">
-                    {fromInput.numericValue > 0 ? actualReceiveAmount.displayText : formatCurrency(0, toCurrency)}
-                  </span>
+              )}
+
+              {/* Limit Orders (Manual Mode) */}
+              {exchangeType === 'manual' && (
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center">
+                    <span className="font-medium text-gray-900">Você recebe total</span>
+                    {fromInput.numericValue > 0 && (
+                      <ReceiveAmountTooltip
+                        breakdown={actualReceiveAmount.breakdown}
+                        warnings={actualReceiveAmount.warnings}
+                        isVisible={showTooltip}
+                        onToggle={() => setShowTooltip(!showTooltip)}
+                      />
+                    )}
+                  </div>
+                  <div className="text-right">
+                    <span className="font-bold text-lg text-gray-900">
+                      {fromInput.numericValue > 0 && toInput.numericValue > 0
+                        ? formatCurrency(toInput.numericValue * 0.98, toCurrency)
+                        : formatCurrency(0, toCurrency)}
+                    </span>
+                  </div>
                 </div>
-              </div>
+              )}
+
+              {/* Hybrid Execution (Partial Fulfillment) - This will be shown when orderResult indicates hybrid */}
+              {orderResult?.hybridExecution?.isHybrid && (
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="font-medium text-gray-900">Você recebe agora</span>
+                    <span className="font-bold text-lg text-gray-900">
+                      {formatCurrency(orderResult.hybridExecution.marketFilledQuantity * getConversionRate(fromCurrency, toCurrency) * 0.98, toCurrency)}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="font-medium text-gray-900">Restante</span>
+                    <span className="font-bold text-lg text-gray-900">
+                      {formatCurrency(orderResult.hybridExecution.limitQuantity * getConversionRate(fromCurrency, toCurrency) * 0.98, toCurrency)}
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
           {/* Processing Info */}
           <div className="text-center mb-6">
             <p className="text-sm text-gray-600">
-              {exchangeType === 'auto'
-                ? 'Sua conversão será processada imediatamente com a taxa atual do mercado.'
+              {orderResult?.hybridExecution?.isHybrid
+                ? 'Sua conversão será processada de forma parcial porque não temos liquidez suficiente.'
+                : exchangeType === 'auto'
+                ? 'Sua conversão será processada imediatamente e não poderá ser cancelada.'
                 : 'Sua conversão será processada quando encontrarmos o câmbio que você quer.'
               }
             </p>
